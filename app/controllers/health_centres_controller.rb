@@ -5,6 +5,6 @@ class HealthCentresController < ApplicationController
 
     def points
         @health_centres_points = HealthCentre.all
-        render json: @health_centres_points.to_json(only: [:lat, :long])
+        render json: @health_centres_points
     end
 end
