@@ -1,4 +1,4 @@
 Rails.application.routes.draw do
 	root to: 'health_centres#index'
-	resources :health_centres
+	get 'points', to: 'health_centres#points'
 end
