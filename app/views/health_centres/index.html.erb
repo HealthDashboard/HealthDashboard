@@ -1,17 +1,1 @@
-<h1>Health Centres</h1>
-
-<div id='map' style='height: 500px; width: 700px'></div>
-<br>
-
-<% for health_centre in @health_centres %>
-ID <%= health_centre.id %>
-LAT <%= health_centre.lat%>
-LONG <%= health_centre.long%>
-CNES <% health_centre.cnes %>
-NAME <%= health_centre.name%>
-BEDS <%= health_centre.beds%>
-PHONE <%= health_centre.phone%>
-CENSUS DISTRICT <%= health_centre.census_district%>
-</br>
-<% end %>
-
+<div id='map'></div>
