@@ -1,4 +1,6 @@
-    var map;
+var map;
+var info_boxes = [];
+var info_box_opened;
 
 function initialize()
 {
@@ -32,7 +34,7 @@ function create_marker(point)
   var marker = new google.maps.Marker({
       position: new google.maps.LatLng(point.lat, point.long),
       map: map
-  }); 
+  });
   add_info_to_marker(marker, point)
 }
 
@@ -43,11 +45,23 @@ function create_marker_text(point)
 
 function add_info_to_marker(marker, point)
 {
-  var infowindow = new google.maps.InfoWindow()
-  google.maps.event.addListener(marker, 'click', (function(marker, i) {
-        return function() {
-                  infowindow.setContent(create_marker_text(point));
-                  infowindow.open(map, marker);
-              }
-  })(marker))
+  info_boxes[point.id] = new google.maps.InfoWindow()
+  info_boxes[point.id].marker = marker
+
+  info_boxes[point.id].listener = google.maps.event.addListener(marker, 'click', function (e) {
+            info_boxes[point.id].setContent(create_marker_text(point))
+            open_info_box(point.id, marker);
+        });
+}
+
+function open_info_box(id, marker){
+  if ((typeof(info_box_opened) == 'number' && typeof(info_boxes[info_box_opened]) == 'object' )) {
+    info_boxes[info_box_opened].close()
+  }
+  if (info_box_opened != id){
+    info_boxes[id].open(map, marker)
+    info_box_opened = id
+  }else{
+    info_box_opened = -1
+  }
 }
