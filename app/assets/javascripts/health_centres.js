@@ -2,6 +2,32 @@ var map;
 var info_boxes = [];
 var info_box_opened;
 
+var locations = [
+  {lat: -23.522787, lng: -46.490063},
+  {lat: -23.522787, lng: -46.490063},
+  {lat: -23.522787, lng: -46.490063},
+  {lat: -23.522787, lng: -46.490063},
+  {lat: -23.522787, lng: -46.490063},
+  {lat: -23.522787, lng: -46.490063},
+  {lat: -23.522787, lng: -46.490063},
+  {lat: -23.522787, lng: -46.490063},
+  {lat: -23.522787, lng: -46.490063},
+  {lat: -23.522787, lng: -46.490063},
+  {lat: -23.522787, lng: -46.490063},
+]
+
+function show_procedures()
+{
+  var markers = locations.map(function(location, i) {
+    return new google.maps.Marker({
+      position: location,
+    });
+  });
+
+  var markerCluster = new MarkerClusterer(map, markers,
+    {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+}
+
 function initialize()
 {
   var lat = -23.522787
@@ -16,6 +42,7 @@ function initialize()
 
   map = new google.maps.Map(document.getElementById("map"), options);
   load_all_points();
+  show_procedures();
 }
 
 function load_all_points()
