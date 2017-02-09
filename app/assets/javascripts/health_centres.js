@@ -40,18 +40,37 @@ function create_marker(point)
 
 function create_marker_text(point)
 {
-  return 'Nome: ' + point.name + '<br>Leitos: ' + point.beds  +'<br>Telefone: ' + point.phone
+  return 'Name: ' + point.name +
+        '<br>Beds: '+ point.beds +
+        '<br>Phone: ' + point.phone +
+        "<br><button type='button' id='show_info' onclick='show_clusters()'>Show Info</button>"
+}
+
+function show_clusters()
+{
+  markers_visible(false)
 }
 
 function add_info_to_marker(marker, point)
 {
   info_boxes[point.id] = new google.maps.InfoWindow()
   info_boxes[point.id].marker = marker
+  info_boxes[point.id].id = point.id
 
   info_boxes[point.id].listener = google.maps.event.addListener(marker, 'click', function (e) {
             info_boxes[point.id].setContent(create_marker_text(point))
             open_info_box(point.id, marker);
         });
+}
+
+function markers_visible(visibility)
+{
+   $.each(info_boxes, function(index, info_box)
+   {
+     if (info_box != null && info_box.id != info_box_opened){
+       info_box.marker.setVisible(visibility);
+     }
+   });
 }
 
 function open_info_box(id, marker){
@@ -65,3 +84,4 @@ function open_info_box(id, marker){
     info_box_opened = -1
   }
 }
+
