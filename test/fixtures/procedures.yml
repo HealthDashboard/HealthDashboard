@@ -1,0 +1,33 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  date: MyString
+  age_code: MyString
+  age_numbbber: MyString
+  gender: MyString
+  race: MyString
+  different_district: MyString
+  cep_patient: MyString
+  cid_associated: MyString
+  cid_primary: MyString
+  cid_secundary: MyString
+  ethnicity: MyString
+  long: 1.5
+  lat: 1.5
+  cnes: one
+
+two:
+  date: MyString
+  age_code: MyString
+  age_numbbber: MyString
+  gender: MyString
+  race: MyString
+  different_district: MyString
+  cep_patient: MyString
+  cid_associated: MyString
+  cid_primary: MyString
+  cid_secundary: MyString
+  ethnicity: MyString
+  long: 1.5
+  lat: 1.5
+  cnes: two
