@@ -36,7 +36,7 @@ ActiveRecord::Schema.define(version: 20170209171452) do
     t.string   "cep_patient"
     t.string   "cid_associated"
     t.string   "cid_primary"
-    t.string   "cid_secundary"
+    t.string   "cid_secondary"
     t.string   "ethnicity"
     t.float    "long"
     t.float    "lat"
