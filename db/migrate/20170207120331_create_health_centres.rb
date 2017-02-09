@@ -8,7 +8,6 @@ class CreateHealthCentres < ActiveRecord::Migration[5.0]
       t.integer :beds
       t.string :phone
       t.string :census_district
-
       t.timestamps
     end
   end
