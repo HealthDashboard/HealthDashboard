@@ -42,7 +42,6 @@ function initialize()
 
   map = new google.maps.Map(document.getElementById("map"), options);
   load_all_points();
-  show_procedures();
 }
 
 function load_all_points()
@@ -51,31 +50,37 @@ function load_all_points()
   {
     $.each(points, function(index, point)
     {
-      create_marker(point)
+      create_health_centre_marker(point)
     });
   });
 }
 
+function create_health_centre_marker(point)
+{
+  var marker = create_marker(point)
+  add_info_to_marker(marker, point)
+}
+
 function create_marker(point)
 {
-  var marker = new google.maps.Marker({
+  return new google.maps.Marker({
       position: new google.maps.LatLng(point.lat, point.long),
       map: map
   });
-  add_info_to_marker(marker, point)
 }
 
 function create_marker_text(point)
 {
-  return 'Name: ' + point.name +
-        '<br>Beds: '+ point.beds +
-        '<br>Phone: ' + point.phone +
-        "<br><button type='button' id='show_info' onclick='show_clusters()'>Show Info</button>"
+  return '<strong>Name:</strong> ' + point.name +
+         '<br><strong>Beds:</strong> '+ point.beds +
+         '<br><strong>Phone:</strong> ' + point.phone +
+         "<br><br><button type='button' id='show_info' onclick='show_clusters()'>Show Info</button>"
 }
 
 function show_clusters()
 {
   markers_visible(false)
+  show_procedures();
 }
 
 function add_info_to_marker(marker, point)
@@ -84,6 +89,11 @@ function add_info_to_marker(marker, point)
   info_boxes[point.id].marker = marker
   info_boxes[point.id].id = point.id
 
+  add_listener(marker, point)
+}
+
+function add_listener(marker, point)
+{
   info_boxes[point.id].listener = google.maps.event.addListener(marker, 'click', function (e) {
             info_boxes[point.id].setContent(create_marker_text(point))
             open_info_box(point.id, marker);
