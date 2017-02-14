@@ -30,8 +30,6 @@ if $locations_cache.size > size
     size = $locations_cache.size + 30
 end
 
-puts size
-
 CSV.foreach(procedure_csv_path, :headers => true) do |row|
   cep = row[7]
   if not $locations_cache.key?(cep)
@@ -40,7 +38,7 @@ CSV.foreach(procedure_csv_path, :headers => true) do |row|
     sleep(2)
 
     if not location
-      locations_cache[cep] = location
+      $locations_cache[cep] = location
       next
     end
 
@@ -48,7 +46,6 @@ CSV.foreach(procedure_csv_path, :headers => true) do |row|
     $locations_cache[cep] = location
   end
 
-  puts $locations_cache.count
   if $locations_cache.count >= size
     write_json()
     size += 30
