@@ -14,7 +14,7 @@ class CreateProcedures < ActiveRecord::Migration[5.0]
       t.string :ethnicity
       t.float :long
       t.float :lat
-
+      t.integer :cnes_id
       t.timestamps
     end
   end

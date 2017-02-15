@@ -26,14 +26,13 @@ end
 
 print "\nProcedure"
 CSV.foreach(procedure_csv_path, :headers => true) do |row|
-
-  if locations.key?(row[7])
+  if locations.key?(row[7]) and locations[row[7]]
     location = locations[row[7]]
   else
     next
   end
 
-  Procedure.create!(date: row[1], age_code: row[2], age_number: row[3],
+  Procedure.create!(cnes_id: row[0], date: row[1], age_code: row[2], age_number: row[3],
                    gender: row[4], race: row[5], cep_patient: row[7],
                    different_district: row[8], cid_associated: row[10],
                    cid_primary: row[11], cid_secondary: row[12],
