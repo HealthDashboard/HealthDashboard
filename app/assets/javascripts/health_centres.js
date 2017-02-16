@@ -1,9 +1,9 @@
 var map;
 var info_boxes = [];
+var circles = []
 var info_box_opened;
 var cluster_status = false;
-var cluster = null;
-
+var markerCluster = null;
 
 function show_procedures(procedures)
 {
@@ -21,13 +21,27 @@ function show_procedures(procedures)
         });
   });
 
-  cluster = new MarkerClusterer(map, markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+ markerCluster = new MarkerClusterer(map, markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+ var radius = [1000, 5000, 10000];
+ var circle_color = ['#003300', '#ffff00', '#ff0000']
+
+ for(var i = 0; i<3; i++)
+ {
+  var circle = new google.maps.Circle({
+    map: map,
+    radius: radius[i],
+    fillColor: circle_color[i],
+  });
+    circle.bindTo('center', info_boxes[info_box_opened].marker, 'position');
+  circles.push(circle)
+ }
+
 }
 
 function initialize()
 {
-  var lat = -23.590298
-  var lng = -46.727993
+  var lat = -23.580562
+  var lng = -46.589796
   var latlng = new google.maps.LatLng(lat, lng);
 
   var options = {
@@ -98,10 +112,14 @@ function setup_cluster()
 function teardown_cluster()
 {
   markers_visible(true)
-  cluster.clearMarkers()
+  markerCluster.clearMarkers()
   info_boxes[info_box_opened].close()
   info_box_opened = -1
   cluster_status = false
+
+  $.each(circles, function(index, circle){
+	circle.setMap(null)
+  });
 }
 
 function add_info_to_marker(marker, point)
