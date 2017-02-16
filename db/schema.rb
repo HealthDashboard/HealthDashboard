@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170209132004) do
+ActiveRecord::Schema.define(version: 20170216115623) do
 
   create_table "health_centres", force: :cascade do |t|
     t.float    "long"
@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(version: 20170209132004) do
     t.integer  "cnes_id"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
+    t.float    "distance"
   end
 
 end

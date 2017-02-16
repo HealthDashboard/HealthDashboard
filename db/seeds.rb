@@ -39,3 +39,8 @@ CSV.foreach(procedure_csv_path, :headers => true) do |row|
                    ethnicity: row[13], lat: location['lat'], long: location['lng'])
   print '.'
 end
+
+Procedure.all.each do |a|
+  a.distance = a.calculate_distance
+  a.save!
+end
