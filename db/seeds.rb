@@ -40,7 +40,9 @@ CSV.foreach(procedure_csv_path, :headers => true) do |row|
   print '.'
 end
 
+print "\nCalculating procedure distance from associated health centre: "
 Procedure.all.each do |a|
   a.distance = a.calculate_distance
   a.save!
+  print '.'
 end
