@@ -4,26 +4,21 @@ var info_box_opened;
 var cluster_status = false;
 var cluster = null;
 
-var locations = [
-  {lat: -23.522787, lng: -46.490063},
-  {lat: -23.522787, lng: -46.490063},
-  {lat: -23.522787, lng: -46.490063},
-  {lat: -23.522787, lng: -46.490063},
-  {lat: -23.522787, lng: -46.490063},
-  {lat: -23.522787, lng: -46.490063},
-  {lat: -23.522787, lng: -46.490063},
-  {lat: -23.522787, lng: -46.490063},
-  {lat: -23.522787, lng: -46.490063},
-  {lat: -23.522787, lng: -46.490063},
-  {lat: -23.522787, lng: -46.490063},
-]
 
-function show_procedures()
+function show_procedures(procedures)
 {
-  var markers = locations.map(function(location, i) {
+  var markers = procedures.map(function(procedure, i) {
+    var lat = procedure.lat
+    var lng = procedure.long
+
     return new google.maps.Marker({
-      position: location,
-    });
+        position: new google.maps.LatLng(lat, lng),
+        icon: {
+                  path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                  strokeColor: "red",
+                  scale: 3
+                },
+        });
   });
 
   cluster = new MarkerClusterer(map, markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
@@ -31,8 +26,8 @@ function show_procedures()
 
 function initialize()
 {
-  var lat = -23.522787
-  var lng = -46.490063
+  var lat = -23.590298
+  var lng = -46.727993
   var latlng = new google.maps.LatLng(lat, lng);
 
   var options = {
@@ -47,8 +42,7 @@ function initialize()
 
 function load_all_points()
 {
-  $.getJSON('/points.json', function(points)
-  {
+  $.getJSON('/points.json', function(points) {
     $.each(points, function(index, point)
     {
       create_health_centre_marker(point)
@@ -72,6 +66,7 @@ function create_marker(point)
 
 function create_marker_text(point)
 {
+  var id = point.id
   return '<strong>Name:</strong> ' + point.name +
          '<br><strong>Beds:</strong> '+ point.beds +
          '<br><strong>Phone:</strong> ' + point.phone +
@@ -88,8 +83,14 @@ function show_clusters()
 
 function setup_cluster()
 {
+  var procedure_path = ["/procedures/", info_box_opened].join("");
+  console.log(procedure_path)
+
+  $.getJSON(procedure_path, function(procedures) {
+      show_procedures(procedures)
+  });
+
   markers_visible(false)
-  show_procedures();
   $('#cluster_info').text('Hide info')
   cluster_status = true
 }
@@ -117,6 +118,7 @@ function add_listener(marker, point)
   info_boxes[point.id].listener = google.maps.event.addListener(marker, 'click', function (e) {
             info_boxes[point.id].setContent(create_marker_text(point))
             open_info_box(point.id, marker);
+
         });
 }
 
