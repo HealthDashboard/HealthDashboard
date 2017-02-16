@@ -5,6 +5,8 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
+gem 'geokit-rails'
+
 # Install bootstrap
 gem 'bootstrap-sass'
 gem 'autoprefixer-rails'
