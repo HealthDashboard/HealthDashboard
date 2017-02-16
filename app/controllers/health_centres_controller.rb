@@ -7,4 +7,10 @@ class HealthCentresController < ApplicationController
         @health_centres_points = HealthCentre.all
         render json: @health_centres_points
     end
+
+    def procedures
+        @health_centre = HealthCentre.find_by(id: params[:id])
+        render json: @health_centre.procedures
+    end
+
 end
