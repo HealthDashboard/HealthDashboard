@@ -4,6 +4,7 @@ var circles = []
 var info_box_opened;
 var cluster_status = false;
 var markerCluster = null;
+var circle_color = ['#003300', '#ffff00', '#ff0000']
 
 function show_procedures(procedures)
 {
@@ -23,7 +24,6 @@ function show_procedures(procedures)
 
  markerCluster = new MarkerClusterer(map, markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
  var radius = [1000, 5000, 10000];
- var circle_color = ['#003300', '#ffff00', '#ff0000']
 
  for(var i = 0; i<3; i++)
  {
@@ -52,6 +52,8 @@ function initialize()
 
   map = new google.maps.Map(document.getElementById("map"), options);
   load_all_points();
+  populate_legend()
+  create_legend()
 }
 
 function load_all_points()
@@ -89,10 +91,13 @@ function create_marker_text(point)
 
 function show_clusters()
 {
-  if (cluster_status == false)
+  if (cluster_status == false){
     setup_cluster()
-  else
+    $('#legend').show()
+  }else{
     teardown_cluster()
+     $('#legend').hide()
+  }
 }
 
 function setup_cluster()
@@ -118,7 +123,7 @@ function teardown_cluster()
   cluster_status = false
 
   $.each(circles, function(index, circle){
-	circle.setMap(null)
+    circle.setMap(null)
   });
 }
 
@@ -160,5 +165,29 @@ function open_info_box(id, marker){
   }else{
     info_box_opened = -1
   }
+}
+
+function create_legend(){
+  map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push
+  (document.getElementById('legend'));
+}
+
+function populate_legend(){
+  styles = [{'name': '1 km', 'color': circle_color[0]},
+            {'name': '5 km', 'color': circle_color[1]},
+            {'name': '10 km', 'color': circle_color[2]}]
+
+  var $legend = $('#legend')
+  $.each(styles, function(index, style){
+    var div = document.createElement('div');
+    var br = document.createElement('br');
+    var div_name = document.createElement('div');
+    div_name.innerHTML = '<div class="name" style="margin-left: 30px;">'+style.name+'</div>'
+    div.innerHTML = '<div class="color" style="background-color:'+style.color+'"></div>'
+
+    $legend.append(div);
+    $legend.append(div_name);
+    $legend.append(br);
+  });
 }
 
