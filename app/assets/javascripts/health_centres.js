@@ -83,10 +83,11 @@ function create_marker(point)
 function create_marker_text(point)
 {
   var id = point.id
+  var button_label= (cluster_status == false)? 'Show Info':'Hide Info'
   return '<strong>Name:</strong> ' + point.name +
          '<br><strong>Beds:</strong> '+ point.beds +
          '<br><strong>Phone:</strong> ' + point.phone +
-         "<br><br><button type='button' id='cluster_info' onclick='show_clusters()'>Show Info</button>"
+         "<br><br><button type='button' id='cluster_info' onclick='show_clusters()'>"+button_label+"</button>"
 }
 
 function show_clusters()
