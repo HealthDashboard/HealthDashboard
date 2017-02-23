@@ -1,48 +1,39 @@
 require 'csv'
 require 'json'
 
-health_centre_csv_path = File.join(__dir__, "csv/estab_saude.csv")
-procedure_csv_path = File.join(__dir__, "csv/procedimentos.csv")
-locations_json_path = File.join(__dir__, "scripts/latlng.json")
-
-health_centres = []
-procedures = []
-
-if File.exists?(locations_json_path)
- file = File.read(locations_json_path)
- locations = JSON.parse(file)
-else
-  locations = {}
-end
+health_centre_csv_path = File.join(__dir__, "csv/health_centres.csv")
+specialties_csv_path = File.join(__dir__, "csv/specialties.csv")
+data_csv_path = File.join(__dir__, "csv/data.csv")
 
 puts "Seeding"
 print "HealthCentres: "
 CSV.foreach(health_centre_csv_path, :headers => true) do |row|
-  HealthCentre.create!(long: row[0], lat: row[1], cnes: row[5],
-                      name: row[3], beds: row[6], phone: row[4],
-                      census_district: row[2])
+  HealthCentre.create!(cnes: row[0], name: row[1], beds: row[2])
   print '.'
 end
 
-print "\nProcedure"
-CSV.foreach(procedure_csv_path, :headers => true) do |row|
-  if locations.key?(row[7]) and locations[row[7]]
-    location = locations[row[7]]
-  else
-    next
+if Specialty.count == 0 
+ print "Specialties: "
+ CSV.foreach(specialties_csv_path, :headers => false) do |row|
+   Specialty.create!(id: row[0], name: row[1])
+   print '.'
+ end
+end
+
+print "Procedures and update HealthCentres: "
+CSV.foreach(data_csv_path, :headers => true) do |row|
+  specialty_id = row[11].to_i
+  if specialty_id < 10
+   p = Procedure.create!(cnes_id: row[6], specialty_id: specialty_id, date: row[8], gender: row[2],
+                     different_district: row[12], lat: row[0], long: row[1])
+   p.cnes.update! lat: row[4], long: row[5]
+   print '.'
   end
-
-  Procedure.create!(cnes_id: row[0], date: row[1], age_code: row[2], age_number: row[3],
-                   gender: row[4], race: row[5], cep_patient: row[7],
-                   different_district: row[8], cid_associated: row[10],
-                   cid_primary: row[11], cid_secondary: row[12],
-                   ethnicity: row[13], lat: location['lat'], long: location['lng'])
-  print '.'
 end
-
-print "\nCalculating procedure distance from associated health centre: "
-Procedure.all.each do |a|
-  a.distance = a.calculate_distance
-  a.save!
-  print '.'
-end
+#
+#print "\nCalculating procedure distance from associated health centre: "
+#Procedure.all.each do |a|
+#  a.distance = a.calculate_distance
+#  a.save!
+#  print '.'
+#end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170216115623) do
+ActiveRecord::Schema.define(version: 20170221204744) do
 
   create_table "health_centres", force: :cascade do |t|
     t.float    "long"
@@ -42,6 +42,14 @@ ActiveRecord::Schema.define(version: 20170216115623) do
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
     t.float    "distance"
+    t.integer  "specialty_id"
+    t.index ["specialty_id"], name: "index_procedures_on_specialty_id"
+  end
+
+  create_table "specialties", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end
