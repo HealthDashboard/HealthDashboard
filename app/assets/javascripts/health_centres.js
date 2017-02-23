@@ -4,7 +4,7 @@ var circles = []
 var info_box_opened;
 var cluster_status = false;
 var markerCluster = null;
-var circle_color = ['#003300', '#15ff00', '#ff0000']
+var colors = ['#003300', '#15ff00', '#ff0000', "#f5b979" , "#13f1e8" ,  "#615ac7", "#8e3a06", "#b769ab", "#df10eb"]
 
 function show_procedures(procedures)
 {
@@ -56,7 +56,7 @@ function show_procedures(procedures)
   var circle = new google.maps.Circle({
     map: map,
     radius: radius[i],
-    fillColor: circle_color[i],
+    fillColor: colors[i],
   });
     circle.bindTo('center', info_boxes[info_box_opened].marker, 'position');
   circles.push(circle)
@@ -80,6 +80,7 @@ function initialize()
   load_all_points();
   populate_legend()
   create_legend()
+  create_chart()
 }
 
 function load_all_points()
@@ -112,8 +113,8 @@ function create_marker_text(point)
   var button_label= (cluster_status == false)? 'Show Info':'Hide Info'
   return '<strong>Name:</strong> ' + point.name +
          '<br><strong>Beds:</strong> '+ point.beds +
-         '<br><strong>Phone:</strong> ' + point.phone +
-         "<br><br><button type='button' id='cluster_info' onclick='show_clusters()'>"+button_label+"</button>"
+         "<br><br><button type='button' id='cluster_info' class='btn btn-info btn-sm' onclick='show_clusters()'>"+button_label+"</button>"+
+         '<button type="button" class="btn btn-info btn-sm pull-right" data-toggle="modal" onclick="update_chart()" data-target="#myModal">Analytics</button>'
 }
 
 function show_clusters()
@@ -200,9 +201,9 @@ function create_legend(){
 }
 
 function populate_legend(){
-  styles = [{'name': '1 km', 'color': circle_color[2]},
-            {'name': '5 km', 'color': circle_color[1]},
-            {'name': '10 km', 'color': circle_color[0]}]
+  styles = [{'name': '1 km', 'color': colors[2]},
+            {'name': '5 km', 'color': colors[1]},
+            {'name': '10 km', 'color': colors[0]}]
 
   var $legend = $('#legend')
   $.each(styles, function(index, style){
@@ -216,5 +217,44 @@ function populate_legend(){
     $legend.append(div_name);
     $legend.append(br);
   });
+}
+
+function create_chart(){
+  google.charts.load("current", {packages:["corechart"]});
+  google.charts.setOnLoadCallback(update_chart);
+}
+
+function update_chart(){
+  specialty_path = ["specialties/", info_box_opened].join("")
+  $.getJSON(specialty_path, function(specialties) {
+    var values = []
+    var i = 0
+    $.each(specialties, function(name, number)
+    {
+      values.push([name, number, colors[i]])
+      i+=1
+    });
+    var header = ["Elementos", "Número de Procedimentos", { role: "style" } ]
+
+    values.unshift(header)
+    var data = google.visualization.arrayToDataTable(values);
+
+    var view = new google.visualization.DataView(data);
+    view.setColumns([0, 1,
+                    { calc: "stringify",
+                        sourceColumn: 1,
+                        type: "string",
+                        role: "annotation" },
+                    2]);
+
+    var options = {
+        bar: {groupWidth: "70%"},
+        legend: { position: "none" },
+    };
+
+    var chart = new google.visualization.BarChart(document.getElementById("chart_div"));
+    chart.draw(view, options);
+  });
+
 }
 
