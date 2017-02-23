@@ -48,8 +48,8 @@ function show_procedures(procedures)
    zoomOnClick: false,
    minimumClusterSize: 2};
 
- markerCluster = new MarkerClusterer( map, markers, options);
- var radius = [10000, 5000, 1000];
+ markerCluster = new MarkerClusterer(map, markers, options);
+ var radius = [20000, 10000, 5000];
 
  for(var i = 0; i<3; i++)
  {
@@ -57,6 +57,7 @@ function show_procedures(procedures)
     map: map,
     radius: radius[i],
     fillColor: colors[i],
+    fillOpacity: 0.09,
   });
     circle.bindTo('center', info_boxes[info_box_opened].marker, 'position');
   circles.push(circle)
@@ -66,8 +67,8 @@ function show_procedures(procedures)
 
 function initialize()
 {
-  var lat = -23.580562
-  var lng = -46.589796
+  var lat = -23.557296000000001
+  var lng = -46.669210999999997
   var latlng = new google.maps.LatLng(lat, lng);
 
   var options = {
@@ -95,15 +96,16 @@ function load_all_points()
 
 function create_health_centre_marker(point)
 {
-  var marker = create_marker(point)
+  var marker = create_marker(point, 'health_centre_icon.png')
   add_info_to_marker(marker, point)
 }
 
-function create_marker(point)
+function create_marker(point, icon_path)
 {
   return new google.maps.Marker({
       position: new google.maps.LatLng(point.lat, point.long),
-      map: map
+      map: map,
+      icon: icon_path
   });
 }
 
@@ -131,7 +133,6 @@ function show_clusters()
 function setup_cluster()
 {
   var procedure_path = ["/procedures/", info_box_opened].join("");
-  console.log(procedure_path)
 
   $.getJSON(procedure_path, function(procedures) {
       show_procedures(procedures)
