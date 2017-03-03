@@ -32,4 +32,11 @@ class HealthCentresController < ApplicationController
         end
         render json: result
     end
+
+    # GET /procedures_specialties/:id
+    def procedures_specialties
+        procedures = Procedure.where(specialty_id: params[:id])
+        render json: procedures
+    end
+
 end

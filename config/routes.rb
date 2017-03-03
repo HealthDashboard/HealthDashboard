@@ -3,4 +3,5 @@ Rails.application.routes.draw do
 	get 'points', to: 'health_centres#points'
 	get 'procedures/:id', to: 'health_centres#procedures'
 	get 'specialties/:id', to: 'health_centres#specialties'
+	get 'procedures_specialties/:id', to: 'health_centres#procedures_specialties'
 end
