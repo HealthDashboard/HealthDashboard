@@ -39,4 +39,13 @@ class HealthCentresController < ApplicationController
         render json: procedures
     end
 
+    # GET /health_centre_specialty/:hc_id/:spec_id
+    def health_centre_specialty
+        health_centre = HealthCentre.find_by(id: params[:hc_id])
+        procedures = health_centre.procedures
+
+        procedures_specialties = procedures.where(specialty_id: params[:spec_id])
+        render json: procedures_specialties
+    end
+
 end
