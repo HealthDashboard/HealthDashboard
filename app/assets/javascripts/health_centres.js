@@ -1,7 +1,7 @@
 var map;
 var info_boxes = [];
 var circles = []
-var info_box_opened;
+var info_box_opened = 1;
 var cluster_status = false;
 var markerCluster = null;
 var colors = ['#003300', '#15ff00', '#ff0000', "#f5b979" , "#13f1e8" ,  "#615ac7", "#8e3a06", "#b769ab", "#df10eb"]
@@ -221,12 +221,11 @@ function populate_legend(){
 }
 
 function create_chart(){
-  google.charts.load("current", {packages:["corechart"]});
   google.charts.setOnLoadCallback(update_chart);
 }
 
 function update_chart(){
-  specialty_path = ["specialties/", info_box_opened].join("")
+  var specialty_path = ["specialties/", info_box_opened].join("")
   $.getJSON(specialty_path, function(specialties) {
     var values = []
     var i = 0
@@ -256,6 +255,5 @@ function update_chart(){
     var chart = new google.visualization.BarChart(document.getElementById("chart_div"));
     chart.draw(view, options);
   });
-
 }
 

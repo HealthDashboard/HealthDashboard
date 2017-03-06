@@ -45,6 +45,18 @@ class HealthCentresController < ApplicationController
         render json: result
     end
 
+    # GET /specialties_procedure_distance_average
+    def specialties_procedure_distance_average
+      result = {}
+
+      for spec_id in 1..9
+        distance_average = (Procedure.where(specialty_id: spec_id).average(:distance) or 0.0)
+        result[ Specialty.find(spec_id).name] = distance_average.round(2)
+      end
+
+      render json: result
+    end
+
     # GET /procedures_specialties/:id
     def procedures_specialties
         procedures = Procedure.where(specialty_id: params[:id])
