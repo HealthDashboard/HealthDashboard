@@ -18,6 +18,29 @@ var specialties_color = {
 
 function init_dashboard_chart(){
   google.charts.setOnLoadCallback(create_dashboard_charts);
+  dashboard_legend()
+  animate_legend()
+}
+
+var dashboard_legend_clicked = false;
+function animate_legend(){
+  $dashboard = $("#dashboard_legend")
+  $arrow = $("#dashboard_legend .glyphicon-chevron-up")
+  $("#dashboard_legend .dashboard-header").click(function(){
+    var options = {}
+    if (!dashboard_legend_clicked){
+      options = {top: '-=200px'}
+      dashboard_legend_clicked = true
+      $arrow.addClass('glyphicon-chevron-down')
+      $arrow.removeClass('glyphicon-chevron-up')
+    }else{
+      options = {top: '+=200px'}
+      dashboard_legend_clicked = false
+      $arrow.addClass('glyphicon-chevron-up')
+      $arrow.removeClass('glyphicon-chevron-down')
+    }
+    $dashboard.animate(options);
+  });
 }
 
 function create_dashboard_charts() {
@@ -30,8 +53,10 @@ function create_procedures_per_specialties() {
   var chart = new google.visualization.PieChart(document.getElementById("chart_specialties"));
 
   var options = {
+    title:'% de procedimentos por especialidades',
     slices: get_color_slice(),
     legend: { position: 'none' },
+    is3D: true,
   };
 
   var specialty_path = "specialties_count"
@@ -62,6 +87,7 @@ function create_specialties_distance_between_patients_hospital() {
   var header = ["Especialidades", "Distância Média Percorrida", { role: "style" } ]
   var chart = new google.visualization.BarChart(document.getElementById("chart_spec_distance_average"));
   var options = {
+    title: "Distância média de procedimentos por especialidade",
     vAxis: { textPosition: 'none' },
     legend: { position: 'none' },
   };
@@ -89,4 +115,34 @@ function draw_chart(header, data, chart, options){
                       role: "annotation" },
                   2]);
   chart.draw(view, options);
+}
+
+function dashboard_legend(){
+  text = ""
+  dashboard = $('#dashboard_legend p')
+  $.each(specialties_color, function(name, color){
+    dashboard.append('<div style="float: left;background:'+color+';width:20px; height: 20px;margin-left: 2px;margin-right: 20px;"></div><div class="pull-left">'+name+'</div><br>')
+  });
+}
+
+
+
+function update_rank(){
+  $.getJSON('rank_health_centres', create_table_rank);
+}
+
+function create_table_rank(data){
+  rank_table = $('.health_centres_rank tbody')
+
+  rows = ""
+  index = 1
+  $.each(data, function(name, n_procedures){
+   if (index%2){
+    rows += "<tr class='bg-success'>"
+   }else{
+    rows += "<tr>"
+   }
+   rows += " <th scope=\"row\">"+(index++)+"</th><td>"+name+"</td> <td>"+n_procedures+"</td></tr>"
+  })
+  rank_table.html(rows)
 }

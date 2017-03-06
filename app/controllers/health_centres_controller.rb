@@ -57,6 +57,20 @@ class HealthCentresController < ApplicationController
       render json: result
     end
 
+    # GET /rank_health_centres
+    def rank_health_centres
+      health_centres = HealthCentre.all.to_a
+      health_centres.sort! { |first, second|  first.procedures.count <=> second.procedures.count }
+      result = {}
+
+      health_centres.reverse.each_with_index do |health_centre, index|
+        break if index == 10
+        puts health_centre.name, health_centre.procedures.count
+        result[health_centre.name] = health_centre.procedures.count
+      end
+      render json: result
+    end
+
     # GET /procedures_specialties/:id
     def procedures_specialties
         procedures = Procedure.where(specialty_id: params[:id])
