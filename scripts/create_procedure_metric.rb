@@ -27,9 +27,13 @@ end
 
 def infer_all_health_centre_specialty(health_centres, health_centres_specialties)
   health_centres.each do |health_centre|
+    next if health_centre.specialties != []
+
     puts("Infering specialties for #{health_centre.name} ...")
     health_centres_specialties[health_centre.id] = Set.new []
     infer_health_centre_specialty(health_centre, health_centres_specialties)
+    health_centre.specialties = health_centres_specialties[id].to_a
+    health_centre.save()
   end
 end
 
