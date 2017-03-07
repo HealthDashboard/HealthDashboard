@@ -2,6 +2,7 @@ require 'csv'
 require 'json'
 
 health_centre_csv_path = File.join(__dir__, "csv/health_centres.csv")
+health_centre_types_csv_path = File.join(__dir__, "csv/health_centres_types.csv")
 specialties_csv_path = File.join(__dir__, "csv/specialties.csv")
 types_csv_path = File.join(__dir__, "csv/type.csv")
 data_csv_path = File.join(__dir__, "csv/data.csv")
@@ -29,6 +30,14 @@ if Type.count == 0
    Type.create!(id: row[0], name: row[1])
    print '.'
  end
+end
+puts ""
+
+print "Create association between HealthCentres and Types: "
+CSV.foreach(health_centre_types_csv_path, :headers => false) do |row|
+  type = Type.find_by(id: row[1])
+  HealthCentre.find_by(cnes: row[0]).types << type
+  print '.'
 end
 puts ""
 
