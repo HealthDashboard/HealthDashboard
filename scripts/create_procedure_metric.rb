@@ -37,8 +37,6 @@ end
 
 def infer_all_health_centre_specialty(health_centres, health_centres_specialties)
   health_centres.each do |health_centre|
-    next if health_centre.specialties != []
-
     puts("Infering specialties for #{health_centre.name} ...")
     health_centres_specialties[health_centre.id] = Set.new []
     infer_health_centre_specialty(health_centre, health_centres_specialties)
@@ -83,7 +81,7 @@ def get_number_of_closest_health_centres_procedures_by_health_centre(health_cent
     procedures.each do |procedure|
       smaller_dist = procedure.calculate_distance
       health_centres.each do |hc|
-        next if hc.id == id
+        next if procedure.cnes.id == id
         next if not health_centres_specialties[hc.id].include?(procedure.specialty.id)
 
         dist = Geocoder::Calculations.distance_between([procedure.lat, procedure.long], [hc.lat, hc.long])
