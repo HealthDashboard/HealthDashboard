@@ -11,6 +11,7 @@ Rails.application.require_environment!
 
 
 NUMBER_OF_SPECIALTIES = 9
+$global_specialties = []
 
 
 def infer_health_centre_specialty(health_centre, health_centres_specialties)
@@ -25,6 +26,15 @@ def infer_health_centre_specialty(health_centre, health_centres_specialties)
   end
 end
 
+def get_specialties_array(specialties_set)
+  specialties_array = []
+  specialties_set.each do |id|
+    specialties_array.push($global_specialties[id])
+  end
+
+  return specialties_array
+end
+
 def infer_all_health_centre_specialty(health_centres, health_centres_specialties)
   health_centres.each do |health_centre|
     next if health_centre.specialties != []
@@ -32,7 +42,8 @@ def infer_all_health_centre_specialty(health_centres, health_centres_specialties
     puts("Infering specialties for #{health_centre.name} ...")
     health_centres_specialties[health_centre.id] = Set.new []
     infer_health_centre_specialty(health_centre, health_centres_specialties)
-    health_centre.specialties = health_centres_specialties[id].to_a
+    specialties_array = get_specialties_array(health_centres_specialties[health_centre.id])
+    health_centre.specialties = specialties_array
     health_centre.save()
   end
 end
@@ -88,10 +99,19 @@ def get_number_of_closest_health_centres_procedures_by_health_centre(health_cent
   return health_centre_count
 end
 
+def generate_global_specialties()
+  $global_specialties.push(-1)
+  for i in 1..9
+    $global_specialties.push(Specialty.find_by(id: i))
+  end
+end
+
 def main()
   health_centres = HealthCentre.all[1..10]
   procedures = [Procedure.last, Procedure.first]
   health_centres_specialties = {} 
+
+  generate_global_specialties()
 
   puts('Infering all health centre specialties')
   infer_all_health_centre_specialty(health_centres, health_centres_specialties)
