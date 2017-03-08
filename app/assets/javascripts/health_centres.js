@@ -221,7 +221,12 @@ function populate_legend(){
 }
 
 function create_chart(){
-  google.charts.setOnLoadCallback(update_chart);
+  google.charts.setOnLoadCallback(create_homepage_charts);
+}
+
+function create_homepage_charts(){
+  update_chart()
+  create_right_graph()
 }
 
 function update_chart(){
@@ -257,3 +262,15 @@ function update_chart(){
   });
 }
 
+function create_right_graph(){
+  //TODO: do the right graph, this one is just for some tests :)
+  var header = ["Especialidades", "Número de Procedimentos", { role: "style" } ]
+  var chart = new google.visualization.PieChart(document.getElementById("general-right-graph"));
+
+  var options = {
+    legend: 'none',
+  };
+
+  var specialty_path = "specialties_count"
+  $.getJSON(specialty_path, function(data){ draw_chart(header, data, chart, options) });
+}
