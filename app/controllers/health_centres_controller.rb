@@ -66,21 +66,35 @@ class HealthCentresController < ApplicationController
         procedures = health_centre.procedures
 
         distances = Hash.new(0)
+        distances_by_specialty = {}
+
+        for i in 1..9
+            distances_by_specialty[i] = Hash.new(0)
+        end
+
         labels = ['1', '5', '10', '10+']
 
         procedures.each do |procedure|
+            specialty = procedure.specialty.id
+
             if procedure.distance <= 1
                 distances[labels[0]] += 1
+                distances_by_specialty[specialty][labels[0]] += 1
             elsif procedure.distance <= 5
                 distances[labels[1]] += 1
+                distances_by_specialty[specialty][labels[1]] += 1
             elsif procedure.distance <= 10
                 distances[labels[2]] += 1
+                distances_by_specialty[specialty][labels[2]] += 1
             else
                 distances[labels[3]] += 1
+                distances_by_specialty[specialty][labels[3]] += 1
             end
         end
 
-        render json: distances
+        total_info = {'distances': distances, 'specialty': distances_by_specialty}
+
+        render json: total_info
     end
 
 end
