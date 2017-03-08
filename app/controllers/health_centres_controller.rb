@@ -60,4 +60,27 @@ class HealthCentresController < ApplicationController
         render json: procedures_specialties
     end
 
+    # GET /distances/:id
+    def distances
+        health_centre = HealthCentre.find_by(id: params[:id])
+        procedures = health_centre.procedures
+
+        distances = Hash.new(0)
+        labels = ['1', '5', '10', '10+']
+
+        procedures.each do |procedure|
+            if procedure.distance <= 1
+                distances[labels[0]] += 1
+            elsif procedure.distance <= 5
+                distances[labels[1]] += 1
+            elsif procedure.distance <= 10
+                distances[labels[2]] += 1
+            else
+                distances[labels[3]] += 1
+            end
+        end
+
+        render json: distances
+    end
+
 end

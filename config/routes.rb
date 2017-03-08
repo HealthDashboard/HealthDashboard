@@ -6,4 +6,5 @@ Rails.application.routes.draw do
 	get 'procedures_specialties/:id', to: 'health_centres#procedures_specialties'
 	get 'health_centre_specialty/:hc_id/:spec_id', to: 'health_centres#health_centre_specialty'
 	get 'specialties_count', to: 'health_centres#specialties_count'
+	get 'distances/:id', to: 'health_centres#distances'
 end
