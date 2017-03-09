@@ -112,6 +112,7 @@ function draw_chart(header, data, chart, options, color){
                       type: "string",
                       role: "annotation" },
                   2]);
+
   chart.draw(view, options);
 }
 

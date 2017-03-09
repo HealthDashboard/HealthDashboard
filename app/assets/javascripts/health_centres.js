@@ -227,6 +227,8 @@ function create_chart(){
 function create_homepage_charts(){
   update_chart()
   create_right_graph()
+  create_bottom_graphs("bt-graph1")
+  create_bottom_graphs("bt-graph2")
 }
 
 function update_chart(){
@@ -271,7 +273,7 @@ function create_right_graph(){
     title: "",
     pieHole: 0.8,
     pieSliceBorderColor: "none",
-    colors: colors ,
+    colors: ['green', 'yellow', 'orange', 'red'] ,
     legend: {position: 'none'},
     pieSliceText: "none",
   };
@@ -282,6 +284,47 @@ function create_right_graph(){
     update_right_graph_text(data)
   });
 }
+
+
+function create_bottom_graphs(id){
+  var chart = new google.visualization.BarChart(document.getElementById(id));
+
+  var header = ['Genre', 'Fantasy & Sci Fi', 'Romance', 'Mystery/Crime', 'General', { role: 'annotation' } ]
+
+  var data = [
+        ['pediatria', 10, 24, 20, 32, ''],
+        ['ginecologia', 16, 22, 23, 30, ''],
+        ['oftalmologia', 28, 19, 29, 30,  ''],
+        ['nefrologia', 16, 22, 23, 30, ''],
+        ['clinica geral', 28, 19, 29, 30,  '']
+      ]
+  var options = {
+        height :200,
+        legend: { position: 'none'},
+        isStacked: 'percent',
+        hAxis: { minValue: 0,
+              ticks: [0,.2,.4,.6,.8,1]
+        },
+        bar: { groupWidth: '35%' },
+        series: {
+            0:{color:'green'},
+            1:{color:'yellow'},
+            2:{color:'orange'},
+            3:{color:'red'},
+          }
+      };
+  draw_bottom_graph(header, data, chart, options)
+}
+
+function draw_bottom_graph(header, data, chart, options){
+  var values = data
+
+  values.unshift(header)
+  var data = google.visualization.arrayToDataTable(values);
+  var view = new google.visualization.DataView(data);
+  chart.draw(view, options);
+}
+
 
 function update_right_graph_text(data){
   var $graph_text1 = $('#labelOverlay .n_procedures')
