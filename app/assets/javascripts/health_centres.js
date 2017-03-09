@@ -263,14 +263,33 @@ function update_chart(){
 }
 
 function create_right_graph(){
-  //TODO: do the right graph, this one is just for some tests :)
   var header = ["Especialidades", "Número de Procedimentos", { role: "style" } ]
   var chart = new google.visualization.PieChart(document.getElementById("general-right-graph"));
-
   var options = {
-    legend: 'none',
+    width: 300,
+    height: 300,
+    title: "",
+    pieHole: 0.8,
+    pieSliceBorderColor: "none",
+    colors: colors ,
+    legend: {position: 'none'},
+    pieSliceText: "none",
   };
-
   var specialty_path = "specialties_count"
-  $.getJSON(specialty_path, function(data){ draw_chart(header, data, chart, options) });
+
+  $.getJSON(specialty_path, function(data){
+    draw_chart(header, data, chart, options)
+    update_right_graph_text(data)
+  });
+}
+
+function update_right_graph_text(data){
+  var $graph_text1 = $('#labelOverlay .n_procedures')
+  var $graph_text2 = $('#labelOverlay .atendimentos')
+  sum = 0
+  $.each(data,function(key, value) {
+    sum += parseInt(value);
+  });
+  $graph_text1.html(sum)
+  $graph_text2.html("Procedimentos")
 }

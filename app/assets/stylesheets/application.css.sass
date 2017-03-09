@@ -1,24 +1,15 @@
 @import "bootstrap-sprockets"
 @import "bootstrap"
 
-#map
+.map-wrapper
     position: absolute
     height: 60%
-    width: 80%
-    left: 0
 
-#margin-bottom
-    position: absolute
-    height: 30%
-    width: 80%
-    left: 0
-    bottom: 0
-
-#margin-right
+#map
     position: absolute
     height: 100%
-    width: 20%
-    right: 0
+    width: 100%
+    left: 0
 
 .navbar-inverse
     background-color: rgba(0, 0, 0, .7)
@@ -50,7 +41,6 @@
     width: auto
     height: 10px
 
-
 #dashboard_legend
     border: 2px solid black
     position: fixed
@@ -72,3 +62,68 @@
 
 .navbar-inverse .navbar-nav > li > a
     color: white
+
+#labelOverlay
+    width: 80%
+    position: absolute
+    top: 43%
+    left: 10%
+    text-align: center
+    cursor: default
+
+#labelOverlay p.n_procedures
+    line-height: 0.5
+    font-size: 20pt
+    color: #8e8e8e
+    width: 100%
+
+#labelOverlay p.atendimentos
+    line-height: 0.5
+    font-size: 12pt
+    color: #cdcdcd
+    width: 100%
+
+#distance-legend
+    width:  80%
+    height:  50px
+    position: relative
+    top:  0%
+    right: -15%
+
+#distance-legend .color,
+    float: left
+    height: 20px
+    width: 20px
+    border-style: double
+
+#distance-legend .item
+    margin-bottom: -7px
+
+#distance-legend .text
+    margin-left: 30px
+
+#distance-legend .color.lt-1km
+    background-color: blue
+
+#distance-legend .color.lg-1km-lt-5
+    background-color: orange
+
+#distance-legend .color.lg-5km-lt-10
+    background-color: gray
+
+#distance-legend .color.lg-10km
+    background-color: yellow
+
+#metric-board
+    width: 100%
+    height: 35%
+    padding: 20px
+
+#metric-board #text
+    font-size: 16pt
+    text-align: center
+
+#metric-board #value
+    font-size: 42pt
+    text-align: center
+    font-weight: bold
