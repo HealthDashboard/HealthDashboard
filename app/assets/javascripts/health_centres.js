@@ -229,6 +229,7 @@ function create_homepage_charts(){
   create_right_graph()
   create_bottom_graphs("bt-graph1")
   create_bottom_graphs("bt-graph2")
+  update_procedures_metric()
 }
 
 function update_chart(){
@@ -277,7 +278,7 @@ function create_right_graph(){
     legend: {position: 'none'},
     pieSliceText: "none",
   };
-  var specialty_path = "specialties_count"
+  var specialty_path = "distance_metric.json"
 
   $.getJSON(specialty_path, function(data){
     draw_chart(header, data, chart, options)
@@ -335,4 +336,12 @@ function update_right_graph_text(data){
   });
   $graph_text1.html(sum)
   $graph_text2.html("Procedimentos")
+}
+
+function update_procedures_metric(value){
+  var $html = $("#metric-board #value")
+
+  $.getJSON('metrics.json', function(data){
+    $html.html(data.count)
+  });
 }

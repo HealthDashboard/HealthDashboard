@@ -56,6 +56,14 @@ def count_closest_health_centres(procedures, health_centres_specialties, health_
     health_centres.each do |health_centre|
       id = health_centre.id
       next if procedure.cnes.id == id
+      flag = false
+      procedure.cnes.types.each do |type|
+        health_centre.types.each do |type_hc|
+          flag = true if type.id == type_hc.id
+          break if flag
+        end
+      end
+      next if not flag
       next if not health_centres_specialties[id].include?(procedure.specialty.id)
 
       dist = Geocoder::Calculations.distance_between([procedure.lat, procedure.long], [health_centre.lat, health_centre.long])
@@ -105,8 +113,8 @@ def generate_global_specialties()
 end
 
 def main()
-  health_centres = HealthCentre.all[1..10]
-  procedures = [Procedure.last, Procedure.first]
+  health_centres = HealthCentre.all
+  procedures = Procedure.all #[Procedure.last, Procedure.first]
   health_centres_specialties = {} 
 
   generate_global_specialties()
@@ -126,7 +134,7 @@ def main()
   metric = {'count': count, 'health_centre_count': health_centre_count}
 
   puts('Save json file with results')
-  fJson = File.open("metrics.json","w")
+  fJson = File.open("public/metrics.json","w")
   fJson.write(metric.to_json)
   fJson.close()
 
