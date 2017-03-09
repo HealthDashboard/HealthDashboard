@@ -1,10 +1,38 @@
-<div id='map'></div>
-<div id='margin-bottom'></div>
-<div id='margin-right'>
-  <div id='general-right-graph'></div>
-  <div>Text cames here!!!</div>
+<!--<div id='map'>teste</div>-->
+<div class='map-wrapper col-md-9 col-sm-9'>
+  <div id='map'></div>
 </div>
-<div id="legend"><h3>Distances</h3></div>
+
+<div class='col-sm-3 col-md-3 pull-right '>
+  <div class='row'>
+    <div id='general-right-graph'></div>
+    <div id="labelOverlay">
+        <p class="n_procedures"></p>
+        <p class="atendimentos"></p>
+    </div>
+  </div>
+
+  <div class='row'>
+    <div id='distance-legend'>
+        <div class='item'> <div class="color lt-1km"></div><p class="text">&lt; 1 km</p> </div>
+        <div class='item'> <div class="color lg-1km-lt-5"></div><p class="text">&gt; 1 km e &lt; 5 km</p> </div>
+        <div class='item'> <div class="color lg-5km-lt-10"></div><p class="text">&gt; 5 km e &lt; 10 km</p> </div>
+        <div class='item'> <div class="color lg-10km"></div><p class="text">&gt; 10 km</p> </div>
+    </div>
+  </div>
+
+  <div class='row'>
+    <div id="metric-board">
+      <h1 id='value'>20</h1>
+      <p  id='text'>Procedimentos poderiam ser atendidos mais perto de sua cidade.</p>
+    </div>
+   </div>
+
+</div>
+
+<div id='col-md-9 col-sm-9'>
+
+</div>
 
 <!-- Modal -->
 <div id="myModal" class="modal fade" role="dialog">
@@ -25,6 +53,8 @@
     </div>
   </div>
 </div>
+
+<div id="legend"><h3>Distances</h3></div>
 
 <script>
   $(document).ready(initialize)
