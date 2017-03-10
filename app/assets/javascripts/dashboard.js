@@ -1,5 +1,3 @@
-console.log('dashboard')
-
 $(document).ready(function(){
   google.charts.load("current", {packages:["corechart"]});
 })
@@ -60,7 +58,7 @@ function create_procedures_per_specialties() {
   };
 
   var specialty_path = "specialties_count"
-  $.getJSON(specialty_path, function(data){ draw_chart(header, data, chart, options) });
+  $.getJSON(specialty_path, function(data){ draw_chart(header, data, chart, options, specialties_color) });
 }
 
 function get_color_slice(){
@@ -92,15 +90,15 @@ function create_specialties_distance_between_patients_hospital() {
     legend: { position: 'none' },
   };
   var distance_average_path = 'specialties_procedure_distance_average'
-  $.getJSON(distance_average_path, function(data){ draw_chart(header, data, chart, options)});
+  $.getJSON(distance_average_path, function(data){ draw_chart(header, data, chart, options, specialties_color)});
 }
 
 
-function draw_chart(header, data, chart, options){
+function draw_chart(header, data, chart, options, color){
   var values = []
   $.each(data, function(name, number)
   {
-    values.push([name, parseFloat(number), specialties_color[name]])
+    values.push([name, parseFloat(number), color[name]])
   });
 
   values.unshift(header)
