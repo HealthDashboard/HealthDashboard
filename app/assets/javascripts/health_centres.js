@@ -205,8 +205,7 @@ function open_info_box(id, marker){
 }
 
 function create_legend(){
-  map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push
-  (document.getElementById('legend'));
+  map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(document.getElementById('legend'));
 }
 
 function populate_legend(){

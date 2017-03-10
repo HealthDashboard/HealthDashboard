@@ -1,5 +1,3 @@
-console.log('health filter')
-
 function initialize_health_centre_filter()
 {
   var lat = -23.557296000000001
@@ -26,6 +24,9 @@ function load_health_centre_filtered()
       info_boxes[point.id].marker.setVisible(false)
     });
   });
+
+  create_legend()
+  populate_legend()
 }
 
 function create_health_centre_info_box_text(point){
@@ -66,6 +67,8 @@ function filter_by(health_centre_id, specialty_id){
   teardown_circles()
   create_circles(info_boxes[info_box_opened].marker)
   show_procedures_filtered(health_centre_id, specialty_id)
+  show_legend()
+  map.setZoom(11)
 }
 
 function teardown_health_centre(){
@@ -84,3 +87,6 @@ function show_procedures_filtered(health_centre_id, specialty_id){
   });
 }
 
+function show_legend(){
+  $('#legend').show()
+}
