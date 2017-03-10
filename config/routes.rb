@@ -12,4 +12,5 @@ Rails.application.routes.draw do
   get '/rank_health_centres', to: 'health_centres#rank_health_centres'
 
   get 'dashboard', to: 'dashboard#index'
+  get 'specialties', to: 'specialties#index'
 end
