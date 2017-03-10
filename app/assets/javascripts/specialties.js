@@ -3,15 +3,15 @@ $(document).ready(function(){
 })
 
 var types_color = {
- "1":'#003300',
- "2":'#15ff00',
- "3":'#ff0000',
- "4":"#f5b979",
- "5":"#13f1e8",
- "6":"#615ac7",
- "7":"#8e3a06",
- "8":"#b769ab",
- "9": "#df10eb"
+ "AMBULATORIOS ESPECIALIZADOS":'#003300',
+ "APOIO DIAGNOSTICO":'#15ff00',
+ "SAUDE MENTAL":'#ff0000',
+ "VIGILANCIA EM SAUDE":"#f5b979",
+ "UBS":"#13f1e8",
+ "URGENCIA/ EMERGENCIA":"#615ac7",
+ "HOSPITAL":"#8e3a06",
+ "UNIDADES DST/AIDS":"#b769ab",
+ "OUTROS ESTABELECIMENTOS E SERVIÇOS ESPECIALIZADOS": "#df10eb"
 }
 
 var specialty_divs = [
@@ -28,6 +28,7 @@ var specialty_divs = [
 ]
 
 var specialties_name = [
+ "DUMMY",
  "CIRURGIA",
  "OBSTETRECIA",
  "CLINICA MEDIA",
@@ -37,6 +38,18 @@ var specialties_name = [
  "PEDIATRIA",
  "REABILITACAO",
  "PSIQUIATRIA EM HOSPITAL DIA"
+]
+
+var types_name = [
+ "AMBULATORIOS ESPECIALIZADOS",
+ "APOIO DIAGNOSTICO",
+ "SAUDE MENTAL",
+ "VIGILANCIA EM SAUDE",
+ "UBS",
+ "URGENCIA/ EMERGENCIA",
+ "HOSPITAL",
+ "UNIDADES DST/AIDS",
+ "OUTROS ESTABELECIMENTOS E SERVIÇOS ESPECIALIZADOS"
 ]
 
 function init_specialties_chart(){
@@ -60,5 +73,11 @@ function create_specialty_chart(index, specialty){
     legend: { position: 'none' },
   };
 
- draw_chart(header, specialty, chart, options, types_color)
+  formated_specialty = {}
+  $.each(specialty, function(index, data) {
+      if(types_name[index] != undefined)
+        formated_specialty[types_name[index]] = data
+  });
+
+ draw_chart(header, formated_specialty, chart, options, types_color)
 }
