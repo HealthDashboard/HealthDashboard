@@ -1,0 +1,32 @@
+<div class='col-md-8 col-sm-8 affix'>
+  <div id='specialty-map-filter'> </div>
+</div>
+<div class='col-md-8'>
+</div>
+
+<div class='col-md-4 col-sm-4'>
+  <div class="panel-group" id="accordion">
+  <% for health_centre in @health_centres %>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#<%= health_centre.id %>">
+          <%= health_centre.name.titleize %></a>
+        </h4>
+      </div>
+      <div id="<%= health_centre.id %>" class="panel-collapse collapse">
+        <ul class="list-group">
+          <% for specialty in health_centre.specialties %>
+          <li class="list-group-item"   onclick='filter_by( <%= health_centre.id %> , <%= specialty.id %>)'><%= specialty.name %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+  </div>
+</div>
+
+<script>
+  $(document).ready(initialize_health_centre_filter)
+</script>
+

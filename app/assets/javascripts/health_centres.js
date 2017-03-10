@@ -1,10 +1,12 @@
 var map;
 var info_boxes = [];
 var circles = []
-var info_box_opened = 1;
+var info_box_opened;
 var cluster_status = false;
 var markerCluster = null;
 var colors = ['#003300', '#15ff00', '#ff0000', "#f5b979" , "#13f1e8" ,  "#615ac7", "#8e3a06", "#b769ab", "#df10eb"]
+
+var health_centre_icon = '/health_centre_icon.png'
 
 function show_procedures(procedures)
 {
@@ -15,10 +17,10 @@ function show_procedures(procedures)
     return new google.maps.Marker({
         position: new google.maps.LatLng(lat, lng),
         icon: {
-                  path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-                  strokeColor: "red",
-                  scale: 3
-                },
+                path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                strokeColor: "red",
+                scale: 3
+              },
         });
   });
 
@@ -49,8 +51,10 @@ function show_procedures(procedures)
    minimumClusterSize: 2};
 
  markerCluster = new MarkerClusterer(map, markers, options);
- var radius = [20000, 10000, 5000];
+}
 
+function create_circles(marker){
+ var radius = [20000, 10000, 5000];
  for(var i = 0; i<3; i++)
  {
   var circle = new google.maps.Circle({
@@ -59,11 +63,11 @@ function show_procedures(procedures)
     fillColor: colors[i],
     fillOpacity: 0.09,
   });
-    circle.bindTo('center', info_boxes[info_box_opened].marker, 'position');
+  circle.bindTo('center', marker, 'position');
   circles.push(circle)
  }
-
 }
+
 
 function initialize()
 {
@@ -89,15 +93,15 @@ function load_all_points()
   $.getJSON('/points.json', function(points) {
     $.each(points, function(index, point)
     {
-      create_health_centre_marker(point)
+      create_health_centre_marker(point, create_marker_text)
     });
   });
 }
 
-function create_health_centre_marker(point)
+function create_health_centre_marker(point, generate_infobox_text)
 {
-  var marker = create_marker(point, 'health_centre_icon.png')
-  add_info_to_marker(marker, point)
+  var marker = create_marker(point, health_centre_icon)
+  add_info_to_marker(marker, point, generate_infobox_text)
 }
 
 function create_marker(point, icon_path)
@@ -136,6 +140,7 @@ function setup_cluster()
 
   $.getJSON(procedure_path, function(procedures) {
       show_procedures(procedures)
+      create_circles(info_boxes[info_box_opened].marker)
   });
 
   markers_visible(false)
@@ -150,28 +155,31 @@ function teardown_cluster()
   info_boxes[info_box_opened].close()
   info_box_opened = -1
   cluster_status = false
+  teardown_circles()
+}
 
+function teardown_circles(){
   $.each(circles, function(index, circle){
     circle.setMap(null)
   });
 }
 
-function add_info_to_marker(marker, point)
+function add_info_to_marker(marker, point, generate_infobox_text)
 {
   info_boxes[point.id] = new google.maps.InfoWindow()
   info_boxes[point.id].marker = marker
   info_boxes[point.id].id = point.id
+  info_boxes[point.id].point = point
 
-  add_listener(marker, point)
+  add_listener(marker, point, generate_infobox_text)
 }
 
-function add_listener(marker, point)
+function add_listener(marker, point, generate_infobox_text)
 {
   info_boxes[point.id].listener = google.maps.event.addListener(marker, 'click', function (e) {
-            info_boxes[point.id].setContent(create_marker_text(point))
-            open_info_box(point.id, marker);
-
-        });
+      info_boxes[point.id].setContent(generate_infobox_text(point))
+      open_info_box(point.id, marker);
+  });
 }
 
 function markers_visible(visibility)
@@ -225,7 +233,6 @@ function create_chart(){
 }
 
 function create_homepage_charts(){
-  update_chart()
   create_right_graph()
   create_bottom_graphs("bt-graph1")
   create_bottom_graphs("bt-graph2")
@@ -233,7 +240,7 @@ function create_homepage_charts(){
 }
 
 function update_chart(){
-  var specialty_path = ["specialties/", info_box_opened].join("")
+  var specialty_path = ["/specialties/", info_box_opened].join("")
   $.getJSON(specialty_path, function(specialties) {
     var values = []
     var i = 0
@@ -278,7 +285,7 @@ function create_right_graph(){
     legend: {position: 'none'},
     pieSliceText: "none",
   };
-  var specialty_path = "distance_metric.json"
+  var specialty_path = "/distance_metric.json"
 
   $.getJSON(specialty_path, function(data){
     draw_chart(header, data, chart, options)
@@ -341,7 +348,7 @@ function update_right_graph_text(data){
 function update_procedures_metric(value){
   var $html = $("#metric-board #value")
 
-  $.getJSON('metrics.json', function(data){
+  $.getJSON('/metrics.json', function(data){
     $html.html(data.count)
   });
 }

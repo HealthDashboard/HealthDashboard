@@ -12,16 +12,18 @@
   </head>
 
   <body>
-    <div class="navbar navbar-inverse">
+    <div class="navbar navbar-inverse navbar-fixed-top">
         <nav>
           <ul class="nav navbar-nav navbar-left">
             <li> <%= link_to "Home", root_path %></li>
             <li> <%= link_to "Dashboard", dashboard_path %></li>
             <li> <%= link_to "Specialties", specialties_path %></li>
+            <li> <%= link_to "Estabelecimentos", health_centre_filter_path %></li>
           </ul>
         </nav>
     </div>
-
-        <%= yield %>
+    <div class='container'>
+      <%= yield %>
+    </div>
   </body>
 </html>
