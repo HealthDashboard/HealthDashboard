@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   root to: 'health_centres#index'
 
   get 'points', to: 'health_centres#points'
@@ -13,4 +14,6 @@ Rails.application.routes.draw do
 
   get 'dashboard', to: 'dashboard#index'
   get 'specialties', to: 'specialties#index'
+  get 'health_centre_filter', to: 'health_centre_filter#index'
+  get 'health_centre_filter/:health_centre_id/:specialty_id', to: 'health_centre_filter#filter_health_centres'
 end

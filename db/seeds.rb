@@ -24,7 +24,7 @@ if Specialty.count == 0
 end
 puts ""
 
-if Type.count == 0 
+if Type.count == 0
  print "Types: "
  CSV.foreach(types_csv_path, :headers => false) do |row|
    Type.create!(id: row[0], name: row[1])
@@ -61,3 +61,11 @@ Procedure.all.each do |a|
   a.save!
   print '.'
 end
+
+print "\nFinding health centres specialties: "
+HealthCentre.all.each do | health_centre|
+  health_centre.specialties << health_centre.procedures.map(&:specialty).uniq {| x| x.name }
+  health_centre.save!
+  print '.'
+end
+
