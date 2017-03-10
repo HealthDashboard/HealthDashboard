@@ -25,6 +25,7 @@ def create_specialty_distance_metric(specialty_id, specialty_name, specialties_d
     end
   end
 
+  specialties_distance_metric[specialty_id][5] = ''
 end
 
 def create_specialties_distance_metric
@@ -33,9 +34,9 @@ def create_specialties_distance_metric
 
   specialties.each do |specialty|
     id = specialty.id
-    name = specialty.name
+    name = specialty.name.downcase
     puts("Create metric for specialty #{id}...")
-    specialties_distance_metric[id] = Array.new(5).fill(0)
+    specialties_distance_metric[id] = Array.new(6).fill(0)
     create_specialty_distance_metric(id, name, specialties_distance_metric)
   end
 
@@ -46,7 +47,7 @@ def main
   specialties_distance_metric = create_specialties_distance_metric()
 
   fJson = File.open("../public/specialties_distance_metric.json","w")
-  fJson.write(specialties_distance_metric.to_json)
+  fJson.write(specialties_distance_metric.values.to_json)
   fJson.close()
 end
 
