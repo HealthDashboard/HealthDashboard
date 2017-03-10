@@ -9,18 +9,19 @@ require APP_PATH
 Rails.application.require_environment!
 
 
-def create_specialty_distance_metric(specialty_id, specialties_distance_metric)
+def create_specialty_distance_metric(specialty_id, specialty_name, specialties_distance_metric)
   procedures = Procedure.where(specialty_id: specialty_id)
+  specialties_distance_metric[specialty_id][0] = specialty_name
 
   procedures.each do |procedure|
     if procedure.distance <= 1
-      specialties_distance_metric[specialty_id][0] += 1
-    elsif procedure.distance <= 5
       specialties_distance_metric[specialty_id][1] += 1
-    elsif procedure.distance <= 10
+    elsif procedure.distance <= 5
       specialties_distance_metric[specialty_id][2] += 1
-    else
+    elsif procedure.distance <= 10
       specialties_distance_metric[specialty_id][3] += 1
+    else
+      specialties_distance_metric[specialty_id][4] += 1
     end
   end
 
@@ -32,9 +33,10 @@ def create_specialties_distance_metric
 
   specialties.each do |specialty|
     id = specialty.id
+    name = specialty.name
     puts("Create metric for specialty #{id}...")
-    specialties_distance_metric[id] = Array.new(4).fill(0)
-    create_specialty_distance_metric(id, specialties_distance_metric)
+    specialties_distance_metric[id] = Array.new(5).fill(0)
+    create_specialty_distance_metric(id, name, specialties_distance_metric)
   end
 
   return specialties_distance_metric
