@@ -1,33 +1,60 @@
+
 <div class='col-md-8 col-sm-8 affix'>
   <div id='specialty-map-filter'> </div>
-
   <div id="legend"><h3>Distances</h3></div>
 </div>
-<div class='col-md-8'>
-</div>
 
-<div class='col-md-4 col-sm-4'>
-  <div class="panel-group" id="accordion">
-  <% for health_centre in @health_centres %>
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#<%= health_centre.id %>">
-          <%= health_centre.name.titleize %></a>
-        </h4>
+  <div class='col-md-8'>
+  </div>
+
+  <div class='col-md-4 col-sm-4'>
+    <div class="panel-group" id="accordion">
+    <% for health_centre in @health_centres %>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#<%= health_centre.id %>">
+            <%= health_centre.name.titleize %></a>
+          </h4>
+        </div>
+        <div id="<%= health_centre.id %>" class="panel-collapse collapse">
+          <ul class="list-group">
+            <% for specialty in health_centre.specialties %>
+            <li class="list-group-item"   onclick='filter_by( <%= health_centre.id %> , <%= specialty.id %>)'><%= specialty.name %></li>
+            <% end %>
+          </ul>
+        </div>
       </div>
-      <div id="<%= health_centre.id %>" class="panel-collapse collapse">
-        <ul class="list-group">
-          <% for specialty in health_centre.specialties %>
-          <li class="list-group-item"   onclick='filter_by( <%= health_centre.id %> , <%= specialty.id %>)'><%= specialty.name %></li>
-          <% end %>
-        </ul>
+    <% end %>
+    </div>
+  </div>
+
+  <div class='col-md-8 col-sm-8 affix' style='margin-top: 500px'>
+  </div>
+
+<!-- Modal -->
+<div id="help-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Ajuda</h4>
+      </div>
+      <div class="modal-body">
+          <p>A lista a direita possui os estabelecimentos de saúde de São Paulo, ao clicar em algum deles as suas especialidades são listadas abaixo.
+             Ao clicar em alguma especialidade relacionada a algum estabelecimento, no mapa será mostrado o estabelecimento e a localidade de
+             onde os pacientes vieram para realizar os procedimentos. Além disso, serão apresentados os outros estabelecimentos de saúde que
+             atendem aquela mesma especialidade e são do mesmo porte do selecionado, para fins comparativos.
+          </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
-  <% end %>
   </div>
 </div>
-
 
 <script>
   $(document).ready(initialize_health_centre_filter)
