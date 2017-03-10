@@ -233,8 +233,22 @@ function create_chart(){
 
 function create_homepage_charts(){
   create_right_graph()
-  create_bottom_graphs("bt-graph1")
-  create_bottom_graphs("bt-graph2")
+
+
+  var data = [
+        ['pediatria', 10, 24, 20, 32, ''],
+        ['ginecologia', 16, 22, 23, 30, ''],
+        ['oftalmologia', 28, 19, 29, 30,  ''],
+        ['nefrologia', 16, 22, 23, 30, ''],
+        ['clinica geral', 28, 19, 29, 30,  '']
+      ]
+
+  var path = '/specialties_distance_metric.json'
+  $.getJSON(path, function(data) {
+    data1 = data.splice(0,Math.ceil(data.length / 2))
+    create_bottom_graphs("bt-graph1", data1)
+    create_bottom_graphs("bt-graph2", data)
+  });
   update_procedures_metric()
 }
 
@@ -293,18 +307,11 @@ function create_right_graph(){
 }
 
 
-function create_bottom_graphs(id){
+function create_bottom_graphs(id, data){
   var chart = new google.visualization.BarChart(document.getElementById(id));
 
   var header = ['Genre', 'Fantasy & Sci Fi', 'Romance', 'Mystery/Crime', 'General', { role: 'annotation' } ]
 
-  var data = [
-        ['pediatria', 10, 24, 20, 32, ''],
-        ['ginecologia', 16, 22, 23, 30, ''],
-        ['oftalmologia', 28, 19, 29, 30,  ''],
-        ['nefrologia', 16, 22, 23, 30, ''],
-        ['clinica geral', 28, 19, 29, 30,  '']
-      ]
   var options = {
         height :200,
         legend: { position: 'none'},
