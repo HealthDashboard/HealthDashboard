@@ -301,6 +301,7 @@ function create_right_graph(){
   var specialty_path = "/distance_metric.json"
 
   $.getJSON(specialty_path, function(data){
+
     draw_chart(header, data, chart, options)
     update_right_graph_text(data)
   });

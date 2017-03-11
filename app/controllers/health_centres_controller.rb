@@ -65,7 +65,6 @@ class HealthCentresController < ApplicationController
 
       health_centres.reverse.each_with_index do |health_centre, index|
         break if index == 10
-        puts health_centre.name, health_centre.procedures.count
         result[health_centre.name] = health_centre.procedures.count
       end
       render json: result
