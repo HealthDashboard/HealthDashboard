@@ -118,9 +118,9 @@ function draw_chart(header, data, chart, options, color){
 
 function dashboard_legend(){
   text = ""
-  dashboard = $('#dashboard_legend p')
+  dashboard = $('#dashboard_legend .list')
   $.each(specialties_color, function(name, color){
-    dashboard.append('<div style="float: left;background:'+color+';width:20px; height: 20px;margin-left: 2px;margin-right: 20px;"></div><div class="pull-left">'+name+'</div><br>')
+    dashboard.append("<li><span style='background-color: "+color+";'></span> "+name+"</li>")
   });
 }
 
