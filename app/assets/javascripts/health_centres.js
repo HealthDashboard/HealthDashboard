@@ -310,7 +310,8 @@ function create_right_graph(){
 function create_bottom_graphs(id, data){
   var chart = new google.visualization.BarChart(document.getElementById(id));
 
-  var header = ['Genre', 'Fantasy & Sci Fi', 'Romance', 'Mystery/Crime', 'General', { role: 'annotation' } ]
+  var header = ['Genre', ' > 1 km', '> 1 km e < 5 km',
+                '> 5 km e  < 10 km', '> 10 km', { role: 'annotation' } ]
 
   var options = {
         height :200,
