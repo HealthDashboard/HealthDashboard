@@ -24,31 +24,10 @@ function show_procedures(procedures)
         });
   });
 
- var clusterStyles = [
-   {
-     textColor: 'black',
-     url: 'm1.png',
-     height: 44,
-     width: 44
-   },
-  {
-     textColor: 'black',
-     url: 'm2.png',
-     height: 75,
-     width: 77
-   },
-  {
-     textColor: 'black',
-     url: 'm3.png',
-     height: 112,
-     width: 111
-   }
- ];
-
  var options = {
-   styles: clusterStyles,
    zoomOnClick: false,
-   minimumClusterSize: 2};
+   minimumClusterSize: 3,
+   imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'};
 
  markerCluster = new MarkerClusterer(map, markers, options);
 }
