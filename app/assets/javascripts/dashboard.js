@@ -110,15 +110,6 @@ function create_travel_time_chart(){
 
 }
 
-
-
-
-
-
-
-
-
-
 function get_color_slice(){
   var slices= {}
   var idx = 0;
@@ -176,7 +167,7 @@ function dashboard_legend(){
   text = ""
   dashboard = $('#dashboard_legend .list')
   $.each(specialties_color, function(name, color){
-    dashboard.append("<li><span style='background-color: "+color+";'></span> "+name+"</li>")
+    dashboard.append("<li><span style='background-color: "+color+";'></span> "+name.toLowerCase()+"</li>")
   });
 }
 
