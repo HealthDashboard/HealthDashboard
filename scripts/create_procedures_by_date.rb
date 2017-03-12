@@ -12,11 +12,11 @@ def get_procedures_by_date
   result = []
   procedure_by_years = Procedure.all.group_by {|p|  p.date.year }
 
-  years = procedure_by_years.keys
+  years = procedure_by_years.keys.sort
 
   years.each do |year|
     procedure_by_months = procedure_by_years[year].group_by{|p| p.date.month }
-    months = procedure_by_months.keys
+    months = procedure_by_months.keys.sort
     months.each do |month|
       result << [ year, month, procedure_by_months[month].count]
     end
