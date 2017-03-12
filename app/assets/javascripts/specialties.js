@@ -32,7 +32,7 @@ var specialties_name = [
  "CIRURGIA",
  "OBSTETRECIA",
  "CLINICA MEDIA",
- "PACIENTES",
+ "PACIENTES SOB CUIDADOS PROLONGADOS",
  "PSIQUIATRIA",
  "TISIOLOGIA",
  "PEDIATRIA",
@@ -58,18 +58,15 @@ function init_specialties_chart(){
 
 function create_specialties_charts() {
  specialties_metric = $.getJSON('/specialties_metric.json', function(specialties) {
-   $.each(specialties, function(index, specialty) {
-     create_specialty_chart(index, specialty)
-   });
+   $.each(specialties, create_specialty_chart);
  });
 }
 
 function create_specialty_chart(index, specialty){
-  var header = ["Tipos de estabelecimentos", "Distância Média Percorrida", { role: "style" } ]
+  var header = ["Tipos de estabelecimentos", "Distância Média Percorrida em km", { role: "style" } ]
   var chart = new google.visualization.BarChart(document.getElementById(specialty_divs[index]));
   var options = {
     title: specialties_name[index],
-    vAxis: { textPosition: 'none' },
     legend: { position: 'none' },
   };
 

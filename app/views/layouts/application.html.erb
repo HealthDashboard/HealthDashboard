@@ -18,7 +18,6 @@
               <li class='nav-item <%= 'active' if controller_name == 'health_centres'  %>  '> <%= link_to "Home", root_path, class: 'nav-link' %></li>
               <li class='nav-item <%= 'active' if controller_name == 'health_centre_filter'  %>' > <%= link_to "Estabelecimentos", health_centre_filter_path, class: 'nav-link' %></li>
               <li class='nav-item <%= 'active' if controller_name == 'dashboard'  %>'> <%= link_to "Métricas", dashboard_path, class: 'nav-link' %></li>
-              <li class='nav-item <%= 'active' if controller_name == 'specialties'  %>'> <%= link_to "Specialties", specialties_path, class: 'nav-link' %></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li class='nav-item'><a href='#' class='nav-link glyphicon glyphicon-question-sign' data-toggle="modal" onclick="update_chart()" data-target="#help-modal"></a></li>
