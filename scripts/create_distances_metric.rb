@@ -32,7 +32,7 @@ def main()
   procedures = Procedure.all
   distances = get_procedures_distances(procedures)
 
-  fJson = File.open("distance_metric.json","w")
+  fJson = File.open("public/distance_metric.json","w")
   fJson.write(distances.to_json)
   fJson.close()
 end
