@@ -116,11 +116,11 @@ function create_marker(point, icon_path)
 function create_marker_text(point)
 {
   var id = point.id
-  var button_label= (cluster_status == false)? 'Show Info':'Hide Info'
-  return '<strong>Name:</strong> ' + point.name +
-         '<br><strong>Beds:</strong> '+ point.beds +
+  var button_label= (cluster_status == false)? 'Mostrar Detalhes':'Esconder Detalhes'
+  return '<strong>Nome:</strong> ' + point.name +
+         '<br><strong>Leitos:</strong> '+ point.beds +
          "<br><br><button type='button' id='cluster_info' class='btn btn-info btn-sm' onclick='show_clusters()'>"+button_label+"</button>"+
-         '<button type="button" class="btn btn-info btn-sm pull-right" data-toggle="modal" onclick="update_chart()" data-target="#myModal">Analytics</button>'
+         '<button type="button" class="btn btn-info btn-sm pull-right" data-toggle="modal" onclick="update_chart()" data-target="#myModal">Análise</button>'
 }
 
 function show_clusters()
@@ -144,7 +144,7 @@ function setup_cluster()
   });
 
   markers_visible(false)
-  $('#cluster_info').text('Hide info')
+  $('#cluster_info').text('Esconder Detalhes')
   cluster_status = true
 }
 

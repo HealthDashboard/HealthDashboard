@@ -31,9 +31,9 @@ function load_health_centre_filtered()
 
 function create_health_centre_info_box_text(point){
   var id = point.id
-  var button_label= (cluster_status == false)? 'Show Info':'Hide Info'
-  return '<strong>Name:</strong> ' + point.name +
-         '<br><strong>Beds:</strong> '+ point.beds
+  var button_label= (cluster_status == false)? 'Mostrar Detalhes':'Esconder Detalhes'
+  return '<strong>Nome:</strong> ' + point.name +
+         '<br><strong>Leitos:</strong> '+ point.beds
 }
 
 function change_selected_health_centre(id){
