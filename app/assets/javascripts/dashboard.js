@@ -44,6 +44,8 @@ function animate_legend(){
 function create_dashboard_charts() {
  create_procedures_per_specialties()
  create_specialties_distance_between_patients_hospital()
+ populate_procedures_by_date()
+ create_travel_time_chart()
 }
 
 function create_procedures_per_specialties() {
@@ -53,13 +55,69 @@ function create_procedures_per_specialties() {
   var options = {
     title:'% de procedimentos por especialidades',
     slices: get_color_slice(),
-    legend: { position: 'none' },
-    is3D: true,
   };
 
   var specialty_path = "specialties_count"
   $.getJSON(specialty_path, function(data){ draw_chart(header, data, chart, options, specialties_color) });
 }
+
+
+function populate_procedures_by_date(){
+  var path = "/procedures_by_date.json"
+
+   var options = {
+     title: 'Número de Procedimentos por mês',
+     series: {
+       0: {axis: 'Número de Procedimentos'},
+     },
+     axes: {
+       y: {
+         Temps: {label: 'Número de Procedimentos'},
+       }
+     },
+     legend: {position: 'none'}
+   };
+
+
+  $.getJSON(path, function(data){
+    var values = []
+    $.each(data, function(k,v){
+      values.push([new Date(v[0],v[1]), v[2]])
+    })
+    create_line_chart(values, options)
+  });
+}
+
+function create_line_chart(values, options){
+  var chart = new google.visualization.LineChart(document.getElementById('procedure_by_date'));
+  var data = new google.visualization.DataTable();
+  data.addColumn('date', 'Mês');
+  data.addColumn('number', "Número de Procedimentos");
+  data.addRows(values);
+  chart.draw(data, options);
+}
+
+
+function create_travel_time_chart(){
+  var chart = new google.visualization.BarChart(document.getElementById("chart_spec_time_average"));
+  var header = ["Especialidades", "Tempo médio de viagem em minutos", {role: "style"}]
+  var options = {
+    title: "Tempo médio de viagem para realização de procedimentos por especialidade",
+    legend: {position: 'none'}
+  };
+  var distance_average_path = '/procedures_travel_time.json'
+  $.getJSON(distance_average_path, function(data){draw_chart(header, data, chart, options, specialties_color)});
+
+}
+
+
+
+
+
+
+
+
+
 
 function get_color_slice(){
   var slices= {}
@@ -82,17 +140,15 @@ function create_specialties_vs_time_to_arrive() {
 }
 
 function create_specialties_distance_between_patients_hospital() {
-  var header = ["Especialidades", "Distância Média Percorrida", { role: "style" } ]
   var chart = new google.visualization.BarChart(document.getElementById("chart_spec_distance_average"));
+  var header = ["Especialidades", "Distância média em km", {role: "style"}]
   var options = {
     title: "Distância média de procedimentos por especialidade",
-    vAxis: { textPosition: 'none' },
-    legend: { position: 'none' },
+    legend: {position: 'none'}
   };
   var distance_average_path = 'specialties_procedure_distance_average'
   $.getJSON(distance_average_path, function(data){draw_chart(header, data, chart, options, specialties_color)});
 }
-
 
 function draw_chart(header, data, chart, options, color=specialties_color){
   var values = []
