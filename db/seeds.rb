@@ -47,8 +47,9 @@ CSV.foreach(data_csv_path, :headers => true) do |row|
   break if count == 1000
   specialty_id = row[11].to_i
   if specialty_id < 10
-   p = Procedure.create!(cnes_id: row[6], specialty_id: specialty_id, date: row[8], gender: row[2],
-                     different_district: row[12], lat: row[0], long: row[1])
+   p = Procedure.create!(cnes_id: row[6], specialty_id: specialty_id,
+                         date: Date.parse(row[8]), gender: row[2],
+                         different_district: row[12], lat: row[0], long: row[1])
    p.cnes.update! lat: row[4], long: row[5]
    print '.'
    count += 1
