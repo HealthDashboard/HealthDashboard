@@ -1,7 +1,7 @@
 class CreateProcedures < ActiveRecord::Migration[5.0]
   def change
     create_table :procedures do |t|
-      t.string :date
+      t.date :date
       t.string :age_code
       t.string :age_number
       t.string :gender

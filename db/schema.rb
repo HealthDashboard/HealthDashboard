@@ -43,7 +43,7 @@ ActiveRecord::Schema.define(version: 20170307183528) do
   end
 
   create_table "procedures", force: :cascade do |t|
-    t.string   "date"
+    t.date     "date"
     t.string   "age_code"
     t.string   "age_number"
     t.string   "gender"
