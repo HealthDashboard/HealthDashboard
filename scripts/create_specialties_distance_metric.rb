@@ -46,7 +46,7 @@ end
 def main
   specialties_distance_metric = create_specialties_distance_metric()
 
-  fJson = File.open("../public/specialties_distance_metric.json","w")
+  fJson = File.open("public/specialties_distance_metric.json","w")
   fJson.write(specialties_distance_metric.values.to_json)
   fJson.close()
 end

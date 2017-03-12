@@ -56,15 +56,15 @@ def main()
   num_specialties = {}
   #procedures = HealthCentre.find_by(name: "H RIM E HIPERTENSAO - F OSWALDO RAMOS").procedures
   #distances = load_json('travel_time_oswaldo_ramos.json')
-  
+
   procedures = HealthCentre.find_by(name: "H CLINICAS").procedures
-  distances = load_json('travel_time_hospital_clinicas.json')
+  distances = load_json('scripts/travel_time_hospital_clinicas.json')
   puts distances.count
 
   parse_distances(procedures, distances, specialties, num_specialties)
   puts(specialties.to_json)
 
-  fJson = File.open("temp.json","w")
+  fJson = File.open("public/temp.json","w")
   fJson.write(specialties.to_json)
   fJson.close()
 

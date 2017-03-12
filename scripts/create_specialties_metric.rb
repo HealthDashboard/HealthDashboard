@@ -48,7 +48,7 @@ end
 def main
   specialties_metric = create_metric_for_all_specialties()
 
-  fJson = File.open("../public/specialties_metric.json","w")
+  fJson = File.open("public/specialties_metric.json","w")
   fJson.write(specialties_metric.to_json)
   fJson.close()
 end
