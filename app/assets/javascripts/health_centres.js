@@ -193,16 +193,15 @@ function populate_legend(){
             {'name': '10 km', 'color': colors[0]}]
 
   var $legend = $('#legend')
-  $.each(styles, function(index, style){
-    var div = document.createElement('div');
-    var br = document.createElement('br');
-    var div_name = document.createElement('div');
-    div_name.innerHTML = '<div class="name" style="margin-left: 30px;">'+style.name+'</div>'
-    div.innerHTML = '<div class="color" style="background-color:'+style.color+'"></div>'
 
-    $legend.append(div);
-    $legend.append(div_name);
-    $legend.append(br);
+
+
+
+
+  $.each(styles, function(index, style){
+    element = '<div class="item"><div class="color" style="background-color: '+style.color+
+    '"></div><p class="text">'+style.name+'</p> </div></div>'
+    $legend.append(element)
   });
 }
 
@@ -297,8 +296,16 @@ function create_bottom_graphs(id, data){
         height :200,
         legend: { position: 'none'},
         isStacked: 'percent',
-        hAxis: { minValue: 0,
-              ticks: [0,.2,.4,.6,.8,1]
+        vAxis: { minValue: 0,
+              ticks: [0,.2,.4,.6,.8,1],
+              textStyle: {fontName: 'Arial',
+                          fontSize: '18'
+              }
+        },
+        hAxis: {
+              textStyle: {fontName: 'Arial',
+                          fontSize: '18'
+              }
         },
         bar: { groupWidth: '35%' },
         series: {
