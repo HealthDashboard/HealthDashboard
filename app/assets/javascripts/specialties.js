@@ -67,7 +67,10 @@ function create_specialty_chart(index, specialty){
   var chart = new google.visualization.BarChart(document.getElementById(specialty_divs[index]));
   var options = {
     title: specialties_name[index],
+    titleTextStyle: {fontSize: 25, bold: false },
     legend: { position: 'none' },
+    vAxis: { textStyle:  {fontSize: 18,bold: false}},
+    hAxis: { textStyle:  {fontSize: 18,bold: false}}
   };
 
   formated_specialty = {}
