@@ -1,6 +1,9 @@
 @import "bootstrap-sprockets"
 @import "bootstrap"
 
+body
+    font-size: 14pt
+
 .map-wrapper
     position: absolute
     height: 60%
@@ -42,17 +45,20 @@ a.nav-link.glyphicon.glyphicon-question-sign
 
 #legend h3
     margin-top: 0
+    font-size: 20pt
 
-#legend div
-    float: left
 
 #legend .color
+    float: left
     width: 20px
-    height: 10px
+    height: 20px
     opacity: 0.3
     filter: alpha(opacity=50)
 
-#legend .name
+#legend .text
+    color: gray
+    margin-left: 30px
+    font-size: 16pt
     width: auto
     height: 10px
 
@@ -81,20 +87,20 @@ a.nav-link.glyphicon.glyphicon-question-sign
 #labelOverlay
     width: 80%
     position: absolute
-    top: 22%
+    top: 20%
     left: 6%
     text-align: center
     cursor: default
 
 #labelOverlay p.n_procedures
     line-height: 0.5
-    font-size: 20pt
+    font-size: 22pt
     color: #8e8e8e
     width: 100%
 
 #labelOverlay p.atendimentos
     line-height: 0.5
-    font-size: 12pt
+    font-size: 14pt
     color: #cdcdcd
     width: 100%
 
