@@ -9,8 +9,12 @@ gem 'geokit-rails'
 
 # Install bootstrap
 gem 'bootstrap-sass'
+
 gem 'autoprefixer-rails'
 gem 'geocoder'
+
+#Make the post/get requests
+gem 'rest-client'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.1'
