@@ -7,12 +7,17 @@ ENV["RESOURCE_CATALOGUER_HOST"] ||= 'localhost:3000/'
 ENV["DATA_COLLECTOR_HOST"] ||= 'localhost:4000/'
 
 
-def get_specialties
+def get_specialties  
+  specialties_csv_path = File.join(__dir__, "csv/specialties.csv")
+
   spec_items = {}
-  Specialty.all.each do |item|
-    name = item["name"]
-    spec_items[name] = item["id"]
+  
+  CSV.foreach(specialties_csv_path, :headers => false) do |row|
+    s = Specialty.create id: row[0], name: row[1]
+    spec_items[s.name] = s.id
   end
+
+  puts "#{spec_items.count} specialties successfully created."
   spec_items
 end      
 
@@ -43,22 +48,31 @@ def get_procedures resource_uuid, spec_items
       procedure_items = eval(procedure_fields)
       
       spec_name = procedure_items[:specialty]
-      spec = Specialty.where(name: spec_name)
+      spec = Specialty.where(name: spec_name).first
      
-     #######IMPORTANTE##############
-     ###Apenas criar a instância do Specialty se não existir no banco
-     ###############################
-      s = Specialty.create(id: spec_items[spec_name], name: spec_name)
-      
-      procedure_items[:specialty] = s
- 
+      procedure_items[:specialty] = spec      
+    else
+      return
     end
+         
   rescue RestClient::Exception => e
     puts "Could not send data: #{e.response}"
   end 
-    resources = resp
-    p = Procedure.create(procedure_items)
 
+  resources = resp
+  p = Procedure.create(procedure_items)
+  return 1
+
+end
+
+def create_procedures resources, spec_items
+  number_procedures = 0
+  resources["resources"].each do |res|
+    if ( get_procedures(res["uuid"], spec_items) == 1)
+      number_procedures += 1
+    end
+  end
+  puts "#{number_procedures} procedures successfully created."
 end
 
 
@@ -83,8 +97,10 @@ def get_health_centres
    			cnes = get_match[1]
    			name = get_match[2]
    			beds = get_match[3]
-		
-			  h = HealthCentre.create(cnes: cnes, name: name, beds: beds)
+        		
+			  h = HealthCentre.create(long: item["lon"], lat: item["lat"], cnes: cnes, 
+          name: name, beds: beds, census_district: item["neighborhood"])
+        
         health_centre_instance+=1
    		end
    	end	
@@ -101,9 +117,7 @@ get_health_centres
 
 spec_items = get_specialties 
 
-resources["resources"].each do |res|
-  values = get_procedures(res["uuid"], spec_items)
-end
+create_procedures(resources, spec_items)
 
 
 # 
