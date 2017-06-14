@@ -20,7 +20,7 @@ function show_procedures(procedures)
                 path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
                 strokeColor: "red",
                 scale: 3
-              },
+              }
         });
   });
 
@@ -40,7 +40,7 @@ function create_circles(marker){
     map: map,
     radius: radius[i],
     fillColor: colors[i],
-    fillOpacity: 0.09,
+    fillOpacity: 0.09
   });
   circle.bindTo('center', marker, 'position');
   circles.push(circle)
@@ -95,7 +95,7 @@ function create_marker(point, icon_path)
 function create_marker_text(point)
 {
   var id = point.id
-  var button_label= (cluster_status == false)? 'Mostrar Detalhes':'Esconder Detalhes'
+  var button_label= (cluster_status === false)? 'Mostrar Detalhes':'Esconder Detalhes'
   return '<strong>Nome:</strong> ' + point.name +
          '<br><strong>Leitos:</strong> '+ point.beds +
          "<br><br><button type='button' id='cluster_info' class='btn btn-info btn-sm' onclick='show_clusters()'>"+button_label+"</button>"+
@@ -104,7 +104,7 @@ function create_marker_text(point)
 
 function show_clusters()
 {
-  if (cluster_status == false){
+  if (cluster_status === false){
     setup_cluster()
     $('#legend').show()
   }else{
@@ -165,17 +165,17 @@ function markers_visible(visibility)
 {
    $.each(info_boxes, function(index, info_box)
    {
-     if (info_box != null && info_box.id != info_box_opened){
+     if (info_box && info_box.id !== info_box_opened){
        info_box.marker.setVisible(visibility);
      }
    });
 }
 
 function open_info_box(id, marker){
-  if ((typeof(info_box_opened) == 'number' && typeof(info_boxes[info_box_opened]) == 'object' )) {
+  if ((typeof(info_box_opened) === 'number' && typeof(info_boxes[info_box_opened]) === 'object' )) {
     info_boxes[info_box_opened].close()
   }
-  if (info_box_opened != id){
+  if (info_box_opened !== id){
     info_boxes[id].open(map, marker)
     info_box_opened = id
   }else{
@@ -255,7 +255,7 @@ function update_chart(){
 
     var options = {
         bar: {groupWidth: "70%"},
-        legend: { position: "none" },
+        legend: { position: "none" }
     };
 
     var chart = new google.visualization.BarChart(document.getElementById("chart_div"));
@@ -274,7 +274,7 @@ function create_right_graph(){
     pieSliceBorderColor: "none",
     colors: ['green', 'yellow', 'orange', 'red'] ,
     legend: {position: 'none'},
-    pieSliceText: "none",
+    pieSliceText: "none"
   };
   var specialty_path = "/distance_metric.json"
 
@@ -312,7 +312,7 @@ function create_bottom_graphs(id, data){
             0:{color:'green'},
             1:{color:'yellow'},
             2:{color:'orange'},
-            3:{color:'red'},
+            3:{color:'red'}
           }
       };
   draw_bottom_graph(header, data, chart, options)
@@ -322,8 +322,8 @@ function draw_bottom_graph(header, data, chart, options){
   var values = data
 
   values.unshift(header)
-  var data = google.visualization.arrayToDataTable(values);
-  var view = new google.visualization.DataView(data);
+  var data_table = google.visualization.arrayToDataTable(values);
+  var view = new google.visualization.DataView(data_table);
   chart.draw(view, options);
 }
 
@@ -333,7 +333,7 @@ function update_right_graph_text(data){
   var $graph_text2 = $('#labelOverlay .atendimentos')
   sum = 0
   $.each(data,function(key, value) {
-    sum += parseInt(value);
+    sum += parseInt(value, 10);
   });
   $graph_text1.html(sum)
   $graph_text2.html("Procedimentos")
