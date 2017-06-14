@@ -31,15 +31,15 @@ function load_health_centre_filtered()
 
 function create_health_centre_info_box_text(point){
   var id = point.id
-  var button_label= (cluster_status == false)? 'Mostrar Detalhes':'Esconder Detalhes'
+  var button_label= (cluster_status === false)? 'Mostrar Detalhes':'Esconder Detalhes'
   return '<strong>Nome:</strong> ' + point.name +
          '<br><strong>Leitos:</strong> '+ point.beds
 }
 
 function change_selected_health_centre(id){
 
-  if(info_box_opened != id) {
-    if ((typeof(info_box_opened) == 'number' && typeof(info_boxes[info_box_opened]) == 'object' )) {
+  if(info_box_opened !== id) {
+    if ((typeof(info_box_opened) === 'number' && typeof(info_boxes[info_box_opened]) === 'object' )) {
       info_boxes[info_box_opened].marker.setIcon(health_centre_icon);
       info_boxes[info_box_opened].close()
    }
@@ -74,8 +74,8 @@ function filter_by(health_centre_id, specialty_id){
 function teardown_health_centre(){
     $.each(info_boxes, function(index, point)
     {
-        if(index != 0)
-        point.marker.setVisible(false)
+        if(index !== 0)
+            point.marker.setVisible(false)
     });
 }
 

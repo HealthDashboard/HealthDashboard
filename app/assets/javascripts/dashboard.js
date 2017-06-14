@@ -54,7 +54,7 @@ function create_procedures_per_specialties() {
 
   var options = {
     title:'% de procedimentos por especialidades',
-    slices: get_color_slice(),
+    slices: get_color_slice()
   };
 
   var specialty_path = "specialties_count"
@@ -68,11 +68,11 @@ function populate_procedures_by_date(){
    var options = {
      title: 'Número de Procedimentos por mês',
      series: {
-       0: {axis: 'Número de Procedimentos'},
+       0: {axis: 'Número de Procedimentos'}
      },
      axes: {
        y: {
-         Temps: {label: 'Número de Procedimentos'},
+         Temps: {label: 'Número de Procedimentos'}
        }
      },
      legend: {position: 'none'}
@@ -123,7 +123,7 @@ function create_specialties_vs_time_to_arrive() {
 
   var options = {
     slices: get_color_slice(),
-    legend: { position: 'none' },
+    legend: { position: 'none' }
   };
 
   var specialty_path = ""
@@ -149,9 +149,9 @@ function draw_chart(header, data, chart, options, color=specialties_color){
   });
 
   values.unshift(header)
-  var data = google.visualization.arrayToDataTable(values);
+  var data_table = google.visualization.arrayToDataTable(values);
 
-  var view = new google.visualization.DataView(data);
+  var view = new google.visualization.DataView(data_table);
 
   view.setColumns([0, 1,
                   { calc: "stringify",
