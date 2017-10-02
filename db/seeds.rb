@@ -3,8 +3,8 @@ require 'csv'
 require 'rest-client'
 
 
-ENV["RESOURCE_CATALOGUER_HOST"] ||= 'localhost:3000/'
-ENV["DATA_COLLECTOR_HOST"] ||= 'localhost:4000/'
+ENV["RESOURCE_CATALOGUER_HOST"] ||= '172.19.5.29:8000/catalog/'
+ENV["DATA_COLLECTOR_HOST"] ||= '172.19.5.29:8000/collector/'
 
 
 def get_specialties  
@@ -36,6 +36,7 @@ end
 
 def get_procedures resource_uuid, spec_items
   begin
+    procedure_data = {}
     response = RestClient.post(
       ENV["DATA_COLLECTOR_HOST"] + "resources/#{resource_uuid}/data",  {capability: "medical_procedure"}   
     )
@@ -44,13 +45,19 @@ def get_procedures resource_uuid, spec_items
     resources = resp["resources"]
     if !resources[0].nil?
       capabilities = resources[0]["capabilities"]
-      procedure_fields = capabilities["medical_procedure"][0]["value"]
-      procedure_items = eval(procedure_fields)
-      
-      spec_name = procedure_items[:specialty]
+      procedure_fields = capabilities["medical_procedure"][0]
+
+      spec_name = procedure_fields["specialty"]
       spec = Specialty.where(name: spec_name).first
-     
-      procedure_items[:specialty] = spec      
+      patient = procedure_fields["patient"]
+      
+      procedure_data[:cnes_id] = procedure_fields["cnes_id"]
+      procedure_data[:specialty] = spec
+      procedure_data[:gender] = patient["gender"].to_s
+      procedure_data[:different_district] = patient["different_district"].to_s
+      procedure_data[:lat] = patient["lat"]
+      procedure_data[:long] = patient["lon"]
+      procedure_data[:date] = Date.parse procedure_fields["date"].to_s
     else
       return
     end
@@ -60,9 +67,18 @@ def get_procedures resource_uuid, spec_items
   end 
 
   resources = resp
-  p = Procedure.create(procedure_items)
-  return 1
+  p = Procedure.create(procedure_data)
+  specialty = {}
 
+  cnesid = procedure_data[:cnes_id].to_i
+  hc = HealthCentre.where(cnes: cnesid).first
+
+  if hc != nil
+    specialty[:health_centre] = hc
+    specialty[:specialty] = procedure_data[:specialty]
+    HealthCentreSpecialty.create(specialty)
+  end
+  return 1
 end
 
 def create_procedures resources, spec_items
@@ -92,9 +108,10 @@ def get_health_centres
   response["resources"].each do |item|
     if (item["capabilities"][0] == "medical_procedure")
     	description = item["description"]
+      puts item
         	
    		if !(get_match = regex.match(description)).nil?
-   			cnes = get_match[1]
+   			cnes = get_match[1].to_i
    			name = get_match[2]
    			beds = get_match[3]
         		

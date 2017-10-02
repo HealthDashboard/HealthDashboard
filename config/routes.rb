@@ -16,4 +16,14 @@ Rails.application.routes.draw do
   get 'specialties', to: 'specialties#index'
   get 'health_centre_filter', to: 'health_centre_filter#index'
   get 'health_centre_filter/:health_centre_id/:specialty_id', to: 'health_centre_filter#filter_health_centres'
+  get 'procedure', to: 'procedure#show'
+
+  get '/procedure/health_centres', to: 'procedure#health_centres'
+  get '/procedure/specialties', to: 'procedure#specialties'
+  get 'procedure/allProcedures', to: 'procedure#allProcedures'
+  # get 'procedure/procedures_search/:gender', to: 'procedure#procedures_search'
+  resources :procedure do
+    get :procedures_search, on: :collection
+    get :health_centres_search, on: :collection
+  end
 end

@@ -10,6 +10,15 @@ gem 'geokit-rails'
 # Install bootstrap
 gem 'bootstrap-sass'
 
+# Install Select 2
+gem "select2-rails"
+
+# Bootstrap slider
+gem 'bootstrap-slider-rails'
+
+# Bootstrap datepicker
+gem 'bootstrap-datepicker-rails'
+
 gem 'autoprefixer-rails'
 gem 'geocoder'
 
@@ -41,6 +50,9 @@ gem 'jbuilder', '~> 2.5'
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
+
+# Autocomplete gem
+# gem 'rails-jquery-autocomplete', '~> 1.0', '>= 1.0.3'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

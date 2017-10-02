@@ -1,0 +1,155 @@
+<div class="w3-container">
+    <div class = "container-fluid">
+      <div class = "row">
+        <div class = "col-sm-12" style="height: 10px"></div>
+        <div class = "col-sm-8 affix">
+        	<div id = "procedure_map"> </div>
+        </div>
+        <div class="col-sm-8"></div>
+
+        <div class = "col-sm-4" style = "border: 1px solid; border-radius: 2px;">
+         <div class="card card-block">
+          <h3><center>Filtros</center></h3>
+          <div class = "row">
+            <div class = "col-sm-12">
+              <label>Local dos eventos</label>
+              <div class = "form-check form-check-inline">
+                <label class = "form-check-label">
+                  <input class = "form-check-input" type = "checkbox" id = "checkbox_residencia_paciente" value = 1 checked = "checked"> Região de residência dos pacientes
+                </label>
+              </div>
+              <div class = "form-check form-check-inline">
+                <label class = "form-check-label">
+                  <input class = "form-check-input" type = "checkbox" id = "checkbox_health_centre" value = 1 checked = "checked"> Estabelecimento de ocorrência
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <hr>
+            </div>
+
+            <div class="col-sm-12">
+              <label for="select_health_centre"><b>Região da cidade</b></label>
+              <select class="select-region form-control" id="select_region" multiple="multiple"></select>
+            </div>
+
+            <div class="col-sm-12">
+              <hr>
+            </div>
+
+            <div class="col-sm-12">
+              <label for="select_health_centre"><b>Estabelecimento de ocorrência</b></label>
+              <select class="select-health_centre form-control" id="select_health_centre" multiple="multiple"></select>
+            </div>
+
+            <div class="col-sm-12">
+              <hr>
+            </div>
+
+            <div class="col-sm-12">
+              <label><b>Sexo</b></label>
+              <!-- <br> -->
+              <div class = "row">
+                <div class = "col-sm-3">
+                  <div class="form-check form-check-inline" style = "max-width = 150px;">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" id="sexo_masculino" value="M" checked="unchecked"> Masculino </label>
+                  </div>
+                </div>
+                <div class = "col-sm-3">
+                  <div class="form-check form-check-inline" style = "max-width = 150px;">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" id="sexo_feminino" value="F" checked="unchecked"> Feminino </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-12">
+              <hr>
+            </div>
+
+            <div class="col-sm-12">
+              <label for="select_cdi"><b>Faixa etária</b></label>
+              <select class="select-age_group form-control" id="select_age_group" multiple="multiple">
+              </select>
+            </div>
+
+            <div class="col-sm-12">
+              <hr>
+            </div>
+
+            <div class="col-sm-12">
+              <label for="select_cdi"><b>Causas da internação (CDI-10)</b></label>
+              <select class="select-cdi form-control" id="select_cdi" multiple="multiple"></select>
+            </div>
+
+            <div class="col-sm-12">
+              <hr>
+            </div>
+
+            <div class="col-sm-12">
+              <label for="select_speciality"><b>Especialidade do leito</b></label>
+              <select class="select-speciality form-control" id="select_speciality" multiple="multiple"></select>
+            </div>
+
+            <div class="col-sm-12">
+              <hr>
+            </div>
+
+            <div class="col-sm-12">
+              <label for="select_treatment"><b>Caráter do atendimento</b></label>
+              <select class="select-treatment form-control" id="select_treatment" multiple="multiple"></select>
+            </div>
+
+            <div class="col-sm-12">
+              <hr>
+            </div>
+
+            <div class="col-sm-12">
+              <label><b>Período</b></label>
+                <div class="input-daterange input-group" id="datepicker">
+                  <input type="text" class="input-sm form-control" id="intervalStart" />
+                  <span class="input-group-addon" id="intervalTo">até</span>
+                  <input type="text" class="input-sm form-control" id="intervalEnd" />
+                </div>
+            </div>
+
+            <div class="col-sm-12">
+              <hr>
+            </div>
+
+            <div class="col-sm-12">
+              <label><b>Distância do deslocamento (km)</b></label>
+              <div class="row">
+                <div class="col-sm-1 text-right">
+                  <span id="slider_distance_min">0</span>
+                </div>
+                <div class="col-sm-9">
+                  <input id="slider_distance" type="text" style="width: 100%" />
+                </div>
+                <div class="col-sm-2 text-left">
+                  <span id="slider_distance_max">10+</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-12">
+              <hr>
+              <button class="btn btn-success" type="button" id="btn-submit">
+                <i class="fa fa-search" aria-hidden="true"></i> Buscar
+              </button>
+            </div>
+            <div class = "col-sm-12" style = "height: 10px;"></div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <hr>
+</div>
+
+<script>
+  $(document).ready(initialize_procedures_map)
+  $(document).ready(data_input)
+</script>
