@@ -1,6 +1,6 @@
 $(document).ready(function(){
   google.charts.load("current", {packages:["corechart"]});
-})
+});
 
 var specialties_color = {
  "CIRURGIA":'#003300',
