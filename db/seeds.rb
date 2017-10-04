@@ -67,7 +67,6 @@ def get_procedures resource_uuid, spec_items
   end 
 
   resources = resp
-  p = Procedure.create(procedure_data)
   specialty = {}
 
   cnesid = procedure_data[:cnes_id].to_i
@@ -78,6 +77,10 @@ def get_procedures resource_uuid, spec_items
     specialty[:specialty] = procedure_data[:specialty]
     HealthCentreSpecialty.create(specialty)
   end
+
+  p = Procedure.create(procedure_data)
+  p.distance = p.calculate_distance
+  p.save!
   return 1
 end
 
@@ -108,8 +111,8 @@ def get_health_centres
   response["resources"].each do |item|
     if (item["capabilities"][0] == "medical_procedure")
     	description = item["description"]
-      puts item
-        	
+      # puts item
+      counter += 1  	
    		if !(get_match = regex.match(description)).nil?
    			cnes = get_match[1].to_i
    			name = get_match[2]
@@ -122,7 +125,6 @@ def get_health_centres
    		end
    	end	
   end
-
   puts "#{health_centre_instance} health_centre successfully created."
 end
 
