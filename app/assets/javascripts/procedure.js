@@ -1,6 +1,5 @@
 var map;
 var Markers = [];
-// var cnes_ids = [];
 
 var health_centre_icon = '/health_centre_icon.png';
 
@@ -19,56 +18,7 @@ function initialize_procedures_map()
   map = new google.maps.Map(document.getElementById("procedure_map"), options);
 }
 
-// function load_all_procedures()
-// {
-//   $.ajax({
-//     url: "procedure/allProcedures", success: function(procedures){
-//       $.each(procedures, function(index, procedure){
-//         create_markers(procedure)
-//       });
-//     }});
-// }
-
-// $(document).ready(function() {
-//   $.ajax({
-//     url: "procedure/allProcedures", success: function(procedures){
-//       $.each(procedures, function(index, procedure){
-//         create_markers(procedure)
-//       });
-//   }});  
-
-//   $('#sexo_masculino').change(function() {
-//       if(this.checked) {
-//         setMap(map, "M")
-//         // params.push({"gender", "M"})
-//       } else {
-//         deleteMarkers("M")
-//       }
-//   });
-
-//   $('#sexo_feminino').change(function() {
-//       if(this.checked) {
-//         setMap(map, "F")
-//       } else {
-//         deleteMarkers("F")
-//       }
-//   });
-
-//   $('#select_health_centre').change(function(){
-//     aux = []
-//     var selected = $('#select_health_centre option:selected');
-//     $(selected).each(function(index, brand){
-//       aux.push([$(this).val()]);
-//     });
-//     for (var i = 0; i < Markers.length; i++) { 
-//       if (aux.indexOf(Markers[i].cnes) != -1){
-//         setMap()
-//       }
-//     }
-//   });
-// });
-
-$(document).ready(function()
+function submit()
 {
   $('#btn-submit').click(function() {
     setMap(null);
@@ -81,7 +31,6 @@ $(document).ready(function()
     var genders = [];
     var health_centres = [];
     var specialties = [];
-    var aux = [];
 
     var select_health_centre = $('#select_health_centre option:selected');
     $(select_health_centre).each(function(index, brand){
@@ -104,22 +53,28 @@ $(document).ready(function()
       genders.push("F");
     }
 
+    var distance_max = document.getElementById('slider_distance_max');
+    var distance_min = document.getElementById('slider_distance_min');
+    var dist_min = parseFloat(distance_min.textContent);
+    var dist_max = parseFloat(distance_max.textContent);
+
     if(residencia_paciente.checked) {
-    var f =  $.ajax({
-      url: "procedure/procedures_search", data: {gender: genders.toString(), cnes: health_centres.toString(), 
-        specialties: specialties.toString(), start_date: start_date.toString(), end_date: end_date.toString()}, 
-        success: function(procedures){
-        $.each(procedures, function(index, procedure){
-          create_markers(procedure, "")
-        });
-      }, dataType: "json"});
+      $.ajax({
+        url: "procedure/procedures_search", data: {gender: genders.toString(), cnes: health_centres.toString(), 
+          specialties: specialties.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
+          dist_min: dist_min.toString(), dist_max: dist_max.toString()}, 
+          success: function(procedures){
+          $.each(procedures, function(index, procedure){
+            create_markers(procedure, "")
+          });
+      }});
     }
-    // console.log(JSON.parse(f));
 
     if(hc.checked) {
       $.ajax({
         url: "procedure/health_centres_search", data: {gender: genders.toString(), cnes: health_centres.toString(),
-          specialties: specialties.toString(), start_date: start_date.toString(), end_date: end_date.toString()}, 
+          specialties: specialties.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
+          dist_min: dist_min.toString(), dist_max: dist_max.toString()}, 
           success: function(result){
           $.each(result, function(index, health_centre){
             create_markers(health_centre, health_centre_icon)
@@ -128,7 +83,7 @@ $(document).ready(function()
     }
     setMap(map);
   });
-});
+}
 
 function create_markers(procedure, icon_path)
 {

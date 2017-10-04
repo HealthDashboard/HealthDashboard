@@ -21,7 +21,6 @@ Rails.application.routes.draw do
   get '/procedure/health_centres', to: 'procedure#health_centres'
   get '/procedure/specialties', to: 'procedure#specialties'
   get 'procedure/allProcedures', to: 'procedure#allProcedures'
-  # get 'procedure/procedures_search/:gender', to: 'procedure#procedures_search'
   resources :procedure do
     get :procedures_search, on: :collection
     get :health_centres_search, on: :collection
