@@ -31,6 +31,9 @@ function submit()
     var genders = [];
     var health_centres = [];
     var specialties = [];
+    var age_group = [];
+    var cdi = [];
+    var treatment_type = [];
 
     var select_health_centre = $('#select_health_centre option:selected');
     $(select_health_centre).each(function(index, brand){
@@ -40,6 +43,21 @@ function submit()
     var select_specialty = $('#select_speciality option:selected');
     $(select_specialty).each(function(index, brand){
       specialties.push([$(this).val()]);
+    });
+
+    var select_age_group = $('#select_age_group option:selected');
+    $(select_age_group).each(function(index, brand){
+      age_group.push([$(this).val()]);
+    });
+
+    var select_cdi = $('#select_cdi option:selected');
+    $(select_cdi).each(function(index, brand){
+      cdi.push([$(this).val()]);
+    });
+
+    var select_treatment_type = $('#select_treatment option:selected');
+    $(select_treatment_type).each(function(index, brand){
+      treatment_type.push([$(this).val()]);
     });
 
     var start_date = $("#intervalStart").datepicker({ dateFormat: 'dd,MM,yyyy' }).val();
@@ -62,7 +80,8 @@ function submit()
       $.ajax({
         url: "procedure/procedures_search", data: {gender: genders.toString(), cnes: health_centres.toString(), 
           specialties: specialties.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
-          dist_min: dist_min.toString(), dist_max: dist_max.toString()}, 
+          dist_min: dist_min.toString(), dist_max: dist_max.toString(), age_group: age_group.toString(),
+          cdi: cdi.toString(), treatment_type: treatment_type.toString()}, 
           success: function(procedures){
           $.each(procedures, function(index, procedure){
             create_markers(procedure, "")
@@ -74,7 +93,8 @@ function submit()
       $.ajax({
         url: "procedure/health_centres_search", data: {gender: genders.toString(), cnes: health_centres.toString(),
           specialties: specialties.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
-          dist_min: dist_min.toString(), dist_max: dist_max.toString()}, 
+          dist_min: dist_min.toString(), dist_max: dist_max.toString(), age_group: age_group.toString(),
+          cdi: cdi.toString(), treatment_type: treatment_type.toString()}, 
           success: function(result){
           $.each(result, function(index, health_centre){
             create_markers(health_centre, health_centre_icon)
