@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170922142104) do
+ActiveRecord::Schema.define(version: 20171009133106) do
 
   create_table "health_centre_specialties", force: :cascade do |t|
     t.integer  "health_centre_id"
@@ -61,6 +61,7 @@ ActiveRecord::Schema.define(version: 20170922142104) do
     t.datetime "updated_at",         null: false
     t.float    "distance"
     t.integer  "specialty_id"
+    t.integer  "treatment_type"
     t.index ["specialty_id"], name: "index_procedures_on_specialty_id"
   end
 

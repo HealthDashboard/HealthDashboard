@@ -1,6 +1,4 @@
 class ProcedureController < ApplicationController
-	# helper_method :health_centres, :specialties, :allProcedures, :health_centres_search
-
 	def index
 	end
 
@@ -13,17 +11,6 @@ class ProcedureController < ApplicationController
 	end
 
 	def health_centres
-		# @procedures = Procedure.all
-		# @health_centres = []
-		# @procedures.each do |procedure|
-		# 	health_center = {}
-		# 	hc  = procedure.cnes
-		# 	if hc != nil
-		# 		health_center[:id] = hc.cnes
-		# 		health_center[:text] = hc.name
-		# 		@health_centres << health_center
-		# 	end
-		# end
 		@health_centres = []
 		hc = HealthCentre.all
 		hc.each do |h|
@@ -54,6 +41,9 @@ class ProcedureController < ApplicationController
 		specialties = nil
 		start_date = nil
 		end_date = nil
+		age_group = nil
+		cdi = nil
+		treatment_type = nil
 
 		dist_min = params[:dist_min].to_f
 		dist_max = params[:dist_max].to_f
@@ -81,6 +71,21 @@ class ProcedureController < ApplicationController
 			end_date = Date.parse end_date
 		end
 
+		if params[:age_group].to_s != ""
+			age_group = params[:age_group].to_s
+			age_group = age_group.split(",")
+		end
+
+		if params[:cdi].to_s != ""
+			cdi = params[:cdi].to_s
+			cdi = cdi.split(",")
+		end
+
+		if params[:treatment_type] != ""
+			treatment_type = params[:treatment_type].to_s
+			treatment_type = treatment_type.split(",")
+		end
+
 		@Procedures = Procedure.where(gender: genders)
 
 		if health_centres != nil
@@ -93,6 +98,18 @@ class ProcedureController < ApplicationController
 
 		if start_date != nil && end_date != nil
 			@Procedures = @Procedures.where('date BETWEEN ? AND ?', start_date, end_date)
+		end
+
+		if age_group != nil
+			@Procedures = @Procedures.where(age_code: age_group)
+		end
+
+		if cdi != nil
+			@Procedures = @Procedures.where(cid_primary: cdi)
+		end	
+
+		if treatment_type != nil
+			@Procedures = @Procedures.where(treatment_type: treatment_type)
 		end
 
 		@Procedures = @Procedures.to_a
