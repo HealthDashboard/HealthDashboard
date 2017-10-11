@@ -3,8 +3,8 @@ require 'csv'
 require 'rest-client'
 
 
-ENV["RESOURCE_CATALOGUER_HOST"] ||= '192.168.0.3:8000/catalog/'
-ENV["DATA_COLLECTOR_HOST"] ||= '192.168.0.3:8000/collector/'
+ENV["RESOURCE_CATALOGUER_HOST"] ||= '143.107.45.126:40001/catalog/'
+ENV["DATA_COLLECTOR_HOST"] ||= '143.107.45.126:40001/collector/'
 
 AGE_GROUP = [ "TP_0A4", "TP_5A9", "TP_10A14", "TP_15A19", "TP_20A24", "TP_25A29", "TP_30A34",
               "TP_35A39", "TP_40A44", "TP_45A49", "TP_50A54", "TP_55A59", "TP_60A64", "TP_65A69",
