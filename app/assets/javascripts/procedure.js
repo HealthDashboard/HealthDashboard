@@ -41,7 +41,7 @@ function submit()
     var age_group = [];
     var cdi = [];
     var treatment_type = [];
-
+    
     // Inicializando variaveis globais 
     button_status = false;
     setTemporaryProcedures(false);
