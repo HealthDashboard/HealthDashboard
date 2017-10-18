@@ -194,10 +194,6 @@ function populate_legend(){
 
   var $legend = $('#legend')
 
-
-
-
-
   $.each(styles, function(index, style){
     element = '<div class="item"><div class="color" style="background-color: '+style.color+
     '"></div><p class="text">'+style.name+'</p> </div></div>'

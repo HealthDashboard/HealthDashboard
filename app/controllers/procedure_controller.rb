@@ -132,7 +132,17 @@ class ProcedureController < ApplicationController
 
 		@health_centres = HealthCentre.where(cnes: hc)
 		render json: @health_centres
-	end 
+	end
+
+	def health_centres_procedure
+		@health_centres = HealthCentre.where(cnes: params[:cnes].to_s)
+		render json: @health_centres.to_a
+	end
+
+	def procedures_by_hc
+		@Procedures = Procedure.where(cnes_id: params[:cnes].to_s)
+		render json: @Procedures.to_a
+	end
 
 	def procedures_search
 		@Procedures = getProcedures()
