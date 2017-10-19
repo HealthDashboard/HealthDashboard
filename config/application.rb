@@ -8,7 +8,7 @@ Bundler.require(*Rails.groups)
 
 module HealthSmartCity
   class Application < Rails::Application
-	config.public_file_server.enabled = false
+  	Rails.application.config.assets.precompile += %w( *.js ^[^_]*.css *.css.erb )
   	# config.assets.initialize_on_precompile = false
   	# config.web_console.whitelisted_ips = '10.0.2.2'
     # Settings in config/environments/* take precedence over those specified here.
