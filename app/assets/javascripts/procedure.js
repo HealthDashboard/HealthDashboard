@@ -2,7 +2,8 @@ var map;
 var button_status = false;
 var info_boxes_hc = [];
 var info_boxes_procedure = [];
-var info_box_opened = -1;
+var info_box_opened_procedure = -1;
+var info_box_opened_hc = -1;
 var temporary_hc = null;
 var temporary_procedures = [];
 var type;
@@ -41,7 +42,7 @@ function submit()
     var age_group = [];
     var cdi = [];
     var treatment_type = [];
-    
+
     // Inicializando variaveis globais 
     button_status = false;
     setTemporaryProcedures(false);
@@ -174,26 +175,26 @@ function add_listener(marker, data, generate_infobox_text, type)
 
 function open_info_box(id, marker, type){
   if (type == "procedure") {
-    if ((typeof(info_box_opened) === 'number' && typeof(info_boxes_procedure[info_box_opened]) === 'object' )) {
-      info_boxes_procedure[info_box_opened].close()
+    if ((typeof(info_box_opened_procedure) === 'number' && typeof(info_boxes_procedure[info_box_opened_procedure]) === 'object' )) {
+      info_boxes_procedure[info_box_opened_procedure].close()
     }
-    if (info_box_opened !== id){
+    if (info_box_opened_procedure !== id){
       info_boxes_procedure[id].open(map, marker)
-      info_box_opened = id
+      info_box_opened_procedure = id
       type = "procedure"
     }else{
-      info_box_opened = -1
+      info_box_opened_procedure = -1
     }
   } else {
-    if ((typeof(info_box_opened) === 'number' && typeof(info_boxes_hc[info_box_opened]) === 'object' )) {
-      info_boxes_hc[info_box_opened].close()
+    if ((typeof(info_box_opened_hc) === 'number' && typeof(info_boxes_hc[info_box_opened_hc]) === 'object' )) {
+      info_boxes_hc[info_box_opened_hc].close()
     }
-    if (info_box_opened !== id){
+    if (info_box_opened_hc !== id){
       info_boxes_hc[id].open(map, marker)
-      info_box_opened = id
+      info_box_opened_hc = id
       type = "hc"
     }else{
-      info_box_opened = -1
+      info_box_opened_hc = -1
     }
   }
 }
@@ -206,7 +207,7 @@ function text_patient(procedure)
          '<br><strong>Data: </strong> ' + procedure.date +
          '<br><strong>Sexo: </strong>' + Sexo +
          '<br><strong>Distância percorrida: </strong>' + procedure.distance.toPrecision(4) +
-         " Km<br><br><button type='button' id='cluster_info_procedure' class='btn btn-info btn-sm' onclick='helthcentre()'>"+button_label+"</button>"
+         " Km<br><br><button type='button' id='cluster_info_procedure' class='btn btn-info btn-sm' onclick='procedure()'>"+button_label+"</button>"
 }
 
 function text_heathcentre(hc)
@@ -216,23 +217,23 @@ function text_heathcentre(hc)
          '<br><strong>Cnes: </strong> ' + hc.cnes +
          '<br><strong>Nome: </strong> ' + hc.name +
          '<br><strong>Leitos: </strong> ' + hc.beds +
-         "<br><br><button type='button' id='cluster_info_hc' class='btn btn-info btn-sm' onclick='procedures()'>"+button_label+"</button>"
+         "<br><br><button type='button' id='cluster_info_hc' class='btn btn-info btn-sm' onclick='healthcentre()'>"+button_label+"</button>"
 }
 
-function helthcentre()
+function procedure()
 {
-  if (button_status === false){
-    setup_hc()
+  if (button_status === false) {
+    setup_procedure()
   }else{
-    teardown_hc()
+    teardown_procedure()
   }
 }
 
-function setup_hc()
+function setup_procedure()
 {
   markers_visible(false, "procedure")
   $.ajax({
-  url: "procedure/health_centres_procedure", data: {cnes: info_boxes_procedure[info_box_opened].data.cnes_id.toString()}, 
+  url: "procedure/health_centres_procedure", data: {cnes: info_boxes_procedure[info_box_opened_procedure].data.cnes_id.toString()}, 
     success: function(result){
     $.each(result, function(index, health_centre){
       temporary_hc = create_markers(health_centre, health_centre_icon);
@@ -243,23 +244,25 @@ function setup_hc()
   button_status = true;
 }
 
-function teardown_hc()
+function teardown_procedure()
 {
   markers_visible(true);
-  info_boxes_procedure[info_box_opened].close();
-  temporary_hc.setVisible(false);
+  info_boxes_procedure[info_box_opened_procedure].close();
+  if (temporary_hc != null) {
+    temporary_hc.setVisible(false);
+  }
   temporary_hc = null;
-  info_box_opened = -1
+  info_box_opened_procedure = -1
   $('#cluster_info_procedure').text('Mostrar Centro de saúde')
   button_status = false;
 }
 
-function procedures()
+function healthcentre()
 {
   if (button_status === false){
-    setup_procedures()
+    setup_hc()
   }else{
-    teardown_procedures()
+    teardown_hc()
   }
 }
 
@@ -270,11 +273,11 @@ function setTemporaryProcedures(value)
   }
 }
 
-function setup_procedures()
+function setup_hc()
 {
   markers_visible(false, "hc")
   $.ajax({
-  url: "procedure/procedures_by_hc", data: {cnes: info_boxes_hc[info_box_opened].data.cnes.toString()}, 
+  url: "procedure/procedures_by_hc", data: {cnes: info_boxes_hc[info_box_opened_hc].data.cnes.toString()}, 
     success: function(result){
     $.each(result, function(index, health_centre){
       temporary_procedures.push(create_markers(health_centre, person_icon));
@@ -285,13 +288,13 @@ function setup_procedures()
   button_status = true;
 }
 
-function teardown_procedures()
+function teardown_hc()
 {
   markers_visible(true);
-  info_boxes_hc[info_box_opened].close();
+  info_boxes_hc[info_box_opened_hc].close();
   setTemporaryProcedures(false);
   temporary_procedures = [];
-  info_box_opened = -1
+  info_box_opened_hc = -1
   $('#cluster_info_hc').text('Mostrar pacientes')
   button_status = false;
 }
@@ -300,14 +303,14 @@ function markers_visible(visibility, type)
 {
    $.each(info_boxes_procedure, function(index, info_box)
    {
-     if (info_box && (info_box.id !== info_box_opened || type == "hc")){
+     if (info_box && (info_box.id !== info_box_opened_procedure || type == "hc")){
        info_box.marker.setVisible(visibility);
      }
    });
 
    $.each(info_boxes_hc, function(index, info_box)
    {
-     if (info_box && (info_box.id !== info_box_opened || type == "procedure")){
+     if (info_box && (info_box.id !== info_box_opened_hc || type == "procedure")){
        info_box.marker.setVisible(visibility);
      }
    });
