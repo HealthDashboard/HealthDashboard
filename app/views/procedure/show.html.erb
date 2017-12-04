@@ -1,27 +1,25 @@
-<div class="w3-container">
-    <div class = "container-fluid">
+<!-- <div class="w3-container"> -->
+    <!-- <div class = "container-fluid"> -->
+      <!-- <nav id="navgation"> -->
       <div class = "row">
-        <div class = "col-sm-12" style="height: 10px"></div>
-        <div class = "col-sm-8 affix">
-        	<div id = "procedure_map"> </div>
+        <div id="map-affix" class = "col-sm-9 affix">
+          <div class = "map-wrapper" id = "procedure_map"> </div>
         </div>
-        <div class="col-sm-8"></div>
-
-        <div class = "col-sm-4" style = "border: 1px solid; border-radius: 2px;">
+        <div class="col-sm-9">
+          <h1> </h1>
+        </div>
+        <!-- <div class="col-sm-9 offset-col-sm-9"></div> -->
+        <div class ="col-sm-3">
          <div class="card card-block">
-          <h3><center>Filtros</center></h3>
           <div class = "row">
             <div class = "col-sm-12">
-              <label>Local dos eventos</label>
               <div class = "form-check form-check-inline">
                 <label class = "form-check-label">
-                  <input class = "form-check-input" type = "checkbox" id = "checkbox_residencia_paciente" value = 1 checked = "checked"> Região de residência dos pacientes
-                </label>
+                  <input class = "form-check-input" type = "checkbox" id = "checkbox_residencia_paciente" value = 1 checked = "checked"> Residência dos pacientes</label>
               </div>
               <div class = "form-check form-check-inline">
                 <label class = "form-check-label">
-                  <input class = "form-check-input" type = "checkbox" id = "checkbox_health_centre" value = 1 checked = "checked"> Estabelecimento de ocorrência
-                </label>
+                  <input class = "form-check-input" type = "checkbox" id = "checkbox_health_centre" value = 1 checked = "checked"> Estabelecimento de ocorrência</label>
               </div>
             </div>
             <div class="col-sm-12">
@@ -40,28 +38,6 @@
             <div class="col-sm-12">
               <label for="select_health_centre"><b>Estabelecimento de ocorrência</b></label>
               <select class="select-health_centre form-control" id="select_health_centre" multiple="multiple"></select>
-            </div>
-
-            <div class="col-sm-12">
-              <hr>
-            </div>
-
-            <div class="col-sm-12">
-              <label><b>Sexo</b></label>
-              <div class = "row">
-                <div class = "col-sm-3">
-                  <div class="form-check form-check-inline" style = "max-width = 150px;">
-                    <label class="form-check-label">
-                      <input class="form-check-input" type="checkbox" id="sexo_masculino" value="M" checked="unchecked"> Masculino </label>
-                  </div>
-                </div>
-                <div class = "col-sm-3">
-                  <div class="form-check form-check-inline" style = "max-width = 150px;">
-                    <label class="form-check-label">
-                      <input class="form-check-input" type="checkbox" id="sexo_feminino" value="F" checked="unchecked"> Feminino </label>
-                  </div>
-                </div>
-              </div>
             </div>
 
             <div class="col-sm-12">
@@ -106,6 +82,30 @@
             </div>
 
             <div class="col-sm-12">
+              <div class = "row">
+                <div class = "col-sm-2">
+                  <label><b>Sexo</b></label>
+                </div>
+                <div class = "col-sm-5">
+                  <div class="form-check form-check-inline" style = "max-width = 140px;">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" id="sexo_masculino" value="M" checked="unchecked">Masculino</label>
+                  </div>
+                </div>
+                <div class = "col-sm-5">
+                  <div class="form-check form-check-inline" style = "max-width = 120px;">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" id="sexo_feminino" value="F" checked="unchecked">Feminino</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-12">
+              <hr>
+            </div>
+
+            <div class="col-sm-12">
               <label><b>Período</b></label>
                 <div class="input-daterange input-group" id="datepicker">
                   <input type="text" class="input-sm form-control" id="intervalStart" />
@@ -119,7 +119,7 @@
             </div>
 
             <div class="col-sm-12">
-              <label><b>Distância do deslocamento (km)</b></label>
+              <label><b>Distância de deslocamento(Km)</b></label>
               <div class="row">
                 <div class="col-sm-1 text-right">
                   <span id="slider_distance_min">0</span>
@@ -127,14 +127,14 @@
                 <div class="col-sm-9">
                   <input id="slider_distance" type="text" style="width: 100%" />
                 </div>
-                <div class="col-sm-2 text-left">
+                <div class="col-sm-1" style = "text-align: left" id="text-left">
                   <span id="slider_distance_max">10+</span>
                 </div>
               </div>
             </div>
 
             <div class="col-sm-12">
-              <hr>
+              <hr> 
               <button class="btn btn-success" type="button" id="btn-submit">
                 <i class="fa fa-search" aria-hidden="true"></i> Buscar
               </button>
@@ -143,10 +143,11 @@
           </div>
         </div>
       </div>
-      </div>
     </div>
-    <hr>
-</div>
+  <!-- </nav> -->
+    <!-- </div> -->
+    <!-- <hr> -->
+<!-- </div> -->
 
 <!-- Modal -->
 <div id="help-modal" class="modal fade" role="dialog">

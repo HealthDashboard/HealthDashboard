@@ -8,7 +8,7 @@ var colors = ['#003300', '#15ff00', '#ff0000', "#f5b979" , "#13f1e8" ,  "#615ac7
 
 var health_centre_icon = '/health_centre_icon.png'
 
-function show_procedures(procedures)
+function show_procedures(procedures, icon)
 {
   var markers = procedures.map(function(procedure, i) {
     var lat = procedure.lat
@@ -16,12 +16,8 @@ function show_procedures(procedures)
 
     return new google.maps.Marker({
         position: new google.maps.LatLng(lat, lng),
-        icon: {
-                path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-                strokeColor: "red",
-                scale: 3
-              }
-        });
+        icon: icon
+    });
   });
 
  var options = {
@@ -62,9 +58,9 @@ function initialize()
 
   map = new google.maps.Map(document.getElementById("map"), options);
   load_all_points();
-  populate_legend()
-  create_legend()
-  create_chart()
+  populate_legend();
+  create_legend();
+  create_chart();
 }
 
 function load_all_points()
@@ -138,9 +134,12 @@ function teardown_cluster()
 }
 
 function teardown_circles(){
+  if (markerCluster !== null)
+    markerCluster.clearMarkers()
   $.each(circles, function(index, circle){
     circle.setMap(null)
   });
+  circles = []
 }
 
 function add_info_to_marker(marker, point, generate_infobox_text)
@@ -331,7 +330,7 @@ function update_right_graph_text(data){
   $.each(data,function(key, value) {
     sum += parseInt(value, 10);
   });
-  $graph_text1.html(sum)
+  $graph_text1.html(" " + sum)
   $graph_text2.html("Procedimentos")
 }
 

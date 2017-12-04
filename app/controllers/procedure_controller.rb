@@ -3,6 +3,7 @@ class ProcedureController < ApplicationController
 	end
 
 	def show
+		@@Proc = Procedure.all
 	end
 
 	def allProcedures
@@ -86,7 +87,7 @@ class ProcedureController < ApplicationController
 			treatment_type = treatment_type.split(",")
 		end
 
-		@Procedures = Procedure.where(gender: genders)
+		@Procedures = @@Proc.where(gender: genders)
 
 		if health_centres != nil
 			@Procedures = @Procedures.where(cnes_id: health_centres)
@@ -130,7 +131,7 @@ class ProcedureController < ApplicationController
 			hc << p.cnes_id
 		end
 
-		@health_centres = HealthCentre.where(cnes: hc)
+		@health_centres = HealthCentre.where(cnes: hc.uniq)
 		render json: @health_centres
 	end
 

@@ -1,3 +1,5 @@
+// info_boxes = [];
+
 function initialize_health_centre_filter()
 {
   var lat = -23.557296000000001
@@ -52,6 +54,8 @@ function change_selected_health_centre(id){
 function filter_by(health_centre_id, specialty_id){
 
   teardown_health_centre()
+  // teardown_cluster()
+  teardown_circles()
   var path = ['/health_centre_filter', health_centre_id, specialty_id].join('/')
   $.getJSON(path, function(points) {
     $.each(points, function(index, point)
@@ -64,7 +68,7 @@ function filter_by(health_centre_id, specialty_id){
   var point = info_boxes[info_box_opened].point
   var latlng = new google.maps.LatLng(point.lat, point.long)
   map.setCenter(latlng)
-  teardown_circles()
+
   create_circles(info_boxes[info_box_opened].marker)
   show_procedures_filtered(health_centre_id, specialty_id)
   show_legend()
@@ -82,7 +86,7 @@ function teardown_health_centre(){
 function show_procedures_filtered(health_centre_id, specialty_id){
   var procedure_path = ["/health_centre_specialty", health_centre_id, specialty_id ].join("/");
   $.getJSON(procedure_path, function(procedures) {
-      show_procedures(procedures)
+      show_procedures(procedures, { path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW, strokeColor: "red", scale: 3})
       create_circles(info_boxes[info_box_opened].marker)
   });
 }
