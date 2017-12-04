@@ -1,41 +1,50 @@
-<div class="alert alert-warning">
-  <strong>Atenção!</strong> Página não atualizada, dados podem estar errados.
-</div>
-
-<div class='map-wrapper col-md-9 col-sm-9'>
-  <div id='map'></div>
-</div>
-
-<div class='col-sm-3 col-md-3 pull-right '>
-  <div class='row'>
-    <div id='general-right-graph'></div>
-    <div id="labelOverlay">
-        <p class="n_procedures"></p>
-        <p class="atendimentos"></p>
+<div class = "container-fluid">
+  <div class = "row">
+    <div class = "col-sm-12" style="height: 10px"></div>
+    <div class="col-sm-12">
+      <div class="alert alert-warning">
+        <strong>Atenção!</strong> Página não atualizada, dados podem estar errados.
+      </div>
     </div>
+
+    <div class='col-sm-9'>
+      <div id='map'></div>
+    </div>
+
+    <div class='col-sm-3 pull-right '>
+      <div class='row'>
+        <div id='general-right-graph'></div>
+        <div id="labelOverlay">
+            <p class="n_procedures"></p>
+            <p class="atendimentos"></p>
+        </div>
+      </div>
+
+      <div class='row'>
+        <div id='distance-legend'>
+            <div class='item'> <div class="color lt-1km"></div><p class="text">&lt; 1 km</p> </div>
+            <div class='item'> <div class="color lg-1km-lt-5"></div><p class="text">&gt; 1 km e &lt; 5 km</p> </div>
+            <div class='item'> <div class="color lg-5km-lt-10"></div><p class="text">&gt; 5 km e &lt; 10 km</p> </div>
+            <div class='item'> <div class="color lg-10km"></div><p class="text">&gt; 10 km</p> </div>
+        </div>
+      </div>
+
+      <div class='row'>
+        <div id="metric-board">
+          <h1 id='value'></h1>
+          <p  id='text'>Número de procedimentos cujo tipo é oferecido em centros de saúde mais próximos do que o local onde foram realizados.</p>
+        </div>
+       </div>
+    </div>
+
+    <!-- <div class = "col-sm-12" style="height: 10px"></div> -->
+
+      <div class='col-sm-9'>
+         <div class='col-md-6' id='bt-graph1'></div>
+         <div class='col-md-6' id='bt-graph2'></div>
+      </div>
+      <div class = "col-sm-12" style="height: 10px"></div>
   </div>
-
-  <div class='row'>
-    <div id='distance-legend'>
-        <div class='item'> <div class="color lt-1km"></div><p class="text">&lt; 1 km</p> </div>
-        <div class='item'> <div class="color lg-1km-lt-5"></div><p class="text">&gt; 1 km e &lt; 5 km</p> </div>
-        <div class='item'> <div class="color lg-5km-lt-10"></div><p class="text">&gt; 5 km e &lt; 10 km</p> </div>
-        <div class='item'> <div class="color lg-10km"></div><p class="text">&gt; 10 km</p> </div>
-    </div>
-  </div>
-
-  <div class='row'>
-    <div id="metric-board">
-      <h1 id='value'></h1>
-      <p  id='text'>Número de procedimentos cujo tipo é oferecido em centros de saúde mais próximos do que o local onde foram realizados.</p>
-    </div>
-   </div>
-
-</div>
-
-<div class='col-md-9 col-sm-9 graphs-bottom'>
-   <div class='col-md-6' id='bt-graph1'></div>
-   <div class='col-md-6' id='bt-graph2'></div>
 </div>
 
 <!-- Modal -->

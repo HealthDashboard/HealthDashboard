@@ -1,4 +1,4 @@
-var map;
+// var map;
 var button_status = false;
 var info_boxes_hc = [];
 var info_boxes_procedure = [];
@@ -30,7 +30,7 @@ function initialize_procedures_map()
 function submit()
 {
   $('#btn-submit').click(function() {
-
+    document.body.style.cursor = 'wait';
     var sexo_masculino = document.getElementById('sexo_masculino');
     var sexo_feminino = document.getElementById('sexo_feminino');
     var residencia_paciente = document.getElementById('checkbox_residencia_paciente');
@@ -43,11 +43,13 @@ function submit()
     var cdi = [];
     var treatment_type = [];
 
+    teardown_circles()
+
     // Inicializando variaveis globais 
     button_status = false;
     setTemporaryProcedures(false);
     temporary_procedures = [];
-    markers_visible(false);
+    p_markers_visible(false);
     if (temporary_hc != null) {
       temporary_hc.setVisible(false);
     }
@@ -96,42 +98,41 @@ function submit()
     var dist_min = parseFloat(distance_min.textContent);
     var dist_max = parseFloat(distance_max.textContent);
 
-    if(residencia_paciente.checked) {
-      $.ajax({
-        url: "procedure/procedures_search", data: {gender: genders.toString(), cnes: health_centres.toString(), 
-          specialties: specialties.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
-          dist_min: dist_min.toString(), dist_max: dist_max.toString(), age_group: age_group.toString(),
-          cdi: cdi.toString(), treatment_type: treatment_type.toString()}, 
-          success: function(procedures){
-          $.each(procedures, function(index, procedure){
-            create_makers_with_info(procedure, text_patient, "procedure", person_icon)
-          });
-      }});
-    }
-
     if(hc.checked) {
-      $.ajax({
-        url: "procedure/health_centres_search", data: {gender: genders.toString(), cnes: health_centres.toString(),
+      $.getJSON("procedure/health_centres_search", {gender: genders.toString(), cnes: health_centres.toString(),
           specialties: specialties.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
           dist_min: dist_min.toString(), dist_max: dist_max.toString(), age_group: age_group.toString(),
           cdi: cdi.toString(), treatment_type: treatment_type.toString()}, 
-          success: function(result){
-          $.each(result, function(index, health_centre){
-            create_makers_with_info(health_centre, text_heathcentre, "healthcentre", health_centre_icon)
-          });
-      }});
+          function(result){
+            $.each(result, function(index, health_centre){
+              create_makers_with_info(health_centre, text_heathcentre, "healthcentre", health_centre_icon)
+            });
+      });
     }
-    markers_visible(true)
+    p_markers_visible(true, "hc");
+
+
+    if(residencia_paciente.checked) {
+      $.getJSON("procedure/procedures_search", {gender: genders.toString(), cnes: health_centres.toString(), 
+          specialties: specialties.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
+          dist_min: dist_min.toString(), dist_max: dist_max.toString(), age_group: age_group.toString(),
+          cdi: cdi.toString(), treatment_type: treatment_type.toString()},
+          function(procedures){
+            show_procedures(procedures, person_icon)
+            document.body.style.cursor = 'default';
+      });
+    }
   });
 }
 
 function create_makers_with_info(data, generate_infobox_text, type, icon)
 {
-  var marker = create_markers(data, icon)
-  add_info_to_marker(marker, data, generate_infobox_text, type)
+  var marker = p_create_markers(data, icon)
+  p_add_info_to_marker(marker, data, generate_infobox_text, type)
+  return marker
 }
 
-function create_markers(data, icon_path)
+function p_create_markers(data, icon_path)
 {
   var marker = new google.maps.Marker({
       position: new google.maps.LatLng(data.lat, data.long),
@@ -141,61 +142,33 @@ function create_markers(data, icon_path)
   return marker
 }
 
-function add_info_to_marker(marker, data, generate_infobox_text, type)
+function p_add_info_to_marker(marker, data, generate_infobox_text, type)
 {
-  if (type == "procedure"){
-    info_boxes_procedure[data.id] = new google.maps.InfoWindow()
-    info_boxes_procedure[data.id].marker = marker
-    info_boxes_procedure[data.id].id = data.id
-    info_boxes_procedure[data.id].data = data
-  } else {
-    info_boxes_hc[data.id] = new google.maps.InfoWindow()
-    info_boxes_hc[data.id].marker = marker
-    info_boxes_hc[data.id].id = data.id
-    info_boxes_hc[data.id].data = data
-  }
-
-  add_listener(marker, data, generate_infobox_text, type)
+  info_boxes_hc[data.id] = new google.maps.InfoWindow()
+  info_boxes_hc[data.id].marker = marker
+  info_boxes_hc[data.id].id = data.id
+  info_boxes_hc[data.id].data = data
+  p_add_listener(marker, data, generate_infobox_text, type)
 }
 
-function add_listener(marker, data, generate_infobox_text, type)
+function p_add_listener(marker, data, generate_infobox_text, type)
 {
-  if (type == "procedure") {
-    info_boxes_procedure[data.id].listener = google.maps.event.addListener(marker, 'click', function (e) {
-        info_boxes_procedure[data.id].setContent(generate_infobox_text(data))
-        open_info_box(data.id, marker, type);
-    });
-  } else {
-    info_boxes_hc[data.id].listener = google.maps.event.addListener(marker, 'click', function (e) {
-        info_boxes_hc[data.id].setContent(generate_infobox_text(data))
-        open_info_box(data.id, marker, type);
-    });
-  }
+  info_boxes_hc[data.id].listener = google.maps.event.addListener(marker, 'click', function (e) {
+      info_boxes_hc[data.id].setContent(generate_infobox_text(data))
+      p_open_info_box(data.id, marker, type);
+  });
 }
 
-function open_info_box(id, marker, type){
-  if (type == "procedure") {
-    if ((typeof(info_box_opened_procedure) === 'number' && typeof(info_boxes_procedure[info_box_opened_procedure]) === 'object' )) {
-      info_boxes_procedure[info_box_opened_procedure].close()
-    }
-    if (info_box_opened_procedure !== id){
-      info_boxes_procedure[id].open(map, marker)
-      info_box_opened_procedure = id
-      type = "procedure"
-    }else{
-      info_box_opened_procedure = -1
-    }
-  } else {
-    if ((typeof(info_box_opened_hc) === 'number' && typeof(info_boxes_hc[info_box_opened_hc]) === 'object' )) {
-      info_boxes_hc[info_box_opened_hc].close()
-    }
-    if (info_box_opened_hc !== id){
-      info_boxes_hc[id].open(map, marker)
-      info_box_opened_hc = id
-      type = "hc"
-    }else{
-      info_box_opened_hc = -1
-    }
+function p_open_info_box(id, marker, type){
+  if ((typeof(info_box_opened_hc) === 'number' && typeof(info_boxes_hc[info_box_opened_hc]) === 'object' )) {
+    info_boxes_hc[info_box_opened_hc].close()
+  }
+  if (info_box_opened_hc !== id){
+    info_boxes_hc[id].open(map, marker)
+    info_box_opened_hc = id
+    type = "hc"
+  }else{
+    info_box_opened_hc = -1
   }
 }
 
@@ -231,12 +204,12 @@ function procedure()
 
 function setup_procedure()
 {
-  markers_visible(false, "procedure")
+  p_markers_visible(false, "procedure")
   $.ajax({
   url: "procedure/health_centres_procedure", data: {cnes: info_boxes_procedure[info_box_opened_procedure].data.cnes_id.toString()}, 
     success: function(result){
     $.each(result, function(index, health_centre){
-      temporary_hc = create_markers(health_centre, health_centre_icon);
+      temporary_hc = p_create_markers(health_centre, health_centre_icon);
       temporary_hc.setVisible(true);
     });
   }});
@@ -246,7 +219,7 @@ function setup_procedure()
 
 function teardown_procedure()
 {
-  markers_visible(true);
+  p_markers_visible(true);
   info_boxes_procedure[info_box_opened_procedure].close();
   if (temporary_hc != null) {
     temporary_hc.setVisible(false);
@@ -275,12 +248,12 @@ function setTemporaryProcedures(value)
 
 function setup_hc()
 {
-  markers_visible(false, "hc")
+  p_markers_visible(false, "hc")
   $.ajax({
   url: "procedure/procedures_by_hc", data: {cnes: info_boxes_hc[info_box_opened_hc].data.cnes.toString()}, 
     success: function(result){
     $.each(result, function(index, health_centre){
-      temporary_procedures.push(create_markers(health_centre, person_icon));
+      temporary_procedures.push(p_create_markers(health_centre, person_icon));
     });
   }});
   setTemporaryProcedures(true);
@@ -290,7 +263,7 @@ function setup_hc()
 
 function teardown_hc()
 {
-  markers_visible(true);
+  p_markers_visible(true);
   info_boxes_hc[info_box_opened_hc].close();
   setTemporaryProcedures(false);
   temporary_procedures = [];
@@ -299,19 +272,19 @@ function teardown_hc()
   button_status = false;
 }
 
-function markers_visible(visibility, type)
+function p_markers_visible(visibility, type)
 {
-   $.each(info_boxes_procedure, function(index, info_box)
-   {
-     if (info_box && (info_box.id !== info_box_opened_procedure || type == "hc")){
-       info_box.marker.setVisible(visibility);
-     }
-   });
+   // $.each(info_boxes_procedure, function(index, info_box)
+   // {
+   //   if (info_box && (info_box.id !== info_box_opened_procedure || type == "hc")){
+   //     info_box.marker.setVisible(visibility);
+   //   }
+   // });
 
    $.each(info_boxes_hc, function(index, info_box)
    {
-     if (info_box && (info_box.id !== info_box_opened_hc || type == "procedure")){
-       info_box.marker.setVisible(visibility);
+     if (info_box && (info_box.id !== info_box_opened_hc || type == "hc")){
+      info_box.marker.setVisible(visibility);
      }
    });
 }

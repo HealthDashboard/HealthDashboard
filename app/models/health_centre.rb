@@ -4,4 +4,5 @@ class HealthCentre < ApplicationRecord
   has_many :specialties, through: :health_centre_specialties
   has_many :health_centre_types
   has_many :types, through: :health_centre_types
+  validates :cnes, uniqueness: true
 end
