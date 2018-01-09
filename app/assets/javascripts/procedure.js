@@ -98,30 +98,34 @@ function submit()
     var dist_min = parseFloat(distance_min.textContent);
     var dist_max = parseFloat(distance_max.textContent);
 
-    if(hc.checked) {
       $.getJSON("procedure/health_centres_search", {gender: genders.toString(), cnes: health_centres.toString(),
           specialties: specialties.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
           dist_min: dist_min.toString(), dist_max: dist_max.toString(), age_group: age_group.toString(),
-          cdi: cdi.toString(), treatment_type: treatment_type.toString()}, 
+          cdi: cdi.toString(), treatment_type: treatment_type.toString(), show_hc: hc.checked.toString(), show_rp: residencia_paciente.checked.toString()}, 
           function(result){
-            $.each(result, function(index, health_centre){
-              create_makers_with_info(health_centre, text_heathcentre, "healthcentre", health_centre_icon)
-            });
-      });
-    }
-    p_markers_visible(true, "hc");
-
-
-    if(residencia_paciente.checked) {
-      $.getJSON("procedure/procedures_search", {gender: genders.toString(), cnes: health_centres.toString(), 
-          specialties: specialties.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
-          dist_min: dist_min.toString(), dist_max: dist_max.toString(), age_group: age_group.toString(),
-          cdi: cdi.toString(), treatment_type: treatment_type.toString()},
-          function(procedures){
-            show_procedures(procedures, person_icon)
+            if (hc.checked) {
+              $.each(result.health_centres, function(index, health_centre){
+                create_makers_with_info(health_centre, text_heathcentre, "healthcentre", health_centre_icon)
+              });
+            }
+            if (residencia_paciente.checked) {
+              show_procedures(result.procedures, person_icon)
+            }
             document.body.style.cursor = 'default';
       });
-    }
+      p_markers_visible(true, "hc");
+
+
+    // if(residencia_paciente.checked) {
+    //   $.getJSON("procedure/procedures_search", {gender: genders.toString(), cnes: health_centres.toString(), 
+    //       specialties: specialties.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
+    //       dist_min: dist_min.toString(), dist_max: dist_max.toString(), age_group: age_group.toString(),
+    //       cdi: cdi.toString(), treatment_type: treatment_type.toString()},
+    //       function(procedures){
+    //         show_procedures(procedures, person_icon)
+    //         document.body.style.cursor = 'default';
+    //   });
+    // }
   });
 }
 
@@ -553,7 +557,7 @@ function data_input()
       { id: "03", text: "ACIDENTE NO LOCAL DE TRABALHO OU A SERVICO DA EMPRESA" }, 
       { id: "04", text: "ACIDENTE NO TRAJETO PARA O TRABALHO" }, 
       { id: "05", text: "OUTROS TIPOS DE ACIDENTE DE TRANSITO" }, 
-      { id: "06", text: "OUTROS TIPOS DE LESOES E ENVENENAMENTOS POR AGENTES QUIMICOS OU FISICOS " }, 
+      { id: "06", text: "OUTROS TIPOS DE LESOES E ENVENENAMENTOS POR AGENTES QUIMICOS OU FISICOS" }, 
     ];
 
     $(".select-treatment").select2({
