@@ -122,4 +122,14 @@ class HealthCentresController < ApplicationController
         render json: total_info
     end
 
+    def distance_metric
+        distance_metric = {'1': Procedure.where("distance <= ?", 1).count.to_s,
+                            '5': Procedure.where("distance > ? AND distance <= ?", 1, 5).count.to_s,
+                            '10': Procedure.where("distance > ? AND distance <= ?", 5, 10).count.to_s,
+                            '10+': Procedure.where("distance > ?", 10).count.to_s
+                          }
+
+        render json: distance_metric
+    end
+
 end

@@ -271,9 +271,10 @@ function create_right_graph(){
     legend: {position: 'none'},
     pieSliceText: "none"
   };
-  var specialty_path = "/distance_metric.json"
+  var specialty_path = "/distance_metric"
 
   $.getJSON(specialty_path, function(data){
+    console.log(data)
 
     draw_chart(header, data, chart, options)
     update_right_graph_text(data)

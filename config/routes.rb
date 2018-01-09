@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   get '/specialties_procedure_distance_average', to: 'health_centres#specialties_procedure_distance_average'
   get 'distances/:id', to: 'health_centres#distances'
   get '/rank_health_centres', to: 'health_centres#rank_health_centres'
+  get '/distance_metric', to: 'health_centres#distance_metric'
 
   get 'dashboard', to: 'dashboard#index'
   get 'specialties', to: 'specialties#index'

@@ -10,11 +10,12 @@ AGE_GROUP = [ "TP_0A4", "TP_5A9", "TP_10A14", "TP_15A19", "TP_20A24", "TP_25A29"
               "TP_35A39", "TP_40A44", "TP_45A49", "TP_50A54", "TP_55A59", "TP_60A64", "TP_65A69",
               "TP_70A74", "TP_75A79", "TP_80A84", "TP_85A89", "TP_90A94", "TP_95A99", "TP_100OUMA"]
 
+
 def get_specialties  
   specialties_csv_path = File.join(__dir__, "csv/specialties.csv")
 
   spec_items = {}
-  
+
   CSV.foreach(specialties_csv_path, :headers => false) do |row|
     s = Specialty.create id: row[0], name: row[1]
     spec_items[s.name] = s.id
@@ -22,7 +23,35 @@ def get_specialties
 
   puts "#{spec_items.count} specialties successfully created."
   spec_items
-end      
+end
+
+def get_types
+  # types_csv_path = File.join(__dir__, "csv/type.csv")
+
+  # types = {}
+
+  # CSV.foreach(types_csv_path, :headers => false) do |row|
+  #   t = Type.create id: row[0].to_i, name: row[1]
+  #   types[t.name] = t.id
+  # end
+
+  # puts "#{types.count} types successfully create"
+  # types
+  types = {}
+  t = Type.create id: 1, name: "ELETIVO"
+  types[t.name] = t.id
+  t = Type.create id: 2, name: "URGÊNCIA"
+  types[t.name] = t.id
+  t = Type.create id: 3, name: "ACIDENTE NO LOCAL DE TRABALHO OU A SERVICO DA EMPRESA"
+  types[t.name] = t.id
+  t = Type.create id: 4, name: "ACIDENTE NO TRAJETO PARA O TRABALHO"
+  types[t.name] = t.id
+  t = Type.create id: 5, name: "OUTROS TIPOS DE ACIDENTE DE TRANSITO"
+  types[t.name] = t.id
+  t = Type.create id: 6, name: "OUTROS TIPOS DE LESOES E ENVENENAMENTOS POR AGENTES QUIMICOS OU FISICOS"
+  types[t.name] = t.id
+  types
+end  
 
 
 def get_resources
@@ -85,7 +114,7 @@ def get_age_code age
   end
 end
 
-def get_procedures resource_uuid, spec_items
+def get_procedures resource_uuid, spec_items, types
   page = 0
   last = false
   while true
@@ -111,13 +140,12 @@ def get_procedures resource_uuid, spec_items
 
         pf.each do |procedure_fields|
 
-          spec_id = procedure_fields["specialty"]
-          spec_id = spec_id.to_i
+          spec_id = spec_items[procedure_fields["specialty"]]
 
-          if spec_id >= 1 && spec_id <= 9
+          if spec_id != nil && spec_id >= 1 && spec_id <= 9
             spec = Specialty.where(id: spec_id.to_i).first
           else
-            spec_id = 1
+            spec_id = 10
             spec = Specialty.where(id: spec_id.to_i).first
           end
 
@@ -131,12 +159,13 @@ def get_procedures resource_uuid, spec_items
           procedure_data[:lat] = patient["lat"]
           procedure_data[:long] = patient["lon"]
           procedure_data[:date] = Date.parse procedure_fields["date"].to_s
-          procedure_data[:age_number] = procedure_fields["age"]
+          procedure_data[:age_number] = procedure_fields["age"].to_i
           procedure_data[:age_code] = get_age_code(procedure_fields["age"].to_i)
           procedure_data[:cid_primary] = procedure_fields["cid_primary"]
           procedure_data[:cid_secondary] = procedure_fields["cid_secondary"]
           procedure_data[:cid_associated] = procedure_fields["cid_associated"]
-          procedure_data[:treatment_type] = procedure_fields["treatment_type"]
+
+          procedure_data[:treatment_type] = types[procedure_fields["treatment_type"]]
 
           cnesid = procedure_data[:cnes_id].to_i
           hc = HealthCentre.where(cnes: cnesid).first
@@ -173,10 +202,10 @@ def get_procedures resource_uuid, spec_items
   return 1
 end
 
-def create_procedures resources, spec_items
+def create_procedures resources, spec_items, types
   number_procedures = 0
   resources["resources"].each do |res|
-    if ( get_procedures(res["uuid"], spec_items) == 1)
+    if ( get_procedures(res["uuid"], spec_items, types) == 1)
       number_procedures += 1
     end
   end
@@ -226,6 +255,8 @@ resources = get_resources
 
 get_health_centres(resources)
 
-spec_items = get_specialties 
+spec_items = get_specialties
 
-create_procedures(resources, spec_items)
+types = get_types
+
+create_procedures(resources, spec_items, types)

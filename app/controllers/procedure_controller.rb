@@ -1,9 +1,11 @@
 class ProcedureController < ApplicationController
+	@@Procedimentos = nil
 	def index
 	end
 
 	def show
-		@@Proc = Procedure.all
+		# @@Proc = Procedure.all
+		# @npages = count / 500 
 	end
 
 	def allProcedures
@@ -87,7 +89,7 @@ class ProcedureController < ApplicationController
 			treatment_type = treatment_type.split(",")
 		end
 
-		@Procedures = @@Proc.where(gender: genders)
+		@Procedures = Procedure.where(gender: genders)
 
 		if health_centres != nil
 			@Procedures = @Procedures.where(cnes_id: health_centres)
@@ -114,6 +116,7 @@ class ProcedureController < ApplicationController
 		end
 
 		@Procedures = @Procedures.to_a
+		# puts "HERE"
 		@Procedures.delete_if do |procedure|
 			dist = procedure.distance
 			if(dist == nil || dist < dist_min || (dist_max < 10 &&  dist > dist_max))
@@ -121,18 +124,38 @@ class ProcedureController < ApplicationController
 			end
 		end
 
+		@@Procedimentos = @Procedures
 		return @Procedures
 	end
 
 	def health_centres_search
-		@Procedures = getProcedures()
+		if (@@Procedimentos == nil)
+			puts "TRUE"
+			@Procedures = getProcedures()
+			if (@@Procedimentos == nil)
+				puts "Not OK"
+			end
+		else
+			@Procedures = @@Procedimentos
+			@@Procedimentos = nil
+		end
+
 		hc = [];
 		@Procedures.each do |p|
 			hc << p.cnes_id
 		end
 
 		@health_centres = HealthCentre.where(cnes: hc.uniq)
-		render json: @health_centres
+		if params[:show_hc] == "true" and params[:show_rp] == "true"
+			render json: {:health_centres => @health_centres, :procedures => @Procedures}
+		elsif params[:show_hc] == "true"
+			render json: {:health_centres => @health_centres}
+		elsif params[:show_rp] == "true"
+			render json: {:procedures => @Procedures}
+		else
+			render json: {:result => ""}
+		end
+			
 	end
 
 	def health_centres_procedure
@@ -146,7 +169,13 @@ class ProcedureController < ApplicationController
 	end
 
 	def procedures_search
-		@Procedures = getProcedures()
+		if (@@Procedimentos == nil)
+			puts "TRUE"
+			@Procedures = getProcedures()
+		else
+			@Procedures = @@Procedimentos
+			@@Procedimentos = nil
+		end
 		render json: @Procedures
 	end
 end
