@@ -273,7 +273,11 @@ def create_procedures()
 
   # spec_items = {}
   procedures_counter = 0
+  counter = 0
   CSV.foreach(hc_csv_path, :headers => true) do |row|
+    counter += 1
+    next if counter < 217204
+
     age_code = get_age_code(row[4].to_i)
     spec = nil
     if row[17].to_i > 1 and row[17].to_i <= 9
@@ -306,7 +310,7 @@ def create_procedures()
         break
       end
     }
-    p.save!
+    p.save
     
     if hc != nil
       if hc.procedure_count == nil
@@ -321,11 +325,11 @@ def create_procedures()
   puts "#{procedures_counter} procedures successfully created"
 end
 
-get_health_centres()
+# get_health_centres()
 
-spec_items = get_specialties
+# spec_items = get_specialties
 
-types = get_types
+# types = get_types
 
 create_procedures()
 
