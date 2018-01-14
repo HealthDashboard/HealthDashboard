@@ -276,7 +276,7 @@ def create_procedures()
   counter = 0
   CSV.foreach(hc_csv_path, :headers => true) do |row|
     counter += 1
-    next if counter < 188802
+    next if counter < 217204
 
     age_code = get_age_code(row[4].to_i)
     spec = nil
