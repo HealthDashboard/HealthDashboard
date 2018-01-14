@@ -310,7 +310,7 @@ def create_procedures()
         break
       end
     }
-    p.save!
+    p.save
     
     if hc != nil
       if hc.procedure_count == nil
