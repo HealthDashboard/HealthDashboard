@@ -271,12 +271,13 @@ end
 def create_procedures()
   hc_csv_path = File.join(__dir__, "csv/procedures.csv")
 
-  counter += 1
-  next if counter < 52153
-
   # spec_items = {}
   procedures_counter = 0
+  counter = 0
   CSV.foreach(hc_csv_path, :headers => true) do |row|
+    counter += 1
+    next if counter < 52153
+
     age_code = get_age_code(row[4].to_i)
     spec = nil
     if row[17].to_i > 1 and row[17].to_i <= 9
