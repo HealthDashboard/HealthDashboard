@@ -115,14 +115,14 @@ class ProcedureController < ApplicationController
 			@Procedures = @Procedures.where(treatment_type: treatment_type)
 		end
 
-		@Procedures = @Procedures.to_a
+		# @Procedures = @Procedures.to_a
 		# puts "HERE"
-		@Procedures.delete_if do |procedure|
-			dist = procedure.distance
-			if(dist == nil || dist < dist_min || (dist_max < 10 &&  dist > dist_max))
-				true
-			end
-		end
+		# @Procedures.delete_if do |procedure|
+		# 	dist = procedure.distance
+		# 	if(dist == nil || dist < dist_min || (dist_max < 10 &&  dist > dist_max))
+		# 		true
+		# 	end
+		# end
 
 		@@Procedimentos = @Procedures
 		return @Procedures
@@ -146,11 +146,22 @@ class ProcedureController < ApplicationController
 		end
 
 		@health_centres = HealthCentre.where(cnes: hc.uniq)
+		@Procedures = @Procedures.select("long, lat")
+		@Procedures = @Procedures.to_a
+		# puts "HERE"
+		@Procedures.delete_if do |procedure|
+			dist = procedure.distance
+			if(dist == nil || dist < dist_min || (dist_max < 10 &&  dist > dist_max))
+				true
+			end
+		end
+		
 		if params[:show_hc] == "true" and params[:show_rp] == "true"
 			render json: {:health_centres => @health_centres, :procedures => @Procedures}
 		elsif params[:show_hc] == "true"
 			render json: {:health_centres => @health_centres}
 		elsif params[:show_rp] == "true"
+			# @Procedures = @Procedures.select("long, lat")
 			render json: {:procedures => @Procedures}
 		else
 			render json: {:result => ""}
