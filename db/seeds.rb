@@ -271,6 +271,9 @@ end
 def create_procedures()
   hc_csv_path = File.join(__dir__, "csv/procedures.csv")
 
+  counter += 1
+  next if counter < 52153
+
   # spec_items = {}
   procedures_counter = 0
   CSV.foreach(hc_csv_path, :headers => true) do |row|
@@ -321,11 +324,11 @@ def create_procedures()
   puts "#{procedures_counter} procedures successfully created"
 end
 
-get_health_centres()
+# get_health_centres()
 
-spec_items = get_specialties
+# spec_items = get_specialties
 
-types = get_types
+# types = get_types
 
 create_procedures()
 
