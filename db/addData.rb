@@ -57,3 +57,5 @@ def create_procedures()
   end
   puts "#{procedures_counter} procedures successfully created"
 end
+
+create_procedures()
