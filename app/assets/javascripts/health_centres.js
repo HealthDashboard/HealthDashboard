@@ -342,11 +342,11 @@ function update_procedures_metric(value){
 
   var shorter_distance_count_path = "/shorter_distance_count"
 
-  // $.getJSON('/metrics.json', function(data){
-  //   $html.html(data.count)
-  // });
-
-   $.getJSON(shorter_distance_count_path, function(data){
-    $html.html(data.distance)
+  $.getJSON('/metrics.json', function(data){
+    $html.html(data.count)
   });
+
+  //  $.getJSON(shorter_distance_count_path, function(data){
+  //   $html.html(data.distance)
+  // });
 }

@@ -42,6 +42,7 @@ function submit()
     var age_group = [];
     var cdi = [];
     var treatment_type = [];
+    var region = []
 
     teardown_circles()
 
@@ -56,6 +57,11 @@ function submit()
     info_boxes_procedure = [];
     info_boxes_hc = [];
     temporary_procedures = [];
+
+    var select_region = $('#select_region option:selected');
+    $(select_region).each(function(index, brand){
+      region.push([$(this).val()]);
+    });
 
     var select_health_centre = $('#select_health_centre option:selected');
     $(select_health_centre).each(function(index, brand){
@@ -100,7 +106,7 @@ function submit()
 
       $.getJSON("procedure/health_centres_search", {gender: genders.toString(), cnes: health_centres.toString(),
           specialties: specialties.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
-          dist_min: dist_min.toString(), dist_max: dist_max.toString(), age_group: age_group.toString(),
+          dist_min: dist_min.toString(), dist_max: dist_max.toString(), age_group: age_group.toString(), region: region.toString(),
           cdi: cdi.toString(), treatment_type: treatment_type.toString(), show_hc: hc.checked.toString(), show_rp: residencia_paciente.checked.toString()}, 
           function(result){
             if (hc.checked) {
