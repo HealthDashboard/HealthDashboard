@@ -47,12 +47,15 @@ class ProcedureController < ApplicationController
 		age_group = nil
 		cdi = nil
 		treatment_type = nil
-
-		dist_min = params[:dist_min].to_f
-		dist_max = params[:dist_max].to_f
+		region = nil
 
 		genders = params[:gender].to_s
 		genders = genders.split(",")
+
+		if params[:region].to_s != ""
+			region = params[:region].to_s
+			region = region.split(",")
+		end
 
 		if params[:cnes].to_s != ""
 			health_centres = params[:cnes].to_s
@@ -90,6 +93,10 @@ class ProcedureController < ApplicationController
 		end
 
 		@Procedures = Procedure.where(gender: genders)
+
+		if region != nil
+			@Procedures = @Procedures.where(region: region)
+		end
 
 		if health_centres != nil
 			@Procedures = @Procedures.where(cnes_id: health_centres)
@@ -146,9 +153,11 @@ class ProcedureController < ApplicationController
 		end
 
 		@health_centres = HealthCentre.where(cnes: hc.uniq)
-		@Procedures = @Procedures.select("long, lat")
+		@Procedures = @Procedures.select("long, lat, distance")
 		@Procedures = @Procedures.to_a
 		# puts "HERE"
+		dist_min = params[:dist_min].to_f
+		dist_max = params[:dist_max].to_f
 		@Procedures.delete_if do |procedure|
 			dist = procedure.distance
 			if(dist == nil || dist < dist_min || (dist_max < 10 &&  dist > dist_max))
