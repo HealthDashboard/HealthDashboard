@@ -325,12 +325,25 @@ def create_procedures()
   puts "#{procedures_counter} procedures successfully created"
 end
 
+def health_type
+  hc_csv_path = File.join(__dir__, "csv/health_centres_types.csv")
+
+  hc_counter = 0
+  CSV.foreach(hc_csv_path, :headers => false) do |row|
+    h = HealthCentreType.create health_centre_id: row[0], type_id: row[1]
+    hc_counter += 1
+  end
+  puts "#{hc_counter} Health Centres types successfully created"
+end
+
 # get_health_centres()
 
 # spec_items = get_specialties
 
 # types = get_types
 
-create_procedures()
+# create_procedures()
+
+health_type()
 
 # create_procedures(resources, spec_items, types)

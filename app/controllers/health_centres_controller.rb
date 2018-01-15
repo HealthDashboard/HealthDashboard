@@ -60,12 +60,12 @@ class HealthCentresController < ApplicationController
     # GET /rank_health_centres
     def rank_health_centres
       health_centres = HealthCentre.all.to_a
-      health_centres.sort! { |first, second|  first.procedures.count <=> second.procedures.count }
+      health_centres.sort! { |first, second|  first.procedure_count <=> second.procedure_count }
       result = {}
 
       health_centres.reverse.each_with_index do |health_centre, index|
         break if index == 10
-        result[health_centre.name] = health_centre.procedures.count
+        result[health_centre.name] = health_centre.procedure_count
       end
       render json: result
     end
@@ -130,6 +130,12 @@ class HealthCentresController < ApplicationController
                           }
 
         render json: distance_metric
+    end
+
+    def shorter_distance_count
+        shorter_distance_count = {'distance': Procedure.sum("distance_count").to_s}
+
+        render json: shorter_distance_count
     end
 
 end

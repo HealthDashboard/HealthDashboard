@@ -271,11 +271,13 @@ function create_right_graph(){
     legend: {position: 'none'},
     pieSliceText: "none"
   };
-  var specialty_path = "/distance_metric"
+  // var specialty_path = "/distance_metric"
 
-  $.getJSON(specialty_path, function(data){
-    console.log(data)
-
+  // $.getJSON(specialty_path, function(data){
+  //   draw_chart(header, data, chart, options)
+  //   update_right_graph_text(data)
+  // });
+  $.getJSON('/distance_metric.json', function(data){
     draw_chart(header, data, chart, options)
     update_right_graph_text(data)
   });
@@ -338,7 +340,13 @@ function update_right_graph_text(data){
 function update_procedures_metric(value){
   var $html = $("#metric-board #value")
 
-  $.getJSON('/metrics.json', function(data){
-    $html.html(data.count)
+  var shorter_distance_count_path = "/shorter_distance_count"
+
+  // $.getJSON('/metrics.json', function(data){
+  //   $html.html(data.count)
+  // });
+
+   $.getJSON(shorter_distance_count_path, function(data){
+    $html.html(data.distance)
   });
 }
