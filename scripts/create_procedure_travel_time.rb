@@ -9,8 +9,8 @@ require APP_PATH
 Rails.application.require_environment!
 
 def get_procedures_travel_time
-  h1 = File.open('scripts/travel_time_hospital_clinicas.json', 'r')
-  h2 = File.open('scripts/travel_time_oswaldo_ramos.json', 'r')
+  h1 = File.open(Rails.root.join('scripts/travel_time_hospital_clinicas.json'), 'r')
+  h2 = File.open(Rails.root.join('scripts/travel_time_oswaldo_ramos.json'), 'r')
 
   data1 = JSON.parse h1.read()
   data2 = JSON.parse h2.read()
@@ -59,7 +59,7 @@ end
 def main()
   procedures = get_procedures_travel_time
 
-  fJson = File.open("public/procedures_travel_time.json","w")
+  fJson = File.open(Rails.root.join("public/procedures_travel_time.json"),"w")
   fJson.write(procedures.to_json)
   fJson.close()
 end

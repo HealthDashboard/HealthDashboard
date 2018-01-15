@@ -14,6 +14,8 @@ def get_procedures_distances(procedures)
     distances = Hash.new(0)
     procedures.each do |procedure|
         puts("Calculating distance metric for procedure #{procedure.id}...")
+
+        next if procedure.distance == nil
         if procedure.distance <= 1
             distances[LABELS[0]] += 1
         elsif procedure.distance <= 5
@@ -32,7 +34,7 @@ def main()
   procedures = Procedure.all
   distances = get_procedures_distances(procedures)
 
-  fJson = File.open("public/distance_metric.json","w")
+  fJson = File.open(Rails.root.join("public/distance_metric.json"),"w")
   fJson.write(distances.to_json)
   fJson.close()
 end
