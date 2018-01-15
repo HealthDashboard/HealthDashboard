@@ -294,7 +294,7 @@ function create_bottom_graphs(id, data){
         height :250,
         legend: { position: 'none'},
         isStacked: 'percent',
-        chartArea: {  width: "60%", height: "70%" },
+        chartArea: {  width: "55%", height: "70%" },
         vAxis: { minValue: 0,
               ticks: [0,.2,.4,.6,.8,1],
               textStyle: {fontName: 'Arial',
@@ -351,3 +351,4 @@ function update_procedures_metric(value){
   //   $html.html(data.distance)
   // });
 }
+;

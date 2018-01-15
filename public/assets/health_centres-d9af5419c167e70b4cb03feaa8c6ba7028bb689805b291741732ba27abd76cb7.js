@@ -351,3 +351,4 @@ function update_procedures_metric(value){
   //   $html.html(data.distance)
   // });
 }
+;
