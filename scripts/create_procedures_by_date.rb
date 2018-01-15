@@ -27,7 +27,7 @@ end
 def main()
   procedures = get_procedures_by_date
 
-  fJson = File.open("public/procedures_by_date.json","w")
+  fJson = File.open(Rails.root.join("public/procedures_by_date.json"),"w")
   fJson.write(procedures.to_json)
   fJson.close()
 end

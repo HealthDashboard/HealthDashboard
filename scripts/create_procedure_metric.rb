@@ -21,7 +21,7 @@ def infer_health_centre_specialty(health_centre, health_centres_specialties)
 
     specialty = procedure.specialty.id
     next if health_centres_specialties[id].include?(specialty)
-
+    next if specialty == nil
     health_centres_specialties[id].add(specialty)
   end
 end
@@ -41,6 +41,8 @@ def infer_all_health_centre_specialty(health_centres, health_centres_specialties
     health_centres_specialties[health_centre.id] = Set.new []
     infer_health_centre_specialty(health_centre, health_centres_specialties)
     specialties_array = get_specialties_array(health_centres_specialties[health_centre.id])
+    specialties_array = specialties_array.reject(&:blank?)
+    # puts specialties_array.lenth
     health_centre.specialties = specialties_array
     health_centre.save()
   end
@@ -55,6 +57,7 @@ def count_closest_health_centres(procedures, health_centres_specialties, health_
 
     health_centres.each do |health_centre|
       id = health_centre.id
+      next if procedure.cnes == nil
       next if procedure.cnes.id == id
       flag = false
       procedure.cnes.types.each do |type|
@@ -134,7 +137,7 @@ def main()
   metric = {'count': count, 'health_centre_count': health_centre_count}
 
   puts('Save json file with results')
-  fJson = File.open("public/metrics.json","w")
+  fJson = File.open(Rails.root.join("public/metrics.json"),"w")
   fJson.write(metric.to_json)
   fJson.close()
 

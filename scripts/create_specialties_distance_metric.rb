@@ -14,6 +14,8 @@ def create_specialty_distance_metric(specialty_id, specialty_name, specialties_d
   specialties_distance_metric[specialty_id][0] = specialty_name
 
   procedures.each do |procedure|
+    next if procedure.distance == nil
+    
     if procedure.distance <= 1
       specialties_distance_metric[specialty_id][1] += 1
     elsif procedure.distance <= 5
@@ -46,7 +48,7 @@ end
 def main
   specialties_distance_metric = create_specialties_distance_metric()
 
-  fJson = File.open("public/specialties_distance_metric.json","w")
+  fJson = File.open(Rails.root.join("public/specialties_distance_metric.json"),"w")
   fJson.write(specialties_distance_metric.values.to_json)
   fJson.close()
 end

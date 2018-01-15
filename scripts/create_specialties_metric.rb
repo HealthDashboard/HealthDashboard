@@ -16,6 +16,7 @@ def create_specialty_metric(id, procedures, specialties_metric)
   count_types = Array.new(10).fill(0)
 
   procedures.each do |procedure|
+    next if procedure.cnes == nil
     types = procedure.cnes.types
 
     types.each do |type|
@@ -48,7 +49,7 @@ end
 def main
   specialties_metric = create_metric_for_all_specialties()
 
-  fJson = File.open("public/specialties_metric.json","w")
+  fJson = File.open(Rails.root.join("public/specialties_metric.json"),"w")
   fJson.write(specialties_metric.to_json)
   fJson.close()
 end
