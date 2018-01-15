@@ -45,7 +45,7 @@ function create_dashboard_charts() {
  create_procedures_per_specialties()
  create_specialties_distance_between_patients_hospital()
  populate_procedures_by_date()
- create_travel_time_chart()
+ // create_travel_time_chart()
 }
 
 function create_procedures_per_specialties() {
@@ -174,7 +174,7 @@ function dashboard_legend(){
 
 
 function update_rank(){
-  $.getJSON('rank_health_centres', create_table_rank);
+  $.getJSON('/rank_health_centres.json', create_table_rank);
 }
 
 function create_table_rank(data){

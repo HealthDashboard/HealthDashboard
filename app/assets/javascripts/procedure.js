@@ -42,9 +42,9 @@ function submit()
     var age_group = [];
     var cdi = [];
     var treatment_type = [];
-    var region = []
+    var region = [];
 
-    teardown_circles()
+    teardown_circles();
 
     // Inicializando variaveis globais 
     button_status = false;
@@ -206,9 +206,10 @@ function text_heathcentre(hc)
 function procedure()
 {
   if (button_status === false) {
-    setup_procedure()
+    setup_procedure();
+    teardown_circles();
   }else{
-    teardown_procedure()
+    teardown_procedure();
   }
 }
 
@@ -243,9 +244,10 @@ function teardown_procedure()
 function healthcentre()
 {
   if (button_status === false){
-    setup_hc()
+    setup_hc();
+    teardown_circles();
   }else{
-    teardown_hc()
+    teardown_hc();
   }
 }
 

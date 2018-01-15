@@ -131,21 +131,22 @@ class ProcedureController < ApplicationController
 		# 	end
 		# end
 
-		@@Procedimentos = @Procedures
+		# @@Procedimentos = @Procedures
 		return @Procedures
 	end
 
 	def health_centres_search
-		if (@@Procedimentos == nil)
-			puts "TRUE"
-			@Procedures = getProcedures()
-			if (@@Procedimentos == nil)
-				puts "Not OK"
-			end
-		else
-			@Procedures = @@Procedimentos
-			@@Procedimentos = nil
-		end
+		# if (@@Procedimentos == nil)
+		# 	puts "TRUE"
+		# 	@Procedures = getProcedures()
+		# 	if (@@Procedimentos == nil)
+		# 		puts "Not OK"
+		# 	end
+		# else
+		# 	@Procedures = @@Procedimentos
+		# 	@@Procedimentos = nil
+		# end
+		@Procedures = getProcedures()
 
 		hc = [];
 		@Procedures.each do |p|
