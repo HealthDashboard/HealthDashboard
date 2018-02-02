@@ -3,15 +3,15 @@ $(document).ready(function(){
 });
 
 var specialties_color = {
- "CIRURGIA":'#003300',
- "OBSTETRECIA":'#15ff00',
- "CLINICA MEDICA":'#ff0000',
- "PACIENTES SOB CUIDADOS PROLONGADOS":"#f5b979",
- "PSIQUIATRIA":"#13f1e8",
- "TISIOLOGIA":"#615ac7",
- "PEDIATRIA":"#8e3a06",
- "REABILITACAO":"#b769ab",
- "PSIQUIATRIA EM HOSPITAL DIA": "#df10eb"
+ "Cirurgia":'#003300',
+ "Obstetrícia":'#15ff00',
+ "Clinica Médica":'#ff0000',
+ "Cuidados Prolongados":"#f5b979",
+ "Psiquiatria":"#13f1e8",
+ "Tisiologia":"#615ac7",
+ "Pediatria":"#8e3a06",
+ "Reabilitação":"#b769ab",
+ "Psiquiatria em Hospital-Dia": "#df10eb"
 }
 
 function init_dashboard_chart(){
@@ -134,8 +134,15 @@ function create_specialties_distance_between_patients_hospital() {
   var chart = new google.visualization.BarChart(document.getElementById("chart_spec_distance_average"));
   var header = ["Especialidades", "Distância média em km", {role: "style"}]
   var options = {
-    title: "Distância média de procedimentos por especialidade",
-    legend: {position: 'none'}
+    title: "Distância média por especialidade",
+    legend: {position: 'none'},
+    chartArea: {
+        top: 55,
+        left: 250 },
+    vAxis: { textStyle:  {fontSize: 18,bold: false}},
+    titleTextStyle: {fontSize: 20, bold: true }
+
+
   };
   var distance_average_path = 'specialties_procedure_distance_average'
   $.getJSON(distance_average_path, function(data){draw_chart(header, data, chart, options, specialties_color)});

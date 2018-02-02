@@ -1,22 +1,26 @@
-// var map;
-var button_status = false;
-var info_boxes_hc = [];
-var info_boxes_procedure = [];
-var info_box_opened_procedure = -1;
-var info_box_opened_hc = -1;
-var temporary_hc = null;
-var temporary_procedures = [];
-var type;
-
+var ft_layer = null;
+var SPmap = null;
+var SPmap_label = null;
+var latlng = null;
+var health_centres_var = {};
 var health_centre_icon = '/health_centre_icon.png';
-
 var person_icon = '/home.png';
 
-function initialize_procedures_map()
+function attachPolygonInfoWindow(polygon) {
+    var infoWindow = new google.maps.InfoWindow();
+    google.maps.event.addListener(polygon, 'mouseover', function (e) {
+        infoWindow.setContent("Polygon Name");
+        var latLng = e.latLng;
+        infoWindow.setPosition(latLng);
+        infoWindow.open(map);
+    });
+}
+
+function initMap()
 {
   var lat = -23.557296000000001
   var lng = -46.669210999999997
-  var latlng = new google.maps.LatLng(lat, lng);
+  latlng = new google.maps.LatLng(lat, lng);
 
   var options = {
       zoom: 11,
@@ -25,12 +29,17 @@ function initialize_procedures_map()
   };
 
   map = new google.maps.Map(document.getElementById("procedure_map"), options);
+  SPmap_label = new MapLabel({
+          fontSize: 28,
+          align: 'center'
+        });
 }
 
+// Search button
 function submit()
 {
   $('#btn-submit').click(function() {
-    document.body.style.cursor = 'wait';
+    // document.body.style.cursor = 'wait';
     var sexo_masculino = document.getElementById('sexo_masculino');
     var sexo_feminino = document.getElementById('sexo_feminino');
     var residencia_paciente = document.getElementById('checkbox_residencia_paciente');
@@ -43,20 +52,6 @@ function submit()
     var cdi = [];
     var treatment_type = [];
     var region = [];
-
-    teardown_circles();
-
-    // Inicializando variaveis globais 
-    button_status = false;
-    setTemporaryProcedures(false);
-    temporary_procedures = [];
-    p_markers_visible(false);
-    if (temporary_hc != null) {
-      temporary_hc.setVisible(false);
-    }
-    info_boxes_procedure = [];
-    info_boxes_hc = [];
-    temporary_procedures = [];
 
     var select_region = $('#select_region option:selected');
     $(select_region).each(function(index, brand){
@@ -104,201 +99,136 @@ function submit()
     var dist_min = parseFloat(distance_min.textContent);
     var dist_max = parseFloat(distance_max.textContent);
 
-      $.getJSON("procedure/health_centres_search", {gender: genders.toString(), cnes: health_centres.toString(),
-          specialties: specialties.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
-          dist_min: dist_min.toString(), dist_max: dist_max.toString(), age_group: age_group.toString(), region: region.toString(),
-          cdi: cdi.toString(), treatment_type: treatment_type.toString(), show_hc: hc.checked.toString(), show_rp: residencia_paciente.checked.toString()}, 
-          function(result){
-            if (hc.checked) {
-              $.each(result.health_centres, function(index, health_centre){
-                create_makers_with_info(health_centre, text_heathcentre, "healthcentre", health_centre_icon)
-              });
-            }
-            if (residencia_paciente.checked) {
-              show_procedures(result.procedures, person_icon)
-            }
-            document.body.style.cursor = 'default';
+    var filterDay = $('#viewType input:radio:checked').val()
+
+    // Clear map
+    if (ft_layer != null) {
+      ft_layer.setMap(null);
+    }
+
+    if (SPmap != null) { 
+      SPmap.setMap(null);
+    }
+
+    if (SPmap_label != null) { 
+      SPmap_label.set('map', null);
+    }
+
+    // Show data 
+    if (filterDay == 0) {
+      where =  whereParse(health_centres, region)
+      ft_layer = new google.maps.FusionTablesLayer({
+        query: {
+          select: 'LAT_SC',
+          from: '1NY6F66M-QEkGAMyiDAoALQV3_ypjZC3pL-TTUUy9',
+          where: where 
+        },
       });
-      p_markers_visible(true, "hc");
 
+      var sexp_var = {}
+      sexp_var["M"] = "Masculino";
+      sexp_var["F"] = "Feminino";
 
-    // if(residencia_paciente.checked) {
-    //   $.getJSON("procedure/procedures_search", {gender: genders.toString(), cnes: health_centres.toString(), 
-    //       specialties: specialties.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
-    //       dist_min: dist_min.toString(), dist_max: dist_max.toString(), age_group: age_group.toString(),
-    //       cdi: cdi.toString(), treatment_type: treatment_type.toString()},
-    //       function(procedures){
-    //         show_procedures(procedures, person_icon)
-    //         document.body.style.cursor = 'default';
-    //   });
-    // }
+      google.maps.event.addListener(ft_layer, 'click', function(e) {
+        // Change the content of the InfoWindow
+        e.infoWindowHtml = "<strong>Estabelecimento: </strong>" + health_centres_var[e.row['CNES'].value] + "<br>";
+        e.infoWindowHtml += "<strong>Sexo: </strong>" + sexp_var[e.row['P_SEXO'].value] + "<br>";
+        e.infoWindowHtml += "<strong>Idade: </strong>" + e.row['P_IDADE'].value + "<br>";
+        e.infoWindowHtml += "<strong>CDI: </strong>" + e.row['DIAG_PR'].value + "<br>";
+        e.infoWindowHtml += "<strong>Região: </strong>" + e.row['CRS'].value + "<br>";
+      });
+      ft_layer.setMap(map);
+
+    } else {
+
+      bounds = []
+      $.each(sp_coordenadas, function(index, point){
+        bounds.push(new google.maps.LatLng(parseFloat(point[0]), parseFloat(point[1])))
+      });
+
+      SPmap = new google.maps.Polygon({
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35,
+        map: map,
+        path: bounds
+      });
+      SPmap.setMap(map)
+
+      $.ajax({url: "/procedure/procedures_count", success: function(result) {
+        SPmap_label.set('text', result.toString());
+        SPmap_label.set('position', latlng);
+        SPmap_label.set('map', map);
+      }});
+    }
   });
 }
 
-function create_makers_with_info(data, generate_infobox_text, type, icon)
+function clauseParse(array)
 {
-  var marker = p_create_markers(data, icon)
-  p_add_info_to_marker(marker, data, generate_infobox_text, type)
-  return marker
-}
+  if (array.length == 0) {
+    return ""
+  }
+  res = "";
+  $.each(array, function(index, value){
+    if (res != "") {
+      res = res.concat(", ");
+    }
 
-function p_create_markers(data, icon_path)
-{
-  var marker = new google.maps.Marker({
-      position: new google.maps.LatLng(data.lat, data.long),
-      map: map,
-      icon: icon_path
+    res = res.concat("'", value, "'");
   });
-  return marker
+  res = "(".concat(res, ")");
+  return res
 }
 
-function p_add_info_to_marker(marker, data, generate_infobox_text, type)
+// parse where clause for fusion layer query.
+function whereParse(health_centres, region)
 {
-  info_boxes_hc[data.id] = new google.maps.InfoWindow()
-  info_boxes_hc[data.id].marker = marker
-  info_boxes_hc[data.id].id = data.id
-  info_boxes_hc[data.id].data = data
-  p_add_listener(marker, data, generate_infobox_text, type)
-}
-
-function p_add_listener(marker, data, generate_infobox_text, type)
-{
-  info_boxes_hc[data.id].listener = google.maps.event.addListener(marker, 'click', function (e) {
-      info_boxes_hc[data.id].setContent(generate_infobox_text(data))
-      p_open_info_box(data.id, marker, type);
-  });
-}
-
-function p_open_info_box(id, marker, type){
-  if ((typeof(info_box_opened_hc) === 'number' && typeof(info_boxes_hc[info_box_opened_hc]) === 'object' )) {
-    info_boxes_hc[info_box_opened_hc].close()
+  where = ""
+  if (health_centres.length > 0) {
+    where = where.concat("CNES IN", clauseParse(health_centres));
   }
-  if (info_box_opened_hc !== id){
-    info_boxes_hc[id].open(map, marker)
-    info_box_opened_hc = id
-    type = "hc"
-  }else{
-    info_box_opened_hc = -1
+
+  if (region.length > 0) {
+    if (where != "") { 
+      where = where.concat(" AND ");
+    }
+    where = where.concat("CRS IN", clauseParse(region));
   }
+  return where
 }
 
-function text_patient(procedure)
+function clear()
 {
-  var Sexo = (procedure.gender === "F") ? "Feminino" : "Masculino" 
-  var button_label= (button_status === false)? 'Mostrar Centro de saúde':'Voltar'
-  return '<strong>Local de residência do paciente</strong>' +
-         '<br><strong>Data: </strong> ' + procedure.date +
-         '<br><strong>Sexo: </strong>' + Sexo +
-         '<br><strong>Distância percorrida: </strong>' + procedure.distance.toPrecision(4) +
-         " Km<br><br><button type='button' id='cluster_info_procedure' class='btn btn-info btn-sm' onclick='procedure()'>"+button_label+"</button>"
-}
+  $('#btn-clear').click(function() {
+    $("#slider_distance").slider('refresh');
+    $("#slider_distance_min").html('0');
+    $("#slider_distance_max").html('30+');
+    $(".select-health_centre").val('').trigger('change');
+    $(".select-age_group").val('').trigger('change');
+    $(".select-region").val('').trigger('change');
+    $(".select-cdi").val('').trigger('change');
+    $(".select-speciality").val('').trigger('change');
+    $(".select-treatment").val('').trigger('change');
+    $("#intervalStart").val('').datepicker('destroy').datepicker();
+    $("#intervalEnd").val('').datepicker('destroy').datepicker();
+    $("#sexo_masculino").prop("checked", true);
+    $("#sexo_feminino").prop("checked", true);
+    $("#checkbox_residencia_paciente").prop("checked", true);
+    $("#checkbox_health_centre").prop("checked", true);
+    if (ft_layer != null) {
+      ft_layer.setMap(null);
+    }
 
-function text_heathcentre(hc)
-{
-  var button_label= (button_status === false)? 'Mostrar pacientes':'Voltar'
-  return '<strong>Estabelecimento de saúde</strong>' +
-         '<br><strong>Cnes: </strong> ' + hc.cnes +
-         '<br><strong>Nome: </strong> ' + hc.name +
-         '<br><strong>Leitos: </strong> ' + hc.beds +
-         "<br><br><button type='button' id='cluster_info_hc' class='btn btn-info btn-sm' onclick='healthcentre()'>"+button_label+"</button>"
-}
+    if (SPmap != null) { 
+      SPmap.setMap(null);
+    }
 
-function procedure()
-{
-  if (button_status === false) {
-    setup_procedure();
-    teardown_circles();
-  }else{
-    teardown_procedure();
-  }
-}
-
-function setup_procedure()
-{
-  p_markers_visible(false, "procedure")
-  $.ajax({
-  url: "procedure/health_centres_procedure", data: {cnes: info_boxes_procedure[info_box_opened_procedure].data.cnes_id.toString()}, 
-    success: function(result){
-    $.each(result, function(index, health_centre){
-      temporary_hc = p_create_markers(health_centre, health_centre_icon);
-      temporary_hc.setVisible(true);
-    });
-  }});
-  $('#cluster_info_procedure').text('Voltar')
-  button_status = true;
-}
-
-function teardown_procedure()
-{
-  p_markers_visible(true);
-  info_boxes_procedure[info_box_opened_procedure].close();
-  if (temporary_hc != null) {
-    temporary_hc.setVisible(false);
-  }
-  temporary_hc = null;
-  info_box_opened_procedure = -1
-  $('#cluster_info_procedure').text('Mostrar Centro de saúde')
-  button_status = false;
-}
-
-function healthcentre()
-{
-  if (button_status === false){
-    setup_hc();
-    teardown_circles();
-  }else{
-    teardown_hc();
-  }
-}
-
-function setTemporaryProcedures(value)
-{
-  for (var i = 0; i < temporary_procedures.length; i++) {
-      temporary_procedures[i].setVisible(value); 
-  }
-}
-
-function setup_hc()
-{
-  p_markers_visible(false, "hc")
-  $.ajax({
-  url: "procedure/procedures_by_hc", data: {cnes: info_boxes_hc[info_box_opened_hc].data.cnes.toString()}, 
-    success: function(result){
-    $.each(result, function(index, health_centre){
-      temporary_procedures.push(p_create_markers(health_centre, person_icon));
-    });
-  }});
-  setTemporaryProcedures(true);
-  $('#cluster_info_hc').text('Voltar')
-  button_status = true;
-}
-
-function teardown_hc()
-{
-  p_markers_visible(true);
-  info_boxes_hc[info_box_opened_hc].close();
-  setTemporaryProcedures(false);
-  temporary_procedures = [];
-  info_box_opened_hc = -1
-  $('#cluster_info_hc').text('Mostrar pacientes')
-  button_status = false;
-}
-
-function p_markers_visible(visibility, type)
-{
-   // $.each(info_boxes_procedure, function(index, info_box)
-   // {
-   //   if (info_box && (info_box.id !== info_box_opened_procedure || type == "hc")){
-   //     info_box.marker.setVisible(visibility);
-   //   }
-   // });
-
-   $.each(info_boxes_hc, function(index, info_box)
-   {
-     if (info_box && (info_box.id !== info_box_opened_hc || type == "hc")){
-      info_box.marker.setVisible(visibility);
-     }
-   });
+    if (SPmap_label != null) { 
+      SPmap_label.set('map', null);
+    }  });
 }
 
 function data_input()
@@ -312,13 +242,13 @@ function data_input()
 
     $("#slider_distance").slider({
       min: 0,
-      max: 10,
+      max: 30,
       step: 1,
-      value: [0,10],
+      value: [0,30],
     });
     $("#slider_distance").on("slide", function(slideEvt) {
       $("#slider_distance_min").html(slideEvt.value[0]);
-      $("#slider_distance_max").html(slideEvt.value[1] + (slideEvt.value[1] >= 10 ? "+" : ""));
+      $("#slider_distance_max").html(slideEvt.value[1] + (slideEvt.value[1] >= 30 ? "+" : ""));
     });
 
     var age_group = [
@@ -366,190 +296,22 @@ function data_input()
     });
 
     $.ajax({url: "/procedure/health_centres", success: function(result) {
+         $.each(result, function(index, value){
+           health_centres_var[value.id] = value.text
+         });
         $(".select-health_centre").select2({
             placeholder: "Todos",
             data: result,
+            allowClear: true
         });
     }});
 
-    var cdi = [
-      { id: "A00", text: "A00 - Cólera" },
-      { id: "A01", text: "A01 - Febres Tifóide e Paratifóide" },
-      { id: "A02", text: "A02 - Outras Infecções Por Salmonella" },
-      { id: "A03", text: "A03 - Shiguelose" },
-      { id: "A04", text: "A04 - Outras Infecções Intestinais Bacterianas" },
-      { id: "A05", text: "A05 - Outras Intoxicações Alimentares Bacterianas, Não Classificadas em Outra Parte" },
-      { id: "A06", text: "A06 - Amebíase" },
-      { id: "A07", text: "A07 - Outras Doenças Intestinais Por Protozoários" },
-      { id: "A08", text: "A08 - Infecções Intestinais Virais, Outras e as Não Especificadas" },
-      { id: "A09", text: "A09 - Diarréia e Gastroenterite de Origem Infecciosa Presumível" },
-      { id: "A15", text: "A15 - Tuberculose Respiratória, Com Confirmação Bacteriológica e Histológica" },
-      { id: "A16", text: "A16 - Tuberculose Das Vias Respiratórias, Sem Confirmação Bacteriológica ou Histológica" },
-      { id: "A17", text: "A17 - Tuberculose do Sistema Nervoso" },
-      { id: "A18", text: "A18 - Tuberculose de Outros Órgãos" },
-      { id: "A19", text: "A19 - Tuberculose Miliar" },
-      { id: "A20", text: "A20 - Peste" },
-      { id: "A21", text: "A21 - Tularemia" },
-      { id: "A22", text: "A22 - Carbúnculo" },
-      { id: "A23", text: "A23 - Brucelose" },
-      { id: "A24", text: "A24 - Mormo e Melioidose" },
-      { id: "A25", text: "A25 - Febres Transmitidas Por Mordedura de Rato" },
-      { id: "A26", text: "A26 - Erisipelóide" },
-      { id: "A27", text: "A27 - Leptospirose" },
-      { id: "A28", text: "A28 - Outras Doenças Bacterianas Zoonóticas Não Classificadas em Outra Parte" },
-      { id: "A30", text: "A30 - Hanseníase (doença de Hansen) (lepra)" },
-      { id: "A31", text: "A31 - Infecções Devidas a Outras Micobactérias" },
-      { id: "A32", text: "A32 - Listeriose (listeríase)" },
-      { id: "A33", text: "A33 - Tétano do Recém-nascido (neonatal)" },
-      { id: "A34", text: "A34 - Tétano Obstétrico" },
-      { id: "A35", text: "A35 - Outros Tipos de Tétano" },
-      { id: "A36", text: "A36 - Difteria" },
-      { id: "A37", text: "A37 - Coqueluche" },
-      { id: "A38", text: "A38 - Escarlatina" },
-      { id: "A39", text: "A39 - Infecção Meningogócica" },
-      { id: "A40", text: "A40 - Septicemia Estreptocócica" },
-      { id: "A41", text: "A41 - Outras Septicemias" },
-      { id: "A42", text: "A42 - Actinomicose" },
-      { id: "A43", text: "A43 - Nocardiose" },
-      { id: "A44", text: "A44 - Bartonelose" },
-      { id: "A46", text: "A46 - Erisipela" },
-      { id: "A48", text: "A48 - Outras Doenças Bacterianas Não Classificadas em Outra Parte" },
-      { id: "A49", text: "A49 - Infecção Bacteriana de Localização Não Especificada" },
-      { id: "A50", text: "A50 - Sífilis Congênita" },
-      { id: "A51", text: "A51 - Sífilis Precoce" },
-      { id: "A52", text: "A52 - Sífilis Tardia" },
-      { id: "A53", text: "A53 - Outras Formas e as Não Especificadas da Sífilis" },
-      { id: "A54", text: "A54 - Infecção Gonocócica" },
-      { id: "A55", text: "A55 - Linfogranuloma (venéreo) Por Clamídia" },
-      { id: "A56", text: "A56 - Outras Infecções Causadas Por Clamídias Transmitidas Por Via Sexual" },
-      { id: "A57", text: "A57 - Cancro Mole" },
-      { id: "A58", text: "A58 - Granuloma Inguinal" },
-      { id: "A59", text: "A59 - Tricomoníase" },
-      { id: "A60", text: "A60 - Infecções Anogenitais Pelo Vírus do Herpes (herpes Simples)" },
-      { id: "A63", text: "A63 - Outras Doenças de Transmissão Predominantemente Sexual, Não Classificadas em Outra Parte" },
-      { id: "A64", text: "A64 - Doenças Sexualmente Transmitidas, Não Especificadas" },
-      { id: "A65", text: "A65 - Sífilis Não-venérea" },
-      { id: "A66", text: "A66 - Bouba" },
-      { id: "A67", text: "A67 - Pinta (carate)" },
-      { id: "A68", text: "A68 - Febres Recorrentes (Borrelioses)" },
-      { id: "A69", text: "A69 - Outras Infecções Por Espiroquetas" },
-      { id: "A70", text: "A70 - Infecções Causadas Por Clamídia Psittaci" },
-      { id: "A71", text: "A71 - Tracoma" },
-      { id: "A74", text: "A74 - Outras Doenças Causadas Por Clamídias" },
-      { id: "A75", text: "A75 - Tifo Exantemático" },
-      { id: "A77", text: "A77 - Febre Maculosa (rickettsioses Transmitidas Por Carrapatos)" },
-      { id: "A78", text: "A78 - Febre Q" },
-      { id: "A79", text: "A79 - Outras Rickettsioses" },
-      { id: "A80", text: "A80 - Poliomielite Aguda" },
-      { id: "A81", text: "A81 - Infecções Por Vírus Atípicos do Sistema Nervoso Central" },
-      { id: "A82", text: "A82 - Raiva" },
-      { id: "A83", text: "A83 - Encefalite Por Vírus Transmitidos Por Mosquitos" },
-      { id: "A84", text: "A84 - Encefalite Por Vírus Transmitido Por Carrapatos" },
-      { id: "A85", text: "A85 - Outras Encefalites Virais, Não Classificadas em Outra Parte" },
-      { id: "A86", text: "A86 - Encefalite Viral, Não Especificada" },
-      { id: "A87", text: "A87 - Meningite Viral" },
-      { id: "A88", text: "A88 - Outras Infecções Virais do Sistema Nervoso Central Não Classificadas em Outra Parte" },
-      { id: "A89", text: "A89 - Infecções Virais Não Especificadas do Sistema Nervoso Central" },
-      { id: "A90", text: "A90 - Dengue (dengue Clássico)" },
-      { id: "A91", text: "A91 - Febre Hemorrágica Devida ao Vírus do Dengue" },
-      { id: "A92", text: "A92 - Outras Febres Virais Transmitidas Por Mosquitos" },
-      { id: "A93", text: "A93 - Outras Febres Por Vírus Transmitidas Por Artrópodes Não Classificadas em Outra Parte" },
-      { id: "A94", text: "A94 - Febre Viral Transmitida Por Artrópodes, Não Especificada" },
-      { id: "A95", text: "A95 - Febre Amarela" },
-      { id: "A96", text: "A96 - Febre Hemorrágica Por Arenavírus" },
-      { id: "A98", text: "A98 - Outras Febres Hemorrágicas Por Vírus, Não Classificadas em Outra Parte" },
-      { id: "A99", text: "A99 - Febres Hemorrágicas Virais Não Especificadas" }, 
-      { id: "B00", text: "B00 - Infecções Pelo Vírus do Herpes (herpes Simples)" },
-      { id: "B01", text: "B01 - Varicela (Catapora)" },
-      { id: "B02", text: "B02 - Herpes Zoster (Zona)" },
-      { id: "B03", text: "B03 - Varíola" },
-      { id: "B04", text: "B04 - Varíola Dos Macacos (Monkeypox)" },
-      { id: "B05", text: "B05 - Sarampo" },
-      { id: "B06", text: "B06 - Rubéola" },
-      { id: "B07", text: "B07 - Verrugas de Origem Viral" },
-      { id: "B08", text: "B08 - Outras Infecções Virais Caracterizadas Por Lesões da Pele e Das Membranas Mucosas, Não Classificadas em Outra Parte" },
-      { id: "B09", text: "B09 - Infecção Viral Não Especificada Caracterizada Por Lesões da Pele e Membranas Mucosas" },
-      { id: "B15", text: "B15 - Hepatite Aguda A" },
-      { id: "B16", text: "B16 - Hepatite Aguda B" },
-      { id: "B17", text: "B17 - Outras Hepatites Virais Agudas" },
-      { id: "B18", text: "B18 - Hepatite Viral Crônica" },
-      { id: "B19", text: "B19 - Hepatite Viral Não Especificada" },
-      { id: "B20", text: "B20 - Doença Pelo Vírus da Imunodeficiência Humana (HIV), Resultando em Doenças Infecciosas e Parasitárias" },
-      { id: "B21", text: "B21 - Doença Pelo Vírus da Imunodeficiência Humana (HIV), Resultando em Neoplasias Malignas" },
-      { id: "B22", text: "B22 - Doença Pelo Vírus da Imunodeficiência Humana (HIV) Resultando em Outras Doenças Especificadas" },
-      { id: "B23", text: "B23 - Doença Pelo Vírus da Imunodeficiência Humana (HIV) Resultando em Outras Doenças" },
-      { id: "B24", text: "B24 - Doença Pelo Vírus da Imunodeficiência Humana (HIV) Não Especificada" },
-      { id: "B25", text: "B25 - Doença Por Citomegalovírus" },
-      { id: "B26", text: "B26 - Caxumba (Parotidite Epidêmica)" },
-      { id: "B27", text: "B27 - Mononucleose Infecciosa" },
-      { id: "B30", text: "B30 - Conjuntivite Viral" },
-      { id: "B33", text: "B33 - Outras Doenças Por Vírus Não Classificada em Outra Parte" },
-      { id: "B34", text: "B34 - Doenças Por Vírus, de Localização Não Especificada" },
-      { id: "B35", text: "B35 - Dermatofitose" },
-      { id: "B36", text: "B36 - Outras Micoses Superficiais" },
-      { id: "B37", text: "B37 - Candidíase" },
-      { id: "B38", text: "B38 - Coccidioidomicose" },
-      { id: "B39", text: "B39 - Histoplasmose" },
-      { id: "B40", text: "B40 - Blastomicose" },
-      { id: "B41", text: "B41 - Paracoccidioidomicose" },
-      { id: "B42", text: "B42 - Esporotricose" },
-      { id: "B43", text: "B43 - Cromomicose e Abscesso Feomicótico" },
-      { id: "B44", text: "B44 - Aspergilose" },
-      { id: "B45", text: "B45 - Criptococose" },
-      { id: "B46", text: "B46 - Zigomicose" },
-      { id: "B47", text: "B47 - Micetoma" },
-      { id: "B48", text: "B48 - Outras Micoses, Não Classificadas em Outra Parte" },
-      { id: "B49", text: "B49 - Micose Não Especificada" },
-      { id: "B50", text: "B50 - Malária Por Plasmodium Falciparum" },
-      { id: "B51", text: "B51 - Malária Por Plasmodium Vivax" },
-      { id: "B52", text: "B52 - Malária Por Plasmodium Malariae" },
-      { id: "B53", text: "B53 - Outras Formas de Malária Confirmadas Por Exames Parasitológicos" },
-      { id: "B54", text: "B54 - Malária Não Especificada" },
-      { id: "B55", text: "B55 - Leishmaniose" },
-      { id: "B56", text: "B56 - Tripanossomíase Africana" },
-      { id: "B57", text: "B57 - Doença de Chagas" },
-      { id: "B58", text: "B58 - Toxoplasmose" },
-      { id: "B59", text: "B59 - Pneumocistose" },
-      { id: "B60", text: "B60 - Outras Doenças Devidas a Protozoários, Não Classificadas em Outra Parte" },
-      { id: "B64", text: "B64 - Doença Não Especificada Devida a Protozoários" },
-      { id: "B65", text: "B65 - Esquistossomose (bilharziose) (Schistosomíase)" },
-      { id: "B66", text: "B66 - Outras Infestações Por Trematódeos" },
-      { id: "B67", text: "B67 - Equinococose" },
-      { id: "B68", text: "B68 - Infestação Por Taenia" },
-      { id: "B69", text: "B69 - Cisticercose" },
-      { id: "B70", text: "B70 - Difilobotríase e Esparganose" },
-      { id: "B71", text: "B71 - Outras Infestações Por Cestóides" },
-      { id: "B72", text: "B72 - Dracontíase" },
-      { id: "B73", text: "B73 - Oncocercose" },
-      { id: "B74", text: "B74 - Filariose" },
-      { id: "B75", text: "B75 - Triquinose" },
-      { id: "B76", text: "B76 - Ancilostomíase" },
-      { id: "B77", text: "B77 - Ascaridíase" },
-      { id: "B78", text: "B78 - Estrongiloidíase" },
-      { id: "B79", text: "B79 - Tricuríase" },
-      { id: "B80", text: "B80 - Oxiuríase" },
-      { id: "B81", text: "B81 - Outras Helmintíases Intestinais, Não Classificadas em Outra Parte" },
-      { id: "B82", text: "B82 - Parasitose Intestinal Não Especificada" },
-      { id: "B83", text: "B83 - Outras Helmintíases" },
-      { id: "B85", text: "B85 - Pediculose e Ftiríase" },
-      { id: "B86", text: "B86 - Escabiose (sarna)" },
-      { id: "B87", text: "B87 - Miíase" },
-      { id: "B88", text: "B88 - Outras Infestações" },
-      { id: "B89", text: "B89 - Doença Parasitária Não Especificada" },
-      { id: "B90", text: "B90 - Seqüelas de Tuberculose" },
-      { id: "B91", text: "B91 - Seqüelas de Poliomielite" },
-      { id: "B92", text: "B92 - Seqüelas de Hanseníase (lepra)" },
-      { id: "B94", text: "B94 - Seqüelas de Outras Doenças Infecciosas e Parasitárias e Das Não Especificadas" },
-      { id: "B95", text: "B95 - Estreptococos e Estafilococos Como Causa de Doenças Classificadas em Outros Capítulos" },
-      { id: "B96", text: "B96 - Outros Agentes Bacterianos, Como Causa de Doenças Classificadas em Outros Capítulos" },
-      { id: "B97", text: "B97 - Vírus Como Causa de Doenças Classificadas em Outros Capítulos" },
-      { id: "B99", text: "B99 - Doenças Infecciosas, Outras e as Não Especificadas" },
-    ];
-
-    $(".select-cdi").select2({
-      placeholder: "Todas",
-      allowClear: true,
-      data: cdi,
+    $.getJSON('CID10.json', function(data){
+      $(".select-cdi").select2({
+        placeholder: "Todas",
+        allowClear: true,
+        data: data,
+      });
     });
 
     $.ajax({url: "/procedure/specialties", success: function(result) {
