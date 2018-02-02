@@ -3,15 +3,15 @@ $(document).ready(function(){
 })
 
 var types_color = {
- "AMBULATORIOS ESPECIALIZADOS":'#003300',
- "APOIO DIAGNOSTICO":'#15ff00',
- "SAUDE MENTAL":'#ff0000',
- "VIGILANCIA EM SAUDE":"#f5b979",
+ "Ambulatorios Especializados":'#003300',
+ "Apoio Diagnostico":'#15ff00',
+ "Saúde Mental":'#ff0000',
+ "Vigilancia Em Saúde":"#f5b979",
  "UBS":"#13f1e8",
- "URGENCIA/ EMERGENCIA":"#615ac7",
- "HOSPITAL":"#8e3a06",
- "UNIDADES DST/AIDS":"#b769ab",
- "OUTROS ESTABELECIMENTOS E SERVIÇOS ESPECIALIZADOS": "#df10eb"
+ "Urgência/Emergência":"#615ac7",
+ "Hospital":"#8e3a06",
+ "Unidades DST/AIDS":"#b769ab",
+ "Outros Estabelecimentos E Serviços Especializados": "#df10eb"
 }
 
 var specialty_divs = [
@@ -29,27 +29,27 @@ var specialty_divs = [
 
 var specialties_name = [
  "DUMMY",
- "CIRURGIA",
- "OBSTETRÍCIA",
- "CLÍNICA MÉDICA",
- "PACIENTES SOB CUIDADOS PROLONGADOS",
- "PSIQUIATRIA",
- "TISIOLOGIA",
- "PEDIATRIA",
- "REABILITAÇÃO",
- "PSIQUIATRIA EM HOSPITAL DIA"
+ "Cirurgia",
+ "Obstetrícia",
+ "Clínica Médica",
+ "Cuidados Prolongados",
+ "Psiquiatria",
+ "Tisiologia",
+ "Pediatria",
+ "Reabilitação",
+ "Psiquiatria Em Hospital-Dia"
 ]
 
 var types_name = [
- "AMBULATORIOS ESPECIALIZADOS",
- "APOIO DIAGNOSTICO",
- "SAUDE MENTAL",
- "VIGILANCIA EM SAUDE",
+ "Ambulatorios Especializados",
+ "Apoio Diagnostico",
+ "Saúde Mental",
+ "Vigilancia Em Saúde",
  "UBS",
- "URGENCIA/ EMERGENCIA",
- "HOSPITAL",
- "UNIDADES DST/AIDS",
- "OUTROS ESTABELECIMENTOS E SERVIÇOS ESPECIALIZADOS"
+ "Urgência/Emergência",
+ "Hospital",
+ "Unidades DST/AIDS",
+ "Outros Estabelecimentos E Serviços Especializados"
 ]
 
 function init_specialties_chart(){
@@ -68,8 +68,12 @@ function create_specialty_chart(index, specialty){
   var options = {
     title: specialties_name[index],
     titleTextStyle: {fontSize: 25, bold: false },
+    bar: {groupWidth: "80%"},
     legend: { position: 'none' },
-    vAxis: { textStyle:  {fontSize: 18,bold: false}},
+    chartArea: {
+   top: 55,
+   left: 150 },
+    vAxis: { textStyle:  {fontSize: 14,bold: false}},
     hAxis: { textStyle:  {fontSize: 18,bold: false}}
   };
 

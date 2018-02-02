@@ -1,13 +1,4 @@
 class ProcedureController < ApplicationController
-	@@Procedimentos = nil
-	def index
-	end
-
-	def show
-		# @@Proc = Procedure.all
-		# @npages = count / 500 
-	end
-
 	def allProcedures
 		@allProcedures = Procedure.all
 		render json: @allProcedures.to_a
@@ -23,6 +14,11 @@ class ProcedureController < ApplicationController
 			@health_centres << healthcentres
 		end
 		render json: @health_centres
+	end
+
+	def procedures_count
+		@total = Procedure.all.count
+		render json: @total
 	end
 
 	def specialties
@@ -121,31 +117,10 @@ class ProcedureController < ApplicationController
 		if treatment_type != nil
 			@Procedures = @Procedures.where(treatment_type: treatment_type)
 		end
-
-		# @Procedures = @Procedures.to_a
-		# puts "HERE"
-		# @Procedures.delete_if do |procedure|
-		# 	dist = procedure.distance
-		# 	if(dist == nil || dist < dist_min || (dist_max < 10 &&  dist > dist_max))
-		# 		true
-		# 	end
-		# end
-
-		# @@Procedimentos = @Procedures
 		return @Procedures
 	end
 
 	def health_centres_search
-		# if (@@Procedimentos == nil)
-		# 	puts "TRUE"
-		# 	@Procedures = getProcedures()
-		# 	if (@@Procedimentos == nil)
-		# 		puts "Not OK"
-		# 	end
-		# else
-		# 	@Procedures = @@Procedimentos
-		# 	@@Procedimentos = nil
-		# end
 		@Procedures = getProcedures()
 
 		hc = [];
@@ -156,7 +131,7 @@ class ProcedureController < ApplicationController
 		@health_centres = HealthCentre.where(cnes: hc.uniq)
 		@Procedures = @Procedures.select("long, lat, distance")
 		@Procedures = @Procedures.to_a
-		# puts "HERE"
+
 		dist_min = params[:dist_min].to_f
 		dist_max = params[:dist_max].to_f
 		@Procedures.delete_if do |procedure|
@@ -171,7 +146,6 @@ class ProcedureController < ApplicationController
 		elsif params[:show_hc] == "true"
 			render json: {:health_centres => @health_centres}
 		elsif params[:show_rp] == "true"
-			# @Procedures = @Procedures.select("long, lat")
 			render json: {:procedures => @Procedures}
 		else
 			render json: {:result => ""}

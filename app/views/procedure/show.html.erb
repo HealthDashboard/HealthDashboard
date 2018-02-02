@@ -1,3 +1,5 @@
+<!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwxSdPxeKR0IyS4C0A8E67DyYm-KQYpxs&callback=initMap"> </script> -->
+<%= javascript_include_tag 'map_SP.js' %>
 <!-- <div class="w3-container"> -->
     <!-- <div class = "container-fluid"> -->
       <!-- <nav id="navgation"> -->
@@ -12,10 +14,30 @@
         <div class ="col-sm-3">
          <div class="card card-block">
           <div class = "row">
-            <div class = "col-sm-12">
+
+            <div class="col-sm-12">
+              <label for="select_health_centre"><b>Tipo de Visualização</b></label>
+            </div>
+
+            <div class="col-sm-12" id="viewType">
+              <form>
+                <div class="radio">
+                  <label><input type="radio" name="optRadio" value="0"> Individual</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="optRadio" value="1" checked="checked"> Cluster</label>
+                </div>
+              </form>
+            </div>
+
+            <div class="col-sm-12">
+              <hr>
+            </div>
+
+<!--             <div class = "col-sm-12">
               <div class = "form-check form-check-inline">
                 <label class = "form-check-label">
-                  <input class = "form-check-input" type = "checkbox" id = "checkbox_residencia_paciente" value = 1 checked = "checked"> Residência dos pacientes</label>
+                  <input class = "form-check-input" type = "checkbox" id = "checkbox_residencia_paciente" value = 1 checked = "checked"> Região de Domicílio</label>
               </div>
               <div class = "form-check form-check-inline">
                 <label class = "form-check-label">
@@ -24,7 +46,7 @@
             </div>
             <div class="col-sm-12">
               <hr>
-            </div>
+            </div> -->
 
             <div class="col-sm-12">
               <label for="select_health_centre"><b>Região da cidade</b></label>
@@ -128,7 +150,7 @@
                   <input id="slider_distance" type="text" style="width: 100%" />
                 </div>
                 <div class="col-sm-1" style = "text-align: left" id="text-left">
-                  <span id="slider_distance_max">10+</span>
+                  <span id="slider_distance_max">30+</span>
                 </div>
               </div>
             </div>
@@ -137,6 +159,9 @@
               <hr> 
               <button class="btn btn-success" type="button" id="btn-submit">
                 <i class="fa fa-search" aria-hidden="true"></i> Buscar
+              </button>
+              <button class="btn btn-clear" type="button" id="btn-clear">
+                <i class="fa fa-search" aria-hidden="true"></i> Limpar
               </button>
             </div>
             <div class = "col-sm-12" style = "height: 10px;"></div>
@@ -175,7 +200,8 @@
 </div>
 
 <script>
-  $(document).ready(initialize_procedures_map)
+  $(document).ready(initMap)
   $(document).ready(data_input)
   $(document).ready(submit)
+  $(document).ready(clear)
 </script>
