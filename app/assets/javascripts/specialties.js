@@ -3,7 +3,7 @@ $(document).ready(function(){
 })
 
 var types_color = {
- "Ambulatorios Especializados":'#003300',
+ "Especializados":'#003300',
  "Apoio Diagnostico":'#15ff00',
  "Saúde Mental":'#ff0000',
  "Vigilancia Em Saúde":"#f5b979",
@@ -11,7 +11,7 @@ var types_color = {
  "Urgência/Emergência":"#615ac7",
  "Hospital":"#8e3a06",
  "Unidades DST/AIDS":"#b769ab",
- "Outros Estabelecimentos E Serviços Especializados": "#df10eb"
+ "Outros Estabelecimentos": "#df10eb"
 }
 
 var specialty_divs = [
@@ -41,7 +41,7 @@ var specialties_name = [
 ]
 
 var types_name = [
- "Ambulatorios Especializados",
+ "Especializados",
  "Apoio Diagnostico",
  "Saúde Mental",
  "Vigilancia Em Saúde",
@@ -49,7 +49,7 @@ var types_name = [
  "Urgência/Emergência",
  "Hospital",
  "Unidades DST/AIDS",
- "Outros Estabelecimentos E Serviços Especializados"
+ "Outros Estabelecimentos"
 ]
 
 function init_specialties_chart(){
@@ -72,7 +72,7 @@ function create_specialty_chart(index, specialty){
     legend: { position: 'none' },
     chartArea: {
    top: 55,
-   left: 150 },
+   left: 170 },
     vAxis: { textStyle:  {fontSize: 14,bold: false}},
     hAxis: { textStyle:  {fontSize: 18,bold: false}}
   };
