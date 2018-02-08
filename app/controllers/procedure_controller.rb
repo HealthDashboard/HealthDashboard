@@ -44,6 +44,9 @@ class ProcedureController < ApplicationController
 		cdi = nil
 		treatment_type = nil
 		region = nil
+		dist_min = params[:dist_min].to_f
+		dist_max = params[:dist_max].to_f
+		# distance = nil
 
 		genders = params[:gender].to_s
 		genders = genders.split(",")
@@ -117,6 +120,13 @@ class ProcedureController < ApplicationController
 		if treatment_type != nil
 			@Procedures = @Procedures.where(treatment_type: treatment_type)
 		end
+
+		if (dist_max == 30)
+			@Procedures = @Procedures.where('distance >= ?', dist_min)
+		else
+			@Procedures = @Procedures.where('distance BETWEEN ? AND ?', dist_min, dist_max)
+		end
+		
 		return @Procedures
 	end
 
@@ -164,13 +174,62 @@ class ProcedureController < ApplicationController
 	end
 
 	def procedures_search
-		if (@@Procedimentos == nil)
-			puts "TRUE"
-			@Procedures = getProcedures()
-		else
-			@Procedures = @@Procedimentos
-			@@Procedimentos = nil
-		end
-		render json: @Procedures
+		oeste_points = [[-23.538900, -46.732634], [-23.538270, -46.689376], [-23.585633, -46.732806], [-23.578710, -46.676673]]
+
+		norte_points = [[-23.440030, -46.738127], [-23.456408, -46.611785], [-23.482862, -46.724395], [-23.488529, -46.624144]]
+
+		leste_points = [[-23.511041, -46.425704], [-23.514189, -46.479949], [-23.585633, -46.437377], [-23.584059, -46.490248]]
+
+		sudeste_points = [[-23.533549, -46.549987], [-23.579182, -46.552047], [-23.589408, -46.595992], [-23.611116, -46.621226]]
+
+		sul_points = [[-23.639425, -46.741389], [-23.660496, -46.654872], [-23.715830, -46.693324], [-23.813707, -46.709288]]
+
+		centro_points = [[-23.568577, -46.631364], [-23.548680, -46.636640]]
+
+		procedures_points = getProcedures()
+
+		oeste = @Procedures.where(region: "OESTE");
+		norte = @Procedures.where(region: "NORTE");
+		sul = @Procedures.where(region: "SUL");
+		leste = @Procedures.where(region: "LESTE");
+		centro = @Procedures.where(region: "CENTRO");
+		sudeste = @Procedures.where(region: "SUDESTE");
+
+		oeste1 = oeste.where(region_number: 0).count
+		oeste2 = oeste.where(region_number: 1).count
+		oeste3 = oeste.where(region_number: 2).count
+		oeste4 = oeste.where(region_number: 3).count
+
+		norte1 = norte.where(region_number: 0).count
+		norte2 = norte.where(region_number: 1).count
+		norte3 = norte.where(region_number: 2).count
+		norte4 = norte.where(region_number: 3).count
+
+		leste1 = leste.where(region_number: 0).count
+		leste2 = leste.where(region_number: 1).count
+		leste3 = leste.where(region_number: 2).count
+		leste4 = leste.where(region_number: 3).count
+
+		sul1 = sul.where(region_number: 0).count
+		sul2 = sul.where(region_number: 1).count
+		sul3 = sul.where(region_number: 2).count
+		sul4 = sul.where(region_number: 3).count
+
+		sudeste1 = sudeste.where(region_number: 0).count
+		sudeste2 = sudeste.where(region_number: 1).count
+		sudeste3 = sudeste.where(region_number: 2).count
+		sudeste4 = sudeste.where(region_number: 3).count
+
+		centro1 = centro.where(region_number: 0).count
+		centro2 = centro.where(region_number: 1).count
+
+		@JS = [[oeste1, oeste2, oeste3, oeste4],
+		[norte1, norte2, norte3, norte4],
+		[leste1, leste2, leste3, leste4],
+		[sul1, sul2, sul3, sul4],
+		[sudeste1, sudeste2, sudeste3, sudeste4],
+		[centro1, centro2]];
+
+		render json: @JS
 	end
 end

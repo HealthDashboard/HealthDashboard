@@ -13,6 +13,7 @@ Rails.application.require_environment!
 NUMBER_OF_SPECIALTIES = 9
 $global_specialties = []
 
+$hc_specialties_array = {}
 
 def infer_health_centre_specialty(health_centre, health_centres_specialties)
   id = health_centre.id
@@ -115,31 +116,53 @@ def generate_global_specialties()
   end
 end
 
+#New method ***********************************************
+
+def health_centres_specialties(procedures, health_centres)
+  spec = Specialty.second
+  puts spec.name
+  h = HealthCentreSpecialty.where(specialty_id: spec.id)
+  # puts h
+  h.each do |hc|
+    puts hc.health_centre_id
+  end
+end
+
 def main()
   health_centres = HealthCentre.all
-  procedures = Procedure.all #[Procedure.last, Procedure.first]
-  health_centres_specialties = {} 
+  procedures = Procedure.all
 
-  generate_global_specialties()
+  health_centres_specialties(procedures, health_centres)
 
-  puts('Infering all health centre specialties')
-  infer_all_health_centre_specialty(health_centres, health_centres_specialties)
-  puts("\n")
+  $hc_specialties_array.each_with_index do |hcs, index|
+    puts index
+    hcs.each do |hc|
+      puts hc;
+    end
 
-  puts('Count number of procedures that could be attended in a closer health centre')
-  count = count_closest_health_centres(procedures, health_centres_specialties, health_centres)
-  puts("\n")
+  end
+  # health_centres_specialties = {} 
 
-  puts('Count number of procedures of a given health centre that could be made in a closer health centre')
-  health_centre_count = get_number_of_closest_health_centres_procedures_by_health_centre(health_centres, health_centres_specialties)
-  puts("\n\n")
+  # generate_global_specialties()
 
-  metric = {'count': count, 'health_centre_count': health_centre_count}
+  # puts('Infering all health centre specialties')
+  # infer_all_health_centre_specialty(health_centres, health_centres_specialties)
+  # puts("\n")
 
-  puts('Save json file with results')
-  fJson = File.open(Rails.root.join("public/metrics.json"),"w")
-  fJson.write(metric.to_json)
-  fJson.close()
+  # puts('Count number of procedures that could be attended in a closer health centre')
+  # count = count_closest_health_centres(procedures, health_centres_specialties, health_centres)
+  # puts("\n")
+
+  # puts('Count number of procedures of a given health centre that could be made in a closer health centre')
+  # health_centre_count = get_number_of_closest_health_centres_procedures_by_health_centre(health_centres, health_centres_specialties)
+  # puts("\n\n")
+
+  # metric = {'count': count, 'health_centre_count': health_centre_count}
+
+  # puts('Save json file with results')
+  # fJson = File.open(Rails.root.join("public/metrics.json"),"w")
+  # fJson.write(metric.to_json)
+  # fJson.close()
 
 end
 

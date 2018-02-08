@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180114060413) do
+ActiveRecord::Schema.define(version: 20180205053209) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(version: 20180114060413) do
     t.integer  "treatment_type"
     t.integer  "distance_count"
     t.string   "region"
+    t.integer  "region_number"
     t.index ["specialty_id"], name: "index_procedures_on_specialty_id", using: :btree
   end
 

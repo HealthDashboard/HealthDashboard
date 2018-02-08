@@ -49,11 +49,11 @@ function create_dashboard_charts() {
 }
 
 function create_procedures_per_specialties() {
-  var header = ["Especialidades", "Número de Procedimentos", { role: "style" } ]
+  var header = ["Especialidades", "Número de Internações", { role: "style" } ]
   var chart = new google.visualization.PieChart(document.getElementById("chart_specialties"));
 
   var options = {
-    title:'% de procedimentos por especialidades',
+    title:'% de Internações por especialidades',
     slices: get_color_slice()
   };
 
@@ -66,13 +66,13 @@ function populate_procedures_by_date(){
   var path = "/procedures_by_date.json"
 
    var options = {
-     title: 'Número de Procedimentos por mês',
+     title: 'Número de Internações por mês',
      series: {
-       0: {axis: 'Número de Procedimentos'}
+       0: {axis: 'Número de Internações'}
      },
      axes: {
        y: {
-         Temps: {label: 'Número de Procedimentos'}
+         Temps: {label: 'Número de Internações'}
        }
      },
      legend: {position: 'none'}
@@ -92,7 +92,7 @@ function create_line_chart(values, options){
   var chart = new google.visualization.LineChart(document.getElementById('procedure_by_date'));
   var data = new google.visualization.DataTable();
   data.addColumn('date', 'Mês');
-  data.addColumn('number', "Número de Procedimentos");
+  data.addColumn('number', "Número de Internações");
   data.addRows(values);
   chart.draw(data, options);
 }
@@ -102,7 +102,7 @@ function create_travel_time_chart(){
   var chart = new google.visualization.BarChart(document.getElementById("chart_spec_time_average"));
   var header = ["Especialidades", "Tempo médio de viagem em minutos", {role: "style"}]
   var options = {
-    title: "Tempo médio de viagem para realização de procedimentos por especialidade",
+    title: "Tempo médio de viagem para realização de Internações por especialidade",
     legend: {position: 'none'}
   };
   var distance_average_path = '/procedures_travel_time.json'
@@ -118,7 +118,7 @@ function get_color_slice(){
 }
 
 function create_specialties_vs_time_to_arrive() {
-  var header = ["Especialidades", "Número de Procedimentos", { role: "style" } ]
+  var header = ["Especialidades", "Número de Internações", { role: "style" } ]
   var chart = new google.visualization.PieChart(document.getElementById("chart_specialties"));
 
   var options = {

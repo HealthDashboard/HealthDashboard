@@ -8,6 +8,10 @@ class Procedure < ApplicationRecord
     self.distance_to([health_centre.lat, health_centre.long]) if health_centre
   end
 
+  def dist_to(latlong)
+  	return self.distance_to(latlong);
+  end
+
   def calculate_distance_to(lat, long)
  	if self.distance != nil and self.distance < self.distance_to([lat, long])
  		return true
