@@ -51,7 +51,7 @@ class HealthCentresController < ApplicationController
 
       for spec_id in 1..9
         distance_average = (Procedure.where(specialty_id: spec_id).average(:distance) or 0.0)
-        result[ Specialty.find(spec_id).name] = distance_average.round(2)
+        result[Specialty.find(spec_id).name] = distance_average.round(2)
       end
 
       render json: result

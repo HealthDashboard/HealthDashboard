@@ -4,34 +4,9 @@ class ProcedureController < ApplicationController
 		render json: @allProcedures.to_a
 	end
 
-	def health_centres
-		@health_centres = []
-		hc = HealthCentre.all
-		hc.each do |h|
-			healthcentres = {}
-			healthcentres[:id] = h.cnes
-			healthcentres[:text] = h.name
-			@health_centres << healthcentres
-		end
-		render json: @health_centres
-	end
-
 	def procedures_count
 		@total = Procedure.all.count
 		render json: @total
-	end
-
-	def specialties
-		@spec = []
-		Specialty.all.each_with_index do |specialty, index|
-			if specialty != nil
-				sp = {}
-				sp[:id] = index
-				sp[:text] = specialty.name
-				@spec << sp
-			end
-		end
-		render json: @spec
 	end
 
 	def getProcedures
@@ -174,62 +149,66 @@ class ProcedureController < ApplicationController
 	end
 
 	def procedures_search
-		oeste_points = [[-23.538900, -46.732634], [-23.538270, -46.689376], [-23.585633, -46.732806], [-23.578710, -46.676673]]
+		@Procedures = getProcedures()
 
-		norte_points = [[-23.440030, -46.738127], [-23.456408, -46.611785], [-23.482862, -46.724395], [-23.488529, -46.624144]]
+		oeste = @Procedures.where(region: "OESTE").pluck(:long, :lat);
+		norte = @Procedures.where(region: "NORTE").pluck(:long, :lat);
+		sul = @Procedures.where(region: "SUL").pluck(:long, :lat);
+		leste = @Procedures.where(region: "LESTE").pluck(:long, :lat);
+		centro = @Procedures.where(region: "CENTRO").pluck(:long, :lat);
+		sudeste = @Procedures.where(region: "SUDESTE").pluck(:long, :lat);
 
-		leste_points = [[-23.511041, -46.425704], [-23.514189, -46.479949], [-23.585633, -46.437377], [-23.584059, -46.490248]]
+  		k = 4
+  		oeste1 = [{"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}]
+  		norte1 = [{"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}]
+  		sul1 = [{"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}]
+  		leste1 = [{"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}]
+  		centro1 = [{"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}]
+  		sudeste1 = [{"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}]
+  		puts "Here"
+  		if oeste.count > 0
+  			kmeans_oeste = KMeansClusterer.run k, oeste, runs: 1, max_iter: 1
+  			kmeans_oeste.clusters.each_with_index do |cluster, index|
+  				oeste1[index] = {"centroid" => cluster.centroid.to_s, "number" => cluster.points.count.to_s}
+  		 	end
+  		end
 
-		sudeste_points = [[-23.533549, -46.549987], [-23.579182, -46.552047], [-23.589408, -46.595992], [-23.611116, -46.621226]]
+  		if norte.count > 0
+  			kmeans_norte = KMeansClusterer.run k, norte, runs: 1, max_iter: 1
+  			kmeans_norte.clusters.each_with_index do |cluster, index|
+  				norte1[index] = {"centroid" => cluster.centroid.to_s, "number" => cluster.points.count.to_s}
+  			end
+  		end
+  		if sul.count > 0
+  			kmeans_sul = KMeansClusterer.run k, sul, runs: 1, max_iter: 1
+  			kmeans_sul.clusters.each_with_index do |cluster, index|
+  				sul1[index] = {"centroid" => cluster.centroid.to_s, "number" => cluster.points.count.to_s}
+  			end
+  		end
 
-		sul_points = [[-23.639425, -46.741389], [-23.660496, -46.654872], [-23.715830, -46.693324], [-23.813707, -46.709288]]
+  		if leste.count > 0
+	   		kmeans_leste = KMeansClusterer.run k, leste, runs: 1, max_iter: 1
+  			kmeans_leste.clusters.each_with_index do |cluster, index|
+  				leste1[index] = {"centroid" => cluster.centroid.to_s, "number" => cluster.points.count.to_s}
+  			end
+  		end
 
-		centro_points = [[-23.568577, -46.631364], [-23.548680, -46.636640]]
+  		if centro.count > 0
+  			kmeans_centro = KMeansClusterer.run 2, centro, runs: 1, max_iter: 1
+  			kmeans_centro.clusters.each_with_index do |cluster, index|
+  				centro1[index] = {"centroid" => cluster.centroid.to_s, "number" => cluster.points.count.to_s}
+  			end
+  		end
 
-		procedures_points = getProcedures()
+  		if sudeste.count > 0
+  			kmeans_sudeste = KMeansClusterer.run k, sudeste, runs: 1, max_iter: 1
+  			kmeans_sudeste.clusters.each_with_index do |cluster, index|
+  				sudeste1[index] = {"centroid" => cluster.centroid.to_s, "number" => cluster.points.count.to_s}
+  			end
+  		end
+  		puts "Here"
 
-		oeste = @Procedures.where(region: "OESTE");
-		norte = @Procedures.where(region: "NORTE");
-		sul = @Procedures.where(region: "SUL");
-		leste = @Procedures.where(region: "LESTE");
-		centro = @Procedures.where(region: "CENTRO");
-		sudeste = @Procedures.where(region: "SUDESTE");
-
-		oeste1 = oeste.where(region_number: 0).count
-		oeste2 = oeste.where(region_number: 1).count
-		oeste3 = oeste.where(region_number: 2).count
-		oeste4 = oeste.where(region_number: 3).count
-
-		norte1 = norte.where(region_number: 0).count
-		norte2 = norte.where(region_number: 1).count
-		norte3 = norte.where(region_number: 2).count
-		norte4 = norte.where(region_number: 3).count
-
-		leste1 = leste.where(region_number: 0).count
-		leste2 = leste.where(region_number: 1).count
-		leste3 = leste.where(region_number: 2).count
-		leste4 = leste.where(region_number: 3).count
-
-		sul1 = sul.where(region_number: 0).count
-		sul2 = sul.where(region_number: 1).count
-		sul3 = sul.where(region_number: 2).count
-		sul4 = sul.where(region_number: 3).count
-
-		sudeste1 = sudeste.where(region_number: 0).count
-		sudeste2 = sudeste.where(region_number: 1).count
-		sudeste3 = sudeste.where(region_number: 2).count
-		sudeste4 = sudeste.where(region_number: 3).count
-
-		centro1 = centro.where(region_number: 0).count
-		centro2 = centro.where(region_number: 1).count
-
-		@JS = [[oeste1, oeste2, oeste3, oeste4],
-		[norte1, norte2, norte3, norte4],
-		[leste1, leste2, leste3, leste4],
-		[sul1, sul2, sul3, sul4],
-		[sudeste1, sudeste2, sudeste3, sudeste4],
-		[centro1, centro2]];
-
+		@JS = [{"oeste" => oeste1,"norte" => norte1,"leste" => leste1,"sul" => sul1,"sudeste" => sudeste1,"centro" => centro1}	]
 		render json: @JS
 	end
 end

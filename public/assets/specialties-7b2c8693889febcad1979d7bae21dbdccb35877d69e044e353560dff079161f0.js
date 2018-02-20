@@ -85,3 +85,4 @@ function create_specialty_chart(index, specialty){
 
  draw_chart(header, formated_specialty, chart, options, types_color)
 }
+;

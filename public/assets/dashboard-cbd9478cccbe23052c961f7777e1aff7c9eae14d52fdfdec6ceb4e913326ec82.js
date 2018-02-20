@@ -198,3 +198,4 @@ function create_table_rank(data) {
     });
     rank_table.html(rows);
 }
+;

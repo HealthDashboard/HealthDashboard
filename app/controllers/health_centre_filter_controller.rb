@@ -1,13 +1,10 @@
 class HealthCentreFilterController < ApplicationController
   # GET /
   def index
-    @health_centres = HealthCentre.all
-    h = @health_centres.first
-    h = h.specialties
-    print h
-    # h.attributes.each{|key, value| print "#{key} : #{value}"}
+    @health_centres = HealthCentreSpecialty.all
+    @Specialties = Specialty.where("id < ?", 10)
 
-    @health_centres = @health_centres.sort{|h1, h2|  h1.name.downcase <=> h2.name.downcase }
+    # @health_centres = @health_centres.sort{|h1, h2|  h1.name.downcase <=> h2.name.downcase }
   end
 
   # GET health_centre_filter/:health_centre_id/:specialty_id

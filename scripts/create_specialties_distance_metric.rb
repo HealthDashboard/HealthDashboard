@@ -13,9 +13,7 @@ def create_specialty_distance_metric(specialty_id, specialty_name, specialties_d
   procedures = Procedure.where(specialty_id: specialty_id)
   specialties_distance_metric[specialty_id][0] = specialty_name
 
-  procedures.each do |procedure|
-    next if procedure.distance == nil
-    
+  procedures.each do |procedure|    
     if procedure.distance <= 1
       specialties_distance_metric[specialty_id][1] += 1
     elsif procedure.distance <= 5
@@ -36,6 +34,8 @@ def create_specialties_distance_metric
 
   specialties.each do |specialty|
     id = specialty.id
+
+    next if id > 9
     name = specialty.name.downcase
     puts("Create metric for specialty #{id}...")
     specialties_distance_metric[id] = Array.new(6).fill(0)

@@ -13,10 +13,10 @@ class Procedure < ApplicationRecord
   end
 
   def calculate_distance_to(lat, long)
- 	if self.distance != nil and self.distance < self.distance_to([lat, long])
- 		return true
- 	else
- 		return false
- 	end
+ 	  if self.distance != nil and self.distance < self.distance_to([lat, long])
+ 		 return true
+ 	  else
+ 		 return false
+ 	  end
   end
 end
