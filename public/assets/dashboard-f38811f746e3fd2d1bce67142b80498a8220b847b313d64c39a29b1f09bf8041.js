@@ -3,15 +3,15 @@ $(document).ready(function() {
 });
 
 var specialties_color = {
- "CIRURGIA":'#003300',
- "OBSTETRÍCIA":'#15FF00',
- "CLINICA MÉDICA":'#FF0000',
- "CUIDADOS PROLONGADOS":"#F5B979",
- "PSIQUIATRIA":"#13F1E8",
- "TISIOLOGIA":"#615AC7",
- "PEDIATRIA":"#8E3A06",
- "REABILITAÇÃO":"#B769AB",
- "PSIQUIATRIA EM HOSPITAL-DIA": "#DF10EB"
+ "Cirurgia":'#003300',
+ "Obstetrícia":'#15ff00',
+ "Clinica Médica":'#ff0000',
+ "Cuidados Prolongados":"#f5b979",
+ "Psiquiatria":"#13f1e8",
+ "Tisiologia":"#615ac7",
+ "Pediatria":"#8e3a06",
+ "Reabilitação":"#b769ab",
+ "Psiquiatria em Hospital-Dia": "#df10eb"
 }
 
 var dashboard_legend_clicked = false;
@@ -146,7 +146,7 @@ function create_specialties_distance_between_patients_hospital() {
         chartArea: {
             top: 55,
             left: 250 },
-        vAxis: { textStyle:  {fontSize: 14,bold: false}},
+        vAxis: { textStyle:  {fontSize: 18,bold: false}},
         titleTextStyle: {fontSize: 20, bold: true }
     };
 
@@ -198,3 +198,4 @@ function create_table_rank(data) {
     });
     rank_table.html(rows);
 }
+;

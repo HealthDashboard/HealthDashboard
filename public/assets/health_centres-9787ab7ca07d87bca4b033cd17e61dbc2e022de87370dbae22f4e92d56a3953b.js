@@ -305,3 +305,4 @@ function update_right_graph_text(data) {
     $graph_text1.html("<br><br><br> " + sum);
     $graph_text2.html("Procedimentos");
 }
+;

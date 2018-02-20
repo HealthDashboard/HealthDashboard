@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180205053209) do
+ActiveRecord::Schema.define(version: 20180114060413) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,15 +22,6 @@ ActiveRecord::Schema.define(version: 20180205053209) do
     t.datetime "updated_at",       null: false
     t.index ["health_centre_id"], name: "index_health_centre_specialties_on_health_centre_id", using: :btree
     t.index ["specialty_id"], name: "index_health_centre_specialties_on_specialty_id", using: :btree
-  end
-
-  create_table "health_centre_types", force: :cascade do |t|
-    t.integer  "health_centre_id"
-    t.integer  "type_id"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-    t.index ["health_centre_id"], name: "index_health_centre_types_on_health_centre_id", using: :btree
-    t.index ["type_id"], name: "index_health_centre_types_on_type_id", using: :btree
   end
 
   create_table "health_centres", force: :cascade do |t|
@@ -66,9 +57,7 @@ ActiveRecord::Schema.define(version: 20180205053209) do
     t.float    "distance"
     t.integer  "specialty_id"
     t.integer  "treatment_type"
-    t.integer  "distance_count"
     t.string   "region"
-    t.integer  "region_number"
     t.index ["specialty_id"], name: "index_procedures_on_specialty_id", using: :btree
   end
 
@@ -78,15 +67,7 @@ ActiveRecord::Schema.define(version: 20180205053209) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "types", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   add_foreign_key "health_centre_specialties", "health_centres"
   add_foreign_key "health_centre_specialties", "specialties"
-  add_foreign_key "health_centre_types", "health_centres"
-  add_foreign_key "health_centre_types", "types"
   add_foreign_key "procedures", "specialties"
 end

@@ -29,15 +29,15 @@ var specialty_divs = [
 
 var specialties_name = [
  "DUMMY",
- "CIRURGIA",
- "OBSTETRÍCIA",
- "CLÍNICA MÉDICA",
- "CUIDADOS PROLONGADOS",
- "PSIQUIATRIA",
- "TISIOLOGIA",
- "PEDIATRIA",
- "REABILITAÇÃO",
- "PSIQUIATRIA EM HOSPITAL-DIA"
+ "Cirurgia",
+ "Obstetrícia",
+ "Clínica Médica",
+ "Cuidados Prolongados",
+ "Psiquiatria",
+ "Tisiologia",
+ "Pediatria",
+ "Reabilitação",
+ "Psiquiatria Em Hospital-Dia"
 ]
 
 var types_name = [
@@ -85,3 +85,4 @@ function create_specialty_chart(index, specialty){
 
  draw_chart(header, formated_specialty, chart, options, types_color)
 }
+;

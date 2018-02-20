@@ -86,3 +86,4 @@ function show_procedures_filtered(health_centre_id, specialty_id) {
 function show_legend() {
     $('#legend').show();
 }
+;

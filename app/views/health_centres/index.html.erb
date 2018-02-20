@@ -1,19 +1,16 @@
 
 <div class = "container-fluid">
   <div class = "row">
-    <div class = "col-sm-12" style="height: 10px"></div>
+<!--     <div class = "col-sm-12" style="height: 10px"></div>
     <div class="col-sm-12">
-<!--       <div class="alert alert-warning">
-        <strong>Atenção!</strong> Página não atualizada, dados podem estar errados.
-      </div> -->
-    </div>
+    </div> -->
 
     <div class='col-sm-9'>
       <div id='map'></div>
     </div>
 
-    <div class='col-sm-3 pull-right '>
-      <div class='row'>
+    <div class='col-sm-3 pull-right'>
+      <div class='row col-sm-offset-3'>
         <div id='general-right-graph'></div>
         <div id="labelOverlay">
             <p class="n_procedures"></p>
@@ -21,7 +18,7 @@
         </div>
       </div>
 
-      <div class='row'>
+      <div class='row col-sm-offset-3'>
         <div id='distance-legend'>
             <div class='item'> <div class="color lt-1km"></div><p class="text">&lt; 1 km</p> </div>
             <div class='item'> <div class="color lg-1km-lt-5"></div><p class="text">&gt; 1 km e &lt; 5 km</p> </div>
@@ -29,13 +26,6 @@
             <div class='item'> <div class="color lg-10km"></div><p class="text">&gt; 10 km</p> </div>
         </div>
       </div>
-
-      <div class='row'>
-        <div id="metric-board">
-          <h1 id='value'></h1>
-          <p  id='text'>Número de procedimentos cujo tipo é oferecido em centros de saúde mais próximos do que o local onde foram realizados.</p>
-        </div>
-       </div>
     </div>
 
     <!-- <div class = "col-sm-12" style="height: 10px"></div> -->
@@ -45,26 +35,6 @@
          <div class='col-md-6' id='bt-graph2'></div>
       </div>
       <div class = "col-sm-12" style="height: 10px"></div>
-  </div>
-</div>
-
-<!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-lg">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Dados</h4>
-      </div>
-      <div class="modal-body">
-          <div id="chart_div"></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-      </div>
-    </div>
   </div>
 </div>
 

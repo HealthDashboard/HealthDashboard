@@ -5,6 +5,11 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
+# Server side clustering
+# gem 'geocluster'
+gem 'kmeans-clusterer'
+
+
 gem 'geokit-rails'
 
 # Install bootstrap
