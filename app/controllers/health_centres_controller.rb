@@ -19,16 +19,11 @@ class HealthCentresController < ApplicationController
     # GET /specialties/:id
     def specialties
         health_centre = HealthCentre.find_by(id: params[:id])
-        procedures = health_centre.procedures
+        procedures = health_centre.procedures.group(:specialty).count
         result = {}
 
-        procedures.each do |procedure|
-           specialty_name = procedure.specialty.name
-           if result.keys.include?(specialty_name)
-              result[specialty_name] += 1
-           else
-              result[specialty_name] = 1
-           end
+        procedures.each do |key, value|
+            result[key.name] = value
         end
         render json: result
     end
