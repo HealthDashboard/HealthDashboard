@@ -195,9 +195,6 @@ function submit()
     var sexo_feminino = document.getElementById('sexo_feminino');
     var residencia_paciente = document.getElementById('checkbox_residencia_paciente');
     var hc = document.getElementById('checkbox_health_centre');
-    var railsEnv = $('body').data('env')
-
-    console.log(railsEnv)
 
     var genders = [];
     var health_centres = [];
@@ -300,7 +297,7 @@ function submit()
       ft_layer = new google.maps.FusionTablesLayer({
         query: {
           select: 'LAT_SC',
-          from: railsEnv,
+          from: '1hKuL3jRKfMw2XZmGPlr5URI6Zd6rNEWV7j3V0a8Y',
           where: where,
         },
         styles: [

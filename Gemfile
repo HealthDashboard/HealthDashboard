@@ -9,7 +9,6 @@ end
 # gem 'geocluster'
 gem 'kmeans-clusterer'
 
-
 gem 'geokit-rails'
 
 # Install bootstrap
