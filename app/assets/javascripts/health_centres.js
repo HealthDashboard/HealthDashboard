@@ -239,8 +239,8 @@ function create_right_graph() {
     var header = ["Especialidades", "Número de Procedimentos", {role: "style"}];
     var chart = new google.visualization.PieChart(document.getElementById("general-right-graph"));
     var options = {
-        width: 300,
-        height: 300,
+        width: 330,
+        height: 330,
         title: "",
         pieHole: 0.8,
         pieSliceBorderColor: "none",
