@@ -1,5 +1,3 @@
-// info_boxes = [];
-
 function initialize_health_centre_filter() {
     var lat = -23.557296000000001;
     var lng = -46.669210999999997;
@@ -19,7 +17,7 @@ function load_health_centre_filtered() {
     var path = '/points.json'
     $.getJSON(path, function(points) {
         $.each(points, function(index, point) {
-            create_health_centre_marker(point,create_health_centre_info_box_text);
+            create_health_centre_marker(point, create_health_centre_info_box_text);
             info_boxes[point.id].marker.setVisible(false);
         });
     });
@@ -48,14 +46,9 @@ function change_selected_health_centre(id) {
 
 function filter_by(health_centre_id, specialty_id) {
     teardown_health_centre();
-    // teardown_cluster();
     teardown_circles();
-    var path = ['/health_centre_filter', health_centre_id, specialty_id].join('/');
-    $.getJSON(path, function(points) {
-        $.each(points, function(index, point) {
-            info_boxes[point.id].marker.setVisible(true);
-        });
-    });
+
+    info_boxes[health_centre_id].marker.setVisible(true);
 
     change_selected_health_centre(health_centre_id);
     var point = info_boxes[info_box_opened].point;

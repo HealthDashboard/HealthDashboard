@@ -17,7 +17,6 @@ Rails.application.routes.draw do
   get 'dashboard', to: 'dashboard#index'
   get 'specialties', to: 'specialties#index'
   get 'health_centre_filter', to: 'health_centre_filter#index'
-  get 'health_centre_filter/:health_centre_id/:specialty_id', to: 'health_centre_filter#filter_health_centres'
   get 'procedure', to: 'procedure#show'
 
   get '/procedure/health_centres', to: 'procedure#health_centres'
