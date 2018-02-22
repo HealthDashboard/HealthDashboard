@@ -133,7 +133,7 @@ function create_specialties_vs_time_to_arrive() {
 
     var specialty_path = ""
     $.getJSON(specialty_path, function(data) {
-        draw_chart(header, data, chart, options);
+        draw_chart(header, data, chart, options, specialties_color);
     });
 }
 
@@ -156,8 +156,11 @@ function create_specialties_distance_between_patients_hospital() {
     });
 }
 
-function draw_chart(header, data, chart, options, color = specialties_color) {
-    var values = []
+function draw_chart(header, data, chart, options, color) {
+    if (color == null) {
+        color = specialties_color;
+    }
+    var values = [];
     $.each(data, function(name, number) {
         values.push([name, parseFloat(number), color[name]]);
     });
