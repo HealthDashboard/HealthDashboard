@@ -32,9 +32,9 @@ class HealthCentresController < ApplicationController
     def specialties_count
         result = {}
 
-        for spec_id in 1..9
-            procedures = Procedure.where(specialty_id: spec_id)
-            result[Specialty.find_by(id: spec_id).name] = procedures.count
+        procedures = Procedure.where("specialty_id < ?", 10).group(:specialty).count
+        procedures.each do |key, value|
+            result[key.name] = value
         end
 
         render json: result
@@ -42,14 +42,14 @@ class HealthCentresController < ApplicationController
 
     # GET /specialties_procedure_distance_average
     def specialties_procedure_distance_average
-      result = {}
+        result = {}
 
-      for spec_id in 1..9
-        distance_average = (Procedure.where(specialty_id: spec_id).average(:distance) or 0.0)
-        result[Specialty.find(spec_id).name] = distance_average.round(2)
-      end
+        procedures = Procedure.where("specialty_id < ?", 10).group(:specialty).average(:distance)
+        procedures.each do |key, value|
+            result[key.name] = value.round(2)
+        end
 
-      render json: result
+        render json: result
     end
 
     # GET /rank_health_centres
