@@ -250,7 +250,7 @@ function create_right_graph() {
     };
 
     $.getJSON('/distance_metric.json', function(data) {
-        draw_chart(header, data, chart, options);
+        draw_chart(header, data, chart, options, null);
         update_right_graph_text(data);
     });
 }

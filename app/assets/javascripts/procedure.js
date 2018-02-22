@@ -218,7 +218,6 @@ function submit()
     $(select_specialty).each(function(index, brand){
       n_spec = parseInt([$(this).val()]) + 1
       specialties.push(n_spec);
-      // console.log([$(this).val()])
     });
 
     var select_age_group = $('#select_age_group option:selected');
@@ -349,7 +348,6 @@ function submit()
           cdi: cdi.toString(), treatment_type: treatment_type.toString()}, 
           function(result){
             TOTAL = 0;
-            console.log(result)
             $.each(result[0]["oeste"], function(index, number){
                 num = parseInt(number["number"]);
                 COUNTER.push(num);
@@ -726,7 +724,6 @@ function whereParse(health_centres, region, specialties, age_group, cdi, treatme
     where = where.concat("distance < ", dist_max.toString());
   }
 
-  console.log(where)
   return where
 }
 
