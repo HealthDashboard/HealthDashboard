@@ -1,12 +1,12 @@
 class ProcedureController < ApplicationController
 	def allProcedures
-		@allProcedures = Procedure.all
-		render json: @allProcedures.to_a
+		allProcedures = Procedure.all
+		render json: allProcedures.to_a
 	end
 
 	def procedures_count
-		@total = Procedure.all.count
-		render json: @total
+		total = Procedure.all.count
+		render json: total
 	end
 
 	def getProcedures
@@ -66,60 +66,60 @@ class ProcedureController < ApplicationController
 			treatment_type = treatment_type.split(",")
 		end
 
-		@Procedures = Procedure.where(gender: genders)
+		procedures = Procedure.where(gender: genders)
 
 		if region != nil
-			@Procedures = @Procedures.where(region: region)
+			procedures = procedures.where(region: region)
 		end
 
 		if health_centres != nil
-			@Procedures = @Procedures.where(cnes_id: health_centres)
+			procedures = procedures.where(cnes_id: health_centres)
 		end
 
 		if specialties != nil
-			@Procedures = @Procedures.where(specialty_id: specialties)
+			procedures = procedures.where(specialty_id: specialties)
 		end
 
 		if start_date != nil && end_date != nil
-			@Procedures = @Procedures.where('date BETWEEN ? AND ?', start_date, end_date)
+			procedures = procedures.where('date BETWEEN ? AND ?', start_date, end_date)
 		end
 
 		if age_group != nil
-			@Procedures = @Procedures.where(age_code: age_group)
+			procedures = procedures.where(age_code: age_group)
 		end
 
 		if cdi != nil
-			@Procedures = @Procedures.where(cid_primary: cdi)
+			procedures = procedures.where(cid_primary: cdi)
 		end	
 
 		if treatment_type != nil
-			@Procedures = @Procedures.where(treatment_type: treatment_type)
+			procedures = procedures.where(treatment_type: treatment_type)
 		end
 
 		if (dist_max == 30)
-			@Procedures = @Procedures.where('distance >= ?', dist_min)
+			procedures = procedures.where('distance >= ?', dist_min)
 		else
-			@Procedures = @Procedures.where('distance BETWEEN ? AND ?', dist_min, dist_max)
+			procedures = procedures.where('distance BETWEEN ? AND ?', dist_min, dist_max)
 		end
 		
-		return @Procedures
+		return procedures
 	end
 
 	def health_centres_search
-		@Procedures = getProcedures()
+		procedures = getProcedures()
 
 		hc = [];
-		@Procedures.each do |p|
+		procedures.each do |p|
 			hc << p.cnes_id
 		end
 
-		@health_centres = HealthCentre.where(cnes: hc.uniq)
-		@Procedures = @Procedures.select("long, lat, distance")
-		@Procedures = @Procedures.to_a
+		health_centres = HealthCentre.where(cnes: hc.uniq)
+		procedures = procedures.select("long, lat, distance")
+		procedures = procedures.to_a
 
 		dist_min = params[:dist_min].to_f
 		dist_max = params[:dist_max].to_f
-		@Procedures.delete_if do |procedure|
+		procedures.delete_if do |procedure|
 			dist = procedure.distance
 			if(dist == nil || dist < dist_min || (dist_max < 10 &&  dist > dist_max))
 				true
@@ -127,11 +127,11 @@ class ProcedureController < ApplicationController
 		end
 		
 		if params[:show_hc] == "true" and params[:show_rp] == "true"
-			render json: {:health_centres => @health_centres, :procedures => @Procedures}
+			render json: {:health_centres => health_centres, :procedures => Procedures}
 		elsif params[:show_hc] == "true"
-			render json: {:health_centres => @health_centres}
+			render json: {:health_centres => health_centres}
 		elsif params[:show_rp] == "true"
-			render json: {:procedures => @Procedures}
+			render json: {:procedures => Procedures}
 		else
 			render json: {:result => ""}
 		end
@@ -139,24 +139,24 @@ class ProcedureController < ApplicationController
 	end
 
 	def health_centres_procedure
-		@health_centres = HealthCentre.where(cnes: params[:cnes].to_s)
-		render json: @health_centres.to_a
+		health_centres = HealthCentre.where(cnes: params[:cnes].to_s)
+		render json: health_centres.to_a
 	end
 
 	def procedures_by_hc
-		@Procedures = Procedure.where(cnes_id: params[:cnes].to_s)
-		render json: @Procedures.to_a
+		procedures = Procedure.where(cnes_id: params[:cnes].to_s)
+		render json: procedures.to_a
 	end
 
 	def procedures_search
-		@Procedures = getProcedures()
+		procedures = getProcedures()
 
-		oeste = @Procedures.where(region: "OESTE").pluck(:long, :lat);
-		norte = @Procedures.where(region: "NORTE").pluck(:long, :lat);
-		sul = @Procedures.where(region: "SUL").pluck(:long, :lat);
-		leste = @Procedures.where(region: "LESTE").pluck(:long, :lat);
-		centro = @Procedures.where(region: "CENTRO").pluck(:long, :lat);
-		sudeste = @Procedures.where(region: "SUDESTE").pluck(:long, :lat);
+		oeste = procedures.where(region: "OESTE").pluck(:long, :lat);
+		norte = procedures.where(region: "NORTE").pluck(:long, :lat);
+		sul = procedures.where(region: "SUL").pluck(:long, :lat);
+		leste = procedures.where(region: "LESTE").pluck(:long, :lat);
+		centro = procedures.where(region: "CENTRO").pluck(:long, :lat);
+		sudeste = procedures.where(region: "SUDESTE").pluck(:long, :lat);
 
   		k = 4
   		oeste1 = [{"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}]
@@ -208,7 +208,7 @@ class ProcedureController < ApplicationController
   		end
   		puts "Here"
 
-		@JS = [{"oeste" => oeste1,"norte" => norte1,"leste" => leste1,"sul" => sul1,"sudeste" => sudeste1,"centro" => centro1}	]
-		render json: @JS
+		js = [{"oeste" => oeste1,"norte" => norte1,"leste" => leste1,"sul" => sul1,"sudeste" => sudeste1,"centro" => centro1}	]
+		render json: js
 	end
 end
