@@ -5,125 +5,42 @@ var latlng = null;
 var health_centres_var = {};
 var health_centre_icon = '/health_centre_icon.png';
 var person_icon = '/home.png';
+var cid_array = {};
 
-var colors_procedure = [
- '#003300',
- '#15ff00',
- '#ff0000',
- "#f5b979",
- "#13f1e8",
- "#615ac7",
- "#8e3a06",
- "#b769ab",
- "#df10eb"
-];
+//* POLYGONS *//
+// Region name
+var regions = ['oeste', 'norte', 'leste', 'sul', 'sudeste', 'centro'];
+// Drawings representing regions 
+var draw_region = {};
+// Labels for regions total pacients
+var labels_region = {};
+// Total pacients in each region
+var total_region = {};
+// Label points for regions
+var label_points = {'oeste' : [-23.562630, -46.734051], 'norte' : [-23.459998, -46.670880], 'sul' : [-23.762625, -46.704525], 'leste' : [-23.552559, -46.443600], 'sudeste' : [-23.557594, -46.569251], 'centro' : [-23.547838, -46.633801] };
+//**//
 
-var CID_ARRAY = {};
-
-//POLYGONS
-NORTE_POL = null;
-OESTE_POL = null;
-SUL_POL = null;
-SUDESTE_POL = null;
-CENTRO_POL = null;
-LESTE_POL = null;
-
-POLYGONS_ARRAY = {};
-NORTE_ARRAY = [];
-OESTE_ARRAY = [];
-SUL_ARRAY = [];
-SUDESTE_ARRAY = [];
-CENTRO_ARRAY = [];
-LESTE_ARRAY = [];
-
-//LABELS
-NORTE_LAB = null;
-OESTE_LAB = null;
-SUL_LAB = null;
-SUDESTE_LAB = null;
-CENTRO_LAB = null;
-LESTE_LAB = null;
-
-NORTE_LAB_ARRAY = [];
-OESTE_LAB_ARRAY = [];
-SUL_LAB_ARRAY = [];
-SUDESTE_LAB_ARRAY = [];
-CENTRO_LAB_ARRAY = [];
-LESTE_LAB_ARRAY = [];
-
-// POINTS
-OESTE_LABEL_POINT = [-23.562630, -46.734051];
-NORTE_LABEL_POINT = [-23.459998, -46.670880];
-SUL_LABEL_POINT = [-23.762625, -46.704525];
-LESTE_LABEL_POINT = [-23.552559, -46.443600];
-SUDESTE_LABEL_POINT = [-23.557594, -46.569251];
-CENTRO_LABEL_POINT = [-23.547838, -46.633801];
-
-oeste_points = [];
-
-norte_points = [];
-
-leste_points = [];
-
-sudeste_points = [];
-
-sul_points = [];
-
-centro_points = [];
-
-// Number
-COUNTER = [];
-
-NORTE_TOTAL = 0;
-SUL_TOTAL = 0;
-SUDESTE_TOTAL = 0;
-CENTRO_TOTAL = 0;
-LESTE_TOTAL = 0;
-OESTE_TOTAL = 0;
+//* CLUSTERS *//
+// regions array for clusters
+var array_clusters = {};
+// Label of each cluster in the array above
+var labels_clusters = {};
+// Centroids for the clusters. 
+var centroids = {};
+// Number of pacients in each given centroid.
+var counter = {};
+//**//
 
 // Colors
-var colors = [
- '#FF9900',
- '#FFCC00',
- '#FFFF00',
- "#CCFF00",
- "#99FF00",
- "#66FF00",
- "#33FF00",
- "#FF0000"
-]
-
-
-function calcTotalRegion(){
-  NORTE_TOTAL = 0;
-  SUL_TOTAL = 0;
-  SUDESTE_TOTAL = 0;
-  CENTRO_TOTAL = 0;
-  LESTE_TOTAL = 0;
-  OESTE_TOTAL = 0;
-
-  OESTE_TOTAL = (COUNTER[0] + COUNTER[1] + COUNTER[2] + COUNTER[3]);
-  NORTE_TOTAL = (COUNTER[4] + COUNTER[5] + COUNTER[6] + COUNTER[7]);
-  LESTE_TOTAL = (COUNTER[8] + COUNTER[9] + COUNTER[10] + COUNTER[11]);
-  SUL_TOTAL = (COUNTER[12] + COUNTER[13] + COUNTER[14] + COUNTER[15]);
-  SUDESTE_TOTAL = (COUNTER[16] + COUNTER[17] + COUNTER[18] + COUNTER[19]);
-  CENTRO_TOTAL = (COUNTER[20] + COUNTER[21]);
-}
-
-function attachPolygonInfoWindow(polygon) {
-    var infoWindow = new google.maps.InfoWindow();
-    google.maps.event.addListener(polygon, 'mouseover', function (e) {
-        infoWindow.setContent("Polygon Name");
-        var latLng = e.latLng;
-        infoWindow.setPosition(latLng);
-        infoWindow.open(map);
-    });
-}
+var colors = ['#FF9900', '#FFCC00', '#FFFF00', "#CCFF00", "#99FF00", "#66FF00", "#33FF00", "#FF0000"];
+var colors_procedure = ['#003300', '#15ff00', '#ff0000', "#f5b979", "#13f1e8", "#615ac7", "#8e3a06", "#b769ab", "#df10eb"];
 
 function initMap()
 {
-  var lat = -23.557296000000001
-  var lng = -46.669210999999997
+  $('#legend_proc').hide();
+  $('#loading_overlay').hide();
+  var lat = -23.557296000000001;
+  var lng = -46.669210999999997;
   latlng = new google.maps.LatLng(lat, lng);
 
   var options = {
@@ -150,29 +67,11 @@ function initMap()
     $legend.append(element)
   });
   map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(document.getElementById('legend_proc'));
-  $('#legend_proc').hide()
 
   SPmap_label = new MapLabel({
           fontSize: 28,
           align: 'center'
         });
-
-  OESTE_LAB = createLabel(24);
-  NORTE_LAB = createLabel(24);
-  SUL_LAB = createLabel(24);
-  SUDESTE_LAB = createLabel(24);
-  CENTRO_LAB = createLabel(24);
-  LESTE_LAB = createLabel(24);
-
-  for (i = 0; i < 4; i++){
-      OESTE_LAB_ARRAY.push(createLabel(20))
-      NORTE_LAB_ARRAY.push(createLabel(20))
-      SUL_LAB_ARRAY.push(createLabel(20))
-      LESTE_LAB_ARRAY.push(createLabel(20))
-      SUDESTE_LAB_ARRAY.push(createLabel(20))
-  }
-  CENTRO_LAB_ARRAY.push(createLabel(20))
-  CENTRO_LAB_ARRAY.push(createLabel(20))
 }
 
 function createLabel(size){
@@ -182,15 +81,11 @@ function createLabel(size){
         });
 }
 
-// funtion clickable() {
-//     $('#btn-submit').click(submit());
-// }
-
 // Search button
 function submit()
 {
   $('#btn-submit').click(function() {
-    // document.body.style.cursor = 'wait';
+    $('#loading_overlay').show();
     var sexo_masculino = document.getElementById('sexo_masculino');
     var sexo_feminino = document.getElementById('sexo_feminino');
     var residencia_paciente = document.getElementById('checkbox_residencia_paciente');
@@ -254,40 +149,7 @@ function submit()
     var filterDay = $('#viewType input:radio:checked').val()
 
     // Clear map
-    $('#legend_proc').hide()
-
-    if (ft_layer != null) {
-      ft_layer.setMap(null);
-    }
-
-    clearPolygons(OESTE_ARRAY, OESTE_LAB_ARRAY);
-    clearPolygons(NORTE_ARRAY, NORTE_LAB_ARRAY);
-    clearPolygons(SUL_ARRAY, SUL_LAB_ARRAY);
-    clearPolygons(LESTE_ARRAY, LESTE_LAB_ARRAY);
-    clearPolygons(SUDESTE_ARRAY, SUDESTE_LAB_ARRAY);
-    clearPolygons(CENTRO_ARRAY, CENTRO_LAB_ARRAY);
-    
-    if (SPmap != null) { 
-      SPmap.setMap(null);
-    }
-
-    if (NORTE_POL != null) { NORTE_POL.setMap(null); }
-    if (SUL_POL != null) { SUL_POL.setMap(null); }
-    if (LESTE_POL != null) { LESTE_POL.setMap(null); }
-    if (OESTE_POL != null) { OESTE_POL.setMap(null); }
-    if (SUDESTE_POL != null) { SUDESTE_POL.setMap(null); }
-    if (CENTRO_POL != null) { CENTRO_POL.setMap(null); }
-
-    if (SPmap_label != null) { 
-      SPmap_label.set('map', null);
-    }
-
-    if (NORTE_LAB != null) { NORTE_LAB.set('map', null); }
-    if (SUL_LAB != null) { SUL_LAB.set('map', null); }
-    if (OESTE_LAB != null) { OESTE_LAB.set('map', null); }
-    if (SUDESTE_LAB != null) { SUDESTE_LAB.set('map', null); }
-    if (LESTE_LAB != null) { LESTE_LAB.set('map', null); }
-    if (CENTRO_LAB != null) { CENTRO_LAB.set('map', null); }
+    clearMap();
 
     // Show data 
     if (filterDay == 0) {
@@ -326,6 +188,7 @@ function submit()
       ft_layer.setMap(map);
 
     } else {
+
       bounds = []
       $.each(sp_coordenadas, function(index, point){
         bounds.push(new google.maps.LatLng(parseFloat(point[0]), parseFloat(point[1])))
@@ -341,231 +204,85 @@ function submit()
         path: bounds
       });
 
-      COUNTER = []
       $.getJSON("procedure/procedures_search", {gender: genders.toString(), cnes: health_centres.toString(),
           specialties: specialties.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
           dist_min: dist_min.toString(), dist_max: dist_max.toString(), age_group: age_group.toString(), region: region.toString(),
           cdi: cdi.toString(), treatment_type: treatment_type.toString()}, 
           function(result){
             TOTAL = 0;
-            $.each(result[0]["oeste"], function(index, number){
-                num = parseInt(number["number"]);
-                COUNTER.push(num);
-                oeste_points.push(number["centroid"]);
+            $.each(regions, function(index, region) {
+              centroids[region] = [];
+              counter[region] = [];
+              labels_clusters[region] = [];
+              labels_region[region] = createLabel(24);
+              $.each(result[0][region], function(index, value) {
+                num = parseInt(value["number"]);
+                counter[region].push(num);
+                centroids[region].push(value["centroid"]);
                 TOTAL += num;
-            });
-            $.each(result[0]["norte"], function(index, number){
-                num = parseInt(number["number"]);
-                COUNTER.push(num);
-                norte_points.push(number["centroid"]);
-                TOTAL += num;
-            });
-            $.each(result[0]["leste"], function(index, number){
-                num = parseInt(number["number"]);
-                COUNTER.push(num);
-                leste_points.push(number["centroid"]);
-                TOTAL += num;
-            });
-            $.each(result[0]["sul"], function(index, number){
-                num = parseInt(number["number"]);
-                COUNTER.push(num);
-                sul_points.push(number["centroid"]);
-                TOTAL += num;
-            });
-            $.each(result[0]["sudeste"], function(index, number){
-                num = parseInt(number["number"]);
-                COUNTER.push(num);
-                sudeste_points.push(number["centroid"]);
-                TOTAL += num;
-            });
-            $.each(result[0]["centro"], function(index, number){
-                num = parseInt(number["number"]);
-                COUNTER.push(num);
-                centro_points.push(number["centroid"]);
-                TOTAL += num;
+                labels_clusters[region].push(createLabel(20))
+              });
             });
             calcTotalRegion();
             SPmap_label.set('text', TOTAL.toString());
             SPmap_label.set('position', latlng);
             SPmap_label.set('map', map);
+            $('#loading_overlay').hide();
       });
 
       google.maps.event.addListener(SPmap, 'click', function (event) {
         SPmap.setMap(null);
         SPmap_label.set('map', null);
 
-        bounds = []
-        $.each(Centro, function(index, point){
-          bounds.push(new google.maps.LatLng(parseFloat(point[0]), parseFloat(point[1])))
+        $.each(regions, function(index, region) {
+          bounds = [];
+          $.each(polygons_region[region], function(index, point) {
+            bounds.push(new google.maps.LatLng(parseFloat(point[0]), parseFloat(point[1])));
+          });
+          draw_region[region] = new google.maps.Polygon(makeOptions(bounds));
+          labels_region[region].set('text', total_region[region].toString());
+          labels_region[region].set('position', new google.maps.LatLng(label_points[region][0], label_points[region][1]));
+          labels_region[region].set('map', map);
+          google.maps.event.addListener(draw_region[region], 'click', function(event) {
+            draw_region[region].setMap(null);
+            labels_region[region].set('map', null);
+
+            if (total_region[region] != 0) {
+              array_clusters[region] = [];
+              $.each(centroids[region], function(index, centroid){
+                array_clusters[region].push(createCircle(centroid, counter[region][index]));
+                circleLabel(labels_clusters[region][index], counter[region][index], centroid);
+              });
+            }
+
+          });
         });
-        CENTRO_POL = (new google.maps.Polygon(makeOptions(bounds)));
-        CENTRO_LAB.set('text', CENTRO_TOTAL.toString());
-        CENTRO_LAB.set('position', new google.maps.LatLng(CENTRO_LABEL_POINT[0], CENTRO_LABEL_POINT[1]));
-        CENTRO_LAB.set('map', map);
-        google.maps.event.addListener(CENTRO_POL, 'click', function (event) {
-          CENTRO_POL.setMap(null);
-          CENTRO_LAB.set('map', null);
+      });
 
-          if (CENTRO_TOTAL != 0) { 
-            centro1 = createCircle(centro_points[0], COUNTER[20])
-            centro2 = createCircle(centro_points[1], COUNTER[21])
-            CENTRO_ARRAY.push(centro1);
-            CENTRO_ARRAY.push(centro2);
-            circleLAbel(CENTRO_LAB_ARRAY[0], COUNTER[20], centro_points[0])
-            circleLAbel(CENTRO_LAB_ARRAY[1], COUNTER[21], centro_points[1])
-          }
-        });
-
-        bounds = []
-        $.each(Oeste, function(index, point){
-          bounds.push(new google.maps.LatLng(parseFloat(point[0]), parseFloat(point[1])))
-        });
-        OESTE_POL = (new google.maps.Polygon(makeOptions(bounds)));
-        OESTE_LAB.set('text', OESTE_TOTAL.toString());
-        OESTE_LAB.set('position', new google.maps.LatLng(OESTE_LABEL_POINT[0], OESTE_LABEL_POINT[1]));
-        OESTE_LAB.set('map', map);
-
-        google.maps.event.addListener(OESTE_POL, 'click', function (event) {
-          OESTE_POL.setMap(null);
-          OESTE_LAB.set('map', null);
-
-          if (OESTE_TOTAL != 0) { 
-            oeste1 = createCircle(oeste_points[0], COUNTER[0])
-            oeste2 = createCircle(oeste_points[1], COUNTER[1])
-            oeste3 = createCircle(oeste_points[2], COUNTER[2])
-            oeste4 = createCircle(oeste_points[3], COUNTER[3])
-            OESTE_ARRAY.push(oeste1)
-            OESTE_ARRAY.push(oeste2)
-            OESTE_ARRAY.push(oeste3)
-            OESTE_ARRAY.push(oeste4)
-
-            circleLAbel(OESTE_LAB_ARRAY[0], COUNTER[0], oeste_points[0])
-            circleLAbel(OESTE_LAB_ARRAY[1], COUNTER[1], oeste_points[1])
-            circleLAbel(OESTE_LAB_ARRAY[2], COUNTER[2], oeste_points[2])
-            circleLAbel(OESTE_LAB_ARRAY[3], COUNTER[3], oeste_points[3])
-          }
-        });
-
-        bounds = []
-        $.each(Norte, function(index, point){
-          bounds.push(new google.maps.LatLng(parseFloat(point[0]), parseFloat(point[1])))
-        });
-        NORTE_POL = (new google.maps.Polygon(makeOptions(bounds)));
-        NORTE_LAB.set('text', NORTE_TOTAL.toString());
-        NORTE_LAB.set('position', new google.maps.LatLng(NORTE_LABEL_POINT[0], NORTE_LABEL_POINT[1]));
-        NORTE_LAB.set('map', map);
-
-        google.maps.event.addListener(NORTE_POL, 'click', function (event) {
-          NORTE_POL.setMap(null);
-          NORTE_LAB.set('map', null);
-
-          if (NORTE_TOTAL != 0) { 
-            norte1 = createCircle(norte_points[0], COUNTER[4])
-            norte2 = createCircle(norte_points[1], COUNTER[5])
-            norte3 = createCircle(norte_points[2], COUNTER[6])
-            norte4 = createCircle(norte_points[3], COUNTER[7])
-            NORTE_ARRAY.push(norte1)
-            NORTE_ARRAY.push(norte2)
-            NORTE_ARRAY.push(norte3)
-            NORTE_ARRAY.push(norte4)
-
-            circleLAbel(NORTE_LAB_ARRAY[0], COUNTER[4], norte_points[0])
-            circleLAbel(NORTE_LAB_ARRAY[1], COUNTER[5], norte_points[1])
-            circleLAbel(NORTE_LAB_ARRAY[2], COUNTER[6], norte_points[2])
-            circleLAbel(NORTE_LAB_ARRAY[3], COUNTER[7], norte_points[3])
-          }
-        });
-
-        bounds = []
-        $.each(Leste, function(index, point){
-          bounds.push(new google.maps.LatLng(parseFloat(point[0]), parseFloat(point[1])))
-        });
-        LESTE_POL = (new google.maps.Polygon(makeOptions(bounds)));
-        LESTE_LAB.set('text', LESTE_TOTAL.toString());
-        LESTE_LAB.set('position', new google.maps.LatLng(LESTE_LABEL_POINT[0], LESTE_LABEL_POINT[1]));
-        LESTE_LAB.set('map', map);
-
-        google.maps.event.addListener(LESTE_POL, 'click', function (event) {
-          LESTE_POL.setMap(null);
-          LESTE_LAB.set('map', null);
-
-          if (LESTE_TOTAL != 0) { 
-            leste1 = createCircle(leste_points[0], COUNTER[8])
-            leste2 = createCircle(leste_points[1], COUNTER[9])
-            leste3 = createCircle(leste_points[2], COUNTER[10])
-            leste4 = createCircle(leste_points[3], COUNTER[11])
-            LESTE_ARRAY.push(leste1)
-            LESTE_ARRAY.push(leste2)
-            LESTE_ARRAY.push(leste3)
-            LESTE_ARRAY.push(leste4)
-            circleLAbel(LESTE_LAB_ARRAY[0], COUNTER[8], leste_points[0])
-            circleLAbel(LESTE_LAB_ARRAY[1], COUNTER[9], leste_points[1])
-            circleLAbel(LESTE_LAB_ARRAY[2], COUNTER[10], leste_points[2])
-            circleLAbel(LESTE_LAB_ARRAY[3], COUNTER[11], leste_points[3])
-          }
-        });
-
-        bounds = []
-        $.each(Sul, function(index, point){
-          bounds.push(new google.maps.LatLng(parseFloat(point[0]), parseFloat(point[1])))
-        });
-        SUL_POL = (new google.maps.Polygon(makeOptions(bounds)));
-        SUL_LAB.set('text', SUL_TOTAL.toString());
-        SUL_LAB.set('position', new google.maps.LatLng(SUL_LABEL_POINT[0], SUL_LABEL_POINT[1]));
-        SUL_LAB.set('map', map);
-        google.maps.event.addListener(SUL_POL, 'click', function (event) {
-          SUL_POL.setMap(null);
-          SUL_LAB.set('map', null);
-
-          if (SUL_TOTAL != 0) { 
-            sul1 = createCircle(sul_points[0], COUNTER[12])
-            sul2 = createCircle(sul_points[1], COUNTER[13])
-            sul3 = createCircle(sul_points[2], COUNTER[14])
-            sul4 = createCircle(sul_points[3], COUNTER[15])
-            SUL_ARRAY.push(sul1)
-            SUL_ARRAY.push(sul2)
-            SUL_ARRAY.push(sul3)
-            SUL_ARRAY.push(sul4)
-            circleLAbel(SUL_LAB_ARRAY[0], COUNTER[12], sul_points[0])
-            circleLAbel(SUL_LAB_ARRAY[1], COUNTER[13], sul_points[1])
-            circleLAbel(SUL_LAB_ARRAY[2], COUNTER[14], sul_points[2])
-            circleLAbel(SUL_LAB_ARRAY[3], COUNTER[15], sul_points[3])
-          }
-        });
-
-        bounds = []
-        $.each(Sudeste, function(index, point){
-          bounds.push(new google.maps.LatLng(parseFloat(point[0]), parseFloat(point[1])))
-        });
-        SUDESTE_POL = (new google.maps.Polygon(makeOptions(bounds)));
-        SUDESTE_LAB.set('text', SUDESTE_TOTAL.toString());
-        SUDESTE_LAB.set('position', new google.maps.LatLng(SUDESTE_LABEL_POINT[0], SUDESTE_LABEL_POINT[1]));
-        SUDESTE_LAB.set('map', map);
-        google.maps.event.addListener(SUDESTE_POL, 'click', function (event) {
-          SUDESTE_POL.setMap(null);
-          SUDESTE_LAB.set('map', null);
-
-          if (SUDESTE_TOTAL != 0) { 
-            sudeste1 = createCircle(sudeste_points[0], COUNTER[16])
-            sudeste2 = createCircle(sudeste_points[1], COUNTER[17])
-            sudeste3 = createCircle(sudeste_points[2], COUNTER[18])
-            sudeste4 = createCircle(sudeste_points[3], COUNTER[19])
-            SUDESTE_ARRAY.push(sudeste1)
-            SUDESTE_ARRAY.push(sudeste2)
-            SUDESTE_ARRAY.push(sudeste3)
-            SUDESTE_ARRAY.push(sudeste4)
-            circleLAbel(SUDESTE_LAB_ARRAY[0], COUNTER[16], sudeste_points[0])
-            circleLAbel(SUDESTE_LAB_ARRAY[1], COUNTER[17], sudeste_points[1])
-            circleLAbel(SUDESTE_LAB_ARRAY[2], COUNTER[18], sudeste_points[2])
-            circleLAbel(SUDESTE_LAB_ARRAY[3], COUNTER[19], sudeste_points[3])
-          }
-        });
-      }); 
     }
   });
 }
 
-function circleLAbel(label, number, points){
+function calcTotalRegion() {
+  $.each(regions, function(index, region) {
+    total_region[region] = 0;
+    $.each(counter[region], function(index, value) {
+      total_region[region] += value;
+    });
+  });
+}
+
+function attachPolygonInfoWindow(polygon) {
+    var infoWindow = new google.maps.InfoWindow();
+    google.maps.event.addListener(polygon, 'mouseover', function (e) {
+        infoWindow.setContent("Polygon Name");
+        var latLng = e.latLng;
+        infoWindow.setPosition(latLng);
+        infoWindow.open(map);
+    });
+}
+
+function circleLabel(label, number, points){
     if (number == 0) {
       return;
     } 
@@ -745,41 +462,36 @@ function clear()
     $("#sexo_feminino").prop("checked", true);
     $("#checkbox_residencia_paciente").prop("checked", true);
     $("#checkbox_health_centre").prop("checked", true);
+
+    clearMap();
+  });
+}
+
+function clearMap() {
+    $('#legend_proc').hide()
+
     if (ft_layer != null) {
       ft_layer.setMap(null);
     }
 
-    $('#legend_proc').hide()
+    $.each(regions, function(index, region) {
+      clearPolygons(array_clusters[region], labels_clusters[region]);
+      if (draw_region[region] != null) {
+        draw_region[region].setMap(null);
+      }
 
-    clearPolygons(OESTE_ARRAY, OESTE_LAB_ARRAY);
-    clearPolygons(NORTE_ARRAY, NORTE_LAB_ARRAY);
-    clearPolygons(SUL_ARRAY, SUL_LAB_ARRAY);
-    clearPolygons(LESTE_ARRAY, LESTE_LAB_ARRAY);
-    clearPolygons(SUDESTE_ARRAY, SUDESTE_LAB_ARRAY);
-    clearPolygons(CENTRO_ARRAY, CENTRO_LAB_ARRAY);
+      if (labels_region[region] != null) {
+        labels_region[region].set('map', null);
+      }
+    });
     
     if (SPmap != null) { 
       SPmap.setMap(null);
     }
 
-    if (NORTE_POL != null) { NORTE_POL.setMap(null); }
-    if (SUL_POL != null) { SUL_POL.setMap(null); }
-    if (LESTE_POL != null) { LESTE_POL.setMap(null); }
-    if (OESTE_POL != null) { OESTE_POL.setMap(null); }
-    if (SUDESTE_POL != null) { SUDESTE_POL.setMap(null); }
-    if (CENTRO_POL != null) { CENTRO_POL.setMap(null); }
-
     if (SPmap_label != null) { 
       SPmap_label.set('map', null);
     }
-
-    if (NORTE_LAB != null) { NORTE_LAB.set('map', null); }
-    if (SUL_LAB != null) { SUL_LAB.set('map', null); }
-    if (OESTE_LAB != null) { OESTE_LAB.set('map', null); }
-    if (SUDESTE_LAB != null) { SUDESTE_LAB.set('map', null); }
-    if (LESTE_LAB != null) { LESTE_LAB.set('map', null); }
-    if (CENTRO_LAB != null) { CENTRO_LAB.set('map', null); }
-  });
 }
 
 function data_input()
@@ -837,7 +549,7 @@ function data_input()
     });
 
     $.getJSON('CID10.json', function(data){
-      CID_ARRAY = data;
+      cid_array = data;
       $(".select-cdi").select2({
         placeholder: "Todas",
         allowClear: true,
