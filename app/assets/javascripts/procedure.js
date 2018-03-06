@@ -85,7 +85,6 @@ function createLabel(size){
 function submit()
 {
   $('#btn-submit').click(function() {
-    $('#loading_overlay').show();
     var sexo_masculino = document.getElementById('sexo_masculino');
     var sexo_feminino = document.getElementById('sexo_feminino');
     var residencia_paciente = document.getElementById('checkbox_residencia_paciente');
@@ -188,7 +187,7 @@ function submit()
       ft_layer.setMap(map);
 
     } else {
-
+      $('#loading_overlay').show();
       bounds = []
       $.each(sp_coordenadas, function(index, point){
         bounds.push(new google.maps.LatLng(parseFloat(point[0]), parseFloat(point[1])))
