@@ -68,6 +68,17 @@ function initMap()
   });
   map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(document.getElementById('legend_proc'));
 
+  var contextMenu = google.maps.event.addListener(
+        map,
+        "rightclick",
+        function( event ) {
+            // use JS Dom methods to create the menu
+            // use event.pixel.x and event.pixel.y 
+            // to position menu at mouse position
+            console.log( event );
+        }
+    );
+
   SPmap_label = new MapLabel({
           fontSize: 28,
           align: 'center'
@@ -491,6 +502,45 @@ function clearMap() {
     if (SPmap_label != null) { 
       SPmap_label.set('map', null);
     }
+}
+
+function print_maps() {
+  $('#btn-print').click(function() {
+    const $body = $('body');
+    const $mapContainer = $('.map-wrapper');
+    const $mapContainerParent = $mapContainer.parent();
+    const $printContainer = $('<div style="position:relative;">');
+
+    $printContainer
+      .height($mapContainer.height())
+      .append($mapContainer)
+      .prependTo($body);
+
+    const $content = $body
+      .children()
+      .not($printContainer)
+      .not('script')
+      .detach();
+
+    /**
+     * Needed for those who use Bootstrap 3.x, because some of
+     * its `@media print` styles ain't play nicely when printing.
+     */
+    const $patchedStyle = $('<style media="print">')
+      .text(`
+        img { max-width: none !important; }
+        a[href]:after { content: ""; }
+      `)
+      .appendTo('head');
+
+    window.print();
+
+    $body.prepend($content);
+    $mapContainerParent.prepend($mapContainer);
+
+    $printContainer.remove();
+    $patchedStyle.remove();
+  });
 }
 
 function data_input()

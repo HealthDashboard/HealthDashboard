@@ -1,4 +1,3 @@
-<!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwxSdPxeKR0IyS4C0A8E67DyYm-KQYpxs&callback=initMap"> </script> -->
 <%= javascript_include_tag 'map_SP.js' %>
 <!-- <div class="w3-container"> -->
     <!-- <div class = "container-fluid"> -->
@@ -163,6 +162,9 @@
               <button class="btn btn-clear" type="button" id="btn-clear">
                 <i class="fa fa-search" aria-hidden="true"></i> Limpar
               </button>
+              <button class="btn btn-print" type="button" id="btn-print">
+                <i class="fa fa-search" aria-hidden="true"></i> Imprimir
+              </button>
             </div>
             <div class = "col-sm-12" style = "height: 10px;"></div>
           </div>
@@ -207,4 +209,5 @@
   $(document).ready(data_input)
   $(document).ready(submit)
   $(document).ready(clear)
+  $(document).ready(print_maps)
 </script>
