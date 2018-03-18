@@ -563,7 +563,7 @@ function data_input()
       $("#slider_distance_max").html(slideEvt.value[1] + (slideEvt.value[1] >= 30 ? "+" : ""));
     });
 
-    $.getJSON("age_group.json", function(data) {
+    $.getJSON("/age_group.json", function(data) {
       $(".select-age_group").select2({
         placeholder: "Todas",
         allowClear: true,
@@ -585,7 +585,7 @@ function data_input()
       data: regions,
     });
 
-    $.getJSON('health_centres.json', function(data) {
+    $.getJSON('/health_centres.json', function(data) {
       $.each(data, function(index, value) {
         health_centres_var[value.id] = value.text;
       });
@@ -597,7 +597,7 @@ function data_input()
       });
     });
 
-    $.getJSON('CID10.json', function(data){
+    $.getJSON('/CID10.json', function(data){
       cid_array = data;
       $(".select-cdi").select2({
         placeholder: "Todas",
@@ -606,7 +606,7 @@ function data_input()
       });
     });
 
-    $.getJSON('specialties.json', function(data) {
+    $.getJSON('/specialties.json', function(data) {
       $(".select-speciality").select2({
         placeholder: "Todas",
         data: data,
