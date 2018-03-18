@@ -524,13 +524,10 @@ function print_maps() {
 
     /**
      * Needed for those who use Bootstrap 3.x, because some of
-     * its `@media print` styles ain't play nicely when printing.
+     * its @media print styles ain't play nicely when printing.
      */
     const $patchedStyle = $('<style media="print">')
-      .text(`
-        img { max-width: none !important; }
-        a[href]:after { content: ""; }
-      `)
+      .text('img { max-width: none !important; } a[href]:after { content: ""; }')
       .appendTo('head');
 
     window.print();
