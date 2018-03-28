@@ -6,6 +6,7 @@ var health_centres_var = {};
 var health_centre_icon = '/health_centre_icon.png';
 var person_icon = '/home.png';
 var cid_array = {};
+var data = null;
 
 //* POLYGONS *//
 // Region name
@@ -56,7 +57,7 @@ function initMap()
         {'name': 'Psiquiatria', 'color': colors_procedure[4]},
         {'name': 'Pediatria', 'color': colors_procedure[3]},
         {'name': 'Reabilitação', 'color': colors_procedure[6]},
-        {'name': 'Psiquiatria Hospital-Dia', 'color': colors_procedure[6]}
+        {'name': 'Psiquiatria Hospital-Dia', 'color': colors_procedure[1]}
         ]
 
   var $legend = $('#legend_proc')
@@ -165,19 +166,21 @@ function submit()
     if (filterDay == 0) {
       where =  whereParse(health_centres, region, specialties, age_group, cdi, treatment_type, 
   start_date, end_date, dist_min, dist_max, genders);
+      console.log(where);
       ft_layer = new google.maps.FusionTablesLayer({
         query: {
           select: 'LAT_SC',
           from: '1hKuL3jRKfMw2XZmGPlr5URI6Zd6rNEWV7j3V0a8Y',
           where: where,
-        },
-        styles: [
-            {where: "'specialty_id' = 2", markerOptions:{iconName:"small_green"}},
-            {where: "'specialty_id' = 3", markerOptions:{iconName:"small_red"}},
-            {where: "'specialty_id' = 9", markerOptions:{iconName:"small_purple"}},
-            {where: "'specialty_id' = '7'", markerOptions:{ iconName:"measle_brown"}},
-            {where: "'specialty_id' = '5'", markerOptions:{ iconName:"measle_turquoise"}},
-        ]  
+        }
+        // },
+        // styles: [
+        //     {where: "'specialty_id' = 2", markerOptions:{iconName:"small_green"}},
+        //     {where: "'specialty_id' = 3", markerOptions:{iconName:"small_red"}},
+        //     {where: "'specialty_id' = 9", markerOptions:{iconName:"small_purple"}},
+        //     {where: "'specialty_id' = '7'", markerOptions:{ iconName:"measle_brown"}},
+        //     {where: "'specialty_id' = '5'", markerOptions:{ iconName:"measle_turquoise"}},
+        // ]  
       });
 
       var sexp_var = {}
@@ -214,7 +217,7 @@ function submit()
         path: bounds
       });
 
-      $.getJSON("procedure/procedures_search", {gender: genders.toString(), cnes: health_centres.toString(),
+      $.getJSON("procedure/procedures_search", data = {gender: genders.toString(), cnes: health_centres.toString(),
           specialties: specialties.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
           dist_min: dist_min.toString(), dist_max: dist_max.toString(), age_group: age_group.toString(), region: region.toString(),
           cdi: cdi.toString(), treatment_type: treatment_type.toString()}, 
@@ -399,7 +402,7 @@ function whereParse(health_centres, region, specialties, age_group, cdi, treatme
     if (where != "") {
       where = where.concat(" AND ");
     }
-    where = where.concat("age_group IN ", clauseParse(age_group));
+    where = where.concat("age_code IN ", clauseParse(age_group));
   }
 
   if (cdi.length > 0) {
@@ -502,6 +505,13 @@ function clearMap() {
     if (SPmap_label != null) { 
       SPmap_label.set('map', null);
     }
+}
+
+function graphs() {
+  $('#btn-graphs').click(function() {
+    var w = window.open('dashboard');
+    w.teste = data;
+  });
 }
 
 function print_maps() {
