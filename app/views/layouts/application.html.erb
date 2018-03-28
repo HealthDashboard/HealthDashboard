@@ -22,40 +22,12 @@
               <li class='nav-item <%= 'active' if controller_name == 'procedure'  %>'> <%= link_to "Busca Avançada", procedure_path, class: 'nav-link' %></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              <li class='nav-item'><a href='#' class='nav-link glyphicon glyphicon-question-sign' data-toggle="modal" onclick="update_chart()" data-target="#help-modal"></a></li>
+              <li class='nav-item'><a href='#' class='nav-link glyphicon glyphicon-question-sign' data-toggle="tab" onclick="about()"></a></li>
             </ul>
           </nav>
       </div>
     <div class='container'>
       <%= yield %>
-    </div>
-    <!-- Modal -->
-    <div id="help-modal" class="modal fade" role="dialog">
-      <div class="modal-dialog modal-lg">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Sobre</h4>
-          </div>
-          <div class="modal-body">
-              <p>Este projeto é desenvolvido em uma parceria entre o Centro de Competência em Software Livre - IME/USP e a Secretaria Municipal de Saúde de São Paulo.</p>
-              <p>Membros do Projeto: </p>
-              <div style="text-align: center;">
-                <p>Marcelo Failla - SMS/SP</p>
-                <p>Breno Aguiar - SMS/SP</p>
-                <p>Prof. Fabio Kon - IME/USP</p>
-                <p>Profª. Kelly Braghetto - IME/USP</p>
-                <p>Eduardo Pinheiro - IME/USP</p>
-                <p>Débora Ciriaco - IME/USP</p>
-              </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-          </div>
-        </div>
-      </div>
     </div>
   </body>
 </html>

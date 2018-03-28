@@ -208,6 +208,10 @@ function create_homepage_charts() {
     });
 }
 
+function about() {
+    window.open("about");
+}
+
 function update_chart() {
     var specialty_path = ["/specialties/", info_box_opened].join("");
     $.getJSON(specialty_path, function(specialties) {

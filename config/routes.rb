@@ -23,6 +23,8 @@ Rails.application.routes.draw do
   get '/procedure/specialties', to: 'procedure#specialties'
   get 'procedure/allProcedures', to: 'procedure#allProcedures'
 
+  get '/about', to: 'application#about'
+
   resources :procedure do
     get :procedures_search, on: :collection
     get :health_centres_search, on: :collection
