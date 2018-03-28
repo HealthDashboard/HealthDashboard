@@ -20,6 +20,7 @@ function init_dashboard_chart() {
     google.charts.setOnLoadCallback(create_dashboard_charts);
     dashboard_legend();
     animate_legend();
+    console.log(window.teste)
 }
 
 function animate_legend() {
