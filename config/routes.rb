@@ -13,11 +13,11 @@ Rails.application.routes.draw do
   get '/rank_health_centres', to: 'health_centres#rank_health_centres'
   get '/distance_metric', to: 'health_centres#distance_metric'
   get '/shorter_distance_count', to: 'health_centres#shorter_distance_count'
-
-  get 'dashboard', to: 'dashboard#index'
+ 
+  get 'metricas', to: 'dashboard#index'
   get 'specialties', to: 'specialties#index'
-  get 'health_centre_filter', to: 'health_centre_filter#index'
-  get 'procedure', to: 'procedure#show'
+  get 'estabelecimentos', to: 'health_centre_filter#index'
+  get 'busca', to: 'procedure#show'
 
   get '/procedure/health_centres', to: 'procedure#health_centres'
   get '/procedure/specialties', to: 'procedure#specialties'
