@@ -509,7 +509,7 @@ function clearMap() {
 
 function graphs() {
   $('#btn-graphs').click(function() {
-    var w = window.open('dashboard');
+    var w = window.open('metricas');
     w.teste = data;
   });
 }
