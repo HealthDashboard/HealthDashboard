@@ -7,6 +7,7 @@ var markerCluster = null;
 var colors = ['#003300', '#15ff00', '#ff0000', "#f5b979" , "#13f1e8" ,  "#615ac7", "#8e3a06", "#b769ab", "#df10eb"];
 
 var health_centre_icon = '/health_centre_icon.png';
+var person_icon = '/home.png';
 
 function initialize() {
     var lat = -23.557296000000001;
