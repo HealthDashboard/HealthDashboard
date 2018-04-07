@@ -102,7 +102,7 @@ function setup_cluster() {
     var procedure_path = ["/procedures/", info_box_opened].join("");
 
     $.getJSON(procedure_path, function(procedures) {
-        show_procedures(procedures);
+        show_procedures(procedures, person_icon);
         create_circles(info_boxes[info_box_opened].marker);
     });
 
