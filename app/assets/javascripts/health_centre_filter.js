@@ -22,6 +22,8 @@ var health_centre_names = {1:"PAM VARZEA DO CARMO NGA 63 SAO PAULO", 2:"HOSPITAL
 87:"HOSP MUN VER JOSE STOROPOLLI", 88:"HOSP MUN CARMEN PRUDENTE", 89:"INSTITUTO DE REABILITACAO LUCY MONTORO", 90:"HOSP MUN M BOI MIRIM", 91:"INSTITUTO DO CANCER DO ESTADO DE SAO PAULO", 92:"HOSPITAL DIA DA REDE HORA CERTA ITAIM PAULISTA", 93:"AME DR LUIZ ROBERTO BARRADAS BARATA SAO PAULO",
 94:"UNAD UNIDADE DE ATENDIMENTO AO DEPENDENTE", 95:"HOSPITAL SANTO ANTONIO", 96:"HOSPITAL DIA DA REDE HORA CERTA LAPA", 97:"HOSP MUN GILSON DE CASSIA MARQUES DE CARVALHO"}
 
+var selected_health_centre = 0;
+
 function initialize_health_centre_filter() {
     var lat = -23.557296000000001;
     var lng = -46.669210999999997;
@@ -65,6 +67,9 @@ function change_list() {
 }
 
 function action(path, ids, group_by) {
+    teardown_health_centre();
+    teardown_circles();
+    teardown_markers();
     //Remove list
     var list = document.getElementById("accordion");
     var element = list.parentNode
@@ -114,7 +119,12 @@ function change_selected_health_centre(id) {
 }
 
 function filter_by(health_centre_id, id, name) {
-    teardown_health_centre();
+    console.log(selected_health_centre, health_centre_id)
+    if (selected_health_centre != health_centre_id) {
+        teardown_health_centre();
+        teardown_markers();
+        selected_health_centre = health_centre_id
+    }
     teardown_circles();
 
     info_boxes[health_centre_id].marker.setVisible(true);
