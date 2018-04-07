@@ -3,7 +3,7 @@ var info_boxes = [];
 var circles = [];
 var info_box_opened;
 var cluster_status = false;
-var markerCluster = null;
+var markerCluster = [];
 var colors = ['#003300', '#15ff00', '#ff0000', "#f5b979" , "#13f1e8" ,  "#615ac7", "#8e3a06", "#b769ab", "#df10eb"];
 
 var health_centre_icon = '/health_centre_icon.png';
@@ -42,7 +42,7 @@ function show_procedures(procedures, icon) {
         minimumClusterSize: 3,
         imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
     };
-    markerCluster = new MarkerClusterer(map, markers, options);
+    markerCluster.push(new MarkerClusterer(map, markers, options));
 }
 
 function create_circles(marker) {
@@ -111,24 +111,32 @@ function setup_cluster() {
     cluster_status = true;
 }
 
+// Remove clusters
 function teardown_cluster() {
     markers_visible(true);
-    markerCluster.clearMarkers();
     info_boxes[info_box_opened].close();
     info_box_opened = -1;
     cluster_status = false;
     teardown_circles();
+    teardown_markers()
 }
 
+// Remove radius circles
 function teardown_circles() {
-    if (markerCluster !== null) {
-        markerCluster.clearMarkers();
-    }
-
     $.each(circles, function(index, circle) {
         circle.setMap(null)
     });
     circles = [];
+}
+
+// Remove pacients markers
+function teardown_markers() {
+    $.each(markerCluster, function(index, cluster) {
+        console.log(cluster)
+        if (cluster != null) {
+            cluster.clearMarkers();
+        }
+    });
 }
 
 function add_info_to_marker(marker, point, generate_infobox_text) {
