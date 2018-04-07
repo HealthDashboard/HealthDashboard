@@ -1,4 +1,8 @@
 class HealthCentresController < ApplicationController
+    @@region_id_array = ["PIRITUBA / JARAGUÁ", "FREGUESIA / BRASILÂNDIA", "JABAQUARA", "VILA PRUDENTE", "SANTO AMARO", "ARICANDUVA / FORMOSA / CARRÃO", "CAMPO LIMPO", "M´BOI MIRIM", "VILA MARIANA", "CASA VERDE / CACHOEIRINHA", "SÃO MIGUEL PAULISTA", 
+        "SÃO MATEUS", "ITAQUERA", "PINHEIROS", "PENHA", "CIDADE TIRADENTES", "LAPA", "SAPOPEMBA", "GUAIANASES", "CAPELA DO SOCORRO", "SÉ", "BUTANTÃ", "ERMELINO MATARAZZO", "ITAIM PAULISTA", "IPIRANGA", "VILA MARIA / VILA GUILHERME", "SANTANA / TUCURUVI",
+         "JAÇANÃ / TREMEMBÉ", "MOÓCA"]
+
     # GET /
     def index
         health_centres = HealthCentre.all
@@ -71,13 +75,31 @@ class HealthCentresController < ApplicationController
         render json: procedures
     end
 
-    # GET /health_centre_specialty/:hc_id/:spec_id
+    # GET /health_centre_specialty/:hc_id/:id
     def health_centre_specialty
         health_centre = HealthCentre.find_by(id: params[:hc_id])
         procedures = health_centre.procedures
 
-        procedures_specialties = procedures.where(specialty_id: params[:spec_id])
+        procedures_specialties = procedures.where(specialty_id: params[:id])
         render json: procedures_specialties
+    end
+
+    # GET /health_centre_type/:hc_id/:id
+    def health_centre_type
+        health_centre = HealthCentre.find_by(id: params[:hc_id])
+        procedures = health_centre.procedures
+
+        procedures_type = procedures.where(treatment_type: params[:id])
+        render json: procedures_type
+    end
+
+    # GET /health_centre_region/:hc_id/:id
+    def health_centre_region
+        health_centre = HealthCentre.find_by(id: params[:hc_id])
+        procedures = health_centre.procedures
+
+        # procedures_specialties = procedures.where(region: params[:spec_id])
+        render json: procedures
     end
 
     # GET /distances/:id

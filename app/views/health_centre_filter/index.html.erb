@@ -12,6 +12,29 @@
     <h1> </h1>
   </div>
 
+  <div class="col-md-4 col-sm-4">
+    <div class="col-sm-12">
+      <label for="select_order"><b>Ordenação dos estabelecimentos: </b></label>
+    </div>
+    <div class="col-sm-12" id="viewType">
+      <form id="myForm">
+        <div class="radio">
+          <label><input type="radio" name="optRadio" value="0" checked="checked"> Especialidade</label>
+        </div>
+        <div class="radio">
+          <label><input type="radio" name="optRadio" value="1"> Modalidade de atendimento</label>
+        </div>
+        <div class="radio">
+          <label><input type="radio" name="optRadio" value="2"> Prefeitura Regional</label>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-sm-8">
+    <h1> </h1>
+  </div>
+
   <div class='col-md-4 col-sm-4'>
     <div class="panel-group" id="accordion">
     <% for specialty in @Specialties %>
@@ -26,7 +49,7 @@
           <ul class="list-group">
             <% for health_centre_specialty in  @HealthCentreSpecialty %>
               <% if health_centre_specialty.specialty_id == specialty.id %>
-                <li class="list-group-item"   onclick='filter_by( <%= health_centre_specialty.health_centre_id %> , <%= specialty.id %>)'><%= health_centre_specialty.health_centre.name %></li>
+                <li class="list-group-item"   onclick='filter_by( <%= health_centre_specialty.health_centre_id %> , <%= specialty.id %>, "specialty")'><%= health_centre_specialty.health_centre.name %></li>
               <% end %>
             <% end %>
           </ul>
@@ -39,7 +62,9 @@
   <div class='col-md-8 col-sm-8 affix' style='margin-top: 500px'>
   </div>
 
+
 <script>
   $(document).ready(initialize_health_centre_filter)
+  $(document).ready(change_list)
 </script>
 
