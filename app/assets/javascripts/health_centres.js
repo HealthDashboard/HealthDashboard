@@ -181,9 +181,9 @@ function create_legend() {
 }
 
 function populate_legend() {
-    styles = [{'name': '1 km', 'color': colors[2]},
-              {'name': '5 km', 'color': colors[1]},
-              {'name': '10 km', 'color': colors[0]}
+    styles = [{'name': '1 Km', 'color': colors[2]},
+              {'name': '5 Km', 'color': colors[1]},
+              {'name': '10 Km', 'color': colors[0]}
              ];
 
     var $legend = $('#legend');
@@ -271,8 +271,8 @@ function create_right_graph() {
 
 function create_bottom_graphs(id, data) {
     var chart = new google.visualization.BarChart(document.getElementById(id));
-    var header = ['Genre', ' > 1 km', '> 1 km e < 5 km',
-                  '> 5 km e  < 10 km', '> 10 km', {role: 'annotation' }];
+    var header = ['Genre', ' < 1 Km', '> 1 Km e < 5 Km',
+                  '> 5 Km e  < 10 Km', '> 10 Km', {role: 'annotation' }];
     var options = {
         height :250,
         legend: { position: 'none'},

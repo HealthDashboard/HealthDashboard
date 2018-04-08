@@ -8,6 +8,10 @@ var person_icon = '/home.png';
 var cid_array = {};
 var data = null;
 
+
+// Health Centres icon on map
+var Markers = [];
+
 //* POLYGONS *//
 // Region name
 var regions = ['oeste', 'norte', 'leste', 'sul', 'sudeste', 'centro'];
@@ -164,6 +168,18 @@ function submit()
 
     // Show data 
     if (filterDay == 0) {
+
+      if (health_centres != []) {
+        $.getJSON("procedure/health_centres_procedure", {cnes: health_centres.toString()}, function(result){
+          $.each(result, function(index, health_centre){
+            create_markers(health_centre, health_centre_icon)
+          });
+          // console.log(Markers.length)
+          map.panTo(Markers[0].position);
+        });
+        setMarkersMap(map);
+        map.setZoom(15);
+      }
       where =  whereParse(health_centres, region, specialties, age_group, cdi, treatment_type, 
   start_date, end_date, dist_min, dist_max, genders);
       console.log(where);
@@ -275,6 +291,24 @@ function submit()
     }
   });
 }
+
+function create_markers(procedure, icon_path)
+{
+  var marker = new google.maps.Marker({
+      position: new google.maps.LatLng(procedure.lat, procedure.long),
+      map: map,
+      icon: icon_path
+  });
+  Markers.push(marker);
+}
+
+function setMarkersMap(map)
+{
+  for (var i = 0; i < Markers.length; i++) {
+      Markers[i].setMap(map);
+  }
+}
+
 
 function calcTotalRegion() {
   $.each(regions, function(index, region) {
@@ -505,6 +539,9 @@ function clearMap() {
     if (SPmap_label != null) { 
       SPmap_label.set('map', null);
     }
+
+    setMarkersMap(null);
+    Markers = [];
 }
 
 function graphs() {
@@ -563,7 +600,7 @@ function data_input()
       min: 0,
       max: 30,
       step: 1,
-      value: [0,30],
+      value: [0,10],
     });
     $("#slider_distance").on("slide", function(slideEvt) {
       $("#slider_distance_min").html(slideEvt.value[0]);

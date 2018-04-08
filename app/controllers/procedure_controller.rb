@@ -134,8 +134,7 @@ class ProcedureController < ApplicationController
 			render json: {:procedures => Procedures}
 		else
 			render json: {:result => ""}
-		end
-			
+		end	
 	end
 
 	def health_centres_procedure
