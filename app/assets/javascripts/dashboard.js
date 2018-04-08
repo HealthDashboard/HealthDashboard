@@ -54,7 +54,7 @@ function create_procedures_per_specialties() {
     var chart = new google.visualization.PieChart(document.getElementById("chart_specialties"));
 
     var options = {
-        title:'% de Internações por especialidades',
+        title:'Porcentagem de Internações por especialidades',
         slices: get_color_slice()
     };
 
@@ -140,9 +140,9 @@ function create_specialties_vs_time_to_arrive() {
 
 function create_specialties_distance_between_patients_hospital() {
     var chart = new google.visualization.BarChart(document.getElementById("chart_spec_distance_average"));
-    var header = ["Especialidades", "Distância média em km", {role: "style"}]
+    var header = ["Especialidades", "Distância média(Km)", {role: "style"}]
     var options = {
-        title: "Distância média por especialidade",
+        title: "Distância média por especialidade (Km)",
         legend: {position: 'none'},
         chartArea: {
             top: 55,

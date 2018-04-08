@@ -3,15 +3,10 @@ $(document).ready(function(){
 })
 
 var types_color = {
- "Especializados":'#003300',
- "Apoio Diagnostico":'#15ff00',
- "Saúde Mental":'#ff0000',
- "Vigilancia Em Saúde":"#f5b979",
- "UBS":"#13f1e8",
- "Urgência/Emergência":"#615ac7",
- "Hospital":"#8e3a06",
- "Unidades DST/AIDS":"#b769ab",
- "Outros Estabelecimentos": "#df10eb"
+ "HOSPITAL/DIA - ISOLADO":'#003300',
+ "OSPITAL GERAL":'#15ff00',
+ "HOSPITAL ESPECIALIZADO":'#ff0000',
+ "CLÍNICA/CENTRO DE ESPECIALIDADE":"#f5b979",
 }
 
 var specialty_divs = [
@@ -41,15 +36,10 @@ var specialties_name = [
 ]
 
 var types_name = [
- "Especializados",
- "Apoio Diagnostico",
- "Saúde Mental",
- "Vigilancia Em Saúde",
- "UBS",
- "Urgência/Emergência",
- "Hospital",
- "Unidades DST/AIDS",
- "Outros Estabelecimentos"
+ "HOSPITAL/DIA - ISOLADO",
+ "HOSPITAL GERAL",
+ "HOSPITAL ESPECIALIZADO",
+ "CLÍNICA/CENTRO DE ESPECIALIDADE", 
 ]
 
 function init_specialties_chart(){
@@ -63,7 +53,7 @@ function create_specialties_charts() {
 }
 
 function create_specialty_chart(index, specialty){
-  var header = ["Tipos de estabelecimentos", "Distância Média Percorrida em km", { role: "style" } ]
+  var header = ["Tipos de estabelecimentos", "Distância Média Percorrida(Km)", { role: "style" } ]
   var chart = new google.visualization.BarChart(document.getElementById(specialty_divs[index]));
   var options = {
     title: specialties_name[index],
@@ -72,7 +62,7 @@ function create_specialty_chart(index, specialty){
     legend: { position: 'none' },
     chartArea: {
    top: 55,
-   left: 170 },
+   left: 270 },
     vAxis: { textStyle:  {fontSize: 14,bold: false}},
     hAxis: { textStyle:  {fontSize: 18,bold: false}}
   };
