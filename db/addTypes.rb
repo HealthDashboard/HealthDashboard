@@ -20,5 +20,5 @@ def linkTypeHealthCentre
   	puts "#{hc_counter} Health Centres successfully updated"
 end
 
-# addTypes()
+addTypes()
 linkTypeHealthCentre()

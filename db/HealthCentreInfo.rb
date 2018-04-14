@@ -5,7 +5,7 @@ def add_info()
 	hc_counter = 0
   	CSV.foreach(hc_csv_path, :headers => true) do |row|
     	h = HealthCentre.where(cnes: row[0]).first
-      h.type = row[5]
+      h.hc_type = row[5]
       h.phone = row[7]
       h.adm = row[8]
       h.DA = row[9]
