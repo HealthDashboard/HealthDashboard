@@ -168,25 +168,26 @@ function submit()
 
     // Show data 
     if (filterDay == 0) {
-
-      if (health_centres != []) {
+      if (genders.length == 0) {
+        return;
+      }
+      if (health_centres.length > 0) {
         $.getJSON("procedure/health_centres_procedure", {cnes: health_centres.toString()}, function(result){
           $.each(result, function(index, health_centre){
             create_markers(health_centre, health_centre_icon)
           });
-          // console.log(Markers.length)
           map.panTo(Markers[0].position);
         });
         setMarkersMap(map);
-        map.setZoom(15);
+        // map.setZoom(15);
       }
       where =  whereParse(health_centres, region, specialties, age_group, cdi, treatment_type, 
   start_date, end_date, dist_min, dist_max, genders);
       console.log(where);
       ft_layer = new google.maps.FusionTablesLayer({
         query: {
-          select: 'LAT_SC',
-          from: '1hKuL3jRKfMw2XZmGPlr5URI6Zd6rNEWV7j3V0a8Y',
+          select: 'lat',
+          from: '1tja971umgcSMI-bU7t3pkE2tWJ0gw7hrFAcH05uH',
           where: where,
         }
         // },
@@ -443,7 +444,7 @@ function whereParse(health_centres, region, specialties, age_group, cdi, treatme
     if (where != "") {
       where = where.concat(" AND ");
     }
-    where = where.concat("cdi IN ", clauseParse(cdi));
+    where = where.concat("cid_primary IN ", clauseParse(cdi));
   }
 
   if (treatment_type.length > 0) {
@@ -496,7 +497,7 @@ function clear()
   $('#btn-clear').click(function() {
     $("#slider_distance").slider('refresh');
     $("#slider_distance_min").html('0');
-    $("#slider_distance_max").html('30+');
+    $("#slider_distance_max").html('10');
     $(".select-health_centre").val('').trigger('change');
     $(".select-age_group").val('').trigger('change');
     $(".select-region").val('').trigger('change');
