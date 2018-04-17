@@ -138,7 +138,11 @@ class ProcedureController < ApplicationController
 	end
 
 	def health_centres_procedure
-		health_centres = HealthCentre.where(cnes: params[:cnes].to_s)
+		cnes = params[:cnes].to_s
+		cnes = cnes.split(",")
+		puts cnes
+		health_centres = HealthCentre.where(cnes: cnes)
+		puts health_centres.to_a
 		render json: health_centres.to_a
 	end
 

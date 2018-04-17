@@ -47,6 +47,7 @@ function create_dashboard_charts() {
     create_procedures_per_specialties();
     create_specialties_distance_between_patients_hospital();
     populate_procedures_by_date();
+    create_specialties_total();
 }
 
 function create_procedures_per_specialties() {
@@ -157,6 +158,25 @@ function create_specialties_distance_between_patients_hospital() {
     });
 }
 
+function create_specialties_total() {
+    var chart = new google.visualization.BarChart(document.getElementById("chart_spec_total"));
+    var header = ["Especialidades", "Total de Internações", {role: "style"}]
+    var options = {
+        title: "Total de internações hospitalares",
+        legend: {position: 'none'},
+        chartArea: {
+            top: 55,
+            left: 250 },
+        vAxis: { textStyle:  {fontSize: 14,bold: false}},
+        titleTextStyle: {fontSize: 20, bold: true }
+    };
+
+    var distance_average_path = 'specialties_count'
+    $.getJSON(distance_average_path, function(data) {
+        draw_chart(header, data, chart, options, specialties_color);
+    });
+}
+
 function draw_chart(header, data, chart, options, color) {
     if (color == null) {
         color = specialties_color;
@@ -200,5 +220,6 @@ function create_table_rank(data) {
         }
         rows += " <th scope=\"row\">" + (index++) + "</th><td>" + name + "</td> <td>" + n_procedures + "</td></tr>"
     });
+    rows += " <th scope=\"row\">#</th><td> TOTAL </td> <td>554202</td></tr>"
     rank_table.html(rows);
 }

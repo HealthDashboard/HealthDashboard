@@ -36,7 +36,7 @@ class HealthCentresController < ApplicationController
     def specialties_count
         result = {}
 
-        procedures = Procedure.where("specialty_id < ?", 10).group(:specialty).count
+        procedures = Procedure.where("specialty_id < ?", 10).order(:specialty_id).group(:specialty).count
         procedures.each do |key, value|
             result[key.name] = value
         end
@@ -48,7 +48,7 @@ class HealthCentresController < ApplicationController
     def specialties_procedure_distance_average
         result = {}
 
-        procedures = Procedure.where("specialty_id < ?", 10).group(:specialty).average(:distance)
+        procedures = Procedure.where("specialty_id < ?", 10).order(:specialty_id).group(:specialty).average(:distance)
         procedures.each do |key, value|
             result[key.name] = value.round(2)
         end
