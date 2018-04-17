@@ -73,5 +73,4 @@ class HealthCentreFilterController < ApplicationController
   	end
   	render json: list
   end
-
 end

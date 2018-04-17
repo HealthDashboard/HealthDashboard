@@ -173,6 +173,7 @@ function submit()
       }
       if (health_centres.length > 0) {
         $.getJSON("procedure/health_centres_procedure", {cnes: health_centres.toString()}, function(result){
+          console.log(result)
           $.each(result, function(index, health_centre){
             create_markers(health_centre, health_centre_icon)
           });
@@ -663,7 +664,6 @@ function data_input()
       { id: "1", text: "ELETIVO" }, 
       { id: "2", text: "URGENCIA" }, 
       { id: "3", text: "ACIDENTE NO LOCAL DE TRABALHO OU A SERVICO DA EMPRESA" }, 
-      { id: "4", text: "ACIDENTE NO TRAJETO PARA O TRABALHO" }, 
       { id: "5", text: "OUTROS TIPOS DE ACIDENTE DE TRANSITO" }, 
       { id: "6", text: "OUTROS TIPOS DE LESOES E ENVENENAMENTOS POR AGENTES QUIMICOS OU FISICOS" }, 
     ];
