@@ -1,13 +1,17 @@
 class CreateHealthCentres < ActiveRecord::Migration[5.0]
   def change
     create_table :health_centres do |t|
-      t.float :long
-      t.float :lat
-      t.string :cnes
+      t.integer :cnes
       t.string :name
       t.integer :beds
+      t.float :long
+      t.float :lat
       t.string :phone
-      t.string :census_district
+      t.string :adm
+      t.string :DA
+      t.string :PR
+      t.string :STS
+      t.string :CRS
       t.timestamps
     end
   end

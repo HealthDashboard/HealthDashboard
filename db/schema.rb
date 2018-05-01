@@ -34,45 +34,56 @@ ActiveRecord::Schema.define(version: 20180408180518) do
   end
 
   create_table "health_centres", force: :cascade do |t|
-    t.float    "long"
-    t.float    "lat"
     t.integer  "cnes"
     t.string   "name"
     t.integer  "beds"
+    t.float    "long"
+    t.float    "lat"
     t.string   "phone"
-    t.string   "census_district"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.integer  "procedure_count"
+    t.string   "adm"
     t.string   "DA"
     t.string   "PR"
     t.string   "STS"
     t.string   "CRS"
-    t.string   "hc_type"
-    t.string   "adm"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "procedures", force: :cascade do |t|
-    t.date     "date"
-    t.string   "age_code"
-    t.string   "age_number"
+    t.float    "lat"
+    t.float    "long"
     t.string   "gender"
+    t.string   "age_number"
+    t.string   "age_code"
     t.string   "race"
-    t.string   "different_district"
-    t.string   "cep_patient"
-    t.string   "cid_associated"
+    t.integer  "lv_instruction"
+    t.integer  "cnes_id"
+    t.integer  "gestor_ide"
+    t.integer  "treatment_type"
+    t.integer  "cmpt"
+    t.date     "date"
+    t.date     "date_in"
+    t.date     "date_out"
+    t.integer  "complexity"
+    t.integer  "proce_re"
     t.string   "cid_primary"
     t.string   "cid_secondary"
-    t.string   "ethnicity"
-    t.float    "long"
-    t.float    "lat"
-    t.integer  "cnes_id"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.string   "cid_secondary2"
+    t.string   "cid_associated"
+    t.integer  "days"
+    t.integer  "days_uti"
+    t.integer  "days_ui"
+    t.integer  "days_total"
+    t.integer  "finance"
+    t.float    "val_total"
+    t.string   "DA"
+    t.string   "PR"
+    t.string   "STS"
+    t.string   "CRS"
     t.float    "distance"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
     t.integer  "specialty_id"
-    t.integer  "treatment_type"
-    t.string   "region"
     t.index ["specialty_id"], name: "index_procedures_on_specialty_id", using: :btree
   end
 
