@@ -69,7 +69,7 @@ class ProcedureController < ApplicationController
 		procedures = Procedure.where(gender: genders)
 
 		if region != nil
-			procedures = procedures.where(region: region)
+			procedures = procedures.where(CRS: region)
 		end
 
 		if health_centres != nil
@@ -99,7 +99,7 @@ class ProcedureController < ApplicationController
 		if (dist_max == 30)
 			procedures = procedures.where('distance >= ?', dist_min)
 		else
-			procedures = procedures.where('distance BETWEEN ? AND ?', dist_min, dist_max)
+			procedures = procedures.where('distance >= ? AND distance <= ?', dist_min, dist_max)
 		end
 		
 		return procedures
@@ -154,12 +154,12 @@ class ProcedureController < ApplicationController
 	def procedures_search
 		procedures = getProcedures()
 
-		oeste = procedures.where(region: "OESTE").pluck(:long, :lat);
-		norte = procedures.where(region: "NORTE").pluck(:long, :lat);
-		sul = procedures.where(region: "SUL").pluck(:long, :lat);
-		leste = procedures.where(region: "LESTE").pluck(:long, :lat);
-		centro = procedures.where(region: "CENTRO").pluck(:long, :lat);
-		sudeste = procedures.where(region: "SUDESTE").pluck(:long, :lat);
+		oeste = procedures.where(CRS: "OESTE").pluck(:long, :lat);
+		norte = procedures.where(CRS: "NORTE").pluck(:long, :lat);
+		sul = procedures.where(CRS: "SUL").pluck(:long, :lat);
+		leste = procedures.where(CRS: "LESTE").pluck(:long, :lat);
+		centro = procedures.where(CRS: "CENTRO").pluck(:long, :lat);
+		sudeste = procedures.where(CRS: "SUDESTE").pluck(:long, :lat);
 
   		k = 4
   		oeste1 = [{"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}]
@@ -168,7 +168,7 @@ class ProcedureController < ApplicationController
   		leste1 = [{"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}]
   		centro1 = [{"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}]
   		sudeste1 = [{"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}]
-  		puts "Here"
+
   		if oeste.count > 0
   			kmeans_oeste = KMeansClusterer.run k, oeste, runs: 1, max_iter: 1
   			kmeans_oeste.clusters.each_with_index do |cluster, index|
@@ -209,9 +209,8 @@ class ProcedureController < ApplicationController
   				sudeste1[index] = {"centroid" => cluster.centroid.to_s, "number" => cluster.points.count.to_s}
   			end
   		end
-  		puts "Here"
-
-		js = [{"oeste" => oeste1,"norte" => norte1,"leste" => leste1,"sul" => sul1,"sudeste" => sudeste1,"centro" => centro1}	]
+		js = [{"oeste" => oeste1,"norte" => norte1,"leste" => leste1,"sul" => sul1,"sudeste" => sudeste1,"centro" => centro1}]
+		puts js
 		render json: js
 	end
 end
