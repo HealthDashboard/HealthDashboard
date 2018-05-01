@@ -609,51 +609,28 @@ function data_input()
       $("#slider_distance_max").html(slideEvt.value[1] + (slideEvt.value[1] >= 30 ? "+" : ""));
     });
 
-    $.getJSON("/age_group.json", function(data) {
-      $(".select-age_group").select2({
-        placeholder: "Todas",
-        allowClear: true,
-        data: data
-      });
-    });
-
-    var regions = [
-      { id: "CENTRO", text: "CENTRO" },
-      { id: "LESTE", text: "LESTE" },
-      { id: "NORTE", text: "NORTE" },
-      { id: "OESTE", text: "OESTE" },
-      { id: "SUDESTE", text: "SUDESTE" },
-      { id: "SUL", text: "SUL" },
-    ];
-
-    $(".select-region").select2({
-      placeholder: "Todas",
-      data: regions,
-    });
-
     $.getJSON('/health_centres.json', function(data) {
       $.each(data, function(index, value) {
         health_centres_var[value.id] = value.text;
       });
 
-      $(".select-health_centre").select2({
+      $(".select-0").select2({
         placeholder: "Todos",
         data: data,
         allowClear: true
       });
     });
 
-    $.getJSON('/CID10.json', function(data){
-      cid_array = data;
-      $(".select-cdi").select2({
+    $.getJSON("/age_group.json", function(data) {
+      $(".select-1").select2({
         placeholder: "Todas",
         allowClear: true,
-        data: data,
+        data: data
       });
     });
 
     $.getJSON('/specialties.json', function(data) {
-      $(".select-speciality").select2({
+      $(".select-2").select2({
         placeholder: "Todas",
         data: data,
         allowClear: true
@@ -668,9 +645,147 @@ function data_input()
       { id: "6", text: "OUTROS TIPOS DE LESOES E ENVENENAMENTOS POR AGENTES QUIMICOS OU FISICOS" }, 
     ];
 
-    $(".select-treatment").select2({
+    $(".select-3").select2({
       placeholder: "Todos",
       data: treatments,
     });
+
+    $.getJSON('/race.json', function(data) {
+      $(".select-4").select2({
+        placeholder: "Todas",
+        data: data,
+        allowClear: true
+      });
+    });
+
+    $.getJSON('/lv_instruction.json', function(data) {
+      $(".select-5").select2({
+        placeholder: "Todas",
+        data: data,
+        allowClear: true
+      });
+    });
+
+    $.getJSON('/cmpt.json', function(data) {
+      $(".select-6").select2({
+        placeholder: "Todas",
+        data: data,
+        allowClear: true
+      });
+    });
+
+    $.getJSON('/proc_re.json', function(data) {
+      $(".select-7").select2({
+        placeholder: "Todas",
+        data: data,
+        allowClear: true
+      });
+    });
+
+    $.getJSON('/CID10.json', function(data){
+      cid_array = data;
+      $(".select-8").select2({
+        placeholder: "Todas",
+        allowClear: true,
+        data: data,
+      });
+      $(".select-9").select2({
+        placeholder: "Todas",
+        allowClear: true,
+        data: data,
+      });
+      $(".select-10").select2({
+        placeholder: "Todas",
+        allowClear: true,
+        data: data,
+      });
+      $(".select-11").select2({
+        placeholder: "Todas",
+        allowClear: true,
+        data: data,
+      });
+    });
+
+    $(".select-12").select2({
+      placeholder: "Todos",
+      tags: true
+    });
+
+    $(".select-13").select2({
+      placeholder: "Todos",
+      tags: true
+    });
+
+    $(".select-14").select2({
+      placeholder: "Todos",
+      tags: true
+    });
+
+    $(".select-15").select2({
+      placeholder: "Todos",
+      tags: true
+    });
+
+    $.getJSON('/finance.json', function(data) {
+      $(".select-16").select2({
+        placeholder: "Todos",
+        data: data,
+        allowClear: true
+      });
+    });
+
+    $(".select-17").select2({
+      placeholder: "Todos",
+      tags: true
+    });
+
+    $.getJSON('/DA.json', function(data) {
+      $(".select-18").select2({
+        placeholder: "Todas",
+        data: data,
+        allowClear: true
+      });
+    });
+
+    $.getJSON('/PR.json', function(data) {
+      $(".select-19").select2({
+        placeholder: "Todas",
+        data: data,
+        allowClear: true
+      });
+    });
+
+    $.getJSON('/STS.json', function(data) {
+      $(".select-20").select2({
+        placeholder: "Todas",
+        data: data,
+        allowClear: true
+      });
+    });
+
+    $.getJSON('/CRS.json', function(data) {
+      $(".select-21").select2({
+        placeholder: "Todas",
+        data: data,
+        allowClear: true
+      });
+    });
+
+    $.getJSON('/complexity.json', function(data) {
+      $(".select-22").select2({
+        placeholder: "Todas",
+        data: data,
+        allowClear: true
+      });
+    });
+
+    var gestor = [{id:"00", text:"ESTADUAL"},
+    {id:"01", text:"MUNICIPAL"}];
+    $(".select-23").select2({
+        placeholder: "Todas",
+        data: gestor,
+        allowClear: true
+    });
+
   });
 }

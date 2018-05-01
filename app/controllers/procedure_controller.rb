@@ -9,6 +9,12 @@ class ProcedureController < ApplicationController
 		render json: total
 	end
 
+	def show
+		@filters = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Grupo étnico", "Nível de instrução", "Competência",
+			"Grupo do procedimento autorizado", "Diagnóstico principal (CDI-10)", "Diagnóstico secundário (CDI-10)", "Diagnóstico secundário 2 (CDI-10)", "Diagnóstico secundário 3 (CDI-10)", "Total geral de diárias", 
+			"Diárias UTI", "Diárias UI", "Dias de permanência", "Tipo de financiamento", "Valor Total", "Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Complexidade", "Gestão"]
+	end
+
 	def getProcedures
 		health_centres = nil
 		genders = nil

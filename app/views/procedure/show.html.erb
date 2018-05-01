@@ -29,7 +29,20 @@
               <hr>
             </div>
 
-            <div class="col-sm-12">
+            <% @filters.each_with_index do |f, i| %>
+              <div class="col-sm-12">
+              <label for="<%= i %>"><b> 
+                <%= f %>
+                </b></label>
+                <select class="select-<%= i %> form-control" id="<%= i %>" multiple="multiple">
+                </select>
+              </div>
+
+              <div class="col-sm-12">
+                <hr>
+              </div>
+            <% end %>
+<!--             <div class="col-sm-12">
               <label for="select_health_centre"><b>Região da cidade</b></label>
               <select class="select-region form-control" id="select_region" multiple="multiple"></select>
             </div>
@@ -82,7 +95,7 @@
 
             <div class="col-sm-12">
               <hr>
-            </div>
+            </div> -->
 
             <div class="col-sm-12">
               <div class = "row">
