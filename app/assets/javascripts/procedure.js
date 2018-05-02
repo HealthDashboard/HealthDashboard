@@ -107,43 +107,20 @@ function submit()
     var hc = document.getElementById('checkbox_health_centre');
 
     var genders = [];
+    var filters = [];
     var health_centres = [];
-    var specialties = [];
-    var age_group = [];
-    var cdi = [];
-    var treatment_type = [];
-    var region = [];
 
-    var select_region = $('#select_region option:selected');
-    $(select_region).each(function(index, brand){
-      region.push([$(this).val()]);
-    });
-
-    var select_health_centre = $('#select_health_centre option:selected');
-    $(select_health_centre).each(function(index, brand){
-      health_centres.push([$(this).val()]);
-    });
-
-    var select_specialty = $('#select_speciality option:selected');
-    $(select_specialty).each(function(index, brand){
-      n_spec = parseInt([$(this).val()]) + 1
-      specialties.push(n_spec);
-    });
-
-    var select_age_group = $('#select_age_group option:selected');
-    $(select_age_group).each(function(index, brand){
-      age_group.push([$(this).val()]);
-    });
-
-    var select_cdi = $('#select_cdi option:selected');
-    $(select_cdi).each(function(index, brand){
-      cdi.push([$(this).val()]);
-    });
-
-    var select_treatment_type = $('#select_treatment option:selected');
-    $(select_treatment_type).each(function(index, brand){
-      treatment_type.push([$(this).val()]);
-    });
+    for (i = 0; i < 24; i++) {
+      var aux = []
+      var select_name = $('#' + i);
+      $(select_name).each(function(index, brand){
+        aux.push([$(this).val()]);
+        if (i == 0) {
+          health_centres = aux;
+        }
+      });
+      filters.push(aux.join(";"));
+    }
 
     var start_date = $("#intervalStart").datepicker({ dateFormat: 'dd,MM,yyyy' }).val();
     var end_date = $("#intervalEnd").datepicker({ dateFormat: 'dd,MM,yyyy' }).val();
@@ -171,24 +148,23 @@ function submit()
       if (genders.length == 0) {
         return;
       }
-      if (health_centres.length > 0) {
+      if (health_centres != "") {
         $.getJSON("procedure/health_centres_procedure", {cnes: health_centres.toString()}, function(result){
-          console.log(result)
           $.each(result, function(index, health_centre){
             create_markers(health_centre, health_centre_icon)
           });
-          map.panTo(Markers[0].position);
+          if (Markers[0] != null) {
+            map.panTo(Markers[0].position);
+          }
         });
         setMarkersMap(map);
         // map.setZoom(15);
       }
-      where =  whereParse(health_centres, region, specialties, age_group, cdi, treatment_type, 
-  start_date, end_date, dist_min, dist_max, genders);
-      console.log(where);
+      where =  whereParse(filters, start_date, end_date, dist_min, dist_max, genders);
       ft_layer = new google.maps.FusionTablesLayer({
         query: {
           select: 'lat',
-          from: '1tja971umgcSMI-bU7t3pkE2tWJ0gw7hrFAcH05uH',
+          from: '1HGEnc2tBtzGL2iNmrB298YOBt_9YcldOkHKItiPp',
           where: where,
         }
         // },
@@ -235,10 +211,8 @@ function submit()
         path: bounds
       });
 
-      $.getJSON("procedure/procedures_search", data = {gender: genders.toString(), cnes: health_centres.toString(),
-          specialties: specialties.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
-          dist_min: dist_min.toString(), dist_max: dist_max.toString(), age_group: age_group.toString(), region: region.toString(),
-          cdi: cdi.toString(), treatment_type: treatment_type.toString()}, 
+      $.getJSON("procedure/procedures_search", data = {gender: genders.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
+          dist_min: dist_min.toString(), dist_max: dist_max.toString(), filters: filters}, 
           function(result){
             TOTAL = 0;
             $.each(regions, function(index, region) {
@@ -394,66 +368,73 @@ function makeOptions(bounds){
         };
 }
 
-function clauseParse(array)
+function clauseParse(text)
 {
-  if (array.length == 0) {
-    return ""
-  }
-  res = "";
+  array = text.split(",");
+  res = ""
   $.each(array, function(index, value){
-    if (res != "") {
-      res = res.concat(", ");
+    if (res != ""){
+      res = res.concat(", ")
     }
-
-    res = res.concat("'", value, "'");
+    res = res.concat("'" + value + "'");
   });
-  res = "(".concat(res, ")");
   return res
 }
 
 // parse where clause for fusion layer query.
-function whereParse(health_centres, region, specialties, age_group, cdi, treatment_type, 
-  start_date, end_date, dist_min, dist_max, genders)
+function whereParse(filters, start_date, end_date, dist_min, dist_max, genders)
 {
   where = ""
-  if (health_centres.length > 0) {
-    where = where.concat("cnes_id IN ", clauseParse(health_centres));
-  }
+  filters_name = ["cnes_id", "age_code", "specialty_id", "treatment_type", "race", "lv_instruction", "cmpt", "proce_re", "cid_primary", "cid_secondary", "cid_secondary2", 
+    "cid_associated", "days", "days_uti", "days_ui", "days_total", "finance", "val_total", "DA", "PR", "STS", "CRS", "complexity", "gestor_ide"];
 
-  if (region.length > 0) {
-    if (where != "") { 
-      where = where.concat(" AND ");
+  $.each(filters_name, function(index, value){
+    if(filters[index] != "") {
+     if (where != "") {
+       where = where.concat(" AND ");
+     }
+     where = where.concat(value + " IN " + "(" + clauseParse(filters[index]) + ")");
     }
-    where = where.concat("region IN ", clauseParse(region));
-  }
+  });
+  console.log(where)
+  // if (health_centres.length > 0) {
+  //   where = where.concat("cnes_id IN ", clauseParse(health_centres));
+  // }
 
-  if (specialties.length > 0) {
-    if (where != "") {
-      where = where.concat(" AND ");
-    }
-    where = where.concat("specialty_id IN ", clauseParse(specialties));
-  }
+  // if (region.length > 0) {
+  //   if (where != "") { 
+  //     where = where.concat(" AND ");
+  //   }
+  //   where = where.concat("region IN ", clauseParse(region));
+  // }
 
-  if (age_group.length > 0) {
-    if (where != "") {
-      where = where.concat(" AND ");
-    }
-    where = where.concat("age_code IN ", clauseParse(age_group));
-  }
+  // if (specialties.length > 0) {
+  //   if (where != "") {
+  //     where = where.concat(" AND ");
+  //   }
+  //   where = where.concat("specialty_id IN ", clauseParse(specialties));
+  // }
 
-  if (cdi.length > 0) {
-    if (where != "") {
-      where = where.concat(" AND ");
-    }
-    where = where.concat("cid_primary IN ", clauseParse(cdi));
-  }
+  // if (age_group.length > 0) {
+  //   if (where != "") {
+  //     where = where.concat(" AND ");
+  //   }
+  //   where = where.concat("age_code IN ", clauseParse(age_group));
+  // }
 
-  if (treatment_type.length > 0) {
-    if (where != "") {
-      where = where.concat(" AND ");   
-    }
-    where = where.concat("treatment_type IN ", clauseParse(treatment_type));
-  }
+  // if (cdi.length > 0) {
+  //   if (where != "") {
+  //     where = where.concat(" AND ");
+  //   }
+  //   where = where.concat("cid_primary IN ", clauseParse(cdi));
+  // }
+
+  // if (treatment_type.length > 0) {
+  //   if (where != "") {
+  //     where = where.concat(" AND ");   
+  //   }
+  //   where = where.concat("treatment_type IN ", clauseParse(treatment_type));
+  // }
 
   if (start_date != "") {
     if (where != "") {
