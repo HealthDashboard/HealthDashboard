@@ -16,35 +16,23 @@ class ProcedureController < ApplicationController
 	end
 
 	def getProcedures
-		health_centres = nil
+		filters_name = ["cnes_id", "age_code", "specialty_id", "treatment_type", "race", "lv_instruction", "cmpt", "proce_re", "cid_primary", "cid_secondary", "cid_secondary2", 
+		"cid_associated", "days", "days_uti", "days_ui", "days_total", "finance", "val_total", "DA", "PR", "STS", "CRS", "complexity", "gestor_ide"]
+
+		filters = Array.new(24)
 		genders = nil
-		specialties = nil
 		start_date = nil
 		end_date = nil
-		age_group = nil
-		cdi = nil
-		treatment_type = nil
-		region = nil
 		dist_min = params[:dist_min].to_f
 		dist_max = params[:dist_max].to_f
-		# distance = nil
 
 		genders = params[:gender].to_s
 		genders = genders.split(",")
 
-		if params[:region].to_s != ""
-			region = params[:region].to_s
-			region = region.split(",")
-		end
-
-		if params[:cnes].to_s != ""
-			health_centres = params[:cnes].to_s
-			health_centres = health_centres.split(",")
-		end
-
-		if params[:specialties].to_s != ""
-			specialties = params[:specialties].to_s
-			specialties = specialties.split(",")
+		params[:filters].each_with_index do |filter, i|
+			if filter != ""
+				filters[i] = filter.split(",")
+			end
 		end
 
 		if params[:start_date].to_s != ""
@@ -57,49 +45,16 @@ class ProcedureController < ApplicationController
 			end_date = Date.parse end_date
 		end
 
-		if params[:age_group].to_s != ""
-			age_group = params[:age_group].to_s
-			age_group = age_group.split(",")
-		end
-
-		if params[:cdi].to_s != ""
-			cdi = params[:cdi].to_s
-			cdi = cdi.split(",")
-		end
-
-		if params[:treatment_type] != ""
-			treatment_type = params[:treatment_type].to_s
-			treatment_type = treatment_type.split(",")
-		end
-
 		procedures = Procedure.where(gender: genders)
 
-		if region != nil
-			procedures = procedures.where(CRS: region)
-		end
-
-		if health_centres != nil
-			procedures = procedures.where(cnes_id: health_centres)
-		end
-
-		if specialties != nil
-			procedures = procedures.where(specialty_id: specialties)
+		filters_name.each_with_index do |n, i|
+			if filters[i] != nil
+				procedures = procedures.where(n => filters[i])
+			end
 		end
 
 		if start_date != nil && end_date != nil
 			procedures = procedures.where('date BETWEEN ? AND ?', start_date, end_date)
-		end
-
-		if age_group != nil
-			procedures = procedures.where(age_code: age_group)
-		end
-
-		if cdi != nil
-			procedures = procedures.where(cid_primary: cdi)
-		end	
-
-		if treatment_type != nil
-			procedures = procedures.where(treatment_type: treatment_type)
 		end
 
 		if (dist_max == 30)
