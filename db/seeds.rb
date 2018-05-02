@@ -58,7 +58,7 @@ def create_procedures()
     age_code = get_age_code(row[4].to_i)
     spec = specialties[row[17].to_i]
 
-    p = Procedure.new lat: row[1], long: row[2], gender: row[3], age_number: row[4], race: row[5], lv_instruction: row[6], cnes_id: row[9], gestor_ide: row[10], treatment_type: row[11], cmpt: row[12], date: row[13], date_in: row[14], date_out: row[15],
+    p = Procedure.new lat: row[1], long: row[2], gender: row[3], age_code: age_code, age_number: row[4], race: row[5], lv_instruction: row[6], cnes_id: row[9], gestor_ide: row[10], treatment_type: row[11], cmpt: row[12], date: row[13], date_in: row[14], date_out: row[15],
     complexity: row[16], specialty: spec, proce_re: row[18], cid_primary: row[19], cid_secondary: row[20], cid_secondary2: row[21], cid_associated: row[22], days: row[23], days_uti: row[24], days_ui: row[25], days_total: row[26], finance: row[27], val_total: row[28],
     DA: row[30], PR: row[31], STS: row[32], CRS: row[33]
     p.distance = p.calculate_distance
