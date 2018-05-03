@@ -56,24 +56,23 @@ function change_list() {
     var rad = document.getElementById("myForm");
     var prev = null;
     rad[0].onclick = function() {
-        action('listSpecialty', specialty_id_array, "specialty");
+        acao('listSpecialty', specialty_id_array, "specialty");
     }
     rad[1].onclick = function() {
-        action('listType', type_id_array, "type");
+        acao('listType', type_id_array, "type");
     }
     rad[2].onclick = function() {
-        action("listRegion", region_id_array, "region")
+        acao("listRegion", region_id_array, "region")
     }
 }
 
-function action(path, ids, group_by) {
+function acao(path, ids, group_by) {
     teardown_health_centre();
     teardown_circles();
     teardown_markers();
     //Remove list
     var list = document.getElementById("accordion");
     var element = list.parentNode
-    console.log(element)
     if (list != null) {
         list.parentNode.removeChild(list);
     }
@@ -81,7 +80,6 @@ function action(path, ids, group_by) {
     //add new one
     var newElement = '<div class="panel-group" id="accordion">\n';
     $.getJSON(path, function(data) {
-        console.log()
         $.each(data, function(index, type) {
             name = Object.keys(type);
             id = ids[name];

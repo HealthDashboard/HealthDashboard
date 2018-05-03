@@ -9,17 +9,18 @@
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
 
     <!-- Google MAPS API -->
-    <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=AIzaSyCwxSdPxeKR0IyS4C0A8E67DyYm-KQYpxs&callback=submit", defer: true %>
+    <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=AIzaSyCwxSdPxeKR0IyS4C0A8E67DyYm-KQYpxs", defer: true %>
+    <!-- &callback=buscar -->
   </head>
 
-  <body data-env="<%= ENV['TABLE_ID'] %>">
+  <body>
       <div class="navbar navbar-inverse navbar-fixed-top">
           <nav>
             <ul class="nav navbar-nav navbar-left">
-              <li class='nav-item <%= 'active' if controller_name == 'health_centres'  %>  '> <%= link_to "Início", root_path, class: 'nav-link' %></li>
-              <li class='nav-item <%= 'active' if controller_name == 'health_centre_filter'  %>' > <%= link_to "Estabelecimentos", estabelecimentos_path, class: 'nav-link' %></li>
-              <li class='nav-item <%= 'active' if controller_name == 'dashboard'  %>'> <%= link_to "Métricas", metricas_path, class: 'nav-link' %></li>
-              <li class='nav-item <%= 'active' if controller_name == 'procedure'  %>'> <%= link_to "Busca Avançada", busca_path, class: 'nav-link' %></li>
+              <li class='nav-item <%= 'active' if controller_name == 'health_centres' %>'> <%= link_to "Início", root_path, class: 'nav-link' %></li>
+              <li class='nav-item <%= 'active' if controller_name == 'health_centre_filter' %>'> <%= link_to "Estabelecimentos", estabelecimentos_path, class: 'nav-link' %></li>
+              <li class='nav-item <%= 'active' if controller_name == 'dashboard' %>'> <%= link_to "Métricas", metricas_path, class: 'nav-link' %></li>
+              <li class='nav-item <%= 'active' if controller_name == 'procedure' %>'> <%= link_to "Busca Avançada", busca_path, class: 'nav-link' %></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li class='nav-item'><a href='#' class='nav-link glyphicon glyphicon-question-sign' data-toggle="tab" onclick="about()"></a></li>

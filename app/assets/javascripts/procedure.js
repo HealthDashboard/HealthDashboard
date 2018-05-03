@@ -8,6 +8,9 @@ var person_icon = '/home.png';
 var cid_array = {};
 var data = null;
 
+// Automatic search
+var auto = false;
+var cleaning = false;
 
 // Health Centres icon on map
 var Markers = [];
@@ -40,7 +43,7 @@ var counter = {};
 var colors = ['#FF9900', '#FFCC00', '#FFFF00', "#CCFF00", "#99FF00", "#66FF00", "#33FF00", "#FF0000"];
 var colors_procedure = ['#003300', '#15ff00', '#ff0000', "#f5b979", "#13f1e8", "#615ac7", "#8e3a06", "#b769ab", "#df10eb"];
 
-function initMap()
+function initProcedureMap()
 {
   $('#legend_proc').hide();
   $('#loading_overlay').hide();
@@ -62,27 +65,27 @@ function initMap()
         {'name': 'Pediatria', 'color': colors_procedure[3]},
         {'name': 'Reabilitação', 'color': colors_procedure[6]},
         {'name': 'Psiquiatria Hospital-Dia', 'color': colors_procedure[1]}
-        ]
+        ];
 
-  var $legend = $('#legend_proc')
+  // var $legend = $('#legend_proc')
 
-  $.each(leg_types, function(index, style){
-    element = '<div class="item"><div class="color" style="background-color: '+style.color+
-    '"></div><p class="text">'+style.name+'</p> </div></div>'
-    $legend.append(element)
-  });
-  map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(document.getElementById('legend_proc'));
+  // $.each(leg_types, function(index, style){
+  //   element = '<div class="item"><div class="color" style="background-color: '+style.color+
+  //   '"></div><p class="text">'+style.name+'</p> </div></div>'
+  //   $legend.append(element)
+  // });
+  // map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(document.getElementById('legend_proc'));
 
-  var contextMenu = google.maps.event.addListener(
-        map,
-        "rightclick",
-        function( event ) {
-            // use JS Dom methods to create the menu
-            // use event.pixel.x and event.pixel.y 
-            // to position menu at mouse position
-            console.log( event );
-        }
-    );
+  // var contextMenu = google.maps.event.addListener(
+  //       map,
+  //       "rightclick",
+  //       function( event ) {
+  //           // use JS Dom methods to create the menu
+  //           // use event.pixel.x and event.pixel.y 
+  //           // to position menu at mouse position
+  //           console.log( event );
+  //       }
+  //   );
 
   SPmap_label = new MapLabel({
           fontSize: 28,
@@ -97,10 +100,17 @@ function createLabel(size){
         });
 }
 
-// Search button
-function submit()
+function change()
 {
-  $('#btn-submit').click(function() {
+  if (cleaning == false && auto == true){
+    buscar()
+  }
+  // console.log("Teste");
+}
+
+// Search button
+function buscar()
+{
     var sexo_masculino = document.getElementById('sexo_masculino');
     var sexo_feminino = document.getElementById('sexo_feminino');
     var residencia_paciente = document.getElementById('checkbox_residencia_paciente');
@@ -263,9 +273,7 @@ function submit()
           });
         });
       });
-
     }
-  });
 }
 
 function create_markers(procedure, icon_path)
@@ -396,45 +404,6 @@ function whereParse(filters, start_date, end_date, dist_min, dist_max, genders)
      where = where.concat(value + " IN " + "(" + clauseParse(filters[index]) + ")");
     }
   });
-  console.log(where)
-  // if (health_centres.length > 0) {
-  //   where = where.concat("cnes_id IN ", clauseParse(health_centres));
-  // }
-
-  // if (region.length > 0) {
-  //   if (where != "") { 
-  //     where = where.concat(" AND ");
-  //   }
-  //   where = where.concat("region IN ", clauseParse(region));
-  // }
-
-  // if (specialties.length > 0) {
-  //   if (where != "") {
-  //     where = where.concat(" AND ");
-  //   }
-  //   where = where.concat("specialty_id IN ", clauseParse(specialties));
-  // }
-
-  // if (age_group.length > 0) {
-  //   if (where != "") {
-  //     where = where.concat(" AND ");
-  //   }
-  //   where = where.concat("age_code IN ", clauseParse(age_group));
-  // }
-
-  // if (cdi.length > 0) {
-  //   if (where != "") {
-  //     where = where.concat(" AND ");
-  //   }
-  //   where = where.concat("cid_primary IN ", clauseParse(cdi));
-  // }
-
-  // if (treatment_type.length > 0) {
-  //   if (where != "") {
-  //     where = where.concat(" AND ");   
-  //   }
-  //   where = where.concat("treatment_type IN ", clauseParse(treatment_type));
-  // }
 
   if (start_date != "") {
     if (where != "") {
@@ -474,27 +443,23 @@ function whereParse(filters, start_date, end_date, dist_min, dist_max, genders)
   return where
 }
 
-function clear()
+function limpar()
 {
-  $('#btn-clear').click(function() {
+    cleaning = true;
     $("#slider_distance").slider('refresh');
     $("#slider_distance_min").html('0');
     $("#slider_distance_max").html('10');
-    $(".select-health_centre").val('').trigger('change');
-    $(".select-age_group").val('').trigger('change');
-    $(".select-region").val('').trigger('change');
-    $(".select-cdi").val('').trigger('change');
-    $(".select-speciality").val('').trigger('change');
-    $(".select-treatment").val('').trigger('change');
+
+    for (i = 0; i < 24; i++) {
+      name = ".select-" + i
+      $(name).val('').trigger('change');
+    }
     $("#intervalStart").val('').datepicker('destroy').datepicker();
     $("#intervalEnd").val('').datepicker('destroy').datepicker();
     $("#sexo_masculino").prop("checked", true);
     $("#sexo_feminino").prop("checked", true);
-    $("#checkbox_residencia_paciente").prop("checked", true);
-    $("#checkbox_health_centre").prop("checked", true);
 
     clearMap();
-  });
 }
 
 function clearMap() {
@@ -525,17 +490,15 @@ function clearMap() {
 
     setMarkersMap(null);
     Markers = [];
+    cleaning = false;
 }
 
 function graphs() {
-  $('#btn-graphs').click(function() {
     var w = window.open('metricas');
     w.teste = data;
-  });
 }
 
 function print_maps() {
-  $('#btn-print').click(function() {
     const $body = $('body');
     const $mapContainer = $('.map-wrapper');
     const $mapContainerParent = $mapContainer.parent();
@@ -567,13 +530,11 @@ function print_maps() {
 
     $printContainer.remove();
     $patchedStyle.remove();
-  });
 }
 
-function data_input()
+function dadosInput()
 {
-  $(document).ready(function(){
-    $('.input-daterange').datepicker({
+    $('#datepicker').datepicker({
       format: "dd/mm/yyyy",
       language: "pt-BR",
       container:'#datepicker',
@@ -590,32 +551,41 @@ function data_input()
       $("#slider_distance_max").html(slideEvt.value[1] + (slideEvt.value[1] >= 30 ? "+" : ""));
     });
 
-    $.getJSON('/health_centres.json', function(data) {
-      $.each(data, function(index, value) {
-        health_centres_var[value.id] = value.text;
-      });
+    $.ajax({
+      url: '/health_centres.json',
+      success: function(data){
+        $.each(data, function(index, value) {
+          health_centres_var[value.id] = value.text;
+        });
 
-      $(".select-0").select2({
-        placeholder: "Todos",
-        data: data,
-        allowClear: true
-      });
+        $("#0").select2({
+          placeholder: "Todos",
+          data: data,
+          allowClear: true
+        });
+      }
     });
 
-    $.getJSON("/age_group.json", function(data) {
-      $(".select-1").select2({
-        placeholder: "Todas",
-        allowClear: true,
-        data: data
-      });
+    $.ajax({
+      url: '/age_group.json',
+      success: function(data){
+        $("#1").select2({
+          placeholder: "Todas",
+          allowClear: true,
+          data: data
+        });
+      }
     });
 
-    $.getJSON('/specialties.json', function(data) {
-      $(".select-2").select2({
-        placeholder: "Todas",
-        data: data,
-        allowClear: true
-      });
+    $.ajax({
+      url: '/specialties.json',
+      success: function(data){
+        $("#2").select2({
+          placeholder: "Todas",
+          data: data,
+          allowClear: true
+        });
+      }
     });
 
     var treatments = [
@@ -626,102 +596,123 @@ function data_input()
       { id: "6", text: "OUTROS TIPOS DE LESOES E ENVENENAMENTOS POR AGENTES QUIMICOS OU FISICOS" }, 
     ];
 
-    $(".select-3").select2({
+    $("#3").select2({
       placeholder: "Todos",
       data: treatments,
     });
 
-    $.getJSON('/race.json', function(data) {
-      $(".select-4").select2({
-        placeholder: "Todas",
-        data: data,
-        allowClear: true
-      });
+    $.ajax({
+      url: '/race.json',
+      success: function(data){
+        $("#4").select2({
+          placeholder: "Todas",
+          data: data,
+          allowClear: true
+        });
+      }
     });
 
-    $.getJSON('/lv_instruction.json', function(data) {
-      $(".select-5").select2({
-        placeholder: "Todas",
-        data: data,
-        allowClear: true
-      });
+    $.ajax({
+      url: '/lv_instruction.json',
+      success: function(data){
+        $("#5").select2({
+          placeholder: "Todas",
+          data: data,
+          allowClear: true
+        });
+      }
     });
 
-    $.getJSON('/cmpt.json', function(data) {
-      $(".select-6").select2({
-        placeholder: "Todas",
-        data: data,
-        allowClear: true
-      });
+    $.ajax({
+      url: '/cmpt.json',
+      success: function(data){
+        $("#6").select2({
+          placeholder: "Todas",
+          data: data,
+          allowClear: true
+        });
+      }
     });
 
-    $.getJSON('/proc_re.json', function(data) {
-      $(".select-7").select2({
-        placeholder: "Todas",
-        data: data,
-        allowClear: true
-      });
+    $.ajax({
+      url: '/proc_re.json',
+      success: function(data){
+        $("#7").select2({
+          placeholder: "Todas",
+          data: data,
+          allowClear: true
+        });
+      }
     });
 
-    $.getJSON('/CID10.json', function(data){
-      cid_array = data;
-      $(".select-8").select2({
-        placeholder: "Todas",
-        allowClear: true,
-        data: data,
-      });
-      $(".select-9").select2({
-        placeholder: "Todas",
-        allowClear: true,
-        data: data,
-      });
-      $(".select-10").select2({
-        placeholder: "Todas",
-        allowClear: true,
-        data: data,
-      });
-      $(".select-11").select2({
-        placeholder: "Todas",
-        allowClear: true,
-        data: data,
-      });
+    $.ajax({
+      url: '',
+      success: function(data){
+      }
     });
 
-    $(".select-12").select2({
+    $.ajax({
+      url: '/CID10.json',
+      success: function(data){
+        cid_array = data;
+        $("#8").select2({
+          placeholder: "Todas",
+          allowClear: true,
+          data: data,
+        });
+        $("#9").select2({
+          placeholder: "Todas",
+          allowClear: true,
+          data: data,
+        });
+        $("#10").select2({
+          placeholder: "Todas",
+          allowClear: true,
+          data: data,
+        });
+        $("#11").select2({
+          placeholder: "Todas",
+          allowClear: true,
+          data: data,
+        });
+      }
+    });
+
+    $("#12").select2({
       placeholder: "Todos",
       tags: true
     });
 
-    $(".select-13").select2({
+    $("#13").select2({
       placeholder: "Todos",
       tags: true
     });
 
-    $(".select-14").select2({
+    $("#14").select2({
       placeholder: "Todos",
       tags: true
     });
 
-    $(".select-15").select2({
+    $("#15").select2({
       placeholder: "Todos",
       tags: true
     });
 
     $.getJSON('/finance.json', function(data) {
-      $(".select-16").select2({
+      $("#16").select2({
         placeholder: "Todos",
         data: data,
         allowClear: true
       });
     });
 
-    $(".select-17").select2({
+    $("#17").select2({
       placeholder: "Todos",
       tags: true
     });
 
     $.getJSON('/DA.json', function(data) {
-      $(".select-18").select2({
+      $("#18").select2({
         placeholder: "Todas",
         data: data,
         allowClear: true
@@ -729,7 +720,7 @@ function data_input()
     });
 
     $.getJSON('/PR.json', function(data) {
-      $(".select-19").select2({
+      $("#19").select2({
         placeholder: "Todas",
         data: data,
         allowClear: true
@@ -737,7 +728,7 @@ function data_input()
     });
 
     $.getJSON('/STS.json', function(data) {
-      $(".select-20").select2({
+      $("#20").select2({
         placeholder: "Todas",
         data: data,
         allowClear: true
@@ -745,7 +736,7 @@ function data_input()
     });
 
     $.getJSON('/CRS.json', function(data) {
-      $(".select-21").select2({
+      $("#21").select2({
         placeholder: "Todas",
         data: data,
         allowClear: true
@@ -753,7 +744,7 @@ function data_input()
     });
 
     $.getJSON('/complexity.json', function(data) {
-      $(".select-22").select2({
+      $("#22").select2({
         placeholder: "Todas",
         data: data,
         allowClear: true
@@ -762,11 +753,9 @@ function data_input()
 
     var gestor = [{id:"00", text:"ESTADUAL"},
     {id:"01", text:"MUNICIPAL"}];
-    $(".select-23").select2({
+    $("#23").select2({
         placeholder: "Todas",
         data: gestor,
         allowClear: true
     });
-
-  });
 }
