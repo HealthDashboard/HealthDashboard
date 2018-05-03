@@ -23,5 +23,7 @@
 .byebug_history
 
 .vagrant/*
-Gemfile.lock
+
+.lock
+
 vendor/*

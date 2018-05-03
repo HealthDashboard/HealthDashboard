@@ -100,6 +100,17 @@ function createLabel(size){
         });
 }
 
+function automatic_search()
+{
+  var checkbox_search = document.getElementById('automatic_search_checkbox');
+
+  if (checkbox_search.checked) {
+    auto = true;
+  } else {
+    auto = false;
+  }
+}
+
 function change()
 {
   if (cleaning == false && auto == true){
