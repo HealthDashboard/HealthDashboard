@@ -34,7 +34,7 @@
               <label for="<%= i %>"><b> 
                 <%= f %>
                 </b></label>
-                <select class="select-<%= i %> form-control" id="<%= i %>" multiple="multiple">
+                <select class="select-<%= i %> form-control" id="<%= i %>" multiple="multiple" onchange='change()'>
                 </select>
               </div>
 
@@ -42,60 +42,6 @@
                 <hr>
               </div>
             <% end %>
-<!--             <div class="col-sm-12">
-              <label for="select_health_centre"><b>Região da cidade</b></label>
-              <select class="select-region form-control" id="select_region" multiple="multiple"></select>
-            </div>
-
-            <div class="col-sm-12">
-              <hr>
-            </div>
-
-            <div class="col-sm-12">
-              <label for="select_health_centre"><b>Estabelecimento de ocorrência</b></label>
-              <select class="select-health_centre form-control" id="select_health_centre" multiple="multiple"></select>
-            </div>
-
-            <div class="col-sm-12">
-              <hr>
-            </div>
-
-            <div class="col-sm-12">
-              <label for="select_cdi"><b>Faixa etária</b></label>
-              <select class="select-age_group form-control" id="select_age_group" multiple="multiple">
-              </select>
-            </div>
-
-            <div class="col-sm-12">
-              <hr>
-            </div>
-
-            <div class="col-sm-12">
-              <label for="select_cdi"><b>Causas da internação (CDI-10)</b></label>
-              <select class="select-cdi form-control" id="select_cdi" multiple="multiple"></select>
-            </div>
-
-            <div class="col-sm-12">
-              <hr>
-            </div>
-
-            <div class="col-sm-12">
-              <label for="select_speciality"><b>Especialidade do leito</b></label>
-              <select class="select-speciality form-control" id="select_speciality" multiple="multiple"></select>
-            </div>
-
-            <div class="col-sm-12">
-              <hr>
-            </div>
-
-            <div class="col-sm-12">
-              <label for="select_treatment"><b>Caráter do atendimento</b></label>
-              <select class="select-treatment form-control" id="select_treatment" multiple="multiple"></select>
-            </div>
-
-            <div class="col-sm-12">
-              <hr>
-            </div> -->
 
             <div class="col-sm-12">
               <div class = "row">
@@ -151,16 +97,16 @@
 
             <div class="col-sm-12">
               <hr> 
-              <button class="btn btn-success" type="button" id="btn-submit">
+              <button class="btn btn-success" type="button" id="btn-submit" onclick="buscar()">
                 <i class="fa fa-search" aria-hidden="true"></i> Buscar
               </button>
-              <button class="btn btn-clear" type="button" id="btn-clear">
+              <button class="btn btn-warning" type="button" id="btn-clear" onclick="limpar()">
                 <i class="fa fa-search" aria-hidden="true"></i> Limpar
               </button>
-              <button class="btn btn-print" type="button" id="btn-print">
+              <button class="btn btn-info" type="button" id="btn-print" onclick="print_maps()">
                 <i class="fa fa-search" aria-hidden="true"></i> Imprimir
               </button>
-              <button class="btn btn-graphs" type="button" id="btn-graphs">
+              <button class="btn btn-info" type="button" id="btn-graphs" onclick="graphs()">
                 <i class="fa fa-search" aria-hidden="true"></i> Métricas
               </button>
             </div>
@@ -174,10 +120,6 @@
 <div id="loading_overlay"class="loading">Loading&#8230;</div>
 
 <script>
-  $(document).ready(initMap)
-  $(document).ready(data_input)
-  $(document).ready(submit)
-  $(document).ready(clear)
-  $(document).ready(print_maps)
-  $(document).ready(graphs)
+  $(document).ready(initProcedureMap);
+  $(document).ready(dadosInput);
 </script>
