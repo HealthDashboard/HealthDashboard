@@ -185,7 +185,7 @@ function buscar()
       ft_layer = new google.maps.FusionTablesLayer({
         query: {
           select: 'lat',
-          from: '1HGEnc2tBtzGL2iNmrB298YOBt_9YcldOkHKItiPp',
+          from: '1LuW5LATPZByF7hnjNvWz5DHwW_k3MbaFmjV0iHZ5',
           where: where,
         }
         // },
@@ -207,7 +207,7 @@ function buscar()
         e.infoWindowHtml += "<strong>Sexo: </strong>" + sexp_var[e.row['gender'].value] + "<br>";
         e.infoWindowHtml += "<strong>Idade: </strong>" + e.row['age_number'].value + "<br>";
         e.infoWindowHtml += "<strong>CDI: </strong>" + e.row['cid_primary'].value + "<br>";
-        e.infoWindowHtml += "<strong>Região: </strong>" + e.row['region'].value + "<br>";
+        e.infoWindowHtml += "<strong>CRS: </strong>" + e.row['CRS'].value + "<br>";
         e.infoWindowHtml += "<strong>Data: </strong>" + e.row['date'].value + "<br>";
         e.infoWindowHtml += "<strong>Distância: </strong>" + parseFloat(e.row['distance'].value).toPrecision(5) + "<br>";
       });
@@ -400,6 +400,14 @@ function clauseParse(text)
   return res
 }
 
+function make_date(text)
+{
+  values = text.split("/");
+  str = "";
+  str = str.concat(values[2] + "-" + values[1] + "-" + values[0]);
+  return str;
+}
+
 // parse where clause for fusion layer query.
 function whereParse(filters, start_date, end_date, dist_min, dist_max, genders)
 {
@@ -417,19 +425,22 @@ function whereParse(filters, start_date, end_date, dist_min, dist_max, genders)
   });
 
   if (start_date != "") {
+    start_date = make_date(start_date);
     if (where != "") {
       where = where.concat(" AND ");
     }
-    where = where.concat("start_date >= ", start_date);
+    where = where.concat("date >= " + "\'" + start_date + "\'");
   }
 
   if (end_date != "") {
+    end_date = make_date(end_date);
     if (where != "") {
       where = where.concat(" AND ");
     }
-    where = where.concat("end_date < ", end_date);
+    where = where.concat("date < " + "\'" + end_date + "\'");
   }
 
+  genders = genders.join();
   if (genders.length < 2) {
     if (where != "") {
       where = where.concat(" AND ");
@@ -451,6 +462,7 @@ function whereParse(filters, start_date, end_date, dist_min, dist_max, genders)
     where = where.concat("distance < ", dist_max.toString());
   }
 
+  console.log(where);
   return where
 }
 
