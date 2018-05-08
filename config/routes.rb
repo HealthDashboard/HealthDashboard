@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   get '/procedure/health_centres', to: 'procedure#health_centres'
   get '/procedure/specialties', to: 'procedure#specialties'
   get 'procedure/allProcedures', to: 'procedure#allProcedures'
+  # get 'procedure/procedures_per_month', to: 'procedure#procedures_per_month'
 
   get '/about', to: 'application#about'
 
@@ -38,6 +39,11 @@ Rails.application.routes.draw do
     get :health_centres_search, on: :collection
     get :health_centres_procedure, on: :collection
     get :procedures_by_hc, on: :collection
-    get :procedures_count, on: :collection 
+    get :procedures_count, on: :collection
+    get :procedures_per_month, on: :collection
+    get :procedures_per_health_centre, on: :collection
+    get :procedures_per_specialties, on: :collection
+    get :procedures_distance, on: :collection
+    get :procedures_total, on: :collection
   end
 end
