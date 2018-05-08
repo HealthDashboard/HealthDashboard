@@ -66,6 +66,56 @@ class ProcedureController < ApplicationController
 		return procedures
 	end
 
+	# Procedures group by month on metrics page
+	def procedures_per_month
+		procedures = getProcedures()
+		result = Array.new(12)
+		year = 2015
+		procedures.where("date >= ? AND date <= ?", "2015-01-01", "2015-12-31")
+		.group_by_month(:date).count.each_with_index do |d, i|
+			result[i] = [year, i+1, d[1]]
+		end
+		render json: result
+	end
+
+	# Procedures group by health centre on metrics page
+	def procedures_per_health_centre
+		procedures = getProcedures()
+		result = {}
+		procedures.group(:cnes_id).order("count_id DESC").limit(10)
+				  .count(:id).each_with_index do |p, i|
+				result[HealthCentre.find_by(cnes: p[0]).name.to_s] = p[1].to_i
+		end
+		render json: result
+	end
+
+	# Procedures group by specialties count metrics page
+	def procedures_per_specialties
+		procedures = getProcedures()
+		procedures = procedures.where("specialty_id < ?", 10).order(:specialty_id).group(:specialty_id).count
+		result = {}
+		procedures.each do |p|
+			result[Specialty.find_by(id: p[0]).name] = p[1].to_i
+		end
+		render json: result
+	end
+
+	# Procedures group by specialties distance avarega on metrics page
+	def procedures_distance
+		procedures = getProcedures()
+		result = {}
+		procedures.where("specialty_id < ?", 10).order(:specialty_id).group(:specialty_id)
+				  .average(:distance).each_with_index do |p, i|
+				 	result[Specialty.find_by(id: p[0]).name.to_s] = p[1].round(2).to_f
+		end
+		render json: result
+	end
+
+	# Total number of procedures on metrics page
+	def procedures_total
+		render json: getProcedures().count
+	end
+
 	def health_centres_search
 		procedures = getProcedures()
 
@@ -101,9 +151,7 @@ class ProcedureController < ApplicationController
 	def health_centres_procedure
 		cnes = params[:cnes].to_s
 		cnes = cnes.split(",")
-		puts cnes
 		health_centres = HealthCentre.where(cnes: cnes)
-		puts health_centres.to_a
 		render json: health_centres.to_a
 	end
 
@@ -171,7 +219,6 @@ class ProcedureController < ApplicationController
   			end
   		end
 		js = [{"oeste" => oeste1,"norte" => norte1,"leste" => leste1,"sul" => sul1,"sudeste" => sudeste1,"centro" => centro1}]
-		puts js
 		render json: js
 	end
 end

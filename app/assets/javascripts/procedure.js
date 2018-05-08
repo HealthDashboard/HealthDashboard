@@ -5,7 +5,7 @@ var latlng = null;
 var health_centres_var = {};
 var health_centre_icon = '/health_centre_icon.png';
 var person_icon = '/home.png';
-var cid_array = {};
+var cid_array = null;
 var data = null;
 
 // Automatic search
@@ -116,7 +116,6 @@ function change()
   if (cleaning == false && auto == true){
     buscar()
   }
-  // console.log("Teste");
 }
 
 // Search button
@@ -161,6 +160,9 @@ function buscar()
 
     var filterDay = $('#viewType input:radio:checked').val()
 
+    data = {gender: genders.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
+          dist_min: dist_min.toString(), dist_max: dist_max.toString(), filters: filters}
+
     // Clear map
     clearMap();
 
@@ -179,7 +181,6 @@ function buscar()
           }
         });
         setMarkersMap(map);
-        // map.setZoom(15);
       }
       where =  whereParse(filters, start_date, end_date, dist_min, dist_max, genders);
       ft_layer = new google.maps.FusionTablesLayer({
@@ -232,8 +233,7 @@ function buscar()
         path: bounds
       });
 
-      $.getJSON("procedure/procedures_search", data = {gender: genders.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
-          dist_min: dist_min.toString(), dist_max: dist_max.toString(), filters: filters}, 
+      $.getJSON("procedure/procedures_search", data, 
           function(result){
             TOTAL = 0;
             $.each(regions, function(index, region) {
@@ -674,32 +674,52 @@ function dadosInput()
       }
     });
 
-    $.ajax({
-      url: '/CID10.json',
-      success: function(data){
-        cid_array = data;
-        $("#8").select2({
-          placeholder: "Todas",
-          allowClear: true,
-          data: data,
-        });
-        $("#9").select2({
-          placeholder: "Todas",
-          allowClear: true,
-          data: data,
-        });
-        $("#10").select2({
-          placeholder: "Todas",
-          allowClear: true,
-          data: data,
-        });
-        $("#11").select2({
-          placeholder: "Todas",
-          allowClear: true,
-          data: data,
-        });
-      }
-    });
+    console.log(cid_array);
+    if (cid_array == null) {
+      $.ajax({
+        url: '/CID10.json',
+        success: function(data){
+          cid_array = data;
+          $("#8").select2({
+            placeholder: "Todas",
+            allowClear: true,
+            data: data,
+          });
+          $("#9").select2({
+            placeholder: "Todas",
+            allowClear: true,
+            data: data,
+          });
+          $("#10").select2({
+            placeholder: "Todas",
+            allowClear: true,
+            data: data,
+          });
+          $("#11").select2({
+            placeholder: "Todas",
+            allowClear: true,
+            data: data,
+          });
+        }
+      });
+    } else {
+          $("#8").select2({
+            placeholder: "Todas",
+            tags: true
+          });
+          $("#9").select2({
+            placeholder: "Todas",
+            tags: true
+          });
+          $("#10").select2({
+            placeholder: "Todas",
+            tags: true
+          });
+          $("#11").select2({
+            placeholder: "Todas",
+            tags: true
+          }); 
+    }
 
     $("#12").select2({
       placeholder: "Todos",

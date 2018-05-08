@@ -240,6 +240,7 @@ function update_chart() {
 
         var options = {
             bar: {groupWidth: "70%"},
+                chartArea: {left: 100},
             legend: {position: "none"}
         };
 

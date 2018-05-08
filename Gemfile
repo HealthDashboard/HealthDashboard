@@ -17,6 +17,9 @@ gem 'bootstrap-sass'
 # Install Select 2
 gem "select2-rails"
 
+# group date, sql helper for dates
+gem 'groupdate'
+
 # Bootstrap slider
 gem 'bootstrap-slider-rails'
 
