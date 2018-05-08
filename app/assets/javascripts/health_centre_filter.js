@@ -23,6 +23,8 @@ var health_centre_names = {1:"PAM VARZEA DO CARMO NGA 63 SAO PAULO", 2:"HOSPITAL
 94:"UNAD UNIDADE DE ATENDIMENTO AO DEPENDENTE", 95:"HOSPITAL SANTO ANTONIO", 96:"HOSPITAL DIA DA REDE HORA CERTA LAPA", 97:"HOSP MUN GILSON DE CASSIA MARQUES DE CARVALHO"}
 
 var selected_health_centre = 0;
+var name_filter = ""
+var id_filter = ""
 
 function initialize_health_centre_filter() {
     var lat = -23.557296000000001;
@@ -83,6 +85,7 @@ function acao(path, ids, group_by) {
         $.each(data, function(index, type) {
             name = Object.keys(type);
             id = ids[name];
+            console.log(name)
 
             newElement = newElement.concat("<div class=\"panel panel-default\">\n<div class=\"panel-heading\">\n<h4 class=\"panel-title\">\n<a data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#"+ id + "\"> ");
             newElement = newElement.concat(name + "</a>\n</h4>\n</div>\n<div id=\"" + id + "\" class=\"panel-collapse collapse\">\n<ul class=\"list-group\">");
@@ -98,10 +101,26 @@ function acao(path, ids, group_by) {
 
 function create_health_centre_info_box_text(point) {
     var id = point.id;
-    // BUG, BUTTON NOT SHOWING UP
-    var button_label = (cluster_status === false) ? 'Mostrar Detalhes' : 'Esconder Detalhes';
     return '<strong>Nome:</strong> ' + point.name + '<br><strong>Telefone:</strong> ' + point.phone + '<br><strong>Leitos:</strong> ' + point.beds + '<br><strong>Distrito Administrativo:</strong> ' + point.DA + '<br><strong>Prefeitura Regional:</strong> ' + point.PR
-    + '<br><strong>Supervisão Técnica de Saúde:</strong> ' + point.STS + '<br><strong>Coordenadoria Regional de Saúde:</strong> ' + point.CRS;
+    + '<br><strong>Supervisão Técnica de Saúde:</strong> ' + point.STS + '<br><strong>Coordenadoria Regional de Saúde:</strong> ' + point.CRS +
+    "<br><br><button type='button' id='analise' class='btn btn-info btn-sm' data-toggle='modal' onclick='show_analise()' data-target='#analiseModal'> Análise </button>" ;
+}
+
+function show_analise() {
+    var header = ["Especialidades", "Número de Internações", {role: "style" }]
+    var chart = new google.visualization.PieChart(document.getElementById("chart_div_analise"));
+
+    var options = {
+        // title:'Porcentagem de Internações por distância percorrida',
+        width: 550,
+        height: 550,
+        slices: get_color_slice()
+    };
+
+    var path = ['/health_centre_filter/analise', selected_health_centre, name_filter, id_filter].join("/")
+    $.getJSON(path, function(data) {
+        draw_chart(header, data, chart, options, specialties_color);
+    });
 }
 
 function change_selected_health_centre(id) {
@@ -117,7 +136,6 @@ function change_selected_health_centre(id) {
 }
 
 function filter_by(health_centre_id, id, name) {
-    console.log(selected_health_centre, health_centre_id)
     if (selected_health_centre != health_centre_id) {
         teardown_health_centre();
         teardown_markers();
@@ -147,12 +165,17 @@ function teardown_health_centre() {
 
 function show_procedures_filtered(health_centre_id, id, name) {
     var procedure_path = ""
-    if (name == "specialty")
+    if (name == "specialty") {
         procedure_path = ["/health_centre_specialty", health_centre_id, id].join("/");
-    else if (name == "type")
+        name_filter = "specialty"
+    } else if (name == "type") {
         procedure_path = ["/health_centre_type", health_centre_id, id].join("/");
-    else
+        name_filter = "type"
+    } else {
         procedure_path = ["/health_centre_region", health_centre_id, id].join("/");
+        name_filter = "region"
+    }
+    id_filter = id
 
     $.getJSON(procedure_path, function(procedures) {
         show_procedures(procedures, person_icon);

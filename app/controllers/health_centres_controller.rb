@@ -1,7 +1,7 @@
 class HealthCentresController < ApplicationController
-    @@region_id_array = ["PIRITUBA / JARAGUÁ", "FREGUESIA / BRASILÂNDIA", "JABAQUARA", "VILA PRUDENTE", "SANTO AMARO", "ARICANDUVA / FORMOSA / CARRÃO", "CAMPO LIMPO", "M´BOI MIRIM", "VILA MARIANA", "CASA VERDE / CACHOEIRINHA", "SÃO MIGUEL PAULISTA", 
-        "SÃO MATEUS", "ITAQUERA", "PINHEIROS", "PENHA", "CIDADE TIRADENTES", "LAPA", "SAPOPEMBA", "GUAIANASES", "CAPELA DO SOCORRO", "SÉ", "BUTANTÃ", "ERMELINO MATARAZZO", "ITAIM PAULISTA", "IPIRANGA", "VILA MARIA / VILA GUILHERME", "SANTANA / TUCURUVI",
-         "JAÇANÃ / TREMEMBÉ", "MOÓCA"]
+    @@region_id_array = ["dummy", "PIRITUBA / JARAGUA", "FREGUESIA / BRASILANDIA", "JABAQUARA", "VILA PRUDENTE", "SANTO AMARO", "ARICANDUVA / FORMOSA / CARRAO", "CAMPO LIMPO", "MBOI MIRIM", "VILA MARIANA", "CASA VERDE / CACHOEIRINHA", 
+"SAO MIGUEL", "SAO MATEUS", "ITAQUERA", "PINHEIROS", "PENHA", "CIDADE TIRADENTES", "LAPA", "SAPOPEMBA", "GUAIANASES", "CAPELA DO SOCORRO", "SE", "BUTANTA", "ERMELINO MATARAZZO", "ITAIM PAULISTA", 
+"IPIRANGA", "VILA MARIA / VILA GUILHERME", "SANTANA / TUCURUVI", "JACANA / TREMEMBE", "MOOCA"]
 
     # GET /
     def index
@@ -97,9 +97,9 @@ class HealthCentresController < ApplicationController
     def health_centre_region
         health_centre = HealthCentre.find_by(id: params[:hc_id])
         procedures = health_centre.procedures
-
+        procedures_region = procedures.where(PR: @@region_id_array[params[:id].to_i])
         # procedures_specialties = procedures.where(region: params[:spec_id])
-        render json: procedures
+        render json: procedures_region
     end
 
     # GET /distances/:id
