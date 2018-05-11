@@ -171,6 +171,7 @@ function buscar()
       if (genders.length == 0) {
         return;
       }
+
       if (health_centres != "") {
         $.getJSON("procedure/health_centres_procedure", {cnes: health_centres.toString()}, function(result){
           $.each(result, function(index, health_centre){
@@ -207,11 +208,14 @@ function buscar()
         e.infoWindowHtml = "<strong>Estabelecimento: </strong>" + health_centres_var[e.row['cnes_id'].value] + "<br>";
         e.infoWindowHtml += "<strong>Sexo: </strong>" + sexp_var[e.row['gender'].value] + "<br>";
         e.infoWindowHtml += "<strong>Idade: </strong>" + e.row['age_number'].value + "<br>";
-        e.infoWindowHtml += "<strong>CDI: </strong>" + e.row['cid_primary'].value + "<br>";
+        e.infoWindowHtml += "<strong>CID: </strong>" + e.row['cid_primary'].value + "<br>";
         e.infoWindowHtml += "<strong>CRS: </strong>" + e.row['CRS'].value + "<br>";
         e.infoWindowHtml += "<strong>Data: </strong>" + e.row['date'].value + "<br>";
         e.infoWindowHtml += "<strong>Distância: </strong>" + parseFloat(e.row['distance'].value).toPrecision(5) + "<br>";
       });
+
+      // Send data for download, since individual view don't otherwise call the controller
+      $.ajax({url: '/procedure/update_session', data: data, success: function(data){}});
 
       // $('#legend_proc').show()
       ft_layer.setMap(map);
@@ -668,13 +672,6 @@ function dadosInput()
       }
     });
 
-    $.ajax({
-      url: '',
-      success: function(data){
-      }
-    });
-
-    console.log(cid_array);
     if (cid_array == null) {
       $.ajax({
         url: '/CID10.json',
