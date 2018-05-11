@@ -211,7 +211,7 @@ function buscar()
         e.infoWindowHtml += "<strong>CID: </strong>" + e.row['cid_primary'].value + "<br>";
         e.infoWindowHtml += "<strong>CRS: </strong>" + e.row['CRS'].value + "<br>";
         e.infoWindowHtml += "<strong>Data: </strong>" + e.row['date'].value + "<br>";
-        e.infoWindowHtml += "<strong>Distância: </strong>" + parseFloat(e.row['distance'].value).toPrecision(5) + "<br>";
+        e.infoWindowHtml += "<strong>Distância: </strong>" + parseFloat(e.row['distance'].value).toPrecision(5) + "Km <br>";
       });
 
       // Send data for download, since individual view don't otherwise call the controller
@@ -236,58 +236,97 @@ function buscar()
         map: map,
         path: bounds
       });
-
-      $.getJSON("procedure/procedures_search", data, 
-          function(result){
-            TOTAL = 0;
-            $.each(regions, function(index, region) {
-              centroids[region] = [];
-              counter[region] = [];
-              labels_clusters[region] = [];
-              labels_region[region] = createLabel(24);
-              $.each(result[0][region], function(index, value) {
-                num = parseInt(value["number"]);
-                counter[region].push(num);
-                centroids[region].push(value["centroid"]);
-                TOTAL += num;
-                labels_clusters[region].push(createLabel(20))
-              });
-            });
-            calcTotalRegion();
-            SPmap_label.set('text', TOTAL.toString());
-            SPmap_label.set('position', latlng);
-            SPmap_label.set('map', map);
-            $('#loading_overlay').hide();
+      TOTAL = 0;
+      $.getJSON("procedure/procedures_search", data,
+        function(result){
+          $.each(regions, function(index, region) {
+            total_region[region] = 0;
+            labels_region[region] = createLabel(24);
+            num = parseInt(result[0][region]);
+            total_region[region] = num;
+            TOTAL += num;
+          });
+          SPmap_label.set('text', TOTAL.toString());
+          SPmap_label.set('position', latlng);
+          SPmap_label.set('map', map);
+          $('#loading_overlay').hide();
       });
 
       google.maps.event.addListener(SPmap, 'click', function (event) {
         SPmap.setMap(null);
         SPmap_label.set('map', null);
 
-        $.each(regions, function(index, region) {
-          bounds = [];
-          $.each(polygons_region[region], function(index, point) {
-            bounds.push(new google.maps.LatLng(parseFloat(point[0]), parseFloat(point[1])));
+        if (TOTAL < 100000) {
+          $('#loading_overlay').show();
+          $.getJSON("procedure/procedures_latlong", data, function(procedures) {
+            show_procedures(procedures, person_icon);
+            $('#loading_overlay').hide();
           });
-          draw_region[region] = new google.maps.Polygon(makeOptions(bounds));
-          labels_region[region].set('text', total_region[region].toString());
-          labels_region[region].set('position', new google.maps.LatLng(label_points[region][0], label_points[region][1]));
-          labels_region[region].set('map', map);
-          google.maps.event.addListener(draw_region[region], 'click', function(event) {
-            draw_region[region].setMap(null);
-            labels_region[region].set('map', null);
-
-            if (total_region[region] != 0) {
-              array_clusters[region] = [];
-              $.each(centroids[region], function(index, centroid){
-                array_clusters[region].push(createCircle(centroid, counter[region][index]));
-                circleLabel(labels_clusters[region][index], counter[region][index], centroid);
-              });
-            }
-
-          });
-        });
+        } else {
+          $.each(regions, function(index, region) {
+            bounds = [];
+            $.each(polygons_region[region], function(index, point) {
+              bounds.push(new google.maps.LatLng(parseFloat(point[0]), parseFloat(point[1])));
+            });
+            draw_region[region] = new google.maps.Polygon(makeOptions(bounds));
+            labels_region[region].set('text', total_region[region].toString());
+            labels_region[region].set('position', new google.maps.LatLng(label_points[region][0], label_points[region][1]));
+            labels_region[region].set('map', map);
+            });
+        }
       });
+
+      // $.getJSON("procedure/procedures_search", data, 
+      //     function(result){
+      //       TOTAL = 0;
+      //       $.each(regions, function(index, region) {
+      //         centroids[region] = [];
+      //         counter[region] = [];
+      //         labels_clusters[region] = [];
+      //         labels_region[region] = createLabel(24);
+      //         $.each(result[0][region], function(index, value) {
+      //           num = parseInt(value["number"]);
+      //           counter[region].push(num);
+      //           centroids[region].push(value["centroid"]);
+      //           TOTAL += num;
+      //           labels_clusters[region].push(createLabel(20))
+      //         });
+      //       });
+      //       calcTotalRegion();
+      //       SPmap_label.set('text', TOTAL.toString());
+      //       SPmap_label.set('position', latlng);
+      //       SPmap_label.set('map', map);
+      //       $('#loading_overlay').hide();
+      // });
+
+      // google.maps.event.addListener(SPmap, 'click', function (event) {
+      //   SPmap.setMap(null);
+      //   SPmap_label.set('map', null);
+
+      //   $.each(regions, function(index, region) {
+      //     bounds = [];
+      //     $.each(polygons_region[region], function(index, point) {
+      //       bounds.push(new google.maps.LatLng(parseFloat(point[0]), parseFloat(point[1])));
+      //     });
+      //     draw_region[region] = new google.maps.Polygon(makeOptions(bounds));
+      //     labels_region[region].set('text', total_region[region].toString());
+      //     labels_region[region].set('position', new google.maps.LatLng(label_points[region][0], label_points[region][1]));
+      //     labels_region[region].set('map', map);
+      //     google.maps.event.addListener(draw_region[region], 'click', function(event) {
+      //       draw_region[region].setMap(null);
+      //       labels_region[region].set('map', null);
+
+      //       if (total_region[region] != 0) {
+      //         array_clusters[region] = [];
+      //         $.each(centroids[region], function(index, centroid){
+      //           array_clusters[region].push(createCircle(centroid, counter[region][index]));
+      //           circleLabel(labels_clusters[region][index], counter[region][index], centroid);
+      //         });
+      //       }
+
+      //     });
+      //   });
+      // });
     }
 }
 
@@ -466,7 +505,6 @@ function whereParse(filters, start_date, end_date, dist_min, dist_max, genders)
     where = where.concat("distance < ", dist_max.toString());
   }
 
-  console.log(where);
   return where
 }
 
@@ -495,6 +533,8 @@ function clearMap() {
     if (ft_layer != null) {
       ft_layer.setMap(null);
     }
+
+    teardown_markers();
 
     $.each(regions, function(index, region) {
       clearPolygons(array_clusters[region], labels_clusters[region]);

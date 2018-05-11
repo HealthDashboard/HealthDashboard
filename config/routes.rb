@@ -20,7 +20,7 @@ Rails.application.routes.draw do
 
   get '/health_centre_filter/analise/:id/:name/:id_filter', to: 'health_centre_filter#analise'
  
-  get 'metricas', to: 'dashboard#index'
+  get 'dados-gerais', to: 'dashboard#index'
   get 'specialties', to: 'specialties#index'
   get 'estabelecimentos', to: 'health_centre_filter#index'
   get 'busca', to: 'procedure#show'
@@ -49,5 +49,6 @@ Rails.application.routes.draw do
     get :procedures_total, on: :collection
     get :download, on: :collection
     get :update_session, on: :collection
+    get :procedures_latlong, on: :collection
   end
 end
