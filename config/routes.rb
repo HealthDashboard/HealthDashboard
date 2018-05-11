@@ -47,5 +47,7 @@ Rails.application.routes.draw do
     get :procedures_per_specialties, on: :collection
     get :procedures_distance, on: :collection
     get :procedures_total, on: :collection
+    get :download, on: :collection
+    get :update_session, on: :collection
   end
 end
