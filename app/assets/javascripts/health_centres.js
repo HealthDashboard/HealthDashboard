@@ -28,8 +28,8 @@ function initialize() {
 
 function show_procedures(procedures, icon) {
     var markers = procedures.map(function(procedure, i) {
-        var lat = procedure.lat;
-        var lng = procedure.long;
+        var lat = procedure[0];
+        var lng = procedure[1];
 
         return new google.maps.Marker({
             position: new google.maps.LatLng(lat, lng),
@@ -132,11 +132,11 @@ function teardown_circles() {
 // Remove pacients markers
 function teardown_markers() {
     $.each(markerCluster, function(index, cluster) {
-        console.log(cluster)
         if (cluster != null) {
             cluster.clearMarkers();
         }
     });
+    markercluster = []
 }
 
 function add_info_to_marker(marker, point, generate_infobox_text) {

@@ -85,7 +85,6 @@ function acao(path, ids, group_by) {
         $.each(data, function(index, type) {
             name = Object.keys(type);
             id = ids[name];
-            console.log(name)
 
             newElement = newElement.concat("<div class=\"panel panel-default\">\n<div class=\"panel-heading\">\n<h4 class=\"panel-title\">\n<a data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#"+ id + "\"> ");
             newElement = newElement.concat(name + "</a>\n</h4>\n</div>\n<div id=\"" + id + "\" class=\"panel-collapse collapse\">\n<ul class=\"list-group\">");

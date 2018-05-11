@@ -17,7 +17,7 @@ class HealthCentresController < ApplicationController
     # GET /procedures/:id
     def procedures
         health_centre = HealthCentre.find_by(id: params[:id])
-        render json: health_centre.procedures
+        render json: health_centre.procedures.pluck(:lat, :long);
     end
 
     # GET /specialties/:id
@@ -80,7 +80,7 @@ class HealthCentresController < ApplicationController
         health_centre = HealthCentre.find_by(id: params[:hc_id])
         procedures = health_centre.procedures
 
-        procedures_specialties = procedures.where(specialty_id: params[:id])
+        procedures_specialties = procedures.where(specialty_id: params[:id]).pluck(:lat, :long);
         render json: procedures_specialties
     end
 
@@ -89,7 +89,7 @@ class HealthCentresController < ApplicationController
         health_centre = HealthCentre.find_by(id: params[:hc_id])
         procedures = health_centre.procedures
 
-        procedures_type = procedures.where(treatment_type: params[:id])
+        procedures_type = procedures.where(treatment_type: params[:id]).pluck(:lat, :long);
         render json: procedures_type
     end
 
@@ -97,7 +97,7 @@ class HealthCentresController < ApplicationController
     def health_centre_region
         health_centre = HealthCentre.find_by(id: params[:hc_id])
         procedures = health_centre.procedures
-        procedures_region = procedures.where(PR: @@region_id_array[params[:id].to_i])
+        procedures_region = procedures.where(PR: @@region_id_array[params[:id].to_i]).pluck(:lat, :long);
         # procedures_specialties = procedures.where(region: params[:spec_id])
         render json: procedures_region
     end
