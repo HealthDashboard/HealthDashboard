@@ -27,6 +27,9 @@ var name_filter = ""
 var id_filter = ""
 
 function initialize_health_centre_filter() {
+    selected_health_centre = 0;
+    name_filter = ""
+    id_filter = ""
     var lat = -23.557296000000001;
     var lng = -46.669210999999997;
     var latlng = new google.maps.LatLng(lat, lng);

@@ -45,6 +45,22 @@ var colors_procedure = ['#003300', '#15ff00', '#ff0000', "#f5b979", "#13f1e8", "
 
 function initProcedureMap()
 {
+  ft_layer = null;
+  SPmap = null;
+  SPmap_label = null;
+  latlng = null;
+  health_centres_var= {};
+  auto = false;
+  cleaning = false;
+  Markers = [];
+  draw_region = {};
+  labels_region = {};
+  total_region = {};
+  array_clusters = {};
+  labels_clusters = {};
+  centroids = {};
+  counter = {};
+
   $('#legend_proc').hide();
   $('#loading_overlay').hide();
   var lat = -23.557296000000001;
@@ -275,58 +291,6 @@ function buscar()
             });
         }
       });
-
-      // $.getJSON("procedure/procedures_search", data, 
-      //     function(result){
-      //       TOTAL = 0;
-      //       $.each(regions, function(index, region) {
-      //         centroids[region] = [];
-      //         counter[region] = [];
-      //         labels_clusters[region] = [];
-      //         labels_region[region] = createLabel(24);
-      //         $.each(result[0][region], function(index, value) {
-      //           num = parseInt(value["number"]);
-      //           counter[region].push(num);
-      //           centroids[region].push(value["centroid"]);
-      //           TOTAL += num;
-      //           labels_clusters[region].push(createLabel(20))
-      //         });
-      //       });
-      //       calcTotalRegion();
-      //       SPmap_label.set('text', TOTAL.toString());
-      //       SPmap_label.set('position', latlng);
-      //       SPmap_label.set('map', map);
-      //       $('#loading_overlay').hide();
-      // });
-
-      // google.maps.event.addListener(SPmap, 'click', function (event) {
-      //   SPmap.setMap(null);
-      //   SPmap_label.set('map', null);
-
-      //   $.each(regions, function(index, region) {
-      //     bounds = [];
-      //     $.each(polygons_region[region], function(index, point) {
-      //       bounds.push(new google.maps.LatLng(parseFloat(point[0]), parseFloat(point[1])));
-      //     });
-      //     draw_region[region] = new google.maps.Polygon(makeOptions(bounds));
-      //     labels_region[region].set('text', total_region[region].toString());
-      //     labels_region[region].set('position', new google.maps.LatLng(label_points[region][0], label_points[region][1]));
-      //     labels_region[region].set('map', map);
-      //     google.maps.event.addListener(draw_region[region], 'click', function(event) {
-      //       draw_region[region].setMap(null);
-      //       labels_region[region].set('map', null);
-
-      //       if (total_region[region] != 0) {
-      //         array_clusters[region] = [];
-      //         $.each(centroids[region], function(index, centroid){
-      //           array_clusters[region].push(createCircle(centroid, counter[region][index]));
-      //           circleLabel(labels_clusters[region][index], counter[region][index], centroid);
-      //         });
-      //       }
-
-      //     });
-      //   });
-      // });
     }
 }
 
@@ -561,7 +525,7 @@ function clearMap() {
 }
 
 function graphs() {
-    var w = window.open('metricas');
+    var w = window.open('dados-gerais');
     w.teste = data;
 }
 

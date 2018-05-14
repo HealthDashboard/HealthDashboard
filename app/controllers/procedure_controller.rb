@@ -137,10 +137,11 @@ class ProcedureController < ApplicationController
 	# Download csv file
 	def download
 	    procedures = getProcedures()
+	    enumerator = procedures.copy_to_enumerator(:buffer_lines => 100)
 
 	    respond_to do |format|
 	      format.html
-	      format.csv { send_data procedures.to_csv, filename: "internacoes-hospitalares-#{Date.today}.csv", :disposition => "inline"}
+	      format.csv { send_data procedures.copy_to_string, filename: "internacoes-hospitalares-#{Date.today}.csv", :disposition => "inline"}
 	  	end
     end
 
@@ -204,66 +205,4 @@ class ProcedureController < ApplicationController
 		procedures = getProcedures().pluck(:lat, :long);
 		render json: procedures
 	end
-
-	# def procedures_search
-	# 	procedures = getProcedures()
-
-	# 	oeste = procedures.where(CRS: "OESTE").pluck(:long, :lat);
-	# 	norte = procedures.where(CRS: "NORTE").pluck(:long, :lat);
-	# 	sul = procedures.where(CRS: "SUL").pluck(:long, :lat);
-	# 	leste = procedures.where(CRS: "LESTE").pluck(:long, :lat);
-	# 	centro = procedures.where(CRS: "CENTRO").pluck(:long, :lat);
-	# 	sudeste = procedures.where(CRS: "SUDESTE").pluck(:long, :lat);
-
- #  		k = 4
- #  		oeste1 = [{"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}]
- #  		norte1 = [{"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}]
- #  		sul1 = [{"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}]
- #  		leste1 = [{"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}]
- #  		centro1 = [{"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}]
- #  		sudeste1 = [{"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}, {"centroid" => "[0, 0]", "number":"0"}]
-
- #  		if oeste.count > 0
- #  			kmeans_oeste = KMeansClusterer.run k, oeste, runs: 1, max_iter: 1
- #  			kmeans_oeste.clusters.each_with_index do |cluster, index|
- #  				oeste1[index] = {"centroid" => cluster.centroid.to_s, "number" => cluster.points.count.to_s}
- #  		 	end
- #  		end
-
- #  		if norte.count > 0
- #  			kmeans_norte = KMeansClusterer.run k, norte, runs: 1, max_iter: 1
- #  			kmeans_norte.clusters.each_with_index do |cluster, index|
- #  				norte1[index] = {"centroid" => cluster.centroid.to_s, "number" => cluster.points.count.to_s}
- #  			end
- #  		end
- #  		if sul.count > 0
- #  			kmeans_sul = KMeansClusterer.run k, sul, runs: 1, max_iter: 1
- #  			kmeans_sul.clusters.each_with_index do |cluster, index|
- #  				sul1[index] = {"centroid" => cluster.centroid.to_s, "number" => cluster.points.count.to_s}
- #  			end
- #  		end
-
- #  		if leste.count > 0
-	#    		kmeans_leste = KMeansClusterer.run k, leste, runs: 1, max_iter: 1
- #  			kmeans_leste.clusters.each_with_index do |cluster, index|
- #  				leste1[index] = {"centroid" => cluster.centroid.to_s, "number" => cluster.points.count.to_s}
- #  			end
- #  		end
-
- #  		if centro.count > 0
- #  			kmeans_centro = KMeansClusterer.run 2, centro, runs: 1, max_iter: 1
- #  			kmeans_centro.clusters.each_with_index do |cluster, index|
- #  				centro1[index] = {"centroid" => cluster.centroid.to_s, "number" => cluster.points.count.to_s}
- #  			end
- #  		end
-
- #  		if sudeste.count > 0
- #  			kmeans_sudeste = KMeansClusterer.run k, sudeste, runs: 1, max_iter: 1
- #  			kmeans_sudeste.clusters.each_with_index do |cluster, index|
- #  				sudeste1[index] = {"centroid" => cluster.centroid.to_s, "number" => cluster.points.count.to_s}
- #  			end
- #  		end
-	# 	js = [{"oeste" => oeste1,"norte" => norte1,"leste" => leste1,"sul" => sul1,"sudeste" => sudeste1,"centro" => centro1}]
-	# 	render json: js
-	# end
 end

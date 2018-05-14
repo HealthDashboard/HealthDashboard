@@ -10,6 +10,11 @@ var health_centre_icon = '/health_centre_icon.png';
 var person_icon = '/home.png';
 
 function initialize() {
+    info_boxes = [];
+    circles = [];
+    info_box_opened;
+    cluster_status = false;
+    markerCluster = [];
     var lat = -23.557296000000001;
     var lng = -46.669210999999997;
     var latlng = new google.maps.LatLng(lat, lng);
@@ -33,7 +38,7 @@ function show_procedures(procedures, icon) {
 
         return new google.maps.Marker({
             position: new google.maps.LatLng(lat, lng),
-            icon: icon
+            icon: "https://storage.googleapis.com/support-kms-prod/SNP_2752125_en_v0"
         });
     });
 
@@ -83,7 +88,8 @@ function create_marker(point, icon_path) {
 function create_marker_text(point) {
     var id = point.id;
     var button_label = (cluster_status === false) ? 'Mostrar Detalhes' : 'Esconder Detalhes';
-    return '<strong>Nome:</strong> ' + point.name + '<br><strong>Leitos:</strong> '+ point.beds +
+    return '<strong>Nome:</strong> ' + point.name + '<br><strong>Telefone:</strong> ' + point.phone + '<br><strong>Leitos:</strong> ' + point.beds + '<br><strong>Distrito Administrativo:</strong> ' + point.DA + '<br><strong>Prefeitura Regional:</strong> ' + point.PR
+    + '<br><strong>Supervisão Técnica de Saúde:</strong> ' + point.STS + '<br><strong>Coordenadoria Regional de Saúde:</strong> ' + point.CRS +
            "<br><br><button type='button' id='cluster_info' class='btn btn-info btn-sm' onclick='show_clusters()'>" + button_label + "</button>" +
            '<button type="button" class="btn btn-info btn-sm pull-right" data-toggle="modal" onclick="update_chart()" data-target="#myModal">Análise</button>';
 }

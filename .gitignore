@@ -11,6 +11,9 @@
 /db/*.sqlite3
 /db/*.sqlite3-journal
 
+# Ignore csv files
+/db/csv/procedures.csv
+
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
@@ -23,6 +26,8 @@
 .byebug_history
 
 .vagrant/*
+
+Gemfile.lock
 
 .lock
 
