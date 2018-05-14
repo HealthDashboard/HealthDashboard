@@ -19,6 +19,9 @@ var dynamic = false;
 var dashboard_legend_clicked = false;
 
 function init_dashboard_chart() {
+    dynamic = false;
+    dashboard_legend_clicked = false;
+
     if (window.teste != null) {
         dynamic = true;
         var element = document.getElementById("avarage_distance_div").style.visibility = "hidden";
