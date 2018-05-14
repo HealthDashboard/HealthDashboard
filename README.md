@@ -1,33 +1,31 @@
-# README
+# Dashboard da Saúde
 
-## Development environment
+Uma aplicação para visualização espacial de dados de internações hospitalares da cidade de São Paulo.
+### Requerimentos
+---
+* PostgreSQL >= 9.5.12
+* Rails >= 5.0.1
 
-To facilitate the development environment setup, we provide a Vagrantfile that
-automates all the configuration. You need to have the softwares below installed
-in your PC:
-
-* Virtualbox
-* Vagrant
-
-When you have both of them installed you just need to run the command below:
-
+### Setup
+---
+Instalar dependências necessárias.
 ```bash
-$ vagrant up --provider=virtualbox
+$ bundle install
 ```
 
-Now you are able to login into the virtual machine and work there. To login run:
-
+Criar e popular o banco de dados.
 ```bash
-$ vagrant ssh
+$ rake db:create
+$ rake db:migrate
+$ rake db:seed
+```
+A aplicação está pronta para ser executada.
+```bash
+$ rails s
 ```
 
-The application source code is shared with the virtual machine, you can see it
-in /vagrant directory. To run application execute the commands below:
+A aplicação pode ser acessada em http://localhost:3000
 
-```bash
-$ cd /vagrant
-$ bundle exec rails s
-```
+---
 
-After that you are able to access it via http://localhost:3000 in your host
-machine.
+É possível acessar uma versão da aplicação em http://interscity.org/apps/saude 
