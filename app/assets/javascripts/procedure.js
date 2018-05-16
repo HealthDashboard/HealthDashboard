@@ -447,7 +447,8 @@ function whereParse(filters, start_date, end_date, dist_min, dist_max, genders)
      if (where != "") {
        where = where.concat(" AND ");
      }
-     where = where.concat(value + " IN " + "(" + clauseParse(filters[index]) + ")");
+     f_value = filters[index].replace(/;/g, ',');
+     where = where.concat(value + " IN " + "(" + clauseParse(f_value) + ")");
     }
   });
 
@@ -489,6 +490,7 @@ function whereParse(filters, start_date, end_date, dist_min, dist_max, genders)
     where = where.concat("distance < ", dist_max.toString());
   }
 
+  console.log(where)
   return where
 }
 
