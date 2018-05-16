@@ -39,6 +39,20 @@ var centroids = {};
 var counter = {};
 //**//
 
+//** Filtros para impressão 
+var filters_text = [];
+var filters = [];
+var genders = [];
+var start_date = null;
+var end_date = null;
+var dist_min = null;
+var dist_max = null;
+
+
+var filters_print = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Grupo étnico", "Nível de instrução", "Competência",
+      "Grupo do procedimento autorizado", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Total geral de diárias", 
+      "Diárias UTI", "Diárias UI", "Dias de permanência", "Tipo de financiamento", "Valor Total", "Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Complexidade", "Gestão"]
+
 // Colors
 var colors = ['#FF9900', '#FFCC00', '#FFFF00', "#CCFF00", "#99FF00", "#66FF00", "#33FF00", "#FF0000"];
 var colors_procedure = ['#003300', '#15ff00', '#ff0000', "#f5b979", "#13f1e8", "#615ac7", "#8e3a06", "#b769ab", "#df10eb"];
@@ -142,24 +156,30 @@ function buscar()
     var residencia_paciente = document.getElementById('checkbox_residencia_paciente');
     var hc = document.getElementById('checkbox_health_centre');
 
-    var genders = [];
-    var filters = [];
+    genders = [];
+    filters = [];
+    filters_text = [];
     var health_centres = [];
 
     for (i = 0; i < 24; i++) {
-      var aux = []
-      var select_name = $('#' + i);
-      $(select_name).each(function(index, brand){
-        aux.push([$(this).val()]);
-        if (i == 0) {
-          health_centres = aux;
-        }
+      var aux = [];
+      var aux_name = [];
+      var select_name = $('#' + i + ' option:selected');
+      var options = $(select_name);
+      $.each(options, function(index, value){
+        aux.push(value.value)
+        aux_name.push([value.text])
       });
+      if (i == 0) {
+        health_centres.push(aux);
+      }
+
+      filters_text.push(aux_name.join(", "));
       filters.push(aux.join(";"));
     }
 
-    var start_date = $("#intervalStart").datepicker({ dateFormat: 'dd,MM,yyyy' }).val();
-    var end_date = $("#intervalEnd").datepicker({ dateFormat: 'dd,MM,yyyy' }).val();
+    start_date = $("#intervalStart").datepicker({ dateFormat: 'dd,MM,yyyy' }).val();
+    end_date = $("#intervalEnd").datepicker({ dateFormat: 'dd,MM,yyyy' }).val();
 
     if(sexo_masculino.checked) {
       genders.push("M");
@@ -171,8 +191,8 @@ function buscar()
 
     var distance_max = document.getElementById('slider_distance_max');
     var distance_min = document.getElementById('slider_distance_min');
-    var dist_min = parseFloat(distance_min.textContent);
-    var dist_max = parseFloat(distance_max.textContent);
+    dist_min = parseFloat(distance_min.textContent);
+    dist_max = parseFloat(distance_max.textContent);
 
     var filterDay = $('#viewType input:radio:checked').val()
 
@@ -534,10 +554,47 @@ function print_maps() {
     const $mapContainer = $('.map-wrapper');
     const $mapContainerParent = $mapContainer.parent();
     const $printContainer = $('<div style="position:relative;">');
+    mapSize = $mapContainer.height()
+    const $info = $('<div style="position: relative"><h4>Autorizações de Internação Hospitalar, AIH - tipo 1 (Normal), mapeadas pelo endereço de residência do paciente deslocadas para o centróide do setor censitário correspondente.</h4></div>')
+    const $space_map = $('<div style="height: ' + (mapSize + 150) + 'px;"></div>')
+
+    var filters_div_text = '<div style="position: relative">'
+    $.each(filters_print, function(index, value){
+      if (filters_text[index] != "") {
+        filters_div_text = filters_div_text.concat("<br />" + value + ": " + filters_text[index])
+      }
+    });
+
+    console.log(genders)
+    if (genders != null) {
+      filters_div_text = filters_div_text.concat("<br />Sexo: " + genders.join(", "))
+    }
+
+    if (start_date != "") {
+      filters_div_text = filters_div_text.concat("<br />Data mínima: " + start_date)
+    }
+
+    if (end_date != "") {
+      filters_div_text = filters_div_text.concat("<br />Data máxima: " + end_date)
+    }
+
+    if (dist_min != null) {
+      filters_div_text = filters_div_text.concat("<br />Distância mínima: " + dist_min)
+    }
+
+    if (dist_max != null) {
+      filters_div_text = filters_div_text.concat("<br />Distância máxima: " + dist_max)
+    }
+
+    filters_div_text = filters_div_text.concat("</div>")
+    const $filters_div = $(filters_div_text)
 
     $printContainer
-      .height($mapContainer.height())
+      .height(mapSize + 100)
       .append($mapContainer)
+      .append($space_map)
+      .append($info)
+      .append($filters_div)
       .prependTo($body);
 
     const $content = $body

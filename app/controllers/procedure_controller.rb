@@ -36,7 +36,7 @@ class ProcedureController < ApplicationController
 		if params[:filters] != nil
 			params[:filters].each_with_index do |filter, i|
 				if filter != ""
-					session[:filters][i] = filter.split(",")
+					session[:filters][i] = filter.split(";")
 				end
 			end
 		end
@@ -137,7 +137,6 @@ class ProcedureController < ApplicationController
 	# Download csv file
 	def download
 	    procedures = getProcedures()
-	    enumerator = procedures.copy_to_enumerator(:buffer_lines => 100)
 
 	    respond_to do |format|
 	      format.html
