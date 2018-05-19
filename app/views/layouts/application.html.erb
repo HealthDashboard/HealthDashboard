@@ -18,7 +18,6 @@
           <nav>
             <ul class="nav navbar-nav navbar-left">
               <li class='nav-item <%= 'active' if controller_name == 'health_centres' %>'> <%= link_to "Início", root_path, class: 'nav-link' %></li>
-              <li class='nav-item <%= 'active' if controller_name == 'health_centre_filter' %>'> <%= link_to "Estabelecimentos", estabelecimentos_path, class: 'nav-link' %></li>
               <li class='nav-item <%= 'active' if controller_name == 'dashboard' %>'> <%= link_to "Dados Gerais", dados_gerais_path, class: 'nav-link' %></li>
               <li class='nav-item <%= 'active' if controller_name == 'procedure' %>'> <%= link_to "Busca Avançada", busca_path, class: 'nav-link' %></li>
             </ul>

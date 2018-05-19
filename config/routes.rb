@@ -18,21 +18,14 @@ Rails.application.routes.draw do
   get '/distance_metric', to: 'health_centres#distance_metric'
   get '/shorter_distance_count', to: 'health_centres#shorter_distance_count'
 
-  get '/health_centre_filter/analise/:id/:name/:id_filter', to: 'health_centre_filter#analise'
  
   get 'dados-gerais', to: 'dashboard#index'
   get 'specialties', to: 'specialties#index'
-  get 'estabelecimentos', to: 'health_centre_filter#index'
   get 'busca', to: 'procedure#show'
-
-  get 'listType', to: 'health_centre_filter#listType'
-  get 'listSpecialty', to: 'health_centre_filter#listSpecialty'
-  get 'listRegion', to: 'health_centre_filter#listRegion'
 
   get '/procedure/health_centres', to: 'procedure#health_centres'
   get '/procedure/specialties', to: 'procedure#specialties'
   get 'procedure/allProcedures', to: 'procedure#allProcedures'
-  # get 'procedure/procedures_per_month', to: 'procedure#procedures_per_month'
 
   get '/about', to: 'application#about'
 
@@ -50,5 +43,6 @@ Rails.application.routes.draw do
     get :download, on: :collection
     get :update_session, on: :collection
     get :procedures_latlong, on: :collection
+    get :procedures_distance_group,  on: :collection
   end
 end

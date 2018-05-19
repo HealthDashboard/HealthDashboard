@@ -15,16 +15,20 @@ var specialties_color = {
 }
 
 var dynamic = false;
-
+var data = null;
 var dashboard_legend_clicked = false;
 
 function init_dashboard_chart() {
     dynamic = false;
     dashboard_legend_clicked = false;
-
-    if (window.teste != null) {
+    
+    console.log(window._data_filters)
+    if (window._data_filters != null && window._data_filters != []) {
+        console.log("WHY ARE YOU HERE?")
         dynamic = true;
+        data = window._data_filters
         var element = document.getElementById("avarage_distance_div").style.visibility = "hidden";
+        window._data_filters = null;
     } else {
         dynamic = false;
     }
@@ -36,6 +40,7 @@ function init_dashboard_chart() {
 function create_dashboard_charts() {
     create_procedures_per_specialties();
     create_specialties_distance_between_patients_hospital();
+    create_analise();
     populate_procedures_by_date();
     create_specialties_total();
     update_rank();
@@ -75,8 +80,8 @@ function create_procedures_per_specialties() {
     } else {
         var specialty_path = "/procedure/procedures_per_specialties"
     }
-    $.getJSON(specialty_path, window.teste, function(data) {
-        draw_chart(header, data, chart, options, specialties_color);
+    $.getJSON(specialty_path, data, function(result) {
+        draw_chart(header, result, chart, options, specialties_color);
     });
 }
 
@@ -97,12 +102,33 @@ function create_specialties_distance_between_patients_hospital() {
     } else {
         var distance_average_path = '/procedure/procedures_distance'
     }
-    $.getJSON(distance_average_path, window.teste, function(data) {
-        draw_chart(header, data, chart, options, specialties_color);
+    $.getJSON(distance_average_path, data, function(result) {
+        draw_chart(header, result, chart, options, specialties_color);
+    });
+}
+
+function create_analise() {
+    var header = ["Especialidades", "Número de Internações", {role: "style" }]
+    var chart = new google.visualization.PieChart(document.getElementById("chart_div_analise"));
+
+    var options = {
+        // title:'Porcentagem de Internações por distância percorrida',
+        width: 550,
+        height: 550,
+        slices: get_color_slice()
+    };
+    if (dynamic == false) {
+        var path = '/distance_metric.json'
+    } else {
+        var path = 'procedure/procedures_distance_group'
+    }
+    $.getJSON(path, function(result) {
+        draw_chart(header, result, chart, options, specialties_color);
     });
 }
 
 function populate_procedures_by_date() {
+    console.log(dynamic)
     if (dynamic == false) {
         var path = "/procedures_by_date.json";
     } else {
@@ -122,9 +148,9 @@ function populate_procedures_by_date() {
         legend: {position: 'none'}
     };
 
-    $.getJSON(path, window.teste, function(data) {
+    $.getJSON(path, data, function(result) {
         var values = [];
-        $.each(data, function(k,v) {
+        $.each(result, function(k,v) {
           values.push([new Date(v[0],v[1]), v[2]]);
         })
         create_line_chart(values, options);
@@ -150,35 +176,35 @@ function create_specialties_total() {
         var distance_average_path = '/procedure/procedures_per_specialties'
     }
 
-    $.getJSON(distance_average_path, window.teste, function(data) {
-        draw_chart(header, data, chart, options, specialties_color);
+    $.getJSON(distance_average_path, data, function(result) {
+        draw_chart(header, result, chart, options, specialties_color);
     });
 }
 
 function create_line_chart(values, options) {
     var chart = new google.visualization.LineChart(document.getElementById('procedure_by_date'));
-    var data = new google.visualization.DataTable();
-    data.addColumn('date', 'Mês');
-    data.addColumn('number', "Número de Internações");
-    data.addRows(values);
-    chart.draw(data, options);
+    var table = new google.visualization.DataTable();
+    table.addColumn('date', 'Mês');
+    table.addColumn('number', "Número de Internações");
+    table.addRows(values);
+    chart.draw(table, options);
 }
 
 function get_color_slice() {
     var slices = {};
     var idx = 0;
-    $.each(specialties_color, function(data, value) {
+    $.each(specialties_color, function(result, value) {
         slices[idx++] = {color: value};
     });
     return slices;
 }
 
-function draw_chart(header, data, chart, options, color) {
+function draw_chart(header, result, chart, options, color) {
     if (color == null) {
         color = specialties_color;
     }
     var values = [];
-    $.each(data, function(name, number) {
+    $.each(result, function(name, number) {
         values.push([name, parseFloat(number), color[name]]);
     });
 
@@ -202,18 +228,18 @@ function update_rank() {
     if (dynamic == false) {
         $.getJSON('/rank_health_centres.json', create_table_rank);
     } else {
-        $.getJSON('/procedure/procedures_per_health_centre', window.teste, create_table_rank);
+        $.getJSON('/procedure/procedures_per_health_centre', data, create_table_rank);
     }
 }
 
-function create_table_rank(data) {
+function create_table_rank(result) {
     rank_table = $('.health_centres_rank tbody');
 
     rows = "";
     index = 1;
     Total = 0;
 
-    $.each(data, function(name, n_procedures) {
+    $.each(result, function(name, n_procedures) {
         if (index % 2) {
             rows += "<tr class='bg-success'>"
         } else {

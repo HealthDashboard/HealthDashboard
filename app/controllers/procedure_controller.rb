@@ -84,6 +84,13 @@ class ProcedureController < ApplicationController
 		return procedures
 	end
 
+	# Procedures group by distance
+	def procedures_distance_group
+		procedures = getProcedures()
+		result = {"<= 1 Km" => procedures.where("distance <= ?", 1).count, "> 1 Km e <= 5 Km" =>  procedures.where("distance > ? AND distance <= ?", 1, 5).count, "> 5 Km e <= 10 Km" => procedures.where("distance > ? AND distance <= ?", 5, 10).count, "> 10 Km" => procedures.where("distance > ?", 10).count}
+		render json: result
+	end
+
 	# Procedures group by month on metrics page
 	def procedures_per_month
 		procedures = getProcedures()

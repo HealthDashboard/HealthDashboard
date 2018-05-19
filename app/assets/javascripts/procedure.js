@@ -241,6 +241,8 @@ function buscar()
       sexp_var["F"] = "Feminino";
 
       google.maps.event.addListener(ft_layer, 'click', function(e) {
+        // console.log(e.row['cid_primary'].value.toString())
+        // console.log(cid_array[99])
         e.infoWindowHtml = "<strong>Estabelecimento: </strong>" + health_centres_var[e.row['cnes_id'].value] + "<br>";
         e.infoWindowHtml += "<strong>Sexo: </strong>" + sexp_var[e.row['gender'].value] + "<br>";
         e.infoWindowHtml += "<strong>Idade: </strong>" + e.row['age_number'].value + "<br>";
@@ -548,7 +550,7 @@ function clearMap() {
 
 function graphs() {
     var w = window.open('dados-gerais');
-    w.teste = data;
+    w._data_filters = data;
 }
 
 function print_maps() {
