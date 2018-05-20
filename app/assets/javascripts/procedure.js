@@ -6,6 +6,7 @@ var health_centres_var = {};
 var health_centre_icon = '/health_centre_icon.png';
 var person_icon = '/home.png';
 var cid_array = null;
+var CID10 = null;
 var data = null;
 
 // Automatic search
@@ -241,12 +242,10 @@ function buscar()
       sexp_var["F"] = "Feminino";
 
       google.maps.event.addListener(ft_layer, 'click', function(e) {
-        // console.log(e.row['cid_primary'].value.toString())
-        // console.log(cid_array[99])
         e.infoWindowHtml = "<strong>Estabelecimento: </strong>" + health_centres_var[e.row['cnes_id'].value] + "<br>";
         e.infoWindowHtml += "<strong>Sexo: </strong>" + sexp_var[e.row['gender'].value] + "<br>";
         e.infoWindowHtml += "<strong>Idade: </strong>" + e.row['age_number'].value + "<br>";
-        e.infoWindowHtml += "<strong>CID: </strong>" + e.row['cid_primary'].value + "<br>";
+        e.infoWindowHtml += "<strong>CID: </strong>" + cid_array[e.row['cid_primary'].value.toString()] + "<br>";
         e.infoWindowHtml += "<strong>CRS: </strong>" + e.row['CRS'].value + "<br>";
         e.infoWindowHtml += "<strong>Data: </strong>" + e.row['date'].value + "<br>";
         e.infoWindowHtml += "<strong>Distância: </strong>" + parseFloat(e.row['distance'].value).toPrecision(5) + "Km <br>";
@@ -643,224 +642,32 @@ function dadosInput()
       $("#slider_distance_max").html(slideEvt.value[1] + (slideEvt.value[1] >= 30 ? "+" : ""));
     });
 
-    $.ajax({
-      url: '/health_centres.json',
-      success: function(data){
-        $.each(data, function(index, value) {
-          health_centres_var[value.id] = value.text;
-        });
-
-        $("#0").select2({
-          placeholder: "Todos",
-          data: data,
-          allowClear: true
-        });
-      }
-    });
-
-    $.ajax({
-      url: '/age_group.json',
-      success: function(data){
-        $("#1").select2({
-          placeholder: "Todas",
-          allowClear: true,
-          data: data
-        });
-      }
-    });
-
-    $.ajax({
-      url: '/specialties.json',
-      success: function(data){
-        $("#2").select2({
-          placeholder: "Todas",
-          data: data,
-          allowClear: true
-        });
-      }
-    });
-
-    var treatments = [
-      { id: "1", text: "ELETIVO" }, 
-      { id: "2", text: "URGENCIA" }, 
-      { id: "3", text: "ACIDENTE NO LOCAL DE TRABALHO OU A SERVICO DA EMPRESA" }, 
-      { id: "5", text: "OUTROS TIPOS DE ACIDENTE DE TRANSITO" }, 
-      { id: "6", text: "OUTROS TIPOS DE LESOES E ENVENENAMENTOS POR AGENTES QUIMICOS OU FISICOS" }, 
-    ];
-
-    $("#3").select2({
-      placeholder: "Todos",
-      data: treatments,
-    });
-
-    $.ajax({
-      url: '/race.json',
-      success: function(data){
-        $("#4").select2({
-          placeholder: "Todas",
-          data: data,
-          allowClear: true
-        });
-      }
-    });
-
-    $.ajax({
-      url: '/lv_instruction.json',
-      success: function(data){
-        $("#5").select2({
-          placeholder: "Todas",
-          data: data,
-          allowClear: true
-        });
-      }
-    });
-
-    $.ajax({
-      url: '/cmpt.json',
-      success: function(data){
-        $("#6").select2({
-          placeholder: "Todas",
-          data: data,
-          allowClear: true
-        });
-      }
-    });
-
-    $.ajax({
-      url: '/proc_re.json',
-      success: function(data){
-        $("#7").select2({
-          placeholder: "Todas",
-          data: data,
-          allowClear: true
-        });
-      }
-    });
+    for (i = 0; i < 24; i++) {
+      name = "#" + i
+      $(name).select2({
+        placeholder: "Todos",
+        allowClear: true,
+        tags: true
+      });
+    }
 
     if (cid_array == null) {
       $.ajax({
-        url: '/CID10.json',
+        url: '/CID_hash.json',
         success: function(data){
           cid_array = data;
-          $("#8").select2({
-            placeholder: "Todas",
-            allowClear: true,
-            data: data,
-          });
-          $("#9").select2({
-            placeholder: "Todas",
-            allowClear: true,
-            data: data,
-          });
-          $("#10").select2({
-            placeholder: "Todas",
-            allowClear: true,
-            data: data,
-          });
-          $("#11").select2({
-            placeholder: "Todas",
-            allowClear: true,
-            data: data,
-          });
         }
       });
-    } else {
-          $("#8").select2({
-            placeholder: "Todas",
-            tags: true
-          });
-          $("#9").select2({
-            placeholder: "Todas",
-            tags: true
-          });
-          $("#10").select2({
-            placeholder: "Todas",
-            tags: true
-          });
-          $("#11").select2({
-            placeholder: "Todas",
-            tags: true
-          }); 
     }
+    if (Object.keys(health_centres_var).length == 0) {
+      $.ajax({
+        url: '/health_centres.json',
+        success: function(data){
+            $.each(data, function(index, value) {
+                health_centres_var[value.id] = value.text;
+            });
 
-    $("#12").select2({
-      placeholder: "Todos",
-      tags: true
-    });
-
-    $("#13").select2({
-      placeholder: "Todos",
-      tags: true
-    });
-
-    $("#14").select2({
-      placeholder: "Todos",
-      tags: true
-    });
-
-    $("#15").select2({
-      placeholder: "Todos",
-      tags: true
-    });
-
-    $.getJSON('/finance.json', function(data) {
-      $("#16").select2({
-        placeholder: "Todos",
-        data: data,
-        allowClear: true
+        }
       });
-    });
-
-    $("#17").select2({
-      placeholder: "Todos",
-      tags: true
-    });
-
-    $.getJSON('/DA.json', function(data) {
-      $("#18").select2({
-        placeholder: "Todas",
-        data: data,
-        allowClear: true
-      });
-    });
-
-    $.getJSON('/PR.json', function(data) {
-      $("#19").select2({
-        placeholder: "Todas",
-        data: data,
-        allowClear: true
-      });
-    });
-
-    $.getJSON('/STS.json', function(data) {
-      $("#20").select2({
-        placeholder: "Todas",
-        data: data,
-        allowClear: true
-      });
-    });
-
-    $.getJSON('/CRS.json', function(data) {
-      $("#21").select2({
-        placeholder: "Todas",
-        data: data,
-        allowClear: true
-      });
-    });
-
-    $.getJSON('/complexity.json', function(data) {
-      $("#22").select2({
-        placeholder: "Todas",
-        data: data,
-        allowClear: true
-      });
-    });
-
-    var gestor = [{id:"00", text:"ESTADUAL"},
-    {id:"01", text:"MUNICIPAL"}];
-    $("#23").select2({
-        placeholder: "Todas",
-        data: gestor,
-        allowClear: true
-    });
+    }
 }

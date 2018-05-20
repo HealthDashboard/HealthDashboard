@@ -50,6 +50,9 @@
                 <%= f %>
                 </b></label>
                 <select class="select-<%= i %> form-control" id="<%= i %>" multiple="multiple" onchange='change()'>
+                  <% @options[i].each do |v| %>
+                    <option value= "<%= v["id"] %>" > <%= v["text"] %> </option>
+                  <% end %>
                 </select>
               </div>
 

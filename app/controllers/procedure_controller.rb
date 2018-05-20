@@ -13,6 +13,33 @@ class ProcedureController < ApplicationController
 		@filters = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Grupo étnico", "Nível de instrução", "Competência",
 			"Grupo do procedimento autorizado", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Total geral de diárias", 
 			"Diárias UTI", "Diárias UI", "Dias de permanência", "Tipo de financiamento", "Valor Total", "Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Complexidade", "Gestão"]
+
+		# Values for filters
+		health_centres = JSON.parse(File.read(Rails.root.join('public/health_centres.json')))
+		age_group = JSON.parse(File.read(Rails.root.join('public/age_group.json')))
+		specialties = JSON.parse(File.read(Rails.root.join('public/specialties.json')))
+		treatments = [
+      		{ "id" => "1", "text" => "ELETIVO" }, 
+      		{ "id" => "2", "text" => "URGENCIA" }, 
+      		{ "id" => "3", "text" => "ACIDENTE NO LOCAL DE TRABALHO OU A SERVICO DA EMPRESA" }, 
+      		{ "id" => "5", "text" => "OUTROS TIPOS DE ACIDENTE DE TRANSITO" }, 
+      		{ "id" => "6", "text" => "OUTROS TIPOS DE LESOES E ENVENENAMENTOS POR AGENTES QUIMICOS OU FISICOS" }, 
+    	];
+    	race = JSON.parse(File.read(Rails.root.join('public/race.json')))
+    	lv_instruction = JSON.parse(File.read(Rails.root.join('public/lv_instruction.json')))
+    	cmpt = JSON.parse(File.read(Rails.root.join('public/cmpt.json')))
+    	proce_re = JSON.parse(File.read(Rails.root.join('public/proc_re.json')))
+    	cid = JSON.parse(File.read(Rails.root.join('public/CID10.json')))
+    	finance = JSON.parse(File.read(Rails.root.join('public/finance.json')))
+    	da = JSON.parse(File.read(Rails.root.join('public/DA.json')))
+    	pr = JSON.parse(File.read(Rails.root.join('public/PR.json')))
+    	sts = JSON.parse(File.read(Rails.root.join('public/STS.json')))
+    	crs = JSON.parse(File.read(Rails.root.join('public/CRS.json')))
+    	complexity = JSON.parse(File.read(Rails.root.join('public/complexity.json')))
+    	gestor = [{"id" => "00", "text" => "ESTADUAL"},
+    			  {"id" => "01", "text" => "MUNICIPAL"}];
+
+		@options = [health_centres, age_group, specialties, treatments, race, lv_instruction, cmpt, proce_re, cid, cid, cid, cid, [], [], [], [], finance, [], da, pr, sts, crs, complexity, gestor]
 	end
 
 	def update_session
