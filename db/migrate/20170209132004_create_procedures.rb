@@ -4,9 +4,9 @@ class CreateProcedures < ActiveRecord::Migration[5.0]
       t.float :lat
       t.float :long
       t.string :gender
-      t.string :age_number
+      t.integer :age_number
       t.string :age_code
-      t.string :race
+      t.integer :race
       t.integer :lv_instruction
       t.integer :cnes_id
       t.integer :gestor_ide
