@@ -105,6 +105,7 @@ function show_clusters() {
 }
 
 function setup_cluster() {
+    markers_visible(null);
     var procedure_path = ["/procedures/", info_box_opened].join("");
 
     $.getJSON(procedure_path, function(procedures) {
@@ -112,14 +113,13 @@ function setup_cluster() {
         create_circles(info_boxes[info_box_opened].marker);
     });
 
-    markers_visible(false);
     $('#cluster_info').text('Esconder Detalhes');
     cluster_status = true;
 }
 
 // Remove clusters
 function teardown_cluster() {
-    markers_visible(true);
+    markers_visible(map);
     info_boxes[info_box_opened].close();
     info_box_opened = -1;
     cluster_status = false;
@@ -161,10 +161,10 @@ function add_listener(marker, point, generate_infobox_text) {
     });
 }
 
-function markers_visible(visibility) {
+function markers_visible(map) {
     $.each(info_boxes, function(index, info_box) {
-        if (info_box && info_box.id !== info_box_opened) {
-            info_box.marker.setVisible(visibility);
+        if (info_box != null && info_box.id != info_box_opened) {
+            info_box.marker.setMap(map);
         }
     });
 }

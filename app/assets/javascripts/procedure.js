@@ -149,6 +149,20 @@ function change()
   }
 }
 
+// Show health centres markers on map
+function health_centres_makers(health_centres)
+{
+  $.getJSON("procedure/health_centres_procedure", {cnes: health_centres.toString()}, function(result){
+    $.each(result, function(index, health_centre){
+      create_markers(health_centre, health_centre_icon)
+    });
+    if (Markers[0] != null) {
+      map.panTo(Markers[0].position);
+    }
+  });
+  setMarkersMap(map);
+}
+
 // Search button
 function buscar()
 {
@@ -210,15 +224,7 @@ function buscar()
       }
 
       if (health_centres != "") {
-        $.getJSON("procedure/health_centres_procedure", {cnes: health_centres.toString()}, function(result){
-          $.each(result, function(index, health_centre){
-            create_markers(health_centre, health_centre_icon)
-          });
-          if (Markers[0] != null) {
-            map.panTo(Markers[0].position);
-          }
-        });
-        setMarkersMap(map);
+        health_centres_makers(health_centres)
       }
       where =  whereParse(filters, start_date, end_date, dist_min, dist_max, genders);
       ft_layer = new google.maps.FusionTablesLayer({
@@ -633,13 +639,13 @@ function dadosInput()
 
     $("#slider_distance").slider({
       min: 0,
-      max: 30,
+      max: 53,
       step: 1,
       value: [0,10],
     });
     $("#slider_distance").on("slide", function(slideEvt) {
       $("#slider_distance_min").html(slideEvt.value[0]);
-      $("#slider_distance_max").html(slideEvt.value[1] + (slideEvt.value[1] >= 30 ? "+" : ""));
+      $("#slider_distance_max").html(slideEvt.value[1]);
     });
 
     for (i = 0; i < 24; i++) {
