@@ -1,14 +1,19 @@
 class ProcedureController < ApplicationController
+	
+	# Remove
 	def allProcedures
 		allProcedures = Procedure.all
 		render json: allProcedures.to_a
 	end
 
+	# Remove
 	def procedures_count
 		total = Procedure.all.count
 		render json: total
 	end
 
+	# GET / 
+	# Return "busca avancada" page
 	def show
 		@filters = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Grupo étnico", "Nível de instrução", "Competência",
 			"Grupo do procedimento autorizado", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Total geral de diárias", 
@@ -19,29 +24,34 @@ class ProcedureController < ApplicationController
 		age_group = JSON.parse(File.read(Rails.root.join('public/age_group.json')))
 		specialties = JSON.parse(File.read(Rails.root.join('public/specialties.json')))
 		treatments = [
-      		{ "id" => "1", "text" => "ELETIVO" }, 
-      		{ "id" => "2", "text" => "URGENCIA" }, 
-      		{ "id" => "3", "text" => "ACIDENTE NO LOCAL DE TRABALHO OU A SERVICO DA EMPRESA" }, 
-      		{ "id" => "5", "text" => "OUTROS TIPOS DE ACIDENTE DE TRANSITO" }, 
-      		{ "id" => "6", "text" => "OUTROS TIPOS DE LESOES E ENVENENAMENTOS POR AGENTES QUIMICOS OU FISICOS" }, 
-    	];
-    	race = JSON.parse(File.read(Rails.root.join('public/race.json')))
-    	lv_instruction = JSON.parse(File.read(Rails.root.join('public/lv_instruction.json')))
-    	cmpt = JSON.parse(File.read(Rails.root.join('public/cmpt.json')))
-    	proce_re = JSON.parse(File.read(Rails.root.join('public/proc_re.json')))
-    	cid = JSON.parse(File.read(Rails.root.join('public/CID10.json')))
-    	finance = JSON.parse(File.read(Rails.root.join('public/finance.json')))
-    	da = JSON.parse(File.read(Rails.root.join('public/DA.json')))
-    	pr = JSON.parse(File.read(Rails.root.join('public/PR.json')))
-    	sts = JSON.parse(File.read(Rails.root.join('public/STS.json')))
-    	crs = JSON.parse(File.read(Rails.root.join('public/CRS.json')))
-    	complexity = JSON.parse(File.read(Rails.root.join('public/complexity.json')))
-    	gestor = [{"id" => "00", "text" => "ESTADUAL"},
-    			  {"id" => "01", "text" => "MUNICIPAL"}];
+			{ "id" => "1", "text" => "ELETIVO" }, 
+			{ "id" => "2", "text" => "URGENCIA" }, 
+			{ "id" => "3", "text" => "ACIDENTE NO LOCAL DE TRABALHO OU A SERVICO DA EMPRESA" }, 
+			{ "id" => "5", "text" => "OUTROS TIPOS DE ACIDENTE DE TRANSITO" }, 
+			{ "id" => "6", "text" => "OUTROS TIPOS DE LESOES E ENVENENAMENTOS POR AGENTES QUIMICOS OU FISICOS" }, 
+		];
+		race = JSON.parse(File.read(Rails.root.join('public/race.json')))
+		lv_instruction = JSON.parse(File.read(Rails.root.join('public/lv_instruction.json')))
+		cmpt = JSON.parse(File.read(Rails.root.join('public/cmpt.json')))
+		proce_re = JSON.parse(File.read(Rails.root.join('public/proc_re.json')))
+		cid = JSON.parse(File.read(Rails.root.join('public/CID10.json')))
+		days = JSON.parse(File.read(Rails.root.join('public/total_days.json')))
+		finance = JSON.parse(File.read(Rails.root.join('public/finance.json')))
+		da = JSON.parse(File.read(Rails.root.join('public/DA.json')))
+		pr = JSON.parse(File.read(Rails.root.join('public/PR.json')))
+		sts = JSON.parse(File.read(Rails.root.join('public/STS.json')))
+		crs = JSON.parse(File.read(Rails.root.join('public/CRS.json')))
+		complexity = JSON.parse(File.read(Rails.root.join('public/complexity.json')))
+		gestor = [{"id" => "00", "text" => "ESTADUAL"},
+				  {"id" => "01", "text" => "MUNICIPAL"}];
 
-		@options = [health_centres, age_group, specialties, treatments, race, lv_instruction, cmpt, proce_re, cid, cid, cid, cid, [], [], [], [], finance, [], da, pr, sts, crs, complexity, gestor]
+		@options = [health_centres, age_group, specialties, treatments, race, lv_instruction, cmpt, proce_re, cid, cid, cid, cid, days, [], [], [], finance, [], da, pr, sts, crs, complexity, gestor]
 	end
 
+	# GET /procedure/update_session{data}
+	# Ajax call, no template to render on browser
+	# To pass the data add to your ajax call data = {values} 
+	# Session variable is updated 
 	def update_session
 		if session[:filters] == nil || params[:filters] != nil 
 			session[:filters] = Array.new(24)
@@ -84,6 +94,10 @@ class ProcedureController < ApplicationController
 		return
 	end
 
+	# NO ROUTE, intern methods
+	# TODO - handle calls with no previous update_session. It probably throws a error now, 
+	# maybe send all data instead.
+	# Return procedures based on the values passed in your last update_session
 	def getProcedures
 		filters_name = ["cnes_id", "age_code", "specialty_id", "treatment_type", "race", "lv_instruction", "cmpt", "proce_re", "cid_primary", "cid_secondary", "cid_secondary2", 
 		"cid_associated", "days", "days_uti", "days_ui", "days_total", "finance", "val_total", "DA", "PR", "STS", "CRS", "complexity", "gestor_ide"]
@@ -111,7 +125,11 @@ class ProcedureController < ApplicationController
 		return procedures
 	end
 
+
 	# Procedures group by distance
+	# GET /procedure/procedures_distance_group
+	# Ajax call, no template to render on browser
+	# Return JSON file 
 	def procedures_distance_group
 		procedures = getProcedures()
 		result = {"<= 1 Km" => procedures.where("distance <= ?", 1).count, "> 1 Km e <= 5 Km" =>  procedures.where("distance > ? AND distance <= ?", 1, 5).count, "> 5 Km e <= 10 Km" => procedures.where("distance > ? AND distance <= ?", 5, 10).count, "> 10 Km" => procedures.where("distance > ?", 10).count}
@@ -119,6 +137,8 @@ class ProcedureController < ApplicationController
 	end
 
 	# Procedures group by month on metrics page
+	# GET /procedure/procedures_distance_group
+	# Ajax call, no template to render on browser
 	def procedures_per_month
 		procedures = getProcedures()
 		result = Array.new(12)
@@ -131,6 +151,8 @@ class ProcedureController < ApplicationController
 	end
 
 	# Procedures group by health centre on metrics page
+	# GET /procedure/procedures_distance_group
+	# Ajax call, no template to render on browser
 	def procedures_per_health_centre
 		procedures = getProcedures()
 		result = {}
@@ -142,6 +164,8 @@ class ProcedureController < ApplicationController
 	end
 
 	# Procedures group by specialties count metrics page
+	# GET /procedure/procedures_distance_group
+	# Ajax call, no template to render on browser
 	def procedures_per_specialties
 		procedures = getProcedures()
 		procedures = procedures.where("specialty_id < ?", 10).order(:specialty_id).group(:specialty_id).count
@@ -153,6 +177,8 @@ class ProcedureController < ApplicationController
 	end
 
 	# Procedures group by specialties distance avarega on metrics page
+	# GET /procedure/procedures_distance_group
+	# Ajax call, no template to render on browser
 	def procedures_distance
 		procedures = getProcedures()
 		result = {}
@@ -164,11 +190,19 @@ class ProcedureController < ApplicationController
 	end
 
 	# Total number of procedures on metrics page
+	# GET /procedure/procedures_distance_group
+	# Ajax call, no template to render on browser
 	def procedures_total
 		render json: getProcedures().count
 	end
 
 	# Download csv file
+	# Javascript is not allowed to download files, so this call is done with path_to rails method, 
+	# Because of this we cannot pass data directly in its call.
+	# The workaround is first we use update_session to pass data to the controller then it's possible to
+	# call this method to download filtered procedures.
+	# TODO handle calls that maybe done before a update_session. *throws a error in current version *
+	# Return CSV file.
 	def download
 	    procedures = getProcedures()
 
@@ -178,6 +212,10 @@ class ProcedureController < ApplicationController
 	  	end
     end
 
+	# Total number of procedures on metrics page
+	# GET /procedure/health_centres_search
+	# Ajax call, no template to render on browser
+	# Returns JSON file(s).
 	def health_centres_search
 		procedures = getProcedures()
 
