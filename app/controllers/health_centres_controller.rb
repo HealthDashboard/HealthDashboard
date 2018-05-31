@@ -56,6 +56,18 @@ class HealthCentresController < ApplicationController
         render json: result
     end
 
+    # GET /distance_quartis/:id
+    def distance_quartis
+        health_centre = HealthCentre.find_by(id: params[:id])
+        procedures = health_centre.procedures.pluck(:distance);
+        distances = DescriptiveStatistics::Stats.new(procedures)
+        q1 = distances.value_from_percentile(25).round(2).to_s
+        q2 = distances.value_from_percentile(50).round(2).to_s
+        q3 = distances.value_from_percentile(75).round(2).to_s
+        distance_quartis = [q3, q2, q1]
+        render json: distance_quartis
+    end
+
     # GET /rank_health_centres
     def rank_health_centres
       health_centres = HealthCentre.all.to_a
@@ -73,33 +85,6 @@ class HealthCentresController < ApplicationController
     def procedures_specialties
         procedures = Procedure.where(specialty_id: params[:id])
         render json: procedures
-    end
-
-    # GET /health_centre_specialty/:hc_id/:id
-    def health_centre_specialty
-        health_centre = HealthCentre.find_by(id: params[:hc_id])
-        procedures = health_centre.procedures
-
-        procedures_specialties = procedures.where(specialty_id: params[:id]).pluck(:lat, :long);
-        render json: procedures_specialties
-    end
-
-    # GET /health_centre_type/:hc_id/:id
-    def health_centre_type
-        health_centre = HealthCentre.find_by(id: params[:hc_id])
-        procedures = health_centre.procedures
-
-        procedures_type = procedures.where(treatment_type: params[:id]).pluck(:lat, :long);
-        render json: procedures_type
-    end
-
-    # GET /health_centre_region/:hc_id/:id
-    def health_centre_region
-        health_centre = HealthCentre.find_by(id: params[:hc_id])
-        procedures = health_centre.procedures
-        procedures_region = procedures.where(PR: @@region_id_array[params[:id].to_i]).pluck(:lat, :long);
-        # procedures_specialties = procedures.where(region: params[:spec_id])
-        render json: procedures_region
     end
 
     # GET /distances/:id
@@ -139,6 +124,7 @@ class HealthCentresController < ApplicationController
         render json: total_info
     end
 
+    # GET /distance_metric
     def distance_metric
         distance_metric = {'1': Procedure.where("distance <= ?", 1).count.to_s,
                             '5': Procedure.where("distance > ? AND distance <= ?", 1, 5).count.to_s,
@@ -148,11 +134,4 @@ class HealthCentresController < ApplicationController
 
         render json: distance_metric
     end
-
-    def shorter_distance_count
-        shorter_distance_count = {'distance': Procedure.sum("distance_count").to_s}
-
-        render json: shorter_distance_count
-    end
-
 end

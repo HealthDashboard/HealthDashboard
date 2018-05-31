@@ -7,17 +7,12 @@ Rails.application.routes.draw do
   get 'specialties/:id', to: 'health_centres#specialties'
   get 'procedures_specialties/:id', to: 'health_centres#procedures_specialties'
 
-  get 'health_centre_specialty/:hc_id/:id', to: 'health_centres#health_centre_specialty'
-  get 'health_centre_type/:hc_id/:id', to: 'health_centres#health_centre_type'
-  get 'health_centre_region/:hc_id/:id', to: 'health_centres#health_centre_region'
-
-  get 'specialties_count', to: 'health_centres#specialties_count'
+  get '/specialties_count', to: 'health_centres#specialties_count'
   get '/specialties_procedure_distance_average', to: 'health_centres#specialties_procedure_distance_average'
-  get 'distances/:id', to: 'health_centres#distances'
+  get '/distances/:id', to: 'health_centres#distances'
   get '/rank_health_centres', to: 'health_centres#rank_health_centres'
   get '/distance_metric', to: 'health_centres#distance_metric'
-  get '/shorter_distance_count', to: 'health_centres#shorter_distance_count'
-
+  get '/distance_quartis/:id', to: 'health_centres#distance_quartis' 
  
   get 'dados-gerais', to: 'dashboard#index'
   get 'specialties', to: 'specialties#index'

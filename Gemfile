@@ -29,6 +29,9 @@ gem 'bootstrap-datepicker-rails'
 gem 'autoprefixer-rails'
 gem 'geocoder'
 
+#
+gem 'descriptive-statistics'
+
 #Make the post/get requests
 gem 'rest-client'
 

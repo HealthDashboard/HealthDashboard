@@ -4,6 +4,7 @@ var circles = [];
 var info_box_opened;
 var cluster_status = false;
 var markerCluster = [];
+var radius = [10000, 5000, 1000]
 var colors = ['#003300', '#15ff00', '#ff0000', "#f5b979" , "#13f1e8" ,  "#615ac7", "#8e3a06", "#b769ab", "#df10eb"];
 
 var health_centre_icon = '/health_centre_icon.png';
@@ -26,7 +27,7 @@ function initialize() {
     };
     map = new google.maps.Map(document.getElementById("map"), options);
     load_all_points();
-    populate_legend();
+    // populate_legend();
     create_legend();
     create_chart();
 }
@@ -51,17 +52,22 @@ function show_procedures(procedures, icon) {
 }
 
 function create_circles(marker) {
-    var radius = [20000, 10000, 5000];
-    for (var i = 0; i < 3; i++) {
-        var circle = new google.maps.Circle({
-            map: map,
-            radius: radius[i],
-            fillColor: colors[i],
-            fillOpacity: 0.09
-        });
-        circle.bindTo('center', marker, 'position');
-        circles.push(circle);
-    }
+    var distance_quartis_path = ["/distance_quartis/", info_box_opened].join("");
+    $.getJSON(distance_quartis_path, function(data){
+        radius = data;
+        for (var i = 0; i < 3; i++) {
+            var circle = new google.maps.Circle({
+                map: map,
+                radius: parseFloat(radius[i]) * 1000, //Convert to float then km to meters
+                fillColor: colors[i * 2],
+                fillOpacity: 0.4
+            });
+            circle.bindTo('center', marker, 'position');
+            circles.push(circle);
+        }
+        populate_legend();
+        $('#legend').show(); // Show legend after changing its value
+    });
 }
 
 function load_all_points() {
@@ -97,7 +103,6 @@ function create_marker_text(point) {
 function show_clusters() {
     if (cluster_status === false) {
         setup_cluster();
-        $('#legend').show();
     } else {
         teardown_cluster();
         $('#legend').hide();
@@ -187,13 +192,14 @@ function create_legend() {
 }
 
 function populate_legend() {
-    styles = [{'name': '1 Km', 'color': colors[2]},
-              {'name': '5 Km', 'color': colors[1]},
-              {'name': '10 Km', 'color': colors[0]}
+    styles = [{'name': radius[2] + ' Km', 'color': colors[4]},
+              {'name': radius[1] + ' Km', 'color': colors[2]},
+              {'name': radius[0] + ' Km', 'color': colors[0]}
              ];
 
     var $legend = $('#legend');
-
+    $legend.empty()
+    $legend.append('<h3>Distância</h3>')
     $.each(styles, function(index, style) {
         element = '<div class="item"><div class="color" style="background-color: ' + style.color +
                   '"></div><p class="text">' + style.name + '</p> </div></div>';
