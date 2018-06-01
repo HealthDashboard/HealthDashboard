@@ -8,6 +8,8 @@ var person_icon = '/home.png';
 var cid_array = null;
 var CID10 = null;
 var data = null;
+var procedure_info_boxes = [];
+var procedure_info_box_opened;
 
 // Automatic search
 var auto = false;
@@ -75,6 +77,7 @@ function initProcedureMap()
   labels_clusters = {};
   centroids = {};
   counter = {};
+  procedure_info_boxes = [];
 
   $('#legend_proc').hide();
   $('#loading_overlay').hide();
@@ -136,9 +139,7 @@ function health_centres_makers(health_centres)
     $.each(result, function(index, health_centre){
       create_markers(health_centre, health_centre_icon)
     });
-    if (Markers[0] != null) {
-      map.panTo(Markers[0].position);
-    }
+
   });
   setMarkersMap(map);
 }
@@ -251,11 +252,11 @@ function buscar()
       });
 
       SPmap = new google.maps.Polygon({
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.8,
+        strokeColor: '#CCCCCC',
+        strokeOpacity: 1,
         strokeWeight: 2,
-        fillColor: '#FF0000',
-        fillOpacity: 0.35,
+        fillColor: '#CCCCCC',
+        fillOpacity: 0.50,
         map: map,
         path: bounds
       });
@@ -282,7 +283,7 @@ function buscar()
         if (TOTAL < 100000) {
           $('#loading_overlay').show();
           $.getJSON("procedure/procedures_latlong", data, function(procedures) {
-            show_procedures(procedures, person_icon);
+            show_procedures_with_info(procedures, person_icon);
             $('#loading_overlay').hide();
           });
         } else {
@@ -299,6 +300,94 @@ function buscar()
         }
       });
     }
+}
+
+function show_procedures_with_info(procedures, icon) {
+    var markers = procedures.map(function(procedure, i) {
+        var lat = procedure[0];
+        var lng = procedure[1];
+        var id = procedure[2];
+
+        marker = new google.maps.Marker({
+            position: new google.maps.LatLng(lat, lng),
+            icon: "https://storage.googleapis.com/support-kms-prod/SNP_2752125_en_v0"
+        });
+        procedure_info(marker, id, procedure_info_text);
+        return marker;
+    });
+
+    var options = {
+        zoomOnClick: false,
+        minimumClusterSize: 3,
+        imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+    };
+    markerCluster.push(new MarkerClusterer(map, markers, options));
+}
+
+function procedure_info(marker, id, generate_infobox_text) {
+    procedure_info_boxes[id] = new google.maps.InfoWindow();
+    procedure_info_boxes[id].marker = marker;
+    procedure_info_boxes[id].id = id;
+
+    procedure_listener(marker, id, generate_infobox_text);
+}
+
+function procedure_listener(marker, id, generate_infobox_text) {
+    procedure_info_boxes[id].listener = google.maps.event.addListener(marker, 'click', function(e) {
+      var sexp_var = {}
+          sexp_var["M"] = "Masculino";
+          sexp_var["F"] = "Feminino";
+  
+      var procedure_info_path = ["/procedure/procedure_info", id].join("/");
+  
+      $.getJSON(procedure_info_path, function(result){
+        text =  "<strong>Estabelecimento: </strong>" + health_centres_var[parseInt(result[0].cnes_id)] + "<br>";
+        text += "<strong>Sexo: </strong>" + sexp_var[result[0].gender] + "<br>";
+        text +=  "<strong>Idade: </strong>" + result[0].age_number + "<br>";
+        text += "<strong>CID: </strong>" + cid_array[result[0].cid_primary] + "<br>";
+        text += "<strong>CRS: </strong>" + result[0].CRS + "<br>";
+        text += "<strong>Data: </strong>" + result[0].date + "<br>";
+        text += "<strong>Distância: </strong>" + parseFloat(result[0].distance).toPrecision(4) + " Km <br>";
+        procedure_info_boxes[id].setContent(text)
+        procedure_open_info_box(id, marker);
+        health_centres_makers(result[0].cnes_id)
+      });
+    });
+}
+
+function procedure_open_info_box(id, marker) {
+    if ((typeof(procedure_info_box_opened) === 'number' && typeof(procedure_info_boxes[procedure_info_box_opened]) === 'object')) {
+        procedure_info_boxes[procedure_info_box_opened].close();
+    }
+    setMarkersMap(null)
+    Markers = []
+
+    if (procedure_info_box_opened !== id) {
+        procedure_info_boxes[id].open(map, marker);
+        procedure_info_box_opened = id;
+    } else {
+        procedure_info_box_opened = -1;
+    }
+}
+
+function procedure_info_text(id) {
+  var sexp_var = {}
+      sexp_var["M"] = "Masculino";
+      sexp_var["F"] = "Feminino";
+  
+  var procedure_info_path = ["/procedure/procedure_info", id].join("/");
+  
+  $.getJSON(procedure_info_path, function(result){
+    text =  "<strong>Estabelecimento: </strong>" + health_centres_var[parseInt(result[0].cnes_id)] + "<br>";
+    text += "<strong>Sexo: </strong>" + sexp_var[result[0].gender] + "<br>";
+    text +=  "<strong>Idade: </strong>" + result[0].age_number + "<br>";
+    text += "<strong>CID: </strong>" + cid_array[result[0].cid_primary] + "<br>";
+    text += "<strong>CRS: </strong>" + result[0].CRS + "<br>";
+    text += "<strong>Data: </strong>" + result[0].date + "<br>";
+    text += "<strong>Distância: </strong>" + parseFloat(result[0].distance).toPrecision(5) + "Km <br>";
+    return text;
+    open_info_box(id, marker);
+  });
 }
 
 function create_markers(procedure, icon_path)
@@ -391,11 +480,11 @@ function clearPolygons(ARRAY, ARRAY_LABELS){
 
 function makeOptions(bounds){
   return {
-          strokeColor: '#FF0000',
-          strokeOpacity: 0.8,
+          strokeColor: '#CCCCCC',
+          strokeOpacity: 1,
           strokeWeight: 2,
-          fillColor: '#FF0000',
-          fillOpacity: 0.35,
+          fillColor: '#CCCCCC',
+          fillOpacity: 0.55,
           map: map,
           path: bounds
         };

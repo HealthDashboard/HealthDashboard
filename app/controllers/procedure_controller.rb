@@ -273,7 +273,15 @@ class ProcedureController < ApplicationController
 	end
 
 	def procedures_latlong
-		procedures = getProcedures().pluck(:lat, :long);
+		procedures = getProcedures().pluck(:lat, :long, :id);
 		render json: procedures
+	end
+
+	# GET /procedure/procedure_info/:id
+	# Given a procedure id returns its information 
+	def procedure_info
+		procedure = Procedure.where(id: params[:id]).select(:cnes_id, :gender, :age_number, :cid_primary, :CRS, :date, :distance).to_a
+
+		render json: procedure
 	end
 end
