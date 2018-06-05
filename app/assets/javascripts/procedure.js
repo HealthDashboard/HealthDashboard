@@ -1,12 +1,9 @@
-var ft_layer = null;
 var SPmap = null;
 var SPmap_label = null;
 var latlng = null;
 var health_centres_var = {};
 var health_centre_icon = '/health_centre_icon.png';
-var person_icon = '/home.png';
 var cid_array = null;
-var CID10 = null;
 var data = null;
 var procedure_info_boxes = [];
 var procedure_info_box_opened;
@@ -31,18 +28,7 @@ var total_region = {};
 var label_points = {'oeste' : [-23.562630, -46.734051], 'norte' : [-23.459998, -46.670880], 'sul' : [-23.762625, -46.704525], 'leste' : [-23.552559, -46.443600], 'sudeste' : [-23.557594, -46.569251], 'centro' : [-23.547838, -46.633801] };
 //**//
 
-//* CLUSTERS *//
-// regions array for clusters
-var array_clusters = {};
-// Label of each cluster in the array above
-var labels_clusters = {};
-// Centroids for the clusters. 
-var centroids = {};
-// Number of pacients in each given centroid.
-var counter = {};
-//**//
-
-//** Filtros para impressão 
+//** Filtros para impressão **//
 var filters_text = [];
 var filters = [];
 var genders = [];
@@ -51,102 +37,73 @@ var end_date = null;
 var dist_min = null;
 var dist_max = null;
 
-
 var filters_print = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Grupo étnico", "Nível de instrução", "Competência",
       "Grupo do procedimento autorizado", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Total geral de diárias", 
-      "Diárias UTI", "Diárias UI", "Dias de permanência", "Tipo de financiamento", "Valor Total", "Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Complexidade", "Gestão"]
+      "Diárias UTI", "Diárias UI", "Dias de permanência", "Tipo de financiamento", "Valor Total", "Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Complexidade", "Gestão"];
 
-// Colors
-var colors = ['#FF9900', '#FFCC00', '#FFFF00', "#CCFF00", "#99FF00", "#66FF00", "#33FF00", "#FF0000"];
-var colors_procedure = ['#003300', '#15ff00', '#ff0000', "#f5b979", "#13f1e8", "#615ac7", "#8e3a06", "#b769ab", "#df10eb"];
-
-function initProcedureMap()
-{
-  ft_layer = null;
-  SPmap = null;
-  SPmap_label = null;
-  latlng = null;
-  health_centres_var= {};
-  auto = false;
-  cleaning = false;
-  Markers = [];
-  draw_region = {};
-  labels_region = {};
-  total_region = {};
-  array_clusters = {};
-  labels_clusters = {};
-  centroids = {};
-  counter = {};
-  procedure_info_boxes = [];
-
-  $('#legend_proc').hide();
-  $('#loading_overlay').hide();
-  var lat = -23.557296000000001;
-  var lng = -46.669210999999997;
-  latlng = new google.maps.LatLng(lat, lng);
-
-  var options = {
-      zoom: 11,
-      center: latlng,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-  };
-
-  map = new google.maps.Map(document.getElementById("procedure_map"), options);
-    // Create the legend and display on the map
-  leg_types = [{'name': 'Obstetrícia', 'color': colors_procedure[2]},
-        {'name': 'Clinica Médica', 'color': colors_procedure[3]},
-        {'name': 'Psiquiatria', 'color': colors_procedure[4]},
-        {'name': 'Pediatria', 'color': colors_procedure[3]},
-        {'name': 'Reabilitação', 'color': colors_procedure[6]},
-        {'name': 'Psiquiatria Hospital-Dia', 'color': colors_procedure[1]}
-        ];
-
-  SPmap_label = new MapLabel({
-          fontSize: 28,
-          align: 'center'
-        });
-}
-
-function createLabel(size){
-  return new MapLabel({
-          fontSize: size,
-          align: 'center'
-        });
-}
-
-function automatic_search()
-{
-  var checkbox_search = document.getElementById('automatic_search_checkbox');
-
-  if (checkbox_search.checked) {
-    auto = true;
-  } else {
+function initProcedureMap() {
+    SPmap = null;
+    SPmap_label = null;
+    health_centres_var= {};
     auto = false;
-  }
+    cleaning = false;
+    Markers = [];
+    draw_region = {};
+    labels_region = {};
+    total_region = {};
+    procedure_info_boxes = [];
+
+    $('#loading_overlay').hide();
+    var lat = -23.557296000000001;
+    var lng = -46.669210999999997;
+    latlng = new google.maps.LatLng(lat, lng);
+
+    var options = {
+                    zoom: 11,
+                    center: latlng,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                  };
+
+    map = new google.maps.Map(document.getElementById("procedure_map"), options);
+    SPmap_label = new MapLabel({
+                      fontSize: 28,
+                      align: 'center'
+                  });
 }
 
-function change()
-{
-  if (cleaning == false && auto == true){
-    buscar()
-  }
+function createLabel(size) {
+    return new MapLabel({
+                          fontSize: size,
+                          align: 'center'
+                        });
+}
+
+function automatic_search() {
+    var checkbox_search = document.getElementById('automatic_search_checkbox');
+
+    if (checkbox_search.checked)
+        auto = true;
+    else
+        auto = false;
+}
+
+function change() {
+    if (cleaning == false && auto == true)
+        buscar();
 }
 
 // Show health centres markers on map
-function health_centres_makers(health_centres)
-{
-  $.getJSON("procedure/health_centres_procedure", {cnes: health_centres.toString()}, function(result){
-    $.each(result, function(index, health_centre){
-      create_markers(health_centre, health_centre_icon)
+function health_centres_makers(health_centres) {
+    $.getJSON("procedure/health_centres_procedure", {cnes: health_centres.toString()}, function(result){
+        $.each(result, function(index, health_centre){
+            create_markers(health_centre, health_centre_icon);
+        });
     });
-
-  });
-  setMarkersMap(map);
+    setMarkersMap(map);
 }
 
 // Search button
-function buscar()
-{
+function buscar() {
     var sexo_masculino = document.getElementById('sexo_masculino');
     var sexo_feminino = document.getElementById('sexo_feminino');
     var residencia_paciente = document.getElementById('checkbox_residencia_paciente');
@@ -158,100 +115,48 @@ function buscar()
     var health_centres = [];
 
     for (i = 0; i < 24; i++) {
-      var aux = [];
-      var aux_name = [];
-      var select_name = $('#' + i + ' option:selected');
-      var options = $(select_name);
-      $.each(options, function(index, value){
-        aux.push(value.value)
-        aux_name.push([value.text])
-      });
-      if (i == 0) {
-        health_centres.push(aux);
-      }
+        var aux = [];
+        var aux_name = [];
+        var select_name = $('#' + i + ' option:selected');
+        var options = $(select_name);
+        $.each(options, function(index, value){
+            aux.push(value.value);
+            aux_name.push([value.text]);
+        });
+        if (i == 0)
+            health_centres.push(aux);
 
-      filters_text.push(aux_name.join(", "));
-      filters.push(aux.join(";"));
+        filters_text.push(aux_name.join(", "));
+        filters.push(aux.join(";"));
     }
 
     start_date = $("#intervalStart").datepicker({ dateFormat: 'dd,MM,yyyy' }).val();
     end_date = $("#intervalEnd").datepicker({ dateFormat: 'dd,MM,yyyy' }).val();
 
-    if(sexo_masculino.checked) {
-      genders.push("M");
-    }
+    if(sexo_masculino.checked)
+        genders.push("M");
 
-    if(sexo_feminino.checked) {
-      genders.push("F");
-    }
+    if(sexo_feminino.checked)
+        genders.push("F");
 
     var distance_max = document.getElementById('slider_distance_max');
     var distance_min = document.getElementById('slider_distance_min');
     dist_min = parseFloat(distance_min.textContent);
     dist_max = parseFloat(distance_max.textContent);
 
-    var filterDay = $('#viewType input:radio:checked').val()
-
     data = {gender: genders.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
-          dist_min: dist_min.toString(), dist_max: dist_max.toString(), filters: filters}
+            dist_min: dist_min.toString(), dist_max: dist_max.toString(), filters: filters};
 
-    // Clear map
     clearMap();
 
     // Show data 
-    if (filterDay == 0) {
-      if (genders.length == 0) {
-        return;
-      }
+    $('#loading_overlay').show();
+    bounds = [];
+    $.each(sp_coordenadas, function(index, point){
+        bounds.push(new google.maps.LatLng(parseFloat(point[0]), parseFloat(point[1])));
+    });
 
-      if (health_centres != "") {
-        health_centres_makers(health_centres)
-      }
-      where =  whereParse(filters, start_date, end_date, dist_min, dist_max, genders);
-      ft_layer = new google.maps.FusionTablesLayer({
-        query: {
-          select: 'lat',
-          from: '1LuW5LATPZByF7hnjNvWz5DHwW_k3MbaFmjV0iHZ5',
-          where: where,
-        }
-        // },
-        // styles: [
-        //     {where: "'specialty_id' = 2", markerOptions:{iconName:"small_green"}},
-        //     {where: "'specialty_id' = 3", markerOptions:{iconName:"small_red"}},
-        //     {where: "'specialty_id' = 9", markerOptions:{iconName:"small_purple"}},
-        //     {where: "'specialty_id' = '7'", markerOptions:{ iconName:"measle_brown"}},
-        //     {where: "'specialty_id' = '5'", markerOptions:{ iconName:"measle_turquoise"}},
-        // ]  
-      });
-
-      var sexp_var = {}
-      sexp_var["M"] = "Masculino";
-      sexp_var["F"] = "Feminino";
-
-      google.maps.event.addListener(ft_layer, 'click', function(e) {
-        e.infoWindowHtml = "<strong>Estabelecimento: </strong>" + health_centres_var[e.row['cnes_id'].value] + "<br>";
-        e.infoWindowHtml += "<strong>Sexo: </strong>" + sexp_var[e.row['gender'].value] + "<br>";
-        e.infoWindowHtml += "<strong>Idade: </strong>" + e.row['age_number'].value + "<br>";
-        e.infoWindowHtml += "<strong>CID: </strong>" + cid_array[e.row['cid_primary'].value.toString()] + "<br>";
-        e.infoWindowHtml += "<strong>CRS: </strong>" + e.row['CRS'].value + "<br>";
-        e.infoWindowHtml += "<strong>Data: </strong>" + e.row['date'].value + "<br>";
-        e.infoWindowHtml += "<strong>Distância: </strong>" + parseFloat(e.row['distance'].value).toPrecision(5) + "Km <br>";
-      });
-
-      // Send data for download, since individual view don't otherwise call the controller
-      $.ajax({url: '/procedure/update_session', data: data, success: function(data){}});
-
-      // $('#legend_proc').show()
-      ft_layer.setMap(map);
-
-    } else {
-      $('#loading_overlay').show();
-      bounds = []
-      $.each(sp_coordenadas, function(index, point){
-        bounds.push(new google.maps.LatLng(parseFloat(point[0]), parseFloat(point[1])))
-      });
-
-      SPmap = new google.maps.Polygon({
+    SPmap = new google.maps.Polygon({
         strokeColor: '#CCCCCC',
         strokeOpacity: 1,
         strokeWeight: 2,
@@ -259,50 +164,49 @@ function buscar()
         fillOpacity: 0.50,
         map: map,
         path: bounds
-      });
-      TOTAL = 0;
-      $.getJSON("procedure/procedures_search", data,
-        function(result){
-          $.each(regions, function(index, region) {
+    });
+    TOTAL = 0;
+    $.getJSON("procedure/procedures_search", data, function(result) {
+        $.each(regions, function(index, region) {
             total_region[region] = 0;
             labels_region[region] = createLabel(24);
             num = parseInt(result[0][region]);
             total_region[region] = num;
             TOTAL += num;
-          });
-          SPmap_label.set('text', TOTAL.toString());
-          SPmap_label.set('position', latlng);
-          SPmap_label.set('map', map);
-          $('#loading_overlay').hide();
-      });
+        });
+        SPmap_label.set('text', TOTAL.toString());
+        SPmap_label.set('position', latlng);
+        SPmap_label.set('map', map);
+        $('#loading_overlay').hide();
+    });
 
-      google.maps.event.addListener(SPmap, 'click', function (event) {
+    google.maps.event.addListener(SPmap, 'click', function (event) {
         SPmap.setMap(null);
         SPmap_label.set('map', null);
 
+        // Procedure.count < 100.000 show clusters, otherwise only polygons.
         if (TOTAL < 100000) {
-          $('#loading_overlay').show();
-          $.getJSON("procedure/procedures_latlong", data, function(procedures) {
-            show_procedures_with_info(procedures, person_icon);
-            $('#loading_overlay').hide();
-          });
-        } else {
-          $.each(regions, function(index, region) {
-            bounds = [];
-            $.each(polygons_region[region], function(index, point) {
-              bounds.push(new google.maps.LatLng(parseFloat(point[0]), parseFloat(point[1])));
+            $('#loading_overlay').show();
+            $.getJSON("procedure/procedures_latlong", data, function(procedures) {
+                show_procedures_with_info(procedures);
+                $('#loading_overlay').hide();
             });
-            draw_region[region] = new google.maps.Polygon(makeOptions(bounds));
-            labels_region[region].set('text', total_region[region].toString());
-            labels_region[region].set('position', new google.maps.LatLng(label_points[region][0], label_points[region][1]));
-            labels_region[region].set('map', map);
+        } else {
+            $.each(regions, function(index, region) {
+                bounds = [];
+                $.each(polygons_region[region], function(index, point) {
+                    bounds.push(new google.maps.LatLng(parseFloat(point[0]), parseFloat(point[1])));
+                });
+                draw_region[region] = new google.maps.Polygon(makeOptions(bounds));
+                labels_region[region].set('text', total_region[region].toString());
+                labels_region[region].set('position', new google.maps.LatLng(label_points[region][0], label_points[region][1]));
+                labels_region[region].set('map', map);
             });
         }
-      });
-    }
+    });
 }
 
-function show_procedures_with_info(procedures, icon) {
+function show_procedures_with_info(procedures) {
     var markers = procedures.map(function(procedure, i) {
         var lat = procedure[0];
         var lng = procedure[1];
@@ -334,89 +238,77 @@ function procedure_info(marker, id, generate_infobox_text) {
 
 function procedure_listener(marker, id, generate_infobox_text) {
     procedure_info_boxes[id].listener = google.maps.event.addListener(marker, 'click', function(e) {
-      var sexp_var = {}
-          sexp_var["M"] = "Masculino";
-          sexp_var["F"] = "Feminino";
-  
-      var procedure_info_path = ["/procedure/procedure_info", id].join("/");
-  
-      $.getJSON(procedure_info_path, function(result){
-        text =  "<strong>Estabelecimento: </strong>" + health_centres_var[parseInt(result[0].cnes_id)] + "<br>";
-        text += "<strong>Sexo: </strong>" + sexp_var[result[0].gender] + "<br>";
-        text +=  "<strong>Idade: </strong>" + result[0].age_number + "<br>";
-        text += "<strong>CID: </strong>" + cid_array[result[0].cid_primary] + "<br>";
-        text += "<strong>CRS: </strong>" + result[0].CRS + "<br>";
-        text += "<strong>Data: </strong>" + result[0].date + "<br>";
-        text += "<strong>Distância: </strong>" + parseFloat(result[0].distance).toPrecision(4) + " Km <br>";
-        procedure_info_boxes[id].setContent(text)
-        procedure_open_info_box(id, marker);
-        health_centres_makers(result[0].cnes_id)
-      });
+        var sexp_var = {};
+        sexp_var["M"] = "Masculino";
+        sexp_var["F"] = "Feminino";
+    
+        var procedure_info_path = ["/procedure/procedure_info", id].join("/");
+    
+        $.getJSON(procedure_info_path, function(result) {
+            cnes = result[0].cnes_id;
+            text =  "<strong>Estabelecimento: </strong>" + health_centres_var[parseInt(cnes)] + "<br>";
+            text += "<strong>Sexo: </strong>" + sexp_var[result[0].gender] + "<br>";
+            text +=  "<strong>Idade: </strong>" + result[0].age_number + "<br>";
+            text += "<strong>CID: </strong>" + cid_array[result[0].cid_primary] + "<br>";
+            text += "<strong>CRS: </strong>" + result[0].CRS + "<br>";
+            text += "<strong>Data: </strong>" + result[0].date + "<br>";
+            text += "<strong>Distância: </strong>" + parseFloat(result[0].distance).toPrecision(4) + " Km <br>";
+            procedure_info_boxes[id].setContent(text);
+            procedure_open_info_box(id, marker, cnes);
+        });
     });
 }
 
-function procedure_open_info_box(id, marker) {
-    if ((typeof(procedure_info_box_opened) === 'number' && typeof(procedure_info_boxes[procedure_info_box_opened]) === 'object')) {
+function procedure_open_info_box(id, marker, cnes) {
+    if ((typeof(procedure_info_box_opened) === 'number' && typeof(procedure_info_boxes[procedure_info_box_opened]) === 'object'))
         procedure_info_boxes[procedure_info_box_opened].close();
-    }
-    setMarkersMap(null)
-    Markers = []
+
+    setMarkersMap(null);
+    Markers = [];
 
     if (procedure_info_box_opened !== id) {
         procedure_info_boxes[id].open(map, marker);
         procedure_info_box_opened = id;
+        health_centres_makers(cnes);
     } else {
         procedure_info_box_opened = -1;
     }
 }
 
 function procedure_info_text(id) {
-  var sexp_var = {}
-      sexp_var["M"] = "Masculino";
-      sexp_var["F"] = "Feminino";
+    var sexp_var = {};
+    sexp_var["M"] = "Masculino";
+    sexp_var["F"] = "Feminino";
   
-  var procedure_info_path = ["/procedure/procedure_info", id].join("/");
+    var procedure_info_path = ["/procedure/procedure_info", id].join("/");
   
-  $.getJSON(procedure_info_path, function(result){
-    text =  "<strong>Estabelecimento: </strong>" + health_centres_var[parseInt(result[0].cnes_id)] + "<br>";
-    text += "<strong>Sexo: </strong>" + sexp_var[result[0].gender] + "<br>";
-    text +=  "<strong>Idade: </strong>" + result[0].age_number + "<br>";
-    text += "<strong>CID: </strong>" + cid_array[result[0].cid_primary] + "<br>";
-    text += "<strong>CRS: </strong>" + result[0].CRS + "<br>";
-    text += "<strong>Data: </strong>" + result[0].date + "<br>";
-    text += "<strong>Distância: </strong>" + parseFloat(result[0].distance).toPrecision(5) + "Km <br>";
-    return text;
-    open_info_box(id, marker);
-  });
-}
-
-function create_markers(procedure, icon_path)
-{
-  var marker = new google.maps.Marker({
-      position: new google.maps.LatLng(procedure.lat, procedure.long),
-      map: map,
-      icon: icon_path
-  });
-  Markers.push(marker);
-}
-
-function setMarkersMap(map)
-{
-  for (var i = 0; i < Markers.length; i++) {
-      Markers[i].setMap(map);
-  }
-}
-
-
-function calcTotalRegion() {
-  $.each(regions, function(index, region) {
-    total_region[region] = 0;
-    $.each(counter[region], function(index, value) {
-      total_region[region] += value;
+    $.getJSON(procedure_info_path, function(result){
+        text =  "<strong>Estabelecimento: </strong>" + health_centres_var[parseInt(result[0].cnes_id)] + "<br>";
+        text += "<strong>Sexo: </strong>" + sexp_var[result[0].gender] + "<br>";
+        text +=  "<strong>Idade: </strong>" + result[0].age_number + "<br>";
+        text += "<strong>CID: </strong>" + cid_array[result[0].cid_primary] + "<br>";
+        text += "<strong>CRS: </strong>" + result[0].CRS + "<br>";
+        text += "<strong>Data: </strong>" + result[0].date + "<br>";
+        text += "<strong>Distância: </strong>" + parseFloat(result[0].distance).toPrecision(5) + "Km <br>";
+        return text;
     });
-  });
 }
 
+function create_markers(procedure, icon_path) {
+    var marker = new google.maps.Marker({
+        position: new google.maps.LatLng(procedure.lat, procedure.long),
+        map: map,
+        icon: icon_path
+    });
+    Markers.push(marker);
+}
+
+function setMarkersMap(map) {
+    for (var i = 0; i < Markers.length; i++)
+        Markers[i].setMap(map);
+}
+
+// May use it to remove polygon labels 
 function attachPolygonInfoWindow(polygon) {
     var infoWindow = new google.maps.InfoWindow();
     google.maps.event.addListener(polygon, 'mouseover', function (e) {
@@ -427,159 +319,38 @@ function attachPolygonInfoWindow(polygon) {
     });
 }
 
-function circleLabel(label, number, points){
-    if (number == 0) {
-      return;
-    } 
-    label.set('text', number.toString());
-    label.set('position', makeLatLong(points));
-    label.set('map', map);
+function clearPolygons(ARRAY, ARRAY_LABELS) {
+    $.each(ARRAY, function(index, polygon){
+        if (polygon != null)
+            polygon.setMap(null);
+    });
+
+    $.each(ARRAY_LABELS, function(index, label){
+        label.set('map', null);
+    });
 }
 
-function makeLatLong(strPoint){
-  aux = strPoint.replace("[", "");
-  aux = aux.replace("]", "");
-  aux = aux.split(",");
-  return new google.maps.LatLng(parseFloat(aux[1]), parseFloat(aux[0]));
+function makeOptions(bounds) {
+    return {
+            strokeColor: '#CCCCCC',
+            strokeOpacity: 1,
+            strokeWeight: 2,
+            fillColor: '#CCCCCC',
+            fillOpacity: 0.55,
+            map: map,
+            path: bounds
+          };
 }
 
-function createCircle(point, size){
-  if (size == 0) {
-    return;
-  }
-  icon_path = ""
-  if (size < 5000) {
-    icon_path = "/m1.png"
-  } else if (size < 10000) {
-    icon_path = "/m2.png"
-  } else if (size < 20000) {
-    icon_path = "/m3.png"
-  } else if (size < 30000) {
-    icon_path = "/m4.png"
-  } else {
-    icon_path = "/m5.png"
-  }
-  return new google.maps.Marker({
-      position: makeLatLong(point),
-      map: map,
-      icon: icon_path
-  });
-}
-
-function clearPolygons(ARRAY, ARRAY_LABELS){
-  $.each(ARRAY, function(index, polygon){
-    if (polygon != null) {
-     polygon.setMap(null);
-    }
-  });
-
-  $.each(ARRAY_LABELS, function(index, label){
-    label.set('map', null);
-  });
-}
-
-function makeOptions(bounds){
-  return {
-          strokeColor: '#CCCCCC',
-          strokeOpacity: 1,
-          strokeWeight: 2,
-          fillColor: '#CCCCCC',
-          fillOpacity: 0.55,
-          map: map,
-          path: bounds
-        };
-}
-
-function clauseParse(text)
-{
-  array = text.split(",");
-  res = ""
-  $.each(array, function(index, value){
-    if (res != ""){
-      res = res.concat(", ")
-    }
-    res = res.concat("'" + value + "'");
-  });
-  return res
-}
-
-function make_date(text)
-{
-  values = text.split("/");
-  str = "";
-  str = str.concat(values[2] + "-" + values[1] + "-" + values[0]);
-  return str;
-}
-
-// parse where clause for fusion layer query.
-function whereParse(filters, start_date, end_date, dist_min, dist_max, genders)
-{
-  where = ""
-  filters_name = ["cnes_id", "age_code", "specialty_id", "treatment_type", "race", "lv_instruction", "cmpt", "proce_re", "cid_primary", "cid_secondary", "cid_secondary2", 
-    "cid_associated", "days", "days_uti", "days_ui", "days_total", "finance", "val_total", "DA", "PR", "STS", "CRS", "complexity", "gestor_ide"];
-
-  $.each(filters_name, function(index, value){
-    if(filters[index] != "") {
-     if (where != "") {
-       where = where.concat(" AND ");
-     }
-     f_value = filters[index].replace(/;/g, ',');
-     where = where.concat(value + " IN " + "(" + clauseParse(f_value) + ")");
-    }
-  });
-
-  if (start_date != "") {
-    start_date = make_date(start_date);
-    if (where != "") {
-      where = where.concat(" AND ");
-    }
-    where = where.concat("date >= " + "\'" + start_date + "\'");
-  }
-
-  if (end_date != "") {
-    end_date = make_date(end_date);
-    if (where != "") {
-      where = where.concat(" AND ");
-    }
-    where = where.concat("date < " + "\'" + end_date + "\'");
-  }
-
-  genders = genders.join();
-  if (genders.length < 2) {
-    if (where != "") {
-      where = where.concat(" AND ");
-    }
-    where = where.concat("gender IN ", clauseParse(genders));
-  }
-
-  if (dist_min != "0") {
-    if (where != "") {
-      where = where.concat(" AND ");
-    }
-    where = where.concat("distance > ", dist_min.toString());
-  }
-  
-  if (dist_max != "30") {
-    if (where != "") {
-      where = where.concat(" AND ");
-    }
-    where = where.concat("distance < ", dist_max.toString());
-  }
-
-  console.log(where)
-  return where
-}
-
-function limpar()
-{
+function limpar() {
     cleaning = true;
     $("#slider_distance").slider('refresh');
     $("#slider_distance_min").html('0');
     $("#slider_distance_max").html('30+');
 
     for (i = 0; i < 24; i++) {
-      name = ".select-" + i
-      $(name).val('').trigger('change');
+        name = ".select-" + i;
+        $(name).val('').trigger('change');
     }
     $("#intervalStart").val('').datepicker('destroy').datepicker();
     $("#intervalEnd").val('').datepicker('destroy').datepicker();
@@ -590,32 +361,21 @@ function limpar()
 }
 
 function clearMap() {
-    $('#legend_proc').hide()
-
-    if (ft_layer != null) {
-      ft_layer.setMap(null);
-    }
-
     teardown_markers();
 
     $.each(regions, function(index, region) {
-      clearPolygons(array_clusters[region], labels_clusters[region]);
-      if (draw_region[region] != null) {
-        draw_region[region].setMap(null);
-      }
+        if (draw_region[region] != null)
+            draw_region[region].setMap(null);
 
-      if (labels_region[region] != null) {
-        labels_region[region].set('map', null);
-      }
+        if (labels_region[region] != null)
+            labels_region[region].set('map', null);
     });
     
-    if (SPmap != null) { 
-      SPmap.setMap(null);
-    }
+    if (SPmap != null)
+        SPmap.setMap(null);
 
-    if (SPmap_label != null) { 
-      SPmap_label.set('map', null);
-    }
+    if (SPmap_label != null)
+        SPmap_label.set('map', null);
 
     setMarkersMap(null);
     Markers = [];
@@ -632,40 +392,35 @@ function print_maps() {
     const $mapContainer = $('.map-wrapper');
     const $mapContainerParent = $mapContainer.parent();
     const $printContainer = $('<div style="position:relative;">');
-    mapSize = $mapContainer.height()
-    const $info = $('<div style="position: relative"><h4>Autorizações de Internação Hospitalar, AIH - tipo 1 (Normal), mapeadas pelo endereço de residência do paciente deslocadas para o centróide do setor censitário correspondente.</h4></div>')
-    const $space_map = $('<div style="height: ' + (mapSize + 150) + 'px;"></div>')
+    mapSize = $mapContainer.height();
+    const $info = $('<div style="position: relative"><h4>Autorizações de Internação Hospitalar, AIH - tipo 1 (Normal),' +
+                    ' mapeadas pelo endereço de residência do paciente deslocadas para o centróide do setor censitário ' + 
+                    'correspondente.</h4></div>');
+    const $space_map = $('<div style="height: ' + (mapSize + 150) + 'px;"></div>');
 
-    var filters_div_text = '<div style="position: relative">'
+    var filters_div_text = '<div style="position: relative">';
     $.each(filters_print, function(index, value){
-      if (filters_text[index] != "") {
-        filters_div_text = filters_div_text.concat("<br />" + value + ": " + filters_text[index])
-      }
+      if (filters_text[index] != "")
+          filters_div_text = filters_div_text.concat("<br />" + value + ": " + filters_text[index]);
     });
 
-    console.log(genders)
-    if (genders != null) {
-      filters_div_text = filters_div_text.concat("<br />Sexo: " + genders.join(", "))
-    }
+    if (genders != null)
+      filters_div_text = filters_div_text.concat("<br />Sexo: " + genders.join(", "));
 
-    if (start_date != "") {
-      filters_div_text = filters_div_text.concat("<br />Data mínima: " + start_date)
-    }
+    if (start_date != "")
+      filters_div_text = filters_div_text.concat("<br />Data mínima: " + start_date);
 
-    if (end_date != "") {
-      filters_div_text = filters_div_text.concat("<br />Data máxima: " + end_date)
-    }
+    if (end_date != "")
+      filters_div_text = filters_div_text.concat("<br />Data máxima: " + end_date);
 
-    if (dist_min != null) {
-      filters_div_text = filters_div_text.concat("<br />Distância mínima: " + dist_min)
-    }
+    if (dist_min != null)
+      filters_div_text = filters_div_text.concat("<br />Distância mínima: " + dist_min);
 
-    if (dist_max != null) {
-      filters_div_text = filters_div_text.concat("<br />Distância máxima: " + dist_max)
-    }
+    if (dist_max != null)
+      filters_div_text = filters_div_text.concat("<br />Distância máxima: " + dist_max);
 
-    filters_div_text = filters_div_text.concat("</div>")
-    const $filters_div = $(filters_div_text)
+    filters_div_text = filters_div_text.concat("</div>");
+    const $filters_div = $(filters_div_text);
 
     $printContainer
       .height(mapSize + 100)
@@ -698,52 +453,45 @@ function print_maps() {
     $patchedStyle.remove();
 }
 
-function dadosInput()
-{
+function dadosInput() {
     $('#datepicker').datepicker({
-      format: "dd/mm/yyyy",
-      language: "pt-BR",
-      container:'#datepicker',
+        format: "dd/mm/yyyy",
+        language: "pt-BR",
+        container:'#datepicker',
     });
 
     $("#slider_distance").slider({
-      min: 0,
-      max: 30,
-      step: 1,
-      value: [0,30],
-    });
-    $("#slider_distance").on("slide", function(slideEvt) {
-      $("#slider_distance_min").html(slideEvt.value[0]);
-      $("#slider_distance_max").html(slideEvt.value[1] + (slideEvt.value[1] >= 30 ? "+" : ""));
+        min: 0,
+        max: 30,
+        step: 1,
+        value: [0,30],
     });
 
+    $("#slider_distance").on("slide", function(slideEvt) {
+        $("#slider_distance_min").html(slideEvt.value[0]);
+        $("#slider_distance_max").html(slideEvt.value[1] + (slideEvt.value[1] >= 30 ? "+" : ""));
+    });
 
     for (i = 0; i < 24; i++) {
-      name = "#" + i
-      $(name).select2({
-        placeholder: "Todos",
-        allowClear: true,
-        tags: true
-      });
+        name = "#" + i;
+        $(name).select2({
+            placeholder: "Todos",
+            allowClear: true,
+            tags: true
+        });
     }
 
     if (cid_array == null) {
-      $.ajax({
-        url: '/CID_hash.json',
-        success: function(data){
-          cid_array = data;
-        }
-      });
+        $.getJSON('/CID_hash.json', function(data) {
+            cid_array = data;
+        });
     }
+
     if (Object.keys(health_centres_var).length == 0) {
-      $.ajax({
-        url: '/health_centres.json',
-        success: function(data){
+        $.getJSON('/health_centres.json', function(data) {
             $.each(data, function(index, value) {
                 health_centres_var[value.id] = value.text;
             });
-
-        }
-      });
+        });
     }
 }

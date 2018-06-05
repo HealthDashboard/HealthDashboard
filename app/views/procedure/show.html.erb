@@ -25,25 +25,6 @@
               <hr>
             </div>
 
-            <div class="col-sm-12">
-              <label for="select_health_centre"><b>Tipo de Visualização</b></label>
-            </div>
-
-            <div class="col-sm-12" id="viewType">
-              <form>
-                <div class="radio">
-                  <label><input type="radio" name="optRadio" value="0"> Individual</label>
-                </div>
-                <div class="radio">
-                  <label><input type="radio" name="optRadio" value="1" checked="checked"> Cluster</label>
-                </div>
-              </form>
-            </div>
-
-            <div class="col-sm-12">
-              <hr>
-            </div>
-
             <% @filters.each_with_index do |f, i| %>
               <div class="col-sm-12">
               <label for="<%= i %>"><b> 
@@ -137,7 +118,6 @@
       </div>
     </div>
 
-<div id="legend_proc"><h3>Legenda</h3></div>
 <div id="loading_overlay"class="loading">Loading&#8230;</div>
 
 <script>
