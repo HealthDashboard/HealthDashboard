@@ -6,6 +6,7 @@ var cluster_status = false;
 var markerCluster = [];
 var radius = [10000, 5000, 1000]
 var colors = ['#003300', '#15ff00', '#ff0000', "#f5b979" , "#13f1e8" ,  "#615ac7", "#8e3a06", "#b769ab", "#df10eb"];
+var colors_circle = ['#FF4444', '#44FF44', '#4444FF']
 
 var health_centre_icon = '/health_centre_icon.png';
 var person_icon = '/home.png';
@@ -27,7 +28,6 @@ function initialize() {
     };
     map = new google.maps.Map(document.getElementById("map"), options);
     load_all_points();
-    // populate_legend();
     create_legend();
     create_chart();
 }
@@ -59,7 +59,7 @@ function create_circles(marker) {
             var circle = new google.maps.Circle({
                 map: map,
                 radius: parseFloat(radius[i]) * 1000, //Convert to float then km to meters
-                fillColor: colors[i * 2],
+                fillColor: colors_circle[i],
                 fillOpacity: 0.4
             });
             circle.bindTo('center', marker, 'position');
@@ -192,9 +192,9 @@ function create_legend() {
 }
 
 function populate_legend() {
-    styles = [{'name': radius[2] + ' Km', 'color': colors[4]},
-              {'name': radius[1] + ' Km', 'color': colors[2]},
-              {'name': radius[0] + ' Km', 'color': colors[0]}
+    styles = [{'name': radius[2] + ' Km', 'color': colors_circle[2]},
+              {'name': radius[1] + ' Km', 'color': colors_circle[1]},
+              {'name': radius[0] + ' Km', 'color': colors_circle[0]}
              ];
 
     var $legend = $('#legend');
