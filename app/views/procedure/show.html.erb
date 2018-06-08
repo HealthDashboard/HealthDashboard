@@ -1,126 +1,115 @@
-<%= javascript_include_tag 'map_SP.js' %>
-      <div class = "row">
-        <div id="map-affix" class = "col-sm-9 affix">
-          <div class = "map-wrapper" id = "procedure_map"> </div>
-        </div>
-        <div class="col-sm-9">
-          <h1> </h1>
-        </div>
-        <div class ="col-sm-3">
-         <div class="card card-block">
-          <div class = "row">
-
-            <div class="col-sm-8">
-              <label for="select_automatic_search"><b>Busca automática: </b></label>
-            </div>
-
-            <div class="col-sm-4">
-              <label class="switch">
-                <input type="checkbox" id="automatic_search_checkbox" onchange="automatic_search()">
-                <span class="sliderOn round"></span>
-              </label>
-            </div>
-
-            <div class="col-sm-12">
-              <hr>
-            </div>
-
-            <% @filters.each_with_index do |f, i| %>
-              <div class="col-sm-12">
-              <label for="<%= i %>"><b> 
-                <%= f %>
-                </b></label>
-                <select class="select-<%= i %> form-control" id="<%= i %>" multiple="multiple" onchange='change()'>
-                  <% @options[i].each do |v| %>
-                    <option value= "<%= v["id"] %>" > <%= v["text"] %> </option>
-                  <% end %>
-                </select>
-              </div>
-
-              <div class="col-sm-12">
-                <hr>
-              </div>
-            <% end %>
-
-            <div class="col-sm-12">
-              <div class = "row">
-                <div class = "col-sm-2">
-                  <label><b>Sexo</b></label>
-                </div>
-                <div class = "col-sm-5">
-                  <div class="form-check form-check-inline" style = "max-width = 140px;">
-                    <label class="form-check-label">
-                      <input class="form-check-input" type="checkbox" id="sexo_masculino" value="M" checked="unchecked" onchange="change()">Masculino</label>
-                  </div>
-                </div>
-                <div class = "col-sm-5">
-                  <div class="form-check form-check-inline" style = "max-width = 120px;">
-                    <label class="form-check-label">
-                      <input class="form-check-input" type="checkbox" id="sexo_feminino" value="F" checked="unchecked" onchange="change()">Feminino</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-sm-12">
-              <hr>
-            </div>
-
-            <div class="col-sm-12">
-              <label><b>Período</b></label>
-                <div class="input-daterange input-group" id="datepicker">
-                  <input type="text" class="input-sm form-control" id="intervalStart" onchange="change()" />
-                  <span class="input-group-addon" id="intervalTo">até</span>
-                  <input type="text" class="input-sm form-control" id="intervalEnd" onchange="change()" />
-                </div>
-            </div>
-
-            <div class="col-sm-12">
-              <hr>
-            </div>
-
-            <div class="col-sm-12">
-              <label><b>Distância de deslocamento(Km)</b></label>
-              <div class="row">
-                <div class="col-sm-1 text-right">
-                  <span id="slider_distance_min">0</span>
-                </div>
-                <div class="col-sm-9">
-                  <input id="slider_distance" type="text" style="width: 100%" onchange="change()" />
-                </div>
-                <div class="col-sm-1" style = "text-align: left" id="text-left">
-                  <span id="slider_distance_max">30+</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-sm-12">
-              <hr> 
-              <button class="btn btn-success" type="button" id="btn-submit" onclick="buscar()">
-                <i class="fa fa-search" aria-hidden="true"></i> Buscar
-              </button>
-              <button class="btn btn-warning" type="button" id="btn-clear" onclick="limpar()">
-                <i class="fa fa-search" aria-hidden="true"></i> Limpar
-              </button>
-              <button class="btn btn-info" type="button" id="btn-print" onclick="print_maps()">
-                <i class="fa fa-search" aria-hidden="true"></i> Imprimir
-              </button>
-              <button class="btn btn-info" type="button" id="btn-graphs" onclick="graphs()">
-                <i class="fa fa-search" aria-hidden="true"></i> Métricas
-              </button>
-              <button class="btn btn-info" type="button" id="btn-graphs">
-                <%= link_to "Download", download_procedure_index_path(format: "csv") %>
-              </button>
-            </div>
-            <div class = "col-sm-12" style = "height: 10px;"></div>
-          </div>
-        </div>
-      </div>
+<div class = "row">
+    <div id="map-affix" class = "col-sm-9 affix">
+        <div class = "map-wrapper" id = "procedure_map"> </div>
     </div>
+    <div class="col-sm-9">
+        <h1> </h1>
+    </div>
+    <div class ="col-sm-3">
+        <div class="card card-block">
+            <div class = "row">
+                <div class="col-sm-8">
+                    <label for="select_automatic_search"><b>Busca automática: </b></label>
+                </div>
 
-<div id="loading_overlay"class="loading">Loading&#8230;</div>
+                <div class="col-sm-4">
+                    <label class="switch">
+                        <input type="checkbox" id="automatic_search_checkbox" onchange="automatic_search()">
+                        <span class="sliderOn round"></span>
+                    </label>
+                </div>
+                <div class="col-sm-12"><hr></div> <!-- Space line -->
+
+                <% @filters.each_with_index do |f, i| %>
+                    <div class="col-sm-12">
+                        <label for="<%= i %>"><b> 
+                            <%= f %>
+                        </b></label>
+                        <select class="select-<%= i %> form-control" id="<%= i %>" multiple="multiple" onchange='change()'>
+                            <% @options[i].each do |v| %>
+                                <option value= "<%= v["id"] %>" > <%= v["text"] %> </option>
+                            <% end %>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-12"><hr></div> <!-- Space line -->
+                <% end %>
+
+                <div class="col-sm-12">
+                    <div class = "row">
+                        <div class = "col-sm-2">
+                            <label><b>Sexo</b></label>
+                        </div>
+                        <div class = "col-sm-5">
+                            <div class="form-check form-check-inline" style = "max-width = 140px;">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" id="sexo_masculino" value="M" checked="unchecked" onchange="change()">Masculino
+                                </label>
+                            </div>
+                        </div>
+                        <div class = "col-sm-5">
+                            <div class="form-check form-check-inline" style = "max-width = 120px;">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="sexo_feminino" value="F" checked="unchecked" onchange="change()">Feminino
+                            </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12"><hr></div> <!-- Space line -->
+
+                <div class="col-sm-12">
+                    <label><b>Período</b></label>
+                    <div class="input-daterange input-group" id="datepicker">
+                        <input type="text" class="input-sm form-control" id="intervalStart" onchange="change()" />
+                        <span class="input-group-addon" id="intervalTo">até</span>
+                        <input type="text" class="input-sm form-control" id="intervalEnd" onchange="change()" />
+                    </div>
+                </div>
+                <div class="col-sm-12"><hr></div> <!-- Space line -->
+
+                <div class="col-sm-12">
+                    <label><b>Distância de deslocamento(Km)</b></label>
+                    <div class="row">
+                        <div class="col-sm-1 text-right">
+                            <span id="slider_distance_min">0</span>
+                        </div>
+                        <div class="col-sm-9">
+                            <input id="slider_distance" type="text" style="width: 100%" onchange="change()" />
+                        </div>
+                        <div class="col-sm-1" style = "text-align: left" id="text-left">
+                            <span id="slider_distance_max">30+</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <hr> 
+                    <button class="btn btn-success" type="button" id="btn-submit" onclick="buscar()">
+                        <i class="fa fa-search" aria-hidden="true"></i> Buscar
+                    </button>
+                    <button class="btn btn-warning" type="button" id="btn-clear" onclick="limpar()">
+                        <i class="fa fa-search" aria-hidden="true"></i> Limpar
+                    </button>
+                    <button class="btn btn-info" type="button" id="btn-print" onclick="print_maps()">
+                        <i class="fa fa-search" aria-hidden="true"></i> Imprimir
+                    </button>
+                    <button class="btn btn-info" type="button" id="btn-graphs" onclick="graphs()">
+                        <i class="fa fa-search" aria-hidden="true"></i> Métricas
+                    </button>
+                    <button class="btn btn-info" type="button" id="btn-graphs">
+                        <%= link_to "Download", download_procedure_index_path(format: "csv") %>
+                    </button>
+                </div>
+                <div class = "col-sm-12" style = "height: 10px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="loading_overlay"class="loading">Loading&#8230;</div> <!-- Loading Overlay -->
 
 <script>
-  $(document).ready(initProcedureMap);
-  $(document).ready(dadosInput);
+    $(document).ready(initProcedureMap);
+    $(document).ready(dadosInput);
 </script>

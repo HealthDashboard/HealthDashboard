@@ -260,18 +260,6 @@ class ProcedureController < ApplicationController
 		render json: procedures.to_a
 	end
 
-	def procedures_search
-		procedures = getProcedures()
-		oeste = procedures.where(CRS: "OESTE").count
-		norte = procedures.where(CRS: "NORTE").count
-		sul = procedures.where(CRS: "SUL").count
-		leste = procedures.where(CRS: "LESTE").count
-		centro = procedures.where(CRS: "CENTRO").count
-		sudeste = procedures.where(CRS: "SUDESTE").count
-		js = [{"oeste" => oeste,"norte" => norte,"leste" => leste,"sul" => sul,"sudeste" => sudeste,"centro" => centro}]
-		render json: js
-	end
-
 	def procedures_latlong
 		procedures = getProcedures().pluck(:lat, :long, :id);
 		render json: procedures

@@ -3,7 +3,7 @@ var info_boxes = [];
 var circles = [];
 var info_box_opened;
 var cluster_status = false;
-var markerCluster = [];
+var markerCluster = null;
 var radius = [10000, 5000, 1000]
 var colors = ['#003300', '#15ff00', '#ff0000', "#f5b979" , "#13f1e8" ,  "#615ac7", "#8e3a06", "#b769ab", "#df10eb"];
 var colors_circle = ['#FF4444', '#44FF44', '#4444FF']
@@ -12,11 +12,12 @@ var health_centre_icon = '/health_centre_icon.png';
 var person_icon = '/home.png';
 
 function initialize() {
+    info_box_opened = -1;
+    markers_visible(null);
     info_boxes = [];
     circles = [];
-    info_box_opened;
     cluster_status = false;
-    markerCluster = [];
+    markerCluster = null;
     var lat = -23.557296000000001;
     var lng = -46.669210999999997;
     var latlng = new google.maps.LatLng(lat, lng);
@@ -48,12 +49,12 @@ function show_procedures(procedures, icon) {
         minimumClusterSize: 3,
         imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
     };
-    markerCluster.push(new MarkerClusterer(map, markers, options));
+    markerCluster = new MarkerClusterer(map, markers, options);
 }
 
 function create_circles(marker) {
     var distance_quartis_path = ["/distance_quartis/", info_box_opened].join("");
-    $.getJSON(distance_quartis_path, function(data){
+    $.getJSON(distance_quartis_path, function(data) {
         radius = data;
         for (var i = 0; i < 3; i++) {
             var circle = new google.maps.Circle({
@@ -142,12 +143,10 @@ function teardown_circles() {
 
 // Remove pacients markers
 function teardown_markers() {
-    $.each(markerCluster, function(index, cluster) {
-        if (cluster != null) {
-            cluster.clearMarkers();
-        }
-    });
-    markercluster = []
+    if (markerCluster != null) {
+        markerCluster.clearMarkers();
+        markerCluster = null;
+    }
 }
 
 function add_info_to_marker(marker, point, generate_infobox_text) {

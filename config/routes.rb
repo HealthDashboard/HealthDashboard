@@ -27,7 +27,6 @@ Rails.application.routes.draw do
 
 
   resources :procedure do
-    get :procedures_search, on: :collection
     get :health_centres_search, on: :collection
     get :health_centres_procedure, on: :collection
     get :procedures_by_hc, on: :collection
