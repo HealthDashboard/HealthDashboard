@@ -9,8 +9,7 @@ var procedure_info_box_opened;
 var procedureCluster = [];
 
 // Automatic search
-var auto;
-var cleaning;
+var auto, cleaning;
 
 // Health Centres icon on map
 var Markers = [];
@@ -27,6 +26,7 @@ var filters_print = ["Estabelecimento de ocorrência", "Faixa etária", "Especia
 
 function initProcedureMap() {
     auto = false;
+    cleaning = false;
     Markers = [];
     procedure_info_boxes = [];
     data = null;
