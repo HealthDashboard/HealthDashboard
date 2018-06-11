@@ -29,6 +29,11 @@ gem 'bootstrap-datepicker-rails'
 gem 'autoprefixer-rails'
 gem 'geocoder'
 
+# Using Open Street maps
+gem 'leaflet-rails'
+
+gem 'rails-assets-leaflet.markercluster', source: 'https://rails-assets.org'
+
 #
 gem 'descriptive-statistics'
 
