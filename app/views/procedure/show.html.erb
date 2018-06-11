@@ -1,3 +1,5 @@
+
+
 <div class = "row">
     <div id="map-affix" class = "col-sm-9 affix">
         <div class = "map-wrapper" id = "procedure_map"> </div>
@@ -18,6 +20,32 @@
                         <span class="sliderOn round"></span>
                     </label>
                 </div>
+                <div class="col-sm-12"><hr></div> <!-- Space line -->
+
+            <div class="col-sm-12">
+              <label for="select_health_centre"><b>Camadas de Visualização</b></label>
+            </div>
+
+            <div class="col-sm-12" id="viewType">
+              <form>
+                <div class="radio">
+                  <label><input type="radio" name="optRadio" value="0" onchange="setShape('Shape_SP.geojson')"> Cidade</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="optRadio" value="1" onchange="setShape('Shape_PR.geojson')"> Subprefeituras</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="optRadio" value="2" onchange="setShape('Shape_DA.geojson')"> Distritos Administrativos</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="optRadio" value="3" onchange="setShape('Shape_STS.geojson')"> STS</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="optRadio" value="4" onchange="setShape('Shape_CRS.geojson')"> CRS</label>
+                </div>
+              </form>
+            </div>
+
                 <div class="col-sm-12"><hr></div> <!-- Space line -->
 
                 <% @filters.each_with_index do |f, i| %>

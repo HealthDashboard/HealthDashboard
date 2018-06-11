@@ -19,3 +19,4 @@
 //= require select2
 //= require_tree .
 //= require turbolinks
+//= require leaflet.markercluster

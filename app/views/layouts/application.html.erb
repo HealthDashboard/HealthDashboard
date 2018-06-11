@@ -2,10 +2,12 @@
 <html>
   <head>
     <title>Health Dashboard</title>
+
+
+    <%= javascript_include_tag "leaflet.js" %>
+    <%= javascript_include_tag "leaflet-heat.js" %>
     <%= csrf_meta_tags %>
-
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
 
     <!-- Google MAPS API -->
