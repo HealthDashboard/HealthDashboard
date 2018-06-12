@@ -31,4 +31,6 @@ Gemfile.lock
 
 .lock
 
+.rspec
+
 vendor/*
