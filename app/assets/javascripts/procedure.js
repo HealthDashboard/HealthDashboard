@@ -68,7 +68,7 @@ function initProcedureMap() {
 }
 
 //** Called when a visualization shape is selected, remove any previous selected shape and draws a new one **//
-function setShape(name) {
+function setShape(name, popup) {
     var myStyle = {
         "color": "#444444",
         "opacity": 0.55
@@ -88,6 +88,8 @@ function setShape(name) {
                     }
                 }}).addTo(map);
             shape.setStyle(myStyle);
+            if (popup != null)
+                shape.bindPopup(popup);
     }});
 }
 
@@ -164,9 +166,8 @@ function buscar() {
     Num_procedures = 0;
     $.getJSON("procedure/procedures_total", data, function(result) {
         Num_procedures = parseInt(result);
-        if (shape != null)
-            shape.bindPopup(Num_procedures.toString() + " Internações Hospitalares");
         if (Num_procedures < 50000) {
+            health_centres_makers(health_centres);
             $.getJSON("procedure/procedures_latlong", data, function(procedures) {
                 var locations = procedures.map(function(procedure) {
                     var location = L.latLng(procedure[0], procedure[1]);
@@ -188,6 +189,8 @@ function buscar() {
                 $('#loading_overlay').hide();
             });
         } else {
+            if (shape == null)
+                setShape("Shape_SP.geojson", "<strong>" + Num_procedures.toString() + " Internações Hospitalares</strong><br>Para buscas com resultado<br> menor ou igual 50.000 está dispónivel<br> visualização por cluster.");
             $('#loading_overlay').hide();
             // Do Something
         }
@@ -252,10 +255,10 @@ function setVisible(visibility) {
         if (visibility == true)
             health_centre_markers[i].addTo(map);
         else
-            health_centre_markers[i].remove()
+            health_centre_markers[i].remove();
     }
     if (visibility != true)
-        health_centre_markers = []
+        health_centre_markers = [];
 }
 
 //* Called when "limpar" button is clicked, restore the page to its initial state *//
@@ -280,16 +283,17 @@ function limpar() {
 //** Clears features on the map **//
 function clearMap() {
     if (cluster != null)
-        map.removeLayer(cluster)
+        map.removeLayer(cluster);
 
     if (heat != null)
-        map.removeLayer(heat)
+        map.removeLayer(heat);
 
     if (shape != null)
-        map.removeLayer(shape)
-    heat = null
-    cluster = null
-    chape = null
+        map.removeLayer(shape);
+    setVisible(false);
+    heat = null;
+    cluster = null;
+    shape = null;
 }
 
 //** Called when "Dados Gerais" button is clicked, open "Dados Gerais" page and passes filter values to it **//

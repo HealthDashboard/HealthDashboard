@@ -1,142 +1,127 @@
 var map;
-var info_boxes = [];
-var circles = [];
-var info_box_opened;
-var cluster_status = false;
-var markerCluster = null;
+var circles;
+var cluster_status;
+var markerCluster;
+var hcMarkers;
+
 var radius = [10000, 5000, 1000]
 var colors = ['#003300', '#15ff00', '#ff0000', "#f5b979" , "#13f1e8" ,  "#615ac7", "#8e3a06", "#b769ab", "#df10eb"];
 var colors_circle = ['#FF4444', '#44FF44', '#4444FF']
 
-var health_centre_icon = '/health_centre_icon.png';
-var person_icon = '/home.png';
 
 function initialize() {
-    info_box_opened = -1;
-    markers_visible(null);
-    info_boxes = [];
+    markers_visible(true, -1);
     circles = [];
     cluster_status = false;
     markerCluster = null;
-    var lat = -23.557296000000001;
-    var lng = -46.669210999999997;
-    var latlng = new google.maps.LatLng(lat, lng);
+    hcMarkers = [];
 
-    var options = {
-        zoom: 11,
-        center: latlng,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    map = new google.maps.Map(document.getElementById("map"), options);
+    var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }),
+    latlng = L.latLng(-23.557296000000001, -46.669210999999997);
+    map = L.map('map', { center: latlng, zoom: 11, layers: [tiles] });
     load_all_points();
-    create_legend();
     create_chart();
 }
 
-function show_procedures(procedures, icon) {
-    var markers = procedures.map(function(procedure, i) {
-        var lat = procedure[0];
-        var lng = procedure[1];
-
-        return new google.maps.Marker({
-            position: new google.maps.LatLng(lat, lng),
-            icon: "https://storage.googleapis.com/support-kms-prod/SNP_2752125_en_v0"
-        });
-    });
-
-    var options = {
-        zoomOnClick: false,
-        minimumClusterSize: 3,
-        imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
-    };
-    markerCluster = new MarkerClusterer(map, markers, options);
-}
-
-function create_circles(marker) {
-    var distance_quartis_path = ["/distance_quartis/", info_box_opened].join("");
-    $.getJSON(distance_quartis_path, function(data) {
-        radius = data;
-        for (var i = 0; i < 3; i++) {
-            var circle = new google.maps.Circle({
-                map: map,
-                radius: parseFloat(radius[i]) * 1000, //Convert to float then km to meters
-                fillColor: colors_circle[i],
-                fillOpacity: 0.4
-            });
-            circle.bindTo('center', marker, 'position');
-            circles.push(circle);
-        }
-        populate_legend();
-        $('#legend').show(); // Show legend after changing its value
-    });
-}
-
 function load_all_points() {
+    var health_centre_icon = '/health_centre_icon.png';
+    var hcIcon = L.icon({iconUrl: health_centre_icon});
     $.getJSON('/points.json', function(points) {
         $.each(points, function(index, point) {
-            create_health_centre_marker(point, create_marker_text);
+            marker = L.marker(L.latLng(point.lat, point.long), {icon: hcIcon, point: point});
+            text = healthCentreClick(point)
+            marker.bindPopup(text);
+            marker.addTo(map);
+            hcMarkers.push(marker);
         });
     });
 }
 
-function create_health_centre_marker(point, generate_infobox_text) {
-    var marker = create_marker(point, health_centre_icon);
-    add_info_to_marker(marker, point, generate_infobox_text);
+function healthCentreClick(point) {
+    if (point.phone == null) {
+        point.phone = "Não Informado";
+    }
+    latlng = L.latLng(point.lat, point.long);
+    text = '<strong>Nome:</strong> ' + point.name + '<br><strong>Telefone:</strong> ' + point.phone 
+    + '<br><strong>Leitos:</strong> ' + point.beds + '<br><strong>Distrito Administrativo:</strong> ' + point.DA
+    + '<br><strong>Prefeitura Regional:</strong> ' + point.PR + '<br><strong>Supervisão Técnica de Saúde:</strong> '
+    + point.STS + '<br><strong>Coordenadoria Regional de Saúde:</strong> ' + point.CRS
+    + "<br><br><button type='button' id='cluster_info' class='btn btn-info btn-sm' onclick='show_clusters(" + point.id + ", " + point.lat + "," + point.long + ")'>" 
+    + " Mostrar Detalhes </button>" + '<button type="button" class="btn btn-info btn-sm pull-right" data-toggle="modal" onclick="update_chart('+ point.id +')" data-target="#myModal">Análise</button>';
+    return text;
 }
 
-function create_marker(point, icon_path) {
-    return new google.maps.Marker({
-        position: new google.maps.LatLng(point.lat, point.long),
-        map: map,
-        icon: icon_path
-    });
-}
-
-function create_marker_text(point) {
-    var id = point.id;
-    var button_label = (cluster_status === false) ? 'Mostrar Detalhes' : 'Esconder Detalhes';
-    return '<strong>Nome:</strong> ' + point.name + '<br><strong>Telefone:</strong> ' + point.phone + '<br><strong>Leitos:</strong> ' + point.beds + '<br><strong>Distrito Administrativo:</strong> ' + point.DA + '<br><strong>Prefeitura Regional:</strong> ' + point.PR
-    + '<br><strong>Supervisão Técnica de Saúde:</strong> ' + point.STS + '<br><strong>Coordenadoria Regional de Saúde:</strong> ' + point.CRS +
-           "<br><br><button type='button' id='cluster_info' class='btn btn-info btn-sm' onclick='show_clusters()'>" + button_label + "</button>" +
-           '<button type="button" class="btn btn-info btn-sm pull-right" data-toggle="modal" onclick="update_chart()" data-target="#myModal">Análise</button>';
-}
-
-function show_clusters() {
+function show_clusters(id, lat, long) {
     if (cluster_status === false) {
-        setup_cluster();
+        setup_cluster(id, lat, long);
     } else {
-        teardown_cluster();
+        teardown_cluster(id);
         $('#legend').hide();
     }
 }
 
-function setup_cluster() {
-    markers_visible(null);
-    var procedure_path = ["/procedures/", info_box_opened].join("");
+function setup_cluster(id, lat, long) {
+    markers_visible(false, id);
+    var procedure_path = ["/procedures/", id].join("");
 
     $.getJSON(procedure_path, function(procedures) {
-        show_procedures(procedures, person_icon);
-        create_circles(info_boxes[info_box_opened].marker);
+        show_procedures(procedures);
+        create_circles(id, lat, long);
     });
 
     $('#cluster_info').text('Esconder Detalhes');
     cluster_status = true;
 }
 
+function show_procedures(procedures) {
+    markerCluster = L.markerClusterGroup({ chunkedLoading: true });
+    var dotIcon = L.icon({
+        iconUrl: "https://storage.googleapis.com/support-kms-prod/SNP_2752125_en_v0",
+    });
+    markerList = procedures.map(function(procedure, i) {
+        var lat = procedure[0];
+        var lng = procedure[1];
+        var id = procedure[2];
+        marker = L.marker(L.latLng(lat, lng), {icon: dotIcon, id: id});
+        return marker;
+    });
+    markerCluster.addLayers(markerList);
+    map.addLayer(markerCluster);
+}
+
 // Remove clusters
-function teardown_cluster() {
-    markers_visible(map);
-    info_boxes[info_box_opened].close();
-    info_box_opened = -1;
+function teardown_cluster(id) {
+    markers_visible(true, id);
+    $('#cluster_info').text('Mostrar Detalhes');
     cluster_status = false;
     teardown_circles();
     teardown_markers()
 }
 
+function create_circles(id, lat, long) {
+    var distance_quartis_path = ["/distance_quartis/", id].join("");
+    $.getJSON(distance_quartis_path, function(data) {
+        radius = data;
+        for (var i = 0; i < 3; i++) {
+            var circle = L.circle([lat, long], {
+                color: colors_circle[i],
+                fillColor: colors_circle[i],
+                fillOpacity: 0.4,
+                radius: radius[i] * 1000
+            }).addTo(map);
+            circle.bindTooltip("Raio de " + radius[i] + " Km<br>" + (100 - (25 + 25 * i)).toString() + "% das internações hospitalares")
+            circles.push(circle);
+        }
+    });
+}
+
 // Remove radius circles
 function teardown_circles() {
     $.each(circles, function(index, circle) {
-        circle.setMap(null)
+        circle.remove()
     });
     circles = [];
 }
@@ -144,96 +129,24 @@ function teardown_circles() {
 // Remove pacients markers
 function teardown_markers() {
     if (markerCluster != null) {
-        markerCluster.clearMarkers();
+        map.removeLayer(markerCluster)
         markerCluster = null;
     }
 }
 
-function add_info_to_marker(marker, point, generate_infobox_text) {
-    info_boxes[point.id] = new google.maps.InfoWindow();
-    info_boxes[point.id].marker = marker;
-    info_boxes[point.id].id = point.id;
-    info_boxes[point.id].point = point;
-
-    add_listener(marker, point, generate_infobox_text);
-}
-
-function add_listener(marker, point, generate_infobox_text) {
-    info_boxes[point.id].listener = google.maps.event.addListener(marker, 'click', function(e) {
-        info_boxes[point.id].setContent(generate_infobox_text(point));
-        open_info_box(point.id, marker);
-    });
-}
-
-function markers_visible(map) {
-    $.each(info_boxes, function(index, info_box) {
-        if (info_box != null && info_box.id != info_box_opened) {
-            info_box.marker.setMap(map);
+function markers_visible(visibility, id) {
+    $.each(hcMarkers, function(index, marker) {
+        if (id != null && marker.options.point.id != id) {
+            if (visibility == false)
+                marker.remove();
+            else
+                marker.addTo(map);
         }
     });
 }
 
-function open_info_box(id, marker) {
-    if ((typeof(info_box_opened) === 'number' && typeof(info_boxes[info_box_opened]) === 'object')) {
-        info_boxes[info_box_opened].close();
-    }
-
-    if (info_box_opened !== id) {
-        info_boxes[id].open(map, marker);
-        info_box_opened = id;
-    } else {
-        info_box_opened = -1;
-    }
-}
-
-function create_legend() {
-    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(document.getElementById('legend'));
-}
-
-function populate_legend() {
-    styles = [{'name': radius[2] + ' Km', 'color': colors_circle[2]},
-              {'name': radius[1] + ' Km', 'color': colors_circle[1]},
-              {'name': radius[0] + ' Km', 'color': colors_circle[0]}
-             ];
-
-    var $legend = $('#legend');
-    $legend.empty()
-    $legend.append('<h3>Distância</h3>')
-    $.each(styles, function(index, style) {
-        element = '<div class="item"><div class="color" style="background-color: ' + style.color +
-                  '"></div><p class="text">' + style.name + '</p> </div></div>';
-        $legend.append(element);
-    });
-}
-
-function create_chart() {
-    google.charts.setOnLoadCallback(create_homepage_charts);
-}
-
-function create_homepage_charts() {
-    create_right_graph();
-
-    var data = [['pediatria', 10, 24, 20, 32, ''],
-                ['ginecologia', 16, 22, 23, 30, ''],
-                ['oftalmologia', 28, 19, 29, 30,  ''],
-                ['nefrologia', 16, 22, 23, 30, ''],
-                ['clinica geral', 28, 19, 29, 30,  '']
-               ];
-
-    var path = '/specialties_distance_metric.json';
-    $.getJSON(path, function(data) {
-        data1 = data.splice(0, Math.ceil(data.length / 2));
-        create_bottom_graphs("bt-graph1", data1);
-        create_bottom_graphs("bt-graph2", data);
-    });
-}
-
-function about() {
-    window.open("about");
-}
-
-function update_chart() {
-    var specialty_path = ["/specialties/", info_box_opened].join("");
+function update_chart(id) {
+    var specialty_path = ["/specialties/", id].join("");
     $.getJSON(specialty_path, function(specialties) {
         var values = [];
         var i = 0;
@@ -257,6 +170,28 @@ function update_chart() {
 
         var chart = new google.visualization.BarChart(document.getElementById("chart_div"));
         chart.draw(view, options);
+    });
+}
+
+function create_chart() {
+    google.charts.setOnLoadCallback(create_homepage_charts);
+}
+
+function create_homepage_charts() {
+    create_right_graph();
+
+    var data = [['pediatria', 10, 24, 20, 32, ''],
+                ['ginecologia', 16, 22, 23, 30, ''],
+                ['oftalmologia', 28, 19, 29, 30,  ''],
+                ['nefrologia', 16, 22, 23, 30, ''],
+                ['clinica geral', 28, 19, 29, 30,  '']
+               ];
+
+    var path = '/specialties_distance_metric.json';
+    $.getJSON(path, function(data) {
+        data1 = data.splice(0, Math.ceil(data.length / 2));
+        create_bottom_graphs("bt-graph1", data1);
+        create_bottom_graphs("bt-graph2", data);
     });
 }
 
@@ -329,4 +264,8 @@ function update_right_graph_text(data) {
     });
     $graph_text1.html("<br><br><br> " + sum);
     $graph_text2.html("Procedimentos");
+}
+
+function about() {
+    window.open("about");
 }
