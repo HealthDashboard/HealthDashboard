@@ -146,20 +146,35 @@ function buscar() {
     if(sexo_feminino.checked)
         genders.push("F");
 
-    var distance_max = document.getElementById('slider_distance_max');
-    var distance_min = document.getElementById('slider_distance_min');
-    dist_min = parseFloat(distance_min.textContent);
-    dist_max = parseFloat(distance_max.textContent);
+    // var distance_max = document.getElementById('slider_distance_max').textContent;
+    // var distance_min = document.getElementById('slider_distance_min').textContent;
+    // var days_min = document.getElementById('slider_days_12_min').textContent;
+    // var days_max = document.getElementById('slider_days_12_max').textContent;
+    // var days_uti_min = document.getElementById('slider_days_13_min').textContent;
+    // var days_uti_max = document.getElementById('slider_days_13_max').textContent;
+    // var days_ui_min = document.getElementById('slider_days_14_min').textContent;
+    // var days_ui_max = document.getElementById('slider_days_14_max').textContent;
+    // var days_total_min = document.getElementById('slider_days_15_min').textContent;
+    // var days_total_max = document.getElementById('slider_days_15_max').textContent;
 
-    data = {gender: genders.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
-            dist_min: dist_min.toString(), dist_max: dist_max.toString(), filters: filters};
+    sliders = [];
+    for (i = 0; i < 6; i++) {
+        sliders.push([parseInt(document.getElementById('slider_' + i +'_min').textContent), 
+                      parseInt(document.getElementById('slider_' + i +'_max').textContent)]);
+    }
+
+    // data = {gender: genders.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
+    //         dist_min: distance_min, dist_max: distance_max, days_min: days_min, days_uti_min: days_uti_min, 
+    //         days_ui_min: days_ui_min, days_total_min: days_total_min, days_max: days_max, days_uti_max: days_uti_max, 
+    //         days_ui_max: days_ui_max, days_total_max: days_total_max, filters: filters};
+    data = {gender: genders.toString(), start_date: start_date.toString(), end_date: end_date.toString(), sliders: sliders};
 
     clearMap();
 
     // Show Data
     $('#loading_overlay').show();
     markerList = []
-    cluster = L.markerClusterGroup({ chunkedLoading: true });
+    cluster = L.markerClusterGroup({ chunkedLoading: true }); // chunkedLoading prevents browser freezing
     var dotIcon = L.icon({
         iconUrl: "https://storage.googleapis.com/support-kms-prod/SNP_2752125_en_v0",
     });
@@ -377,17 +392,24 @@ function dadosInput() {
         container:'#datepicker',
     });
 
-    $("#slider_distance").slider({
-        min: 0,
-        max: 30,
-        step: 1,
-        value: [0,30],
-    });
+    var max_hash = {"slider_0" : 351, "slider_1" : 148, "slider_2" : 99, "slider_3" : 351, "slider_4" : 100, "slider_5" : 30}
 
-    $("#slider_distance").on("slide", function(slideEvt) {
-        $("#slider_distance_min").html(slideEvt.value[0]);
-        $("#slider_distance_max").html(slideEvt.value[1] + (slideEvt.value[1] >= 30 ? "+" : ""));
-    });
+    for (i = 0; i < 6; i++) {
+        slider = "slider_" + i.toString();
+        $("#" + slider).slider({
+            min: 0,
+            max: max_hash[slider],
+            step: 1,
+            value: [0, max_hash[slider]],
+        });
+
+        $("#slider_" + i.toString()).on("slide", function(slideEvt) {
+            slider_min  = "#" + slideEvt.currentTarget.id + "_min"
+            slider_max  = "#" + slideEvt.currentTarget.id + "_max"
+            $(slider_min).html(slideEvt.value[0]);
+            $(slider_max).html(slideEvt.value[1] + (slideEvt.value[1] >= max_hash[slideEvt.currentTarget.id] ? "+" : ""));
+        });
+    }
 
     for (i = 0; i < 24; i++) {
         name = "#" + i;
