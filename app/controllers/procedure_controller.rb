@@ -1,5 +1,7 @@
 class ProcedureController < ApplicationController
-	
+	# Cons, AVOID USING NUMBERS, make a constant instead
+	NUM_FILTERS = 19
+	MAX_SLIDERS = [351, 148, 99, 351, 100, 30]
 	# Remove
 	def allProcedures
 		allProcedures = Procedure.all
@@ -16,8 +18,10 @@ class ProcedureController < ApplicationController
 	# Return "busca avancada" page
 	def show
 		@filters = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Grupo étnico", "Nível de instrução", "Competência",
-			"Grupo do procedimento autorizado", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Total geral de diárias", 
-			"Diárias UTI", "Diárias UI", "Dias de permanência", "Tipo de financiamento", "Valor Total", "Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Complexidade", "Gestão"]
+			"Grupo do procedimento autorizado", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", 
+			"Tipo de financiamento", "Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Complexidade", "Gestão"]
+		@sliders = ["Total geral de diárias", "Diárias UTI", "Diárias UI", "Dias de permanência", "Valor da parcela", "Distância de deslocamento(Km)"]
+		@max_days = [351, 148, 99, 351, 100, 30]
 
 		# Values for filters
 		health_centres = JSON.parse(File.read(Rails.root.join('public/health_centres.json')))
@@ -45,7 +49,7 @@ class ProcedureController < ApplicationController
 		gestor = [{"id" => "00", "text" => "ESTADUAL"},
 				  {"id" => "01", "text" => "MUNICIPAL"}];
 
-		@options = [health_centres, age_group, specialties, treatments, race, lv_instruction, cmpt, proce_re, cid, cid, cid, cid, days, [], [], [], finance, [], da, pr, sts, crs, complexity, gestor]
+		@options = [health_centres, age_group, specialties, treatments, race, lv_instruction, cmpt, proce_re, cid, cid, cid, cid, finance, da, pr, sts, crs, complexity, gestor]
 	end
 
 	# GET /procedure/update_session{data}
@@ -54,20 +58,7 @@ class ProcedureController < ApplicationController
 	# Session variable is updated 
 	def update_session
 		if session[:filters] == nil || params[:filters] != nil 
-			session[:filters] = Array.new(24)
-		end
-
-		if params[:dist_min] != nil
-			session[:dist_min] = params[:dist_min].to_f
-		end
-
-		if params[:dist_max] != nil
-			session[:dist_max] = params[:dist_max].to_f
-		end
-
-		if params[:gender] != nil
-			session[:genders] = params[:gender].to_s
-			session[:genders] = session[:genders].split(",")
+			session[:filters] = Array.new(NUM_FILTERS)
 		end
 
 		if params[:filters] != nil
@@ -76,6 +67,62 @@ class ProcedureController < ApplicationController
 					session[:filters][i] = filter.split(";")
 				end
 			end
+		end
+
+		if session[:sliders] == nil || params[:sliders] != nil 
+			session[:sliders] = Array.new(6)
+		end
+
+		if params[:sliders] != nil
+			params[:sliders].each_with_index do |slider, i|
+				session[:sliders][i] = [slider[1][0].to_i, slider[1][1].to_i]
+				print session[:sliders][i]
+			end
+		end
+
+		# if params[:days_min] != nil
+		# 	session[:days_min] = params[:days_min].to_i
+		# end
+
+		# if params[:days_max] != nil
+		# 	session[:days_max] = params[:days_max].to_i
+		# end
+
+		# if params[:days_uti_min] != nil
+		# 	session[:days_uti_min] = params[:days_uti_min].to_i
+		# end
+
+		# if params[:days_uti_max] != nil
+		# 	session[:days_uti_max] = params[:days_uti_max].to_i
+		# end
+
+		# if params[:days_ui_min] != nil
+		# 	session[:days_ui_min] = params[:days_ui_min].to_i
+		# end
+
+		# if params[:days_ui_max] != nil
+		# 	session[:days_ui_max] = params[:days_ui_max].to_i
+		# end
+
+		# if params[:days_total_min] != nil
+		# 	session[:days_total_min] = params[:days_total_min].to_i
+		# end
+
+		# if params[:days_total_max] != nil
+		# 	session[:days_total_max] = params[:days_total_max].to_i
+		# end
+
+		# if params[:dist_min] != nil
+		# 	session[:dist_min] = params[:dist_min].to_f
+		# end
+
+		# if params[:dist_max] != nil
+		# 	session[:dist_max] = params[:dist_max].to_f
+		# end
+
+		if params[:gender] != nil
+			session[:genders] = params[:gender].to_s
+			session[:genders] = session[:genders].split(",")
 		end
 
 		if params[:start_date] != nil && params[:start_date].to_s != ""
@@ -94,32 +141,67 @@ class ProcedureController < ApplicationController
 		return
 	end
 
-	# NO ROUTE, intern methods
+	# NO ROUTE, intern method
 	# TODO - handle calls with no previous update_session. It probably throws a error now, 
 	# maybe send all data instead.
 	# Return procedures based on the values passed in your last update_session
 	def getProcedures
 		filters_name = ["cnes_id", "age_code", "specialty_id", "treatment_type", "race", "lv_instruction", "cmpt", "proce_re", "cid_primary", "cid_secondary", "cid_secondary2", 
-		"cid_associated", "days", "days_uti", "days_ui", "days_total", "finance", "val_total", "DA", "PR", "STS", "CRS", "complexity", "gestor_ide"]
+		"cid_associated", "finance", "DA", "PR", "STS", "CRS", "complexity", "gestor_ide"]
+		sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
 
 		update_session()
 
 		procedures = Procedure.where(gender: session[:genders])
 
-		filters_name.each_with_index do |n, i|
+		filters_name.each_with_index do |filter, i|
 			if session[:filters][i] != nil
-				procedures = procedures.where(n => session[:filters][i])
+				procedures = procedures.where(filter => session[:filters][i])
 			end
 		end
 
-		if session[:start_date] != nil && session[:end_date] != nil
-			procedures = procedures.where('date BETWEEN ? AND ?', session[:start_date], session[:end_date])
+		sliders_name.each_with_index do |slider, i|
+			min =  session[:sliders][i][0]
+			max = session[:sliders][i][1]
+			if max == MAX_SLIDERS[i]
+				rocedures = procedures.where(slider + ' >= ?', min)
+			else
+				procedures = procedures.where(slider + ' >= ? AND ' + slider + ' <= ?', min, max)
+			end
 		end
 
-		if (session[:dist_max] == 30)
-			procedures = procedures.where('distance >= ?', session[:dist_min])
-		else
-			procedures = procedures.where('distance >= ? AND distance <= ?', session[:dist_min], session[:dist_max])
+		# if session[:days_max] == 351
+		# 	procedures = procedures.where('days >= ?', session[:days_min])
+		# else
+		# 	procedures = procedures.where('days >= ? AND days <= ?', session[:days_min], session[:days_max])
+		# end
+
+		# if session[:days_uti_max] == 148
+		# 	procedures = procedures.where('days_uti >= ?', session[:days_uti_min])
+		# else
+		# 	procedures = procedures.where('days_uti >= ? AND days_uti <= ?', session[:days_uti_min], session[:days_uti_max])
+		# end
+
+		# if session[:days_ui_max] == 99
+		# 	procedures = procedures.where('days_ui >= ?', session[:days_ui_min])
+		# else
+		# 	procedures = procedures.where('days_ui >= ? AND days_ui <= ?', session[:days_ui_min], session[:days_ui_max])
+		# end
+
+		# if session[:days_total_max] == 351
+		# 	procedures = procedures.where('days_total >= ?', session[:days_total_min])
+		# else
+		# 	procedures = procedures.where('days_total >= ? AND days_total <= ?', session[:days_total_min], session[:days_total_max])
+		# end
+
+		# if session[:dist_max] == 30
+		# 	procedures = procedures.where('distance >= ?', session[:dist_min])
+		# else
+		# 	procedures = procedures.where('distance >= ? AND distance <= ?', session[:dist_min], session[:dist_max])
+		# end
+
+		if session[:start_date] != nil && session[:end_date] != nil
+			procedures = procedures.where('date BETWEEN ? AND ?', session[:start_date], session[:end_date])
 		end
 		
 		return procedures

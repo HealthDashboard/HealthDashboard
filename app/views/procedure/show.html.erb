@@ -36,10 +36,10 @@
                   <label><input type="radio" name="optRadio" value="2" onchange="setShape('Shape_DA.geojson', null)"> Distritos Administrativos</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="optRadio" value="3" onchange="setShape('Shape_STS.geojson', null)"> STS</label>
+                  <label><input type="radio" name="optRadio" value="3" onchange="setShape('Shape_STS.geojson', null)"> Supervisão Técnica de Saúde</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="optRadio" value="4" onchange="setShape('Shape_CRS.geojson', null)"> CRS</label>
+                  <label><input type="radio" name="optRadio" value="4" onchange="setShape('Shape_CRS.geojson', null)"> Coordenadoria Regional de Saúde</label>
                 </div>
               </form>
             </div>
@@ -84,28 +84,32 @@
                 </div>
                 <div class="col-sm-12"><hr></div> <!-- Space line -->
 
+                <% @sliders.each_with_index do |slid, index| %>
+                    <div class="col-sm-12">
+                        <label for="<%= index %>"><b> 
+                            <%= slid %>
+                        </b></label>
+                        <div class="row">
+                            <div class="col-sm-1 text-right">
+                                <span id="slider_<%= index %>_min">0</span>
+                            </div>
+                            <div class="col-sm-9">
+                                <input id="slider_<%= index %>" type="text" style="width: 100%" />
+                            </div>
+                            <div class="col-sm-1" style = "text-align: left" id="text-left">
+                                <span id="slider_<%= index %>_max"><%= @max_days[index].to_s + "+" %></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12"><hr></div> <!-- Space line -->
+                <% end %>
+
                 <div class="col-sm-12">
                     <label><b>Período</b></label>
                     <div class="input-daterange input-group" id="datepicker">
                         <input type="text" class="input-sm form-control" id="intervalStart" onchange="change()" />
                         <span class="input-group-addon" id="intervalTo">até</span>
                         <input type="text" class="input-sm form-control" id="intervalEnd" onchange="change()" />
-                    </div>
-                </div>
-                <div class="col-sm-12"><hr></div> <!-- Space line -->
-
-                <div class="col-sm-12">
-                    <label><b>Distância de deslocamento(Km)</b></label>
-                    <div class="row">
-                        <div class="col-sm-1 text-right">
-                            <span id="slider_distance_min">0</span>
-                        </div>
-                        <div class="col-sm-9">
-                            <input id="slider_distance" type="text" style="width: 100%" onchange="change()" />
-                        </div>
-                        <div class="col-sm-1" style = "text-align: left" id="text-left">
-                            <span id="slider_distance_max">30+</span>
-                        </div>
                     </div>
                 </div>
 
