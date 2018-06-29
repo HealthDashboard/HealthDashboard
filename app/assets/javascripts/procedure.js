@@ -146,28 +146,13 @@ function buscar() {
     if(sexo_feminino.checked)
         genders.push("F");
 
-    // var distance_max = document.getElementById('slider_distance_max').textContent;
-    // var distance_min = document.getElementById('slider_distance_min').textContent;
-    // var days_min = document.getElementById('slider_days_12_min').textContent;
-    // var days_max = document.getElementById('slider_days_12_max').textContent;
-    // var days_uti_min = document.getElementById('slider_days_13_min').textContent;
-    // var days_uti_max = document.getElementById('slider_days_13_max').textContent;
-    // var days_ui_min = document.getElementById('slider_days_14_min').textContent;
-    // var days_ui_max = document.getElementById('slider_days_14_max').textContent;
-    // var days_total_min = document.getElementById('slider_days_15_min').textContent;
-    // var days_total_max = document.getElementById('slider_days_15_max').textContent;
-
     sliders = [];
     for (i = 0; i < 6; i++) {
         sliders.push([parseInt(document.getElementById('slider_' + i +'_min').textContent), 
                       parseInt(document.getElementById('slider_' + i +'_max').textContent)]);
     }
 
-    // data = {gender: genders.toString(), start_date: start_date.toString(), end_date: end_date.toString(), 
-    //         dist_min: distance_min, dist_max: distance_max, days_min: days_min, days_uti_min: days_uti_min, 
-    //         days_ui_min: days_ui_min, days_total_min: days_total_min, days_max: days_max, days_uti_max: days_uti_max, 
-    //         days_ui_max: days_ui_max, days_total_max: days_total_max, filters: filters};
-    data = {gender: genders.toString(), start_date: start_date.toString(), end_date: end_date.toString(), sliders: sliders};
+    data = {filters: filters, gender: genders.toString(), start_date: start_date.toString(), end_date: end_date.toString(), sliders: sliders};
 
     clearMap();
 
