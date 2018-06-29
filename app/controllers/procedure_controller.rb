@@ -80,46 +80,6 @@ class ProcedureController < ApplicationController
 			end
 		end
 
-		# if params[:days_min] != nil
-		# 	session[:days_min] = params[:days_min].to_i
-		# end
-
-		# if params[:days_max] != nil
-		# 	session[:days_max] = params[:days_max].to_i
-		# end
-
-		# if params[:days_uti_min] != nil
-		# 	session[:days_uti_min] = params[:days_uti_min].to_i
-		# end
-
-		# if params[:days_uti_max] != nil
-		# 	session[:days_uti_max] = params[:days_uti_max].to_i
-		# end
-
-		# if params[:days_ui_min] != nil
-		# 	session[:days_ui_min] = params[:days_ui_min].to_i
-		# end
-
-		# if params[:days_ui_max] != nil
-		# 	session[:days_ui_max] = params[:days_ui_max].to_i
-		# end
-
-		# if params[:days_total_min] != nil
-		# 	session[:days_total_min] = params[:days_total_min].to_i
-		# end
-
-		# if params[:days_total_max] != nil
-		# 	session[:days_total_max] = params[:days_total_max].to_i
-		# end
-
-		# if params[:dist_min] != nil
-		# 	session[:dist_min] = params[:dist_min].to_f
-		# end
-
-		# if params[:dist_max] != nil
-		# 	session[:dist_max] = params[:dist_max].to_f
-		# end
-
 		if params[:gender] != nil
 			session[:genders] = params[:gender].to_s
 			session[:genders] = session[:genders].split(",")
@@ -152,7 +112,11 @@ class ProcedureController < ApplicationController
 
 		update_session()
 
-		procedures = Procedure.where(gender: session[:genders])
+		if session[:genders].length < 2
+			procedures = Procedure.where(gender: session[:genders])
+		else
+			procedures = Procedure.all
+		end
 
 		filters_name.each_with_index do |filter, i|
 			if session[:filters][i] != nil
@@ -164,41 +128,13 @@ class ProcedureController < ApplicationController
 			min =  session[:sliders][i][0]
 			max = session[:sliders][i][1]
 			if max == MAX_SLIDERS[i]
-				rocedures = procedures.where(slider + ' >= ?', min)
+				if min != 0
+					procedures = procedures.where(slider + ' >= ?', min)
+				end
 			else
 				procedures = procedures.where(slider + ' >= ? AND ' + slider + ' <= ?', min, max)
 			end
 		end
-
-		# if session[:days_max] == 351
-		# 	procedures = procedures.where('days >= ?', session[:days_min])
-		# else
-		# 	procedures = procedures.where('days >= ? AND days <= ?', session[:days_min], session[:days_max])
-		# end
-
-		# if session[:days_uti_max] == 148
-		# 	procedures = procedures.where('days_uti >= ?', session[:days_uti_min])
-		# else
-		# 	procedures = procedures.where('days_uti >= ? AND days_uti <= ?', session[:days_uti_min], session[:days_uti_max])
-		# end
-
-		# if session[:days_ui_max] == 99
-		# 	procedures = procedures.where('days_ui >= ?', session[:days_ui_min])
-		# else
-		# 	procedures = procedures.where('days_ui >= ? AND days_ui <= ?', session[:days_ui_min], session[:days_ui_max])
-		# end
-
-		# if session[:days_total_max] == 351
-		# 	procedures = procedures.where('days_total >= ?', session[:days_total_min])
-		# else
-		# 	procedures = procedures.where('days_total >= ? AND days_total <= ?', session[:days_total_min], session[:days_total_max])
-		# end
-
-		# if session[:dist_max] == 30
-		# 	procedures = procedures.where('distance >= ?', session[:dist_min])
-		# else
-		# 	procedures = procedures.where('distance >= ? AND distance <= ?', session[:dist_min], session[:dist_max])
-		# end
 
 		if session[:start_date] != nil && session[:end_date] != nil
 			procedures = procedures.where('date BETWEEN ? AND ?', session[:start_date], session[:end_date])
