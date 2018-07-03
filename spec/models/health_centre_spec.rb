@@ -3,8 +3,11 @@ require 'rails_helper'
 RSpec.describe HealthCentre, type: :model do
 	describe 'Health Centre Insert Test' do
 		it 'should work' do
-			teste = HealthCentre.new(cnes: 2068974, name: "PAM VARZEA DO CARMO NGA 63 SAO PAULO", beds: 0, long: -23.555872, lat: -46.624901, phone: nil, adm: "", DA: "CAMBUCI", PR: "SE", STS: "SE", CRS: "CENTRO")
-      		expect(teste.save!).to be true
+			 hc_csv_path = Rails.root.join('db/csv/health_centres_real.csv')
+				CSV.foreach(hc_csv_path, :headers => true) do |row|
+					teste = HealthCentre.new cnes: row[0], name: row[1], beds: row[2], long: row[4], lat: row[3], phone: row[7], adm: row[8], DA: row[9], PR: row[10], STS: row[11], CRS: row[12]
+		      		expect(teste.save!).to be true
+		      	end
 		end
 
 		it 'should fail' do
