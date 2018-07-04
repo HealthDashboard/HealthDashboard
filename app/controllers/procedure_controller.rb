@@ -1,7 +1,7 @@
 class ProcedureController < ApplicationController
 	# Cons, AVOID USING NUMBERS, make a constant instead
 	NUM_FILTERS = 19
-	MAX_SLIDERS = [351, 148, 99, 351, 100, 30]
+	$MAX_SLIDERS = [351, 148, 99, 351, 100, 30]
 	# Remove
 	def allProcedures
 		allProcedures = Procedure.all
@@ -14,25 +14,30 @@ class ProcedureController < ApplicationController
 		render json: total
 	end
 
-	# GET / 
+	# GET /
 	# Return "busca avancada" page
 	def show
+		i = 0
+		while (i < $MAX_SLIDERS.length) do
+			$MAX_SLIDERS[i] = round_up($MAX_SLIDERS[i])
+			i += 1
+		end
 		@filters = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Grupo étnico", "Nível de instrução", "Competência",
-			"Grupo do procedimento autorizado", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", 
+			"Grupo do procedimento autorizado", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)",
 			"Tipo de financiamento", "Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Complexidade", "Gestão"]
 		@sliders = ["Total geral de diárias", "Diárias UTI", "Diárias UI", "Dias de permanência", "Valor da parcela", "Distância de deslocamento(Km)"]
-		@max_days = [351, 148, 99, 351, 100, 30]
+		#@max_days = [351, 148, 99, 351, 100, 30]
 
 		# Values for filters
 		health_centres = JSON.parse(File.read(Rails.root.join('public/health_centres.json')))
 		age_group = JSON.parse(File.read(Rails.root.join('public/age_group.json')))
 		specialties = JSON.parse(File.read(Rails.root.join('public/specialties.json')))
 		treatments = [
-			{ "id" => "1", "text" => "ELETIVO" }, 
-			{ "id" => "2", "text" => "URGENCIA" }, 
-			{ "id" => "3", "text" => "ACIDENTE NO LOCAL DE TRABALHO OU A SERVICO DA EMPRESA" }, 
-			{ "id" => "5", "text" => "OUTROS TIPOS DE ACIDENTE DE TRANSITO" }, 
-			{ "id" => "6", "text" => "OUTROS TIPOS DE LESOES E ENVENENAMENTOS POR AGENTES QUIMICOS OU FISICOS" }, 
+			{ "id" => "1", "text" => "ELETIVO" },
+			{ "id" => "2", "text" => "URGENCIA" },
+			{ "id" => "3", "text" => "ACIDENTE NO LOCAL DE TRABALHO OU A SERVICO DA EMPRESA" },
+			{ "id" => "5", "text" => "OUTROS TIPOS DE ACIDENTE DE TRANSITO" },
+			{ "id" => "6", "text" => "OUTROS TIPOS DE LESOES E ENVENENAMENTOS POR AGENTES QUIMICOS OU FISICOS" },
 		];
 		race = JSON.parse(File.read(Rails.root.join('public/race.json')))
 		lv_instruction = JSON.parse(File.read(Rails.root.join('public/lv_instruction.json')))
@@ -54,10 +59,10 @@ class ProcedureController < ApplicationController
 
 	# GET /procedure/update_session{data}
 	# Ajax call, no template to render on browser
-	# To pass the data add to your ajax call data = {values} 
-	# Session variable is updated 
+	# To pass the data add to your ajax call data = {values}
+	# Session variable is updated
 	def update_session
-		if session[:filters] == nil || params[:filters] != nil 
+		if session[:filters] == nil || params[:filters] != nil
 			session[:filters] = Array.new(NUM_FILTERS)
 		end
 
@@ -69,7 +74,7 @@ class ProcedureController < ApplicationController
 			end
 		end
 
-		if session[:sliders] == nil || params[:sliders] != nil 
+		if session[:sliders] == nil || params[:sliders] != nil
 			session[:sliders] = Array.new(6)
 		end
 
@@ -102,11 +107,11 @@ class ProcedureController < ApplicationController
 	end
 
 	# NO ROUTE, intern method
-	# TODO - handle calls with no previous update_session. It probably throws a error now, 
+	# TODO - handle calls with no previous update_session. It probably throws a error now,
 	# maybe send all data instead.
 	# Return procedures based on the values passed in your last update_session
 	def getProcedures
-		filters_name = ["cnes_id", "age_code", "specialty_id", "treatment_type", "race", "lv_instruction", "cmpt", "proce_re", "cid_primary", "cid_secondary", "cid_secondary2", 
+		filters_name = ["cnes_id", "age_code", "specialty_id", "treatment_type", "race", "lv_instruction", "cmpt", "proce_re", "cid_primary", "cid_secondary", "cid_secondary2",
 		"cid_associated", "finance", "DA", "PR", "STS", "CRS", "complexity", "gestor_ide"]
 		sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
 
@@ -127,7 +132,7 @@ class ProcedureController < ApplicationController
 		sliders_name.each_with_index do |slider, i|
 			min =  session[:sliders][i][0]
 			max = session[:sliders][i][1]
-			if max == MAX_SLIDERS[i]
+			if max == $MAX_SLIDERS[i]
 				if min != 0
 					procedures = procedures.where(slider + ' >= ?', min)
 				end
@@ -139,7 +144,7 @@ class ProcedureController < ApplicationController
 		if session[:start_date] != nil && session[:end_date] != nil
 			procedures = procedures.where('date BETWEEN ? AND ?', session[:start_date], session[:end_date])
 		end
-		
+
 		return procedures
 	end
 
@@ -147,7 +152,7 @@ class ProcedureController < ApplicationController
 	# Procedures group by distance
 	# GET /procedure/procedures_distance_group
 	# Ajax call, no template to render on browser
-	# Return JSON file 
+	# Return JSON file
 	def procedures_distance_group
 		procedures = getProcedures()
 		result = {"<= 1 Km" => procedures.where("distance <= ?", 1).count, "> 1 Km e <= 5 Km" =>  procedures.where("distance > ? AND distance <= ?", 1, 5).count, "> 5 Km e <= 10 Km" => procedures.where("distance > ? AND distance <= ?", 5, 10).count, "> 10 Km" => procedures.where("distance > ?", 10).count}
@@ -215,7 +220,7 @@ class ProcedureController < ApplicationController
 	end
 
 	# Download csv file
-	# Javascript is not allowed to download files, so this call is done with path_to rails method, 
+	# Javascript is not allowed to download files, so this call is done with path_to rails method,
 	# Because of this we cannot pass data directly in its call.
 	# The workaround is first we use update_session to pass data to the controller then it's possible to
 	# call this method to download filtered procedures.
@@ -254,7 +259,7 @@ class ProcedureController < ApplicationController
 				true
 			end
 		end
-		
+
 		if params[:show_hc] == "true" and params[:show_rp] == "true"
 			render json: {:health_centres => health_centres, :procedures => Procedures}
 		elsif params[:show_hc] == "true"
@@ -263,7 +268,7 @@ class ProcedureController < ApplicationController
 			render json: {:procedures => Procedures}
 		else
 			render json: {:result => ""}
-		end	
+		end
 	end
 
 	def health_centres_procedure
@@ -284,10 +289,17 @@ class ProcedureController < ApplicationController
 	end
 
 	# GET /procedure/procedure_info/:id
-	# Given a procedure id returns its information 
+	# Given a procedure id returns its information
 	def procedure_info
 		procedure = Procedure.where(id: params[:id]).select(:cnes_id, :gender, :age_number, :cid_primary, :CRS, :date, :distance).to_a
 
 		render json: procedure
+	end
+
+	def round_up (num)
+		if (num % 5) != 0
+			num = num + 5 - (num % 5)
+		end
+		return num
 	end
 end

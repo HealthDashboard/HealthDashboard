@@ -25,7 +25,7 @@ var heat, cluster, shape;
 
 //** Display name for printing **//
 var filters_print = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Grupo étnico", "Nível de instrução", "Competência",
-      "Grupo do procedimento autorizado", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Total geral de diárias", 
+      "Grupo do procedimento autorizado", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Total geral de diárias",
       "Diárias UTI", "Diárias UI", "Dias de permanência", "Tipo de financiamento", "Valor Total", "Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Complexidade", "Gestão"];
 
 //** Called when loading the page, init vars, hide overlay and draw the map **//
@@ -81,7 +81,7 @@ function setShape(name, popup) {
         dataType: "json",
         url: name,
         success: function(data) {
-            shape = new L.geoJson(data, 
+            shape = new L.geoJson(data,
                 {onEachFeature: function(feature, layer) {
                     if (feature.properties && feature.properties.Name) {
                         layer.bindTooltip(feature.properties.Name, {closeButton: false});
@@ -148,7 +148,7 @@ function buscar() {
 
     sliders = [];
     for (i = 0; i < 6; i++) {
-        sliders.push([parseInt(document.getElementById('slider_' + i +'_min').textContent), 
+        sliders.push([parseInt(document.getElementById('slider_' + i +'_min').textContent),
                       parseInt(document.getElementById('slider_' + i +'_max').textContent)]);
     }
 
@@ -297,7 +297,7 @@ function clearMap() {
 }
 
 //** Called when "Dados Gerais" button is clicked, open "Dados Gerais" page and passes filter values to it **//
-function graphs() { 
+function graphs() {
     var w = window.open('dados-gerais');
     w._data_filters = data;
 }
@@ -310,7 +310,7 @@ function print_maps() {
     const $printContainer = $('<div style="position:relative;">');
     mapSize = $mapContainer.height();
     const $info = $('<div style="position: relative"><h4>Autorizações de Internação Hospitalar, AIH - tipo 1 (Normal),' +
-                    ' mapeadas pelo endereço de residência do paciente deslocadas para o centróide do setor censitário ' + 
+                    ' mapeadas pelo endereço de residência do paciente deslocadas para o centróide do setor censitário ' +
                     'correspondente.</h4></div>');
     const $space_map = $('<div style="height: ' + (mapSize + 150) + 'px;"></div>');
 
@@ -376,8 +376,11 @@ function dadosInput() {
         language: "pt-BR",
         container:'#datepicker',
     });
+    MAX_SLIDERS = MAX_SLIDERS.replace('[', '')
+    MAX_SLIDERS = MAX_SLIDERS.replace(']', '')
+    var fields = MAX_SLIDERS.split(',')
 
-    var max_hash = {"slider_0" : 351, "slider_1" : 148, "slider_2" : 99, "slider_3" : 351, "slider_4" : 100, "slider_5" : 30}
+    var max_hash = {"slider_0" : parseInt(fields[0]), "slider_1" : parseInt(fields[1]), "slider_2" : parseInt(fields[2]), "slider_3" : parseInt(fields[3]), "slider_4" : parseInt(fields[4]), "slider_5" : parseInt(fields[5])}
 
     for (i = 0; i < 6; i++) {
         slider = "slider_" + i.toString();
