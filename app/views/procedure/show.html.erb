@@ -1,4 +1,10 @@
 <div class = "row">
+    <%= javascript_tag do %>
+      window.MAX_SLIDERS = '<%= $MAX_SLIDERS.inspect.html_safe %>';
+    <% end %>
+
+
+
     <div id="map-affix" class = "col-sm-9 affix">
         <div class = "map-wrapper" id = "procedure_map"> </div>
     </div>
@@ -48,7 +54,7 @@
 
                 <% @filters.each_with_index do |f, i| %>
                     <div class="col-sm-12">
-                        <label for="<%= i %>"><b> 
+                        <label for="<%= i %>"><b>
                             <%= f %>
                         </b></label>
                         <select class="select-<%= i %> form-control" id="<%= i %>" multiple="multiple" onchange='change()'>
@@ -86,7 +92,7 @@
 
                 <% @sliders.each_with_index do |slid, index| %>
                     <div class="col-sm-12">
-                        <label for="<%= index %>"><b> 
+                        <label for="<%= index %>"><b>
                             <%= slid %>
                         </b></label>
                         <div class="row">
@@ -97,7 +103,7 @@
                                 <input id="slider_<%= index %>" type="text" style="width: 100%" />
                             </div>
                             <div class="col-sm-1" style = "text-align: left" id="text-left">
-                                <span id="slider_<%= index %>_max"><%= @max_days[index].to_s + "+" %></span>
+                                <span id="slider_<%= index %>_max"><%= $MAX_SLIDERS[index].to_s + "+" %></span>
                             </div>
                         </div>
                     </div>
@@ -114,7 +120,7 @@
                 </div>
 
                 <div class="col-sm-12">
-                    <hr> 
+                    <hr>
                     <button class="btn btn-success" type="button" id="btn-submit" onclick="buscar()">
                         <i class="fa fa-search" aria-hidden="true"></i> Buscar
                     </button>
