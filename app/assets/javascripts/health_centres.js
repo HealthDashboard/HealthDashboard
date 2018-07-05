@@ -45,11 +45,11 @@ function healthCentreClick(point) {
         point.phone = "Não Informado";
     }
     latlng = L.latLng(point.lat, point.long);
-    text = '<strong>Nome:</strong> ' + point.name + '<br><strong>Telefone:</strong> ' + point.phone 
+    text = '<strong>Nome:</strong> ' + point.name + '<br><strong>Telefone:</strong> ' + point.phone
     + '<br><strong>Leitos:</strong> ' + point.beds + '<br><strong>Distrito Administrativo:</strong> ' + point.DA
     + '<br><strong>Prefeitura Regional:</strong> ' + point.PR + '<br><strong>Supervisão Técnica de Saúde:</strong> '
     + point.STS + '<br><strong>Coordenadoria Regional de Saúde:</strong> ' + point.CRS
-    + "<br><br><button type='button' id='cluster_info' class='btn btn-info btn-sm' onclick='show_clusters(" + point.id + ", " + point.lat + "," + point.long + ")'>" 
+    + "<br><br><button type='button' id='cluster_info' class='btn btn-info btn-sm' onclick='show_clusters(" + point.id + ", " + point.lat + "," + point.long + ")'>"
     + " Mostrar Detalhes </button>" + '<button type="button" class="btn btn-info btn-sm pull-right" data-toggle="modal" onclick="update_chart('+ point.id +')" data-target="#myModal">Análise</button>';
     return text;
 }
@@ -57,9 +57,17 @@ function healthCentreClick(point) {
 function show_clusters(id, lat, long) {
     if (cluster_status === false) {
         setup_cluster(id, lat, long);
+        var hospital_path = ["/hospital/", id].join("");
+
+        $.getJSON(hospital_path, function(hospital) {
+            document.getElementById("search-name").innerHTML = hospital.name;
+        });
+
+        create_homepage_charts(id);
     } else {
         teardown_cluster(id);
         $('#legend').hide();
+        create_homepage_charts();
     }
 }
 
@@ -177,39 +185,43 @@ function create_chart() {
     google.charts.setOnLoadCallback(create_homepage_charts);
 }
 
-function create_homepage_charts() {
-    create_right_graph();
+function create_homepage_charts(id) {
+    console.log(id);
+    create_right_graph(id);
 
-    var data = [['pediatria', 10, 24, 20, 32, ''],
-                ['ginecologia', 16, 22, 23, 30, ''],
-                ['oftalmologia', 28, 19, 29, 30,  ''],
-                ['nefrologia', 16, 22, 23, 30, ''],
-                ['clinica geral', 28, 19, 29, 30,  '']
-               ];
-
-    var path = '/specialties_distance_metric.json';
+    if (id == undefined) {
+      var path = '/specialties_distance_metric.json';
+    }
+    else {
+      var path = ["/specialty_distance/", id].join("");
+    }
     $.getJSON(path, function(data) {
-        data1 = data.splice(0, Math.ceil(data.length / 2));
-        create_bottom_graphs("bt-graph1", data1);
         create_bottom_graphs("bt-graph2", data);
     });
 }
 
-function create_right_graph() {
+function create_right_graph(id) {
     var header = ["Especialidades", "Número de Procedimentos", {role: "style"}];
     var chart = new google.visualization.PieChart(document.getElementById("general-right-graph"));
     var options = {
-        width: 330,
-        height: 330,
+        width: '100%',
+        height:'100%',
         title: "",
         pieHole: 0.8,
         pieSliceBorderColor: "none",
         colors: ['green', 'yellow', 'orange', 'red'],
-        legend: {position: 'none'},
-        pieSliceText: "none"
+        pieSliceText: "none",
+        backgroundColor: { fill:'transparent'},
+        chartArea: {'width': '90%', 'height': '90%'}
     };
 
-    $.getJSON('/distance_metric.json', function(data) {
+    if (id == undefined) {
+      var path = '/distance_metric.json'
+    }
+    else {
+      var path = ["/distances/", id].join("");
+    }
+    $.getJSON(path, function(data) {
         draw_chart(header, data, chart, options, null);
         update_right_graph_text(data);
     });
@@ -221,10 +233,10 @@ function create_bottom_graphs(id, data) {
     var header = ['Genre', ' < 1 Km', '> 1 Km e < 5 Km',
                   '> 5 Km e  < 10 Km', '> 10 Km', {role: 'annotation' }];
     var options = {
-        height :250,
+        height :"100%",
         legend: { position: 'none'},
         isStacked: 'percent',
-        chartArea: {  width: "60%", height: "70%" },
+        chartArea: {  width: "80%", height: "70%", left:"20%" },
         vAxis: {minValue: 0,
                 ticks: [0, .2, .4, .6, .8, 1],
                 textStyle: {fontName: 'Arial',
@@ -269,3 +281,7 @@ function update_right_graph_text(data) {
 function about() {
     window.open("about");
 }
+
+// $(window).resize(function(){
+//   create_homepage_charts();
+// });

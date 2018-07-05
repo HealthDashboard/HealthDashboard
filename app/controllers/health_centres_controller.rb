@@ -10,6 +10,12 @@ class HealthCentresController < ApplicationController
         render json: health_centres_points
     end
 
+    # GET /hospital/:id
+    def hospital
+      health_centre = HealthCentre.find_by(id: params[:id])
+      render json: health_centre
+    end
+
     # GET /procedures/:id
     def procedures
         health_centre = HealthCentre.find_by(id: params[:id])
@@ -25,7 +31,74 @@ class HealthCentresController < ApplicationController
         procedures.each do |key, value|
             result[key.name] = value
         end
-        render json: result
+        render json: health_centre
+    end
+
+    # GET /specialty_distance/:id
+    def specialty_distance
+      health_centre = HealthCentre.find_by(id: params[:id])
+      procedures = health_centre.procedures
+
+
+      distance_metric = {0 => trata_specialty_distance(procedures.order(:specialty_id).group('distance >= 0 AND distance < 1', :specialty_id).count(:specialty_id)),
+                         1 => trata_specialty_distance(procedures.order(:specialty_id).group('distance >= 1 AND distance < 5', :specialty_id).count(:specialty_id)),
+                         2 => trata_specialty_distance(procedures.order(:specialty_id).group('distance >= 5 AND distance < 10', :specialty_id).count(:specialty_id)),
+                         3 => trata_specialty_distance(procedures.order(:specialty_id).group('distance >= 10', :specialty_id).count(:specialty_id))}
+
+      result = {}
+      count = 0
+      j = 0
+      distance_metric[0].each do |dc|
+        result[j] = {0 => dc[0], 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => ""}
+        count += 1
+        j+= 1
+      end
+
+      print (result)
+      print ("\ndistance\n")
+      print (distance_metric[0]["CIRURGIA"])
+      print("\n")
+
+      # result.each do |r|
+      #    i = 1
+      #    while i < 5 do
+      #      r[1][i] = distance_metric[i -1][r[0]]
+      #      i += 1
+      #    end
+      #    print("\n")
+      #    print (r[i[0]])
+      #    print("\n")
+      #
+      #  end
+
+      distance_metric.each do |dm|
+        j = 0
+        dm[1].each do |a|
+          i = 0
+          print ("\n a: ")
+          print (a[1])
+          while i < count do
+            result[i][j] = a[i]
+            i+= 1
+          end
+        end
+        j += 1
+      end
+      print ("\n result:")
+      print (result)
+
+      render json: distance_metric
+    end
+
+    def trata_specialty_distance(array)
+      result = {}
+      array.each do |a|
+        if a[0][0] == true
+          name = Specialty.find_by(id: a[0][1]).name
+          result[name] = a[1]
+        end
+      end
+      return result
     end
 
     # GET /specialties_count
@@ -88,36 +161,13 @@ class HealthCentresController < ApplicationController
         health_centre = HealthCentre.find_by(id: params[:id])
         procedures = health_centre.procedures
 
-        distances = Hash.new(0)
-        distances_by_specialty = {}
+        distance_metric = {'1': procedures.where("distance <= ?", 1).count.to_s,
+                            '5': procedures.where("distance > ? AND distance <= ?", 1, 5).count.to_s,
+                            '10': procedures.where("distance > ? AND distance <= ?", 5, 10).count.to_s,
+                            '10+': procedures.where("distance > ?", 10).count.to_s
+                          }
 
-        for i in 1..9
-            distances_by_specialty[i] = Hash.new(0)
-        end
-
-        labels = ['1', '5', '10', '10+']
-
-        procedures.each do |procedure|
-            specialty = procedure.specialty.id
-
-            if procedure.distance <= 1
-                distances[labels[0]] += 1
-                distances_by_specialty[specialty][labels[0]] += 1
-            elsif procedure.distance <= 5
-                distances[labels[1]] += 1
-                distances_by_specialty[specialty][labels[1]] += 1
-            elsif procedure.distance <= 10
-                distances[labels[2]] += 1
-                distances_by_specialty[specialty][labels[2]] += 1
-            else
-                distances[labels[3]] += 1
-                distances_by_specialty[specialty][labels[3]] += 1
-            end
-        end
-
-        total_info = {'distances': distances, 'specialty': distances_by_specialty}
-
-        render json: total_info
+        render json: distance_metric
     end
 
     # GET /distance_metric
