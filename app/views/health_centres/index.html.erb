@@ -1,35 +1,31 @@
+<%= stylesheet_link_tag "health_centres.css" %>
 
-<div class = "container-fluid">
-  <div class = "row">
-    <div class='col-sm-9'>
-      <div id='map'></div>
-    </div>
+<div class="page">
+<div class="mapa">
+      <div class="mapa fixed" id='map'></div>
+</div>
 
-    <div class='col-sm-3' align="center">
-      <div class='row'>
+<div class="info">
+    <h1 id="search-name"> São Paulo </h1>
+      <div class="grafico redondo">
         <div id='general-right-graph'></div>
-        <div id="labelOverlay" style="padding-top: 20px; padding-left: 30px;">
+        <div class="grafico-info">
+          <div id="labelOverlay">
             <p class="n_procedures"></p>
             <p class="atendimentos"></p>
+          </div>
+          <div id='distance-legend'>
+            <div> <div class="color lt-1km"></div><p class="text">&lt; 1 km</p> </div>
+            <div> <div class="color lg-1km-lt-5"></div><p class="text">&gt; 1 km e &lt; 5 km</p> </div>
+            <div> <div class="color lg-5km-lt-10"></div><p class="text">&gt; 5 km e &lt; 10 km</p> </div>
+            <div> <div class="color lg-10km"></div><p class="text">&gt; 10 km</p> </div>
+          </div>
         </div>
       </div>
 
-      <div class='row'>
-        <div id='distance-legend'>
-            <div class='item'> <div class="color lt-1km"></div><p class="text">&lt; 1 km</p> </div>
-            <div class='item'> <div class="color lg-1km-lt-5"></div><p class="text">&gt; 1 km e &lt; 5 km</p> </div>
-            <div class='item'> <div class="color lg-5km-lt-10"></div><p class="text">&gt; 5 km e &lt; 10 km</p> </div>
-            <div class='item'> <div class="color lg-10km"></div><p class="text">&gt; 10 km</p> </div>
-        </div>
-      </div>
-    </div>
+      <div class="grafico barras" id='bt-graph2'></div>
 
-      <div class='col-sm-12'>
-         <div class='col-md-6' id='bt-graph1'></div>
-         <div class='col-md-6' id='bt-graph2'></div>
-      </div>
-      <div class = "col-sm-12" style="height: 10px"></div>
-  </div>
+</div>
 </div>
 
 <!-- Analise button -->
@@ -50,7 +46,7 @@
   </div>
 </div>
 
-<div id="legend"></div>
+
 
 <script>
   $(document).ready(initialize)

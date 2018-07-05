@@ -3,8 +3,10 @@ Rails.application.routes.draw do
   root to: 'health_centres#index'
 
   get 'points', to: 'health_centres#points'
+  get 'hospital/:id', to: 'health_centres#hospital'
   get 'procedures/:id', to: 'health_centres#procedures'
   get 'specialties/:id', to: 'health_centres#specialties'
+  get 'specialty_distance/:id', to: 'health_centres#specialty_distance'
   get 'procedures_specialties/:id', to: 'health_centres#procedures_specialties'
 
   get '/specialties_count', to: 'health_centres#specialties_count'
@@ -12,8 +14,8 @@ Rails.application.routes.draw do
   get '/distances/:id', to: 'health_centres#distances'
   get '/rank_health_centres', to: 'health_centres#rank_health_centres'
   get '/distance_metric', to: 'health_centres#distance_metric'
-  get '/distance_quartis/:id', to: 'health_centres#distance_quartis' 
- 
+  get '/distance_quartis/:id', to: 'health_centres#distance_quartis'
+
   get 'dados-gerais', to: 'dashboard#index'
   get 'specialties', to: 'specialties#index'
   get 'busca', to: 'procedure#show'

@@ -1,0 +1,63 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
+.page {
+  display: flex;
+  flex-direction: row;
+}
+
+.mapa {
+  width: 50vw;
+  height: 100vh;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.info {
+  padding-left: 2vw;
+  padding-right: 1vw;
+  padding-top: 50px;
+  width: 50vw;
+}
+
+.grafico {
+  width: 47vw;
+}
+
+.barras {
+  height: 60vh;
+}
+
+.redondo {
+  display: flex;
+  flex-direction: row;
+  align-items: space-around;
+  justify-content: space-around;
+}
+
+#general-right-graph {
+  width: 20vw;
+  height: 30vh;
+}
+
+#distance-legend {
+  height: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.text {
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+
+.grafico-info{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
