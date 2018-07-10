@@ -3,6 +3,10 @@
   padding: 0;
 }
 
+hr {
+  border-top: 1px solid #cccccc;
+}
+
 .page {
   display: flex;
   flex-direction: row;
@@ -15,6 +19,14 @@
 
 .fixed {
   position: fixed;
+}
+
+.name {
+  width: 47vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1vh;
 }
 
 .info {
@@ -40,7 +52,7 @@
 }
 
 #general-right-graph {
-  width: 20vw;
+  width: 47vw;
   height: 30vh;
 }
 
