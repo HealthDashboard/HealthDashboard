@@ -105,6 +105,7 @@ function teardown_cluster(id) {
     markers_visible(true, id);
     $('#cluster_info').text('Mostrar Detalhes');
     cluster_status = false;
+    document.getElementById("search-name").innerHTML = "São Paulo";
     teardown_circles();
     teardown_markers()
 }
@@ -186,18 +187,28 @@ function create_chart() {
 }
 
 function create_homepage_charts(id) {
-    console.log(id);
     create_right_graph(id);
 
     if (id == undefined) {
       var path = '/specialties_distance_metric.json';
+      $.getJSON(path, function(data) {
+          create_bottom_graphs("bt-graph2", data);
+      });
     }
     else {
       var path = ["/specialty_distance/", id].join("");
+      $.getJSON(path, function(data) {
+          for (i = 0; i < Object.keys(data).length; i++) {
+            for (j = 1; j < 5; j++) {
+              data[i][j] = parseInt(data[i][j]);
+            }
+            data[i] = Object.values(data[i]);
+          }
+          data = Object.values(data);
+
+          create_bottom_graphs("bt-graph2", data);
+      });
     }
-    $.getJSON(path, function(data) {
-        create_bottom_graphs("bt-graph2", data);
-    });
 }
 
 function create_right_graph(id) {

@@ -54,40 +54,15 @@ class HealthCentresController < ApplicationController
         j+= 1
       end
 
-      print (result)
-      print ("\ndistance\n")
-      print (distance_metric[0]["CIRURGIA"])
-      print("\n")
-
-      # result.each do |r|
-      #    i = 1
-      #    while i < 5 do
-      #      r[1][i] = distance_metric[i -1][r[0]]
-      #      i += 1
-      #    end
-      #    print("\n")
-      #    print (r[i[0]])
-      #    print("\n")
-      #
-      #  end
-
-      distance_metric.each do |dm|
-        j = 0
-        dm[1].each do |a|
-          i = 0
-          print ("\n a: ")
-          print (a[1])
-          while i < count do
-            result[i][j] = a[i]
-            i+= 1
-          end
+      result.each do |r|
+        i = 1
+        while i < 5 do
+          r[1][i] = distance_metric[i - 1][r[1][0]].to_s
+          i += 1
         end
-        j += 1
       end
-      print ("\n result:")
-      print (result)
 
-      render json: distance_metric
+      render json: result
     end
 
     def trata_specialty_distance(array)
