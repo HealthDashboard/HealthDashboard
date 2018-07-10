@@ -136,10 +136,10 @@ class HealthCentresController < ApplicationController
         health_centre = HealthCentre.find_by(id: params[:id])
         procedures = health_centre.procedures
 
-        distance_metric = {'1': procedures.where("distance <= ?", 1).count.to_s,
-                            '5': procedures.where("distance > ? AND distance <= ?", 1, 5).count.to_s,
-                            '10': procedures.where("distance > ? AND distance <= ?", 5, 10).count.to_s,
-                            '10+': procedures.where("distance > ?", 10).count.to_s
+        distance_metric = {'1 km': procedures.where("distance <= ?", 1).count.to_s,
+                            '> 1 km e < 5 km': procedures.where("distance > ? AND distance <= ?", 1, 5).count.to_s,
+                            '> 5 km e < 10 km': procedures.where("distance > ? AND distance <= ?", 5, 10).count.to_s,
+                            '> 10 km': procedures.where("distance > ?", 10).count.to_s
                           }
 
         render json: distance_metric
@@ -147,10 +147,10 @@ class HealthCentresController < ApplicationController
 
     # GET /distance_metric
     def distance_metric
-        distance_metric = {'1': Procedure.where("distance <= ?", 1).count.to_s,
-                            '5': Procedure.where("distance > ? AND distance <= ?", 1, 5).count.to_s,
-                            '10': Procedure.where("distance > ? AND distance <= ?", 5, 10).count.to_s,
-                            '10+': Procedure.where("distance > ?", 10).count.to_s
+        distance_metric = {'1 km': Procedure.where("distance <= ?", 1).count.to_s,
+                            '> 1 km e < 5 km': Procedure.where("distance > ? AND distance <= ?", 1, 5).count.to_s,
+                            '> 5 km e < 10 km': Procedure.where("distance > ? AND distance <= ?", 5, 10).count.to_s,
+                            '> 10 km': Procedure.where("distance > ?", 10).count.to_s
                           }
 
         render json: distance_metric

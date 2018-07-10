@@ -223,11 +223,12 @@ function create_right_graph(id) {
         colors: ['green', 'yellow', 'orange', 'red'],
         pieSliceText: "none",
         backgroundColor: { fill:'transparent'},
-        chartArea: {'width': '90%', 'height': '90%'}
+        chartArea: {'width': '90%', 'height': '90%'},
+        legend: "center"
     };
 
     if (id == undefined) {
-      var path = '/distance_metric.json'
+      var path = '/distance_metric'
     }
     else {
       var path = ["/distances/", id].join("");
