@@ -1,0 +1,68 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
+.fixed {
+  position: fixed;
+    top: 0;
+}
+
+.main-div {
+}
+
+.texto-div {
+  width: 100vw;
+  height: 60vh;
+  background-color: #d6d6d6;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding-left: 3vw;
+  padding-right: 3vw;
+}
+
+.membros-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 30vh;
+  margin-top: 70vh;
+  overflow-y: hidden;
+}
+
+.membros-titulo {
+  font-size: 2em;
+  font-weight: lighter;
+}
+
+.membros-list-div {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  width: 100vw;
+}
+
+.membro-div {
+  display: flex;
+  flex-direction: column;
+  margin-right: 1vw;
+  margin-left: 1vw;
+}
+
+.membro-div-img {
+  border-radius: 50%;
+  width: 15vh;
+  height: 15vh;
+}
+
+.membro-div-name {
+  max-width: 15vh;
+  max-height: 15vh;
+}
+
+.membro-div p {
+  margin-bottom: 0;
+}
