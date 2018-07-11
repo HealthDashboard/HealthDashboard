@@ -29,6 +29,10 @@ hr {
   margin-bottom: 1vh;
 }
 
+#search-name {
+  font-family: 'Raleway', sans-serif;
+}
+
 .info {
   padding-left: 2vw;
   padding-right: 1vw;

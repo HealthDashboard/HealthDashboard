@@ -20,7 +20,7 @@ function initialize() {
         maxZoom: 18,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }),
-    latlng = L.latLng(-23.557296000000001, -46.669210999999997);
+    latlng = L.latLng(-23.56, -46.58);
     map = L.map('map', { center: latlng, zoom: 11, layers: [tiles] });
     load_all_points();
     create_chart();
@@ -105,7 +105,7 @@ function teardown_cluster(id) {
     markers_visible(true, id);
     $('#cluster_info').text('Mostrar Detalhes');
     cluster_status = false;
-    document.getElementById("search-name").innerHTML = "São Paulo";
+    document.getElementById("search-name").innerHTML = "SÃO PAULO";
     teardown_circles();
     teardown_markers()
 }
