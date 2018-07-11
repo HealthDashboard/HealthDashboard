@@ -24,6 +24,43 @@
   padding-right: 3vw;
 }
 
+.text-section {
+  width: 100vw;
+  flex-direction: row;
+}
+
+.image-left-text-section {
+  width: 10vh;
+  height: 10vh;
+  flex-direction: row;
+  float: left;
+  margin-left: 13vw;
+  padding-right: 1.5vw;
+}
+
+.image-right-text-section {
+  width: 10vh;
+  height: 10vh;
+  flex-direction: row;
+  float: right;
+  margin-right: 13vw;
+  padding-left: 1vw;
+}
+
+.left-text-section {
+  width: 90hv;
+  height: 10hv;
+  flex-direction: row;
+  margin-left: 9vw;
+}
+
+.right-text-section {
+  width: 90hv;
+  height: 10hv;
+  flex-direction: row;
+  margin-right: 12vw;
+}
+
 .membros-div {
   display: flex;
   flex-direction: column;
@@ -65,4 +102,30 @@
 
 .membro-div p {
   margin-bottom: 0;
+}
+
+#image-text-section1 {
+  width: 100vw;
+  height: 1.5vh;
+  flex-direction: row;
+}
+
+#image-text-section2 {
+  width: 100vw;
+  height: 1.5vh;
+  margin-left: 15px;
+  flex-direction: row;
+}
+
+#image-text-section3 {
+  width: 100vw;
+  height: 1.5vh;
+  flex-direction: row;
+}
+
+#image-text-section4 {
+  width: 100vw;
+  height: 6vh;
+  padding-bottom: 3vh;
+  flex-direction: row;
 }
