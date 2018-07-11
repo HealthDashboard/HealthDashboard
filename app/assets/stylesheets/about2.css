@@ -5,14 +5,18 @@
 
 .main-div {
   display: flex;
+}
 
+.fixed {
+  padding-top: 50px;
+  width: 50vw;
+  background-color: #d6d6d6;
+  height: 100vh;
+  overflow-x: auto;
 }
 
 .texto-div {
-  padding-top: 50px;
   width: 50vw;
-  height: 100vh;
-  background-color: #d6d6d6;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -20,7 +24,29 @@
   text-align: center;
   padding-left: 3vw;
   padding-right: 3vw;
-  overflow-x: auto;
+  height: calc(100vh - 50px);
+}
+
+.titulo {
+  font-family: 'Raleway', sans-serif;
+}
+
+.right-text-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.left-text-section {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-section {
+  height: 15vh;
+  margin: 0 1vw 0 1vw;
 }
 
 .membros-div {
@@ -34,14 +60,15 @@
   flex-direction: column;
   align-items: center;
   background-color: #ffffff;
-  margin: 2vh 3vw 0 3vw;
-  height: 80vh;
+  margin: 3vh 3vw 2vh 3vw;
+  height: 87vh;
   overflow-x: auto;
   border: 2px solid #afafaf;
   box-shadow: 5px 5px 3px #757575;
 }
 
 .membros-titulo {
+  font-family: 'Raleway', sans-serif;
 }
 
 .membros-list-div {
@@ -67,7 +94,7 @@
 
 .membro-div-name {
   max-width: 15vh;
-  max-height: 15vh;
+  font-family: 'Raleway', sans-serif;
 }
 
 .membro-div p {
