@@ -10,7 +10,7 @@
 .fixed {
   padding-top: 50px;
   width: 50vw;
-  background-color: #d6d6d6;
+  background-color: #fff;
   height: 100vh;
   overflow-x: auto;
 }
@@ -52,14 +52,14 @@
 .membros-div {
   width: 50vw;
   padding-top: 50px;
-  background-color: #d6d6d6;
+  background-color: #fff;
 }
 
 .membros-panel {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #ffffff;
+  background-color: #e9e9e9;
   margin: 3vh 3vw 2vh 3vw;
   height: 87vh;
   overflow-x: auto;
