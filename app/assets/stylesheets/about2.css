@@ -1,0 +1,75 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
+.main-div {
+  display: flex;
+
+}
+
+.texto-div {
+  padding-top: 50px;
+  width: 50vw;
+  height: 100vh;
+  background-color: #d6d6d6;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding-left: 3vw;
+  padding-right: 3vw;
+  overflow-x: auto;
+}
+
+.membros-div {
+  width: 50vw;
+  padding-top: 50px;
+  background-color: #d6d6d6;
+}
+
+.membros-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+  margin: 2vh 3vw 0 3vw;
+  height: 80vh;
+  overflow-x: auto;
+  border: 2px solid #afafaf;
+  box-shadow: 5px 5px 3px #757575;
+}
+
+.membros-titulo {
+}
+
+.membros-list-div {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  width: inherit;
+}
+
+.membro-div {
+  display: flex;
+  flex-direction: column;
+  margin-right: 1vw;
+  margin-left: 1vw;
+  margin-top: 1vh;
+}
+
+.membro-div-img {
+  border-radius: 50%;
+  width: 15vh;
+  height: 15vh;
+}
+
+.membro-div-name {
+  max-width: 15vh;
+  max-height: 15vh;
+}
+
+.membro-div p {
+  margin-bottom: 0;
+}
