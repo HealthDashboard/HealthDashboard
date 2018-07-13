@@ -17,11 +17,6 @@ class ProcedureController < ApplicationController
 	# GET /
 	# Return "busca avancada" page
 	def show
-		i = 0
-		while (i < $MAX_SLIDERS.length) do
-			$MAX_SLIDERS[i] = round_up($MAX_SLIDERS[i])
-			i += 1
-		end
 		@filters = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Grupo étnico", "Nível de instrução", "Competência",
 			"Grupo do procedimento autorizado", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)",
 			"Tipo de financiamento", "Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Complexidade", "Gestão"]
@@ -294,12 +289,5 @@ class ProcedureController < ApplicationController
 		procedure = Procedure.where(id: params[:id]).select(:cnes_id, :gender, :age_number, :cid_primary, :CRS, :date, :distance).to_a
 
 		render json: procedure
-	end
-
-	def round_up (num)
-		if (num % 5) != 0
-			num = num + 5 - (num % 5)
-		end
-		return num
 	end
 end
