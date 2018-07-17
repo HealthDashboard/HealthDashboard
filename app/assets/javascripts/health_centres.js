@@ -314,6 +314,14 @@ function draw_bottom_graph(header, data, chart, options) {
 
     values.unshift(header);
     var data_table = google.visualization.arrayToDataTable(values);
+    var formatter = new google.visualization.NumberFormat({ 
+        decimalSymbol: ',',
+        groupingSymbol: '.' 
+    });
+    formatter.format(data_table, 1);
+    formatter.format(data_table, 2);
+    formatter.format(data_table, 3);
+    formatter.format(data_table, 4);
     var view = new google.visualization.DataView(data_table);
     chart.draw(view, options);
 }
@@ -325,6 +333,7 @@ function update_right_graph_text(data) {
     $.each(data,function(key, value) {
         sum += parseInt(value, 10);
     });
+    sum = sum.toLocaleString('pt-BR');
     $graph_text1.html("<br><br><br> " + sum);
     $graph_text2.html("Procedimentos");
 }
