@@ -31,7 +31,7 @@ class HealthCentresController < ApplicationController
         procedures.each do |key, value|
             result[key.name] = value
         end
-        render json: health_centre
+        render json: result
     end
 
     # GET /specialty_distance/:id
