@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  google.charts.load("current", {packages:["corechart"]});
+  google.charts.load("current", {packages:["corechart"], language: 'pt'});
 })
 
 var types_color = {
