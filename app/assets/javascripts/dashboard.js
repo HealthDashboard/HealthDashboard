@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    google.charts.load("current", {packages:["corechart"]});
+    google.charts.load('current', {'packages':["corechart"], 'language':'pt'});
 });
 
 var specialties_color = {
@@ -207,11 +207,9 @@ function draw_chart(header, result, chart, options, color) {
     $.each(result, function(name, number) {
         values.push([name, parseFloat(number), color[name]]);
     });
-
     values.unshift(header)
     var data_table = google.visualization.arrayToDataTable(values);
     var view = new google.visualization.DataView(data_table);
-
     view.setColumns([0, 1, {calc: "stringify", sourceColumn: 1, type: "string", role: "annotation"}, 2]);
     chart.draw(view, options);
 }
