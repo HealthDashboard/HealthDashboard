@@ -186,6 +186,21 @@ function create_chart() {
     google.charts.setOnLoadCallback(create_homepage_charts);
 }
 
+function LowerCase(data) {
+  for (i = 0; i < data.length; i++) {
+    data[i][0] = data[i][0].toLowerCase();
+    data[i][0] = data[i][0].substring(0,1).toLocaleUpperCase() + data[i][0].substring(1);
+  }
+  return data;
+}
+
+function UpperCase(data) {
+  for (i = 0; i < data.length; i++) {
+    data[i][0] = data[i][0].toUpperCase();
+  }
+  return data;
+}
+
 function create_homepage_charts(id) {
     /*create_right_graph(id);*/
     var dataSpecialty, dataTotal, pathSpecialty, pathTotal, n, i
@@ -200,10 +215,11 @@ function create_homepage_charts(id) {
         }),
         $.getJSON(pathSpecialty, function(data) {
           dataSpecialty = data;
+          dataSpecialty = UpperCase(dataSpecialty);
         })
       ).then(function(){
           n = dataSpecialty.length;
-          dataSpecialty[n] = ["Total", 0, 0, 0, 0, ""];
+          dataSpecialty[n] = ["TOTAL", 0, 0, 0, 0, ""];
 
           i = 1;
           for (d in dataTotal) {
@@ -285,7 +301,7 @@ function create_bottom_graphs(id, data) {
     var options = {
         legend: 'bottom',
         isStacked: 'percent',
-        chartArea: {  width: "80%", height: "90%", left:218 },
+        chartArea: {  width: "80%", height: "90%", left:278 },
         vAxis: {minValue: 0,
                 ticks: [0, .2, .4, .6, .8, 1],
                 textStyle: {fontName: 'Arial',
