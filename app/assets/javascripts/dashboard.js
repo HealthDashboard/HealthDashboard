@@ -205,7 +205,7 @@ function draw_chart(header, result, chart, options, color) {
     }
     var values = [];
     $.each(result, function(name, number) {
-        values.push([name, parseFloat(number), color[name]]);
+        values.push([name, parseFloat(number.toFixed(1)), color[name]]);
     });
     values.unshift(header)
     var data_table = google.visualization.arrayToDataTable(values);
