@@ -2,17 +2,6 @@ class ProcedureController < ApplicationController
 	# Cons, AVOID USING NUMBERS, make a constant instead
 	NUM_FILTERS = 19
 	$MAX_SLIDERS = [351, 148, 99, 351, 100, 30]
-	# Remove
-	def allProcedures
-		allProcedures = Procedure.all
-		render json: allProcedures.to_a
-	end
-
-	# Remove
-	def procedures_count
-		total = Procedure.all.count
-		render json: total
-	end
 
 	# GET /
 	# Return "busca avancada" page
@@ -21,7 +10,6 @@ class ProcedureController < ApplicationController
 			"Grupo do procedimento autorizado", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)",
 			"Tipo de financiamento", "Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Complexidade", "Gestão"]
 		@sliders = ["Total geral de diárias", "Diárias UTI", "Diárias UI", "Dias de permanência", "Valor da parcela", "Distância de deslocamento(Km)"]
-		#@max_days = [351, 148, 99, 351, 100, 30]
 
 		# Values for filters
 		health_centres = JSON.parse(File.read(Rails.root.join('public/health_centres.json')))
@@ -76,7 +64,6 @@ class ProcedureController < ApplicationController
 		if params[:sliders] != nil
 			params[:sliders].each_with_index do |slider, i|
 				session[:sliders][i] = [slider[1][0].to_i, slider[1][1].to_i]
-				print session[:sliders][i]
 			end
 		end
 
