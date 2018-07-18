@@ -46,11 +46,9 @@ class HealthCentresController < ApplicationController
                          3 => trata_specialty_distance(procedures.order(:specialty_id).group('distance >= 10', :specialty_id).count(:specialty_id))}
 
       result = {}
-      count = 0
       j = 0
       distance_metric[0].each do |dc|
         result[j] = {0 => dc[0], 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => ""}
-        count += 1
         j+= 1
       end
 
