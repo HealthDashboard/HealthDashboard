@@ -217,7 +217,7 @@ function markerOnClick(e) {
             text += "<strong>CID: </strong>" + cid_array[result[0].cid_primary] + "<br>";
             text += "<strong>CRS: </strong>" + result[0].CRS + "<br>";
             text += "<strong>Data: </strong>" + result[0].date + "<br>";
-            text += "<strong>Distância: </strong>" + parseFloat(result[0].distance).toPrecision(4).replace(".", ",") + " Km <br>";
+            text += "<strong>Distância: </strong>" + parseFloat(result[0].distance).toFixed(1).replace(".", ",") + " Km <br>";
             e.target.bindPopup(text, {cnes: cnes});
             e.target.openPopup();
             health_centres_makers(cnes);
