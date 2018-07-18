@@ -314,14 +314,6 @@ function draw_bottom_graph(header, data, chart, options) {
 
     values.unshift(header);
     var data_table = google.visualization.arrayToDataTable(values);
-    var formatter = new google.visualization.NumberFormat({ 
-        decimalSymbol: ',',
-        groupingSymbol: '.' 
-    });
-    formatter.format(data_table, 1); //that will change the number format of column 1
-    formatter.format(data_table, 2); //that will change the number format of column 2
-    formatter.format(data_table, 3); //that will change the number format of column 3
-    formatter.format(data_table, 4); //that will change the number format of column 4
     var view = new google.visualization.DataView(data_table);
     chart.draw(view, options);
 }
