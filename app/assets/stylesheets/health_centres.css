@@ -38,6 +38,9 @@ hr {
   padding-right: 1vw;
   padding-top: 50px;
   width: 50vw;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 50px);
 }
 
 .grafico {
@@ -45,7 +48,7 @@ hr {
 }
 
 .barras {
-  height: 60vh;
+  flex-grow: 1;
 }
 
 .redondo {

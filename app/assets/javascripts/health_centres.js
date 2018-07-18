@@ -187,29 +187,67 @@ function create_chart() {
 }
 
 function create_homepage_charts(id) {
-    create_right_graph(id);
+    /*create_right_graph(id);*/
+    var dataSpecialty, dataTotal, pathSpecialty, pathTotal, n, i
 
     if (id == undefined) {
-      var path = '/specialties_distance_metric.json';
-      $.getJSON(path, function(data) {
-          create_bottom_graphs("bt-graph2", data);
+      pathTotal = '/distance_metric.json';
+      pathSpecialty = '/specialties_distance_metric.json'
+      $.when (
+        $.getJSON(pathTotal, function(data) {
+            update_right_graph_text(data)
+            dataTotal = data;
+        }),
+        $.getJSON(pathSpecialty, function(data) {
+          dataSpecialty = data;
+        })
+      ).then(function(){
+          n = dataSpecialty.length;
+          dataSpecialty[n] = ["Total", 0, 0, 0, 0, ""];
+
+          i = 1;
+          for (d in dataTotal) {
+            dataSpecialty[n][i] = dataTotal[d];
+            i++;
+          }
+
+          create_bottom_graphs("bt-graph2", dataSpecialty);
       });
     }
     else {
-      var path = ["/specialty_distance/", id].join("");
-      $.getJSON(path, function(data) {
-          for (i = 0; i < Object.keys(data).length; i++) {
+      pathTotal = ["/distances/", id].join("");
+      pathSpecialty = ["/specialty_distance/", id].join("");
+      $.when (
+        $.getJSON(pathTotal, function(data) {
+            update_right_graph_text(data)
+            dataTotal = data;
+        }),
+        $.getJSON(pathSpecialty, function(data) {
+          dataSpecialty = data;
+        })
+      ).then(function(){
+          for (i = 0; i < Object.keys(dataSpecialty).length; i++) {
             for (j = 1; j < 5; j++) {
-              data[i][j] = parseInt(data[i][j]);
+              dataSpecialty[i][j] = parseInt(dataSpecialty[i][j]);
             }
-            data[i] = Object.values(data[i]);
+            dataSpecialty[i] = Object.values(dataSpecialty[i]);
           }
-          data = Object.values(data);
+          dataSpecialty = Object.values(dataSpecialty);
 
-          create_bottom_graphs("bt-graph2", data);
+          n = dataSpecialty.length;
+          dataSpecialty[n] = ["TOTAL", 0, 0, 0, 0, ""];
+
+          i = 1;
+          for (d in dataTotal) {
+            dataSpecialty[n][i] = dataTotal[d];
+            i++;
+          }
+
+          create_bottom_graphs("bt-graph2", dataSpecialty);
       });
     }
 }
+
 
 function create_right_graph(id) {
     var header = ["Especialidades", "Número de Procedimentos", {role: "style"}];
@@ -245,10 +283,9 @@ function create_bottom_graphs(id, data) {
     var header = ['Genre', ' < 1 Km', '> 1 Km e < 5 Km',
                   '> 5 Km e  < 10 Km', '> 10 Km', {role: 'annotation' }];
     var options = {
-        height :"100%",
-        legend: { position: 'none'},
+        legend: 'bottom',
         isStacked: 'percent',
-        chartArea: {  width: "80%", height: "70%", left:"20%" },
+        chartArea: {  width: "80%", height: "90%", left:218 },
         vAxis: {minValue: 0,
                 ticks: [0, .2, .4, .6, .8, 1],
                 textStyle: {fontName: 'Arial',
