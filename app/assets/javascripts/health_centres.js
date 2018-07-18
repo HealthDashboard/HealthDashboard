@@ -27,21 +27,38 @@ function initialize() {
 }
 
 function load_all_points() {
-    var health_centre_icon = '/health_centre_icon.png';
-    var hcIcon = L.icon({iconUrl: health_centre_icon, iconAnchor: [25, 0]});
     $.getJSON('/points.json', function(points) {
         $.each(points, function(index, point) {
-            marker = L.marker(L.latLng(point.lat, point.long), {icon: hcIcon, point: point, alt: point.name, riseOnHover:true, interactive: true});
-            marker.bindTooltip(point.name, {direction:'top'});
-            marker.on('click', onClick);
-            function onClick(e) {
-                healthCentreClick(point);
-                show_clusters(point.id, point.lat, point.long);
+            var health_centre_icon;
+            //the icon will be different for each administration type
+            if(point.adm === 'MUNICIPAL'){
+                health_centre_icon = '/health_centre_icon2.png';
             }
+            if(point.adm === 'ESTADUAL'){
+                health_centre_icon = '/health_centre_icon.png';
+            }
+            var hcIcon = L.icon({iconUrl: health_centre_icon});
+            marker = L.marker(L.latLng(point.lat, point.long), {icon: hcIcon, point: point});
+            text = healthCentreClick(point)
+            marker.bindPopup(text);
             marker.addTo(map);
             hcMarkers.push(marker);
         });
     });
+    var legend = L.control({position: 'bottomright'}); //position where the legend will be fixed
+    legend.onAdd = function (map) {
+        //creating the div
+        var div = L.DomUtil.create('div', 'info_legend_icons'),
+            labels = ["MUNICIPAL", "ESTADUAL"],
+            icons = ["/health_centre_icon2.png","/health_centre_icon.png"];
+        // iteration to add the legend with labels and icons
+        for (var i = 0; i < labels.length; i++) {
+            div.innerHTML += "<strong>" + labels[i] + "</strong>" + (" <img src="+ icons[i] +
+                " height='50' width='50'>") +'<br>';
+        }
+        return div;
+    };
+    legend.addTo(map);
 }
 
 
