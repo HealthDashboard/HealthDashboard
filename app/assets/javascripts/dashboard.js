@@ -243,9 +243,9 @@ function create_table_rank(result) {
         } else {
             rows += "<tr>"
         }
-        rows += " <th scope=\"row\">" + (index++) + "</th><td>" + name + "</td> <td>" + n_procedures + "</td></tr>"
+        rows += " <th scope=\"row\">" + (index++) + "</th><td>" + name + "</td> <td>" + n_procedures.toLocaleString('pt-BR') + "</td></tr>"
             Total += n_procedures
     });
-    rows += " <th scope=\"row\">#</th><td> TOTAL </td> <td>" + Total + "</td></tr>"
+    rows += " <th scope=\"row\">#</th><td> TOTAL </td> <td>" + Total.toLocaleString('pt-BR') + "</td></tr>"
     rank_table.html(rows);
 }
