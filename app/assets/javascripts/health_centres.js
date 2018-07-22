@@ -28,30 +28,53 @@ function initialize() {
 
 function load_all_points() {
     var health_centre_icon = '/health_centre_icon.png';
-    var hcIcon = L.icon({iconUrl: health_centre_icon});
+    var hcIcon = L.icon({iconUrl: health_centre_icon, iconAnchor: [25, 0]});
     $.getJSON('/points.json', function(points) {
         $.each(points, function(index, point) {
-            marker = L.marker(L.latLng(point.lat, point.long), {icon: hcIcon, point: point});
-            text = healthCentreClick(point)
-            marker.bindPopup(text);
+            marker = L.marker(L.latLng(point.lat, point.long), {icon: hcIcon, point: point, alt: point.name, riseOnHover:true, interactive: true});
+            marker.bindTooltip(point.name, {direction:'top'});
+            marker.on('click', onClick);
+            function onClick(e) {
+                healthCentreClick(point);
+                show_clusters(point.id, point.lat, point.long);
+            }
             marker.addTo(map);
             hcMarkers.push(marker);
         });
     });
 }
 
+
+
 function healthCentreClick(point) {
     if (point.phone == null) {
         point.phone = "Não Informado";
     }
     latlng = L.latLng(point.lat, point.long);
-    text = '<strong>Nome:</strong> ' + point.name + '<br><strong>Telefone:</strong> ' + point.phone
-    + '<br><strong>Leitos:</strong> ' + point.beds + '<br><strong>Distrito Administrativo:</strong> ' + point.DA
-    + '<br><strong>Prefeitura Regional:</strong> ' + point.PR + '<br><strong>Supervisão Técnica de Saúde:</strong> '
-    + point.STS + '<br><strong>Coordenadoria Regional de Saúde:</strong> ' + point.CRS
-    + "<br><br><button type='button' id='cluster_info' class='btn btn-info btn-sm' onclick='show_clusters(" + point.id + ", " + point.lat + "," + point.long + ")'>"
-    + " Mostrar Detalhes </button>" + '<button type="button" class="btn btn-info btn-sm pull-right" data-toggle="modal" onclick="update_chart('+ point.id +')" data-target="#myModal">Análise</button>';
-    return text;
+    text = '<div id="hosp-info-text">'
+    + '<strong>Telefone:</strong> ' + point.phone
+    + '<br><strong>Leitos:</strong> ' + point.beds
+    + '<br><strong>Distrito Administrativo:</strong> ' + point.DA
+    + '<br><strong>Prefeitura Regional:</strong> ' + point.PR
+    + '<br><strong>Supervisão Técnica de Saúde:</strong> ' + point.STS
+    + '<br><strong>Coordenadoria Regional de Saúde:</strong> ' + point.CRS
+    + '<br></div><div class="btn-row">'
+    + '<button type="button" class="button" data-toggle="modal" onclick="update_chart('+ point.id +')" data-target="#myModal">Análise</button>'
+    + '<button type="button" class="button" onclick="show_clusters(' + point.id + ', ' + point.lat + ',' + point.long + ')">Esconder Detalhes</button>'
+    + '<button type="button" id="hide_btn" class="button" onclick="hide_info()">Esconder info</button>'
+    + '</div>';
+    document.getElementById("hosp-info").innerHTML = text;
+}
+
+function hide_info() {
+  var x = document.getElementById("hosp-info-text");
+  if (x.style.display === "none") {
+      x.style.display = "block";
+      document.getElementById("hide_btn").innerHTML = "Esconder info";
+  } else {
+      x.style.display = "none";
+      document.getElementById("hide_btn").innerHTML = "Mostrar info";
+  }
 }
 
 function show_clusters(id, lat, long) {
@@ -66,7 +89,6 @@ function show_clusters(id, lat, long) {
         create_homepage_charts(id);
     } else {
         teardown_cluster(id);
-        $('#legend').hide();
         create_homepage_charts();
     }
 }
@@ -80,7 +102,6 @@ function setup_cluster(id, lat, long) {
         create_circles(id, lat, long);
     });
 
-    $('#cluster_info').text('Esconder Detalhes');
     cluster_status = true;
 }
 
@@ -103,9 +124,9 @@ function show_procedures(procedures) {
 // Remove clusters
 function teardown_cluster(id) {
     markers_visible(true, id);
-    $('#cluster_info').text('Mostrar Detalhes');
     cluster_status = false;
     document.getElementById("search-name").innerHTML = "SÃO PAULO";
+    document.getElementById("hosp-info").innerHTML = "";
     teardown_circles();
     teardown_markers()
 }
@@ -121,7 +142,7 @@ function create_circles(id, lat, long) {
                 fillOpacity: 0.4,
                 radius: radius[i] * 1000
             }).addTo(map);
-            circle.bindTooltip("Raio de " + radius[i] + " Km<br>" + (100 - (25 + 25 * i)).toString() + "% das internações hospitalares")
+            circle.bindTooltip("Raio de " + radius[i] + " Km<br>" + (100 - (25 + 25 * i)).toString() + "% das internações hospitalares", {direction:'top'})
             circles.push(circle);
         }
     });
