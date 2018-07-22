@@ -4,7 +4,7 @@
 }
 
 hr {
-  border-top: 1px solid #cccccc;
+  border-top: 1px solid #8e8e8e;
 }
 
 .page {
@@ -21,8 +21,44 @@ hr {
   position: fixed;
 }
 
-.name {
+.info-text {
+  display: flex;
+  flex-direction: column;
   width: 47vw;
+  flex-grow: 0;
+}
+
+.btn-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.button {
+  width: 33%;
+  border-top: 0;
+  border-bottom: 0;
+  border-left: 1px;
+  border-right:0;
+  border-style: solid;
+  border-color: #cdcdcd;
+  background-color: #fff;
+  color: #8e8e8e;
+  bottom: -15px;
+  position: relative;
+  font-family: 'Raleway', sans-serif;
+}
+
+.button:hover {
+  font-weight: bold;
+}
+
+.button:first-child {
+  border-left: 0;
+}
+
+.name {
+  width: inherit;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -49,34 +85,4 @@ hr {
 
 .barras {
   flex-grow: 1;
-}
-
-.redondo {
-  display: flex;
-  flex-direction: row;
-  align-items: space-around;
-  justify-content: space-around;
-}
-
-#general-right-graph {
-  width: 47vw;
-  height: 30vh;
-}
-
-#distance-legend {
-  height: 40%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.text {
-  margin-bottom: 0;
-  vertical-align: middle;
-}
-
-.grafico-info{
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
 }
