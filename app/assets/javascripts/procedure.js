@@ -148,8 +148,8 @@ function buscar() {
 
     sliders = [];
     for (i = 0; i < 6; i++) {
-        sliders.push([parseInt(document.getElementById('slider_' + i +'_min').textContent),
-                      parseInt(document.getElementById('slider_' + i +'_max').textContent)]);
+        sliders.push([parseInt(document.getElementById('input_slider_' + i +'_min').textContent),
+                      parseInt(document.getElementById('input_slider_' + i +'_max').textContent)]);
     }
 
     data = {filters: filters, gender: genders.toString(), start_date: start_date.toString(), end_date: end_date.toString(), sliders: sliders};
@@ -380,10 +380,13 @@ function dadosInput() {
     MAX_SLIDERS = MAX_SLIDERS.replace(']', '')
     var fields = MAX_SLIDERS.split(',')
 
+
     var max_hash = {"slider_0" : parseInt(fields[0]), "slider_1" : parseInt(fields[1]), "slider_2" : parseInt(fields[2]), "slider_3" : parseInt(fields[3]), "slider_4" : parseInt(fields[4]), "slider_5" : parseInt(fields[5])}
 
     for (i = 0; i < 6; i++) {
         slider = "slider_" + i.toString();
+        document.getElementById("input_slider_" + i.toString() + "_min").setAttribute("max", max_hash[slider]);
+        document.getElementById("input_slider_" + i.toString() + "_max").setAttribute("max", max_hash[slider]);
         $("#" + slider).slider({
             min: 0,
             max: max_hash[slider],
@@ -392,10 +395,10 @@ function dadosInput() {
         });
 
         $("#slider_" + i.toString()).on("slide", function(slideEvt) {
-            slider_min  = "#" + slideEvt.currentTarget.id + "_min"
-            slider_max  = "#" + slideEvt.currentTarget.id + "_max"
-            $(slider_min).html(slideEvt.value[0]);
-            $(slider_max).html(slideEvt.value[1] + (slideEvt.value[1] >= max_hash[slideEvt.currentTarget.id] ? "+" : ""));
+            slider_min  = "input_" + slideEvt.currentTarget.id + "_min";
+            slider_max  = "input_" + slideEvt.currentTarget.id + "_max";
+            document.getElementById(slider_min).value = slideEvt.value[0];
+            document.getElementById(slider_max).value = slideEvt.value[1];
         });
     }
 
@@ -421,5 +424,13 @@ function dadosInput() {
                 health_centres_array[value.id] = value.text;
             });
         });
+    }
+}
+
+function inputSlider(){
+    for (var i = 0; i < 6; i++) {
+        var minValue = document.getElementById("input_slider_" + i.toString() + "_min").value;
+        var maxValue = document.getElementById("input_slider_" + i.toString() + "_max").value;
+        $("#slider_" + i.toString()).slider("setValue", [parseInt(minValue), parseInt(maxValue)]);
     }
 }

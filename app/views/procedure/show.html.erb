@@ -4,9 +4,6 @@
     <%= javascript_tag do %>
       window.MAX_SLIDERS = '<%= $MAX_SLIDERS.inspect.html_safe %>';
     <% end %>
-
-
-
     <div id="map-affix" class = "col-sm-9 affix">
         <div class = "map-wrapper" id = "procedure_map"> </div>
     </div>
@@ -90,15 +87,15 @@
                         <label for="<%= index %>" title="<%= @titles_sliders[index] %>"><b>
                             <%= slid %>
                         </b></label>
-                        <div class="row">
-                            <div class="col-sm-1 text-right">
-                                <span id="slider_<%= index %>_min">0</span>
+                        <div class="row slider-div">
+                            <div class="col-sm-1 text-right left">
+                                <span id="slider_<%= index %>_min"><input id="input_slider_<%= index %>_min" class="min-number" type="number" name="minSlider" value="0" onchange="inputSlider()" min="0"></span>
                             </div>
-                            <div class="col-sm-9">
-                                <input id="slider_<%= index %>" type="text" style="width: 100%" />
+                            <div class="col-sm-9 left">
+                                <input class="slider" id="slider_<%= index %>" type="text" style="width: 85%" />
                             </div>
-                            <div class="col-sm-1" style = "text-align: left" id="text-left">
-                                <span id="slider_<%= index %>_max"><%= $MAX_SLIDERS[index].to_s + "+" %></span>
+                            <div class="col-sm-1 left" style = "text-align: left" id="text-left">
+                                <span id="slider_<%= index %>_max"><input id="input_slider_<%= index %>_max" class="max-number" type="number" name="maxSlider" value="<%= $MAX_SLIDERS[index].to_s %>" onchange="inputSlider()" min="0"></span>
                             </div>
                         </div>
                     </div>
