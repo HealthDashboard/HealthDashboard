@@ -45,7 +45,7 @@ function load_all_points() {
             hcMarkers.push(marker);
         });
     });
-    var legend = L.control({position: 'bottomright'}); //position where the legend will be fixed
+    var legend = L.control({position: 'topright'}); //position where the legend will be fixed
     legend.onAdd = function (map) {
         //creating the div
         var div = L.DomUtil.create('div', 'info_legend_icons'),
