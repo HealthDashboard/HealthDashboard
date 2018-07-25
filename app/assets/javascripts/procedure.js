@@ -427,10 +427,37 @@ function dadosInput() {
     }
 }
 
+//*Called when the textbox slider reads a new value*//
 function inputSlider(){
+    MAX_SLIDERS = MAX_SLIDERS.replace('[', '')
+    MAX_SLIDERS = MAX_SLIDERS.replace(']', '')
+    var fields = MAX_SLIDERS.split(',')
+    //fields are the maximum value of each slider
     for (var i = 0; i < 6; i++) {
-        var minValue = document.getElementById("input_slider_" + i.toString() + "_min").value;
-        var maxValue = document.getElementById("input_slider_" + i.toString() + "_max").value;
-        $("#slider_" + i.toString()).slider("setValue", [parseInt(minValue), parseInt(maxValue)]);
+        var minValue = parseInt(document.getElementById("input_slider_" + i.toString() + "_min").value);
+        var maxValue = parseInt(document.getElementById("input_slider_" + i.toString() + "_max").value);
+        //Treating some corner cases
+        if(minValue < 0){
+            minValue = 0;
+        }
+        if(maxValue < 0){
+            maxValue = 0;
+        }
+        if(minValue > parseInt(fields[i])){
+            minValue = parseInt(fields[i]);
+        }
+        if(maxValue > parseInt(fields[i])){
+            maxValue = parseInt(fields[i]);
+        }
+        if(minValue < maxValue) {
+            $("#slider_" + i.toString()).slider("setValue", [minValue, maxValue]);
+            document.getElementById("input_slider_" + i + "_min").value = minValue;
+            document.getElementById("input_slider_" + i + "_max").value = maxValue;
+        }
+        else {
+            document.getElementById("input_slider_" + i + "_min").value = maxValue;
+            document.getElementById("input_slider_" + i + "_max").value = minValue;
+            $("#slider_" + i.toString()).slider("setValue", [maxValue, minValue]);
+        }
     }
 }
