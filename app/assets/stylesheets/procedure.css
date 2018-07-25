@@ -26,3 +26,9 @@
 .slider-div {
   z-index: 2;
 }
+
+.label-median {
+  position: absolute;
+  font-size: 10px;
+  margin-left: 15%;
+}

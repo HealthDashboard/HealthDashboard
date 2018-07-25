@@ -84,7 +84,7 @@
 
                 <% @sliders.each_with_index do |slid, index| %>
                     <div class="col-sm-12">
-                        <label for="<%= index %>" title="<%= @titles_sliders[index] %>"><b>
+                        <label id="label_slider_<%= index %>" for="<%= index %>" title="<%= @titles_sliders[index] %>"><b>
                             <%= slid %>
                         </b></label>
                         <div class="row slider-div">
@@ -92,7 +92,8 @@
                                 <span id="slider_<%= index %>_min"><input id="input_slider_<%= index %>_min" class="min-number" type="number" name="minSlider" value="0" onchange="inputSlider()" min="0"></span>
                             </div>
                             <div class="col-sm-9 left">
-                                <input class="slider" id="slider_<%= index %>" type="text" style="width: 85%" />
+                                <input class="slider" id="slider_<%= index %>" type="text" style="width: 85%"/>
+                                <label id="label_median_slider_<%= index %>" class="label-median">A</label>
                             </div>
                             <div class="col-sm-1 left" style = "text-align: left" id="text-left">
                                 <span id="slider_<%= index %>_max"><input id="input_slider_<%= index %>_max" class="max-number" type="number" name="maxSlider" value="<%= $MAX_SLIDERS[index].to_s %>" onchange="inputSlider()" min="0"></span>

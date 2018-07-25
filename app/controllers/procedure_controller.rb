@@ -286,4 +286,28 @@ class ProcedureController < ApplicationController
 
 		render json: procedure
 	end
+
+	# GET /procedure/median
+	def procedure_median
+		median = []
+		# 1 - days(Total Geral de Diárias)
+		procedure = Procedure.pluck(:days)
+		median.append(DescriptiveStatistics::Stats.new(procedure).median)
+		# 2 - days_uti(Diárias UTI)
+		procedure = Procedure.pluck(:days_uti)
+		median.append(DescriptiveStatistics::Stats.new(procedure).median)
+		# 3 - days_ui(Diárias UI)
+		procedure = Procedure.pluck(:days_ui)
+		median.append(DescriptiveStatistics::Stats.new(procedure).median)
+		# 4 - days_total(Dias de permanência)
+		procedure = Procedure.pluck(:days_total)
+		median.append(DescriptiveStatistics::Stats.new(procedure).median)
+		# 5 - val_total(Valor da Parcela)
+		procedure = Procedure.pluck(:val_total)
+		median.append(DescriptiveStatistics::Stats.new(procedure).median)
+		# 6 - distance(Distância de Deslocamento)
+		procedure = Procedure.pluck(:distance)
+		median.append(DescriptiveStatistics::Stats.new(procedure).median)
+		render json: median
+	end
 end
