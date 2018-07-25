@@ -215,13 +215,6 @@ function LowerCase(data) {
   return data;
 }
 
-function UpperCase(data) {
-  for (i = 0; i < data.length; i++) {
-    data[i][0] = data[i][0].toUpperCase();
-  }
-  return data;
-}
-
 function create_homepage_charts(id) {
     /*create_right_graph(id);*/
     var dataSpecialty, dataTotal, pathSpecialty, pathTotal, n, i
@@ -236,11 +229,11 @@ function create_homepage_charts(id) {
         }),
         $.getJSON(pathSpecialty, function(data) {
           dataSpecialty = data;
-          dataSpecialty = UpperCase(dataSpecialty);
+          dataSpecialty = LowerCase(dataSpecialty);
         })
       ).then(function(){
           n = dataSpecialty.length;
-          dataSpecialty[n] = ["TOTAL", 0, 0, 0, 0, ""];
+          dataSpecialty[n] = ["Total", 0, 0, 0, 0, ""];
 
           i = 1;
           for (d in dataTotal) {
@@ -271,8 +264,10 @@ function create_homepage_charts(id) {
           }
           dataSpecialty = Object.values(dataSpecialty);
 
+          dataSpecialty = LowerCase(dataSpecialty);
+
           n = dataSpecialty.length;
-          dataSpecialty[n] = ["TOTAL", 0, 0, 0, 0, ""];
+          dataSpecialty[n] = ["Total", 0, 0, 0, 0, ""];
 
           i = 1;
           for (d in dataTotal) {
@@ -284,36 +279,6 @@ function create_homepage_charts(id) {
       });
     }
 }
-
-
-function create_right_graph(id) {
-    var header = ["Especialidades", "Número de Procedimentos", {role: "style"}];
-    var chart = new google.visualization.PieChart(document.getElementById("general-right-graph"));
-    var options = {
-        width: '100%',
-        height:'100%',
-        title: "",
-        pieHole: 0.8,
-        pieSliceBorderColor: "none",
-        colors: ['green', 'yellow', 'orange', 'red'],
-        pieSliceText: "none",
-        backgroundColor: { fill:'transparent'},
-        chartArea: {'width': '90%', 'height': '90%'},
-        legend: "center"
-    };
-
-    if (id == undefined) {
-      var path = '/distance_metric'
-    }
-    else {
-      var path = ["/distances/", id].join("");
-    }
-    $.getJSON(path, function(data) {
-        draw_chart(header, data, chart, options, null);
-        update_right_graph_text(data);
-    });
-}
-
 
 function create_bottom_graphs(id, data) {
     var chart = new google.visualization.BarChart(document.getElementById(id));
@@ -367,7 +332,3 @@ function update_right_graph_text(data) {
 function about() {
     window.open("about");
 }
-
-// $(window).resize(function(){
-//   create_homepage_charts();
-// });
