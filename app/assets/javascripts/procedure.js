@@ -392,7 +392,7 @@ function dadosInput() {
                 //this commands will position the label in the correct place
                 document.getElementById("label_slider_" + i.toString()).setAttribute("title", "Mediana: " + median[i].toLocaleString('pt-BR'));
                 document.getElementById("label_median_slider_" + i.toString()).innerText = median[i].toLocaleString('pt-BR');
-                $("#label_median_slider_" + i.toString()).css('margin-left', (10+(77*15/max_hash[slider])) + "%");
+                $("#label_median_slider_" + i.toString()).css('margin-left', (10+(77*median[i]/max_hash[slider])) + "%");
                 //OBS: the number '5' represents a correct position of label
             }
             else{
