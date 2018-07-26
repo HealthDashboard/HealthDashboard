@@ -380,14 +380,13 @@ function dadosInput() {
     MAX_SLIDERS = MAX_SLIDERS.replace(']', '')
     var fields = MAX_SLIDERS.split(',');
     var max_hash = {"slider_0" : parseInt(fields[0]), "slider_1" : parseInt(fields[1]), "slider_2" : parseInt(fields[2]), "slider_3" : parseInt(fields[3]), "slider_4" : parseInt(fields[4]), "slider_5" : parseInt(fields[5])}
-    var medianValues = []
     $.getJSON('/procedure/median', function(median) {
         for (i = 0; i < 6; i++) {
             slider = "slider_" + i.toString();
             //it changes the possible maximum and minimum value of each slider
             document.getElementById("input_slider_" + i.toString() + "_min").setAttribute("max", max_hash[slider]);
             document.getElementById("input_slider_" + i.toString() + "_max").setAttribute("max", max_hash[slider]);
-            if(i == 5){
+            if(median[i] != parseInt(median[i], 10)){
                 //*The follow commands will catch 1 decimal places of median withour rouding and the number 1 (1||0) represents the number of decimal places*//
                 var fixed = 1 || 0;
                 fixed = Math.pow(10, fixed);
@@ -397,7 +396,7 @@ function dadosInput() {
                 const lastText = document.getElementById("label_slider_" + i.toString()).innerText;
                 document.getElementById("label_slider_" + i.toString()).setAttribute("title", lastText + " [ Mediana: " + medianAux.toLocaleString('pt-BR') + " ]");
                 document.getElementById("label_median_slider_" + i.toString()).innerText = medianAux.toLocaleString('pt-BR');
-                $("#label_median_slider_" + i.toString()).css('margin-left', (10+(77*median[i]/max_hash[slider])) + "%");
+                $("#label_median_slider_" + i.toString()).css('margin-left', (10+(85*median[i]/max_hash[slider])) + "%");
                 //OBS: the number '5' represents a correct position of label
             }
             else{
