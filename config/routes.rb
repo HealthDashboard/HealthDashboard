@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  root to: 'health_centres#index'
+  root to: 'application#home'
 
   get 'points', to: 'health_centres#points'
   get 'hospital/:id', to: 'health_centres#hospital'
@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   get '/distance_metric', to: 'health_centres#distance_metric'
   get '/distance_quartis/:id', to: 'health_centres#distance_quartis'
 
+  get 'estabelecimentos', to: 'health_centres#index'
   get 'dados-gerais', to: 'dashboard#index'
   get 'specialties', to: 'specialties#index'
   get 'busca', to: 'procedure#show'
