@@ -11,6 +11,9 @@ var data = null;
 //** Automatic search **//
 var auto, cleaning;
 
+//** Max value for sliders, change with the search result **//
+var max_sliders = null
+
 //** Health Centres icon on map **//
 var health_centre_markers;
 
@@ -105,21 +108,19 @@ function automatic_search() {
 
 //** Called when any filter is altered, if automatic search is on it calls "buscar()" **//
 function change() {
-    if (cleaning == false && auto == true)
-        buscar();
+    if (cleaning == false && auto == true) {
+        data = getData()
+        buscar(data);
+        filters_value(data);
+    }
 }
 
-//** Called when "Buscar" button is clicked, uses the filters to fetch data on procedures **//
-function buscar() {
+function getData() {
     var sexo_masculino = document.getElementById('sexo_masculino');
     var sexo_feminino = document.getElementById('sexo_feminino');
-    var residencia_paciente = document.getElementById('checkbox_residencia_paciente');
-    var hc = document.getElementById('checkbox_health_centre');
-
-    genders = [];
-    filters = [];
-    filters_text = [];
-    var health_centres = [];
+    var genders = [];
+    var filters = [];
+    var filters_text = [];
 
     for (i = 0; i < 24; i++) {
         var aux = [];
@@ -130,8 +131,6 @@ function buscar() {
             aux.push(value.value);
             aux_name.push([value.text]);
         });
-        if (i == 0)
-            health_centres.push(aux);
 
         filters_text.push(aux_name.join(", "));
         filters.push(aux.join(";"));
@@ -153,7 +152,21 @@ function buscar() {
     }
 
     data = {filters: filters, gender: genders.toString(), start_date: start_date.toString(), end_date: end_date.toString(), sliders: sliders};
+    return data
+}
 
+//** Called when "Buscar" button is clicked, uses the filters to fetch data on procedures **//
+function buscar(data) {
+    var health_centres = [];
+
+    var hc = $('#0 option:selected');
+    aux = []
+    $.each(hc, function(index, value) {
+        aux.push(value.value);
+    });
+    health_centres.push(aux);
+
+    data = getData();
     clearMap();
 
     // Show Data
@@ -265,25 +278,28 @@ function setVisible(visibility) {
 function limpar() {
     cleaning = true;
     $("#slider_distance").slider('refresh');
-    MAX_SLIDERS = MAX_SLIDERS.replace('[', '')
-    MAX_SLIDERS = MAX_SLIDERS.replace(']', '')
-    var fields = MAX_SLIDERS.split(',');
-    var max_hash = {"slider_0" : parseInt(fields[0]), "slider_1" : parseInt(fields[1]), "slider_2" : parseInt(fields[2]), "slider_3" : parseInt(fields[3]), "slider_4" : parseInt(fields[4]), "slider_5" : parseInt(fields[5])}
-    for (i = 0; i < 6; i++){
-        document.getElementById("input_slider_" + i.toString() + "_min").value = 0;
-        document.getElementById("input_slider_" + i.toString() + "_max").value = max_hash["slider_" + i.toString()];
-        $("#slider_" + i.toString()).slider("setValue", [0, max_hash["slider_" + i.toString()]]);
-    }
-    for (i = 0; i < 24; i++) {
-        name = ".select-" + i;
-        $(name).val('').trigger('change');
-    }
-    $("#intervalStart").val('').datepicker('destroy').datepicker();
-    $("#intervalEnd").val('').datepicker('destroy').datepicker();
-    $("#sexo_masculino").prop("checked", true);
-    $("#sexo_feminino").prop("checked", true);
-    cleaning = false;
-    clearMap();
+    var max_hash = {}
+    $.getJSON('/procedure/max_values', function(result) {
+        $.each(result, function(index, max) {
+            max_hash["slider_" + index.toString()] = max
+        });
+    
+        for (i = 0; i < 6; i++){
+            document.getElementById("input_slider_" + i.toString() + "_min").value = 0;
+            document.getElementById("input_slider_" + i.toString() + "_max").value = max_hash["slider_" + i.toString()];
+            $("#slider_" + i.toString()).slider("setValue", [0, max_hash["slider_" + i.toString()]]);
+        }
+        for (i = 0; i < 24; i++) {
+            name = ".select-" + i;
+            $(name).val('').trigger('change');
+        }
+        $("#intervalStart").val('').datepicker('destroy').datepicker();
+        $("#intervalEnd").val('').datepicker('destroy').datepicker();
+        $("#sexo_masculino").prop("checked", true);
+        $("#sexo_feminino").prop("checked", true);
+        cleaning = false;
+        clearMap();
+    });
 }
 
 //** Clears features on the map **//
@@ -375,23 +391,36 @@ function print_maps() {
     $patchedStyle.remove();
 }
 
-//** Called when loading the page, init filters **//
-function dadosInput() {
-    $('#datepicker').datepicker({
-        format: "dd/mm/yyyy",
-        language: "pt-BR",
-        container:'#datepicker',
+function filters_value(data) {
+    var max_hash = {}
+    $.getJSON('/procedure/max_values', data, function(result) {
+        max_sliders = result;
+        $.each(result, function(index, max) {
+            slider = "slider_" + index.toString();
+            max_hash[slider] = max;
+            //it changes the possible maximum and minimum value of each slider
+            document.getElementById("input_slider_" + index.toString() + "_min").setAttribute("max", max_hash[slider]);
+            document.getElementById("input_slider_" + index.toString() + "_max").setAttribute("max", max_hash[slider]);
+            $("#" + slider).slider({
+                min: 0,
+                max: max_hash[slider],
+                step: 1,
+                value: [0, max_hash[slider]],
+            });
+
+            $("#slider_" + index.toString()).on("slide", function(slideEvt) {
+                slider_min  = "input_" + slideEvt.currentTarget.id + "_min";
+                slider_max  = "input_" + slideEvt.currentTarget.id + "_max";
+                document.getElementById(slider_min).value = slideEvt.value[0];
+                document.getElementById(slider_max).value = slideEvt.value[1];
+            });
+        });
+        inputSlider()
     });
-    MAX_SLIDERS = MAX_SLIDERS.replace('[', '')
-    MAX_SLIDERS = MAX_SLIDERS.replace(']', '')
-    var fields = MAX_SLIDERS.split(',');
-    var max_hash = {"slider_0" : parseInt(fields[0]), "slider_1" : parseInt(fields[1]), "slider_2" : parseInt(fields[2]), "slider_3" : parseInt(fields[3]), "slider_4" : parseInt(fields[4]), "slider_5" : parseInt(fields[5])}
-    $.getJSON('/procedure/median', function(median) {
+
+    $.getJSON('/procedure/procedure_median', data, function(median) {
         for (i = 0; i < 6; i++) {
             slider = "slider_" + i.toString();
-            //it changes the possible maximum and minimum value of each slider
-            document.getElementById("input_slider_" + i.toString() + "_min").setAttribute("max", max_hash[slider]);
-            document.getElementById("input_slider_" + i.toString() + "_max").setAttribute("max", max_hash[slider]);
             if(median[i] != parseInt(median[i], 10)){
                 //*The follow commands will catch 1 decimal places of median withour rouding and the number 1 (1||0) represents the number of decimal places*//
                 var fixed = 1 || 0;
@@ -414,21 +443,19 @@ function dadosInput() {
                 //OBS: this is not totally correct because it is not possible explain why the value '75' was choose, it just works
                 //OBS: if another field with different characteristics needs to be represented in that way, possibly the label will be in a wrong position
             }
-            $("#" + slider).slider({
-                min: 0,
-                max: max_hash[slider],
-                step: 1,
-                value: [0, max_hash[slider]],
-            });
-
-            $("#slider_" + i.toString()).on("slide", function(slideEvt) {
-                slider_min  = "input_" + slideEvt.currentTarget.id + "_min";
-                slider_max  = "input_" + slideEvt.currentTarget.id + "_max";
-                document.getElementById(slider_min).value = slideEvt.value[0];
-                document.getElementById(slider_max).value = slideEvt.value[1];
-            });
         }
     });
+}
+
+//** Called when loading the page, init filters **//
+function dadosInput() {
+    $('#datepicker').datepicker({
+        format: "dd/mm/yyyy",
+        language: "pt-BR",
+        container:'#datepicker',
+    });
+
+    filters_value(null);
 
     for (i = 0; i < 24; i++) {
         name = "#" + i;
@@ -457,9 +484,7 @@ function dadosInput() {
 
 //*Called when the textbox slider reads a new value*//
 function inputSlider(){
-    MAX_SLIDERS = MAX_SLIDERS.replace('[', '')
-    MAX_SLIDERS = MAX_SLIDERS.replace(']', '')
-    var fields = MAX_SLIDERS.split(',')
+    var fields = max_sliders;
     //fields are the maximum value of each slider
     for (var i = 0; i < 6; i++) {
         var minValue = parseInt(document.getElementById("input_slider_" + i.toString() + "_min").value);
