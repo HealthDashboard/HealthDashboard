@@ -388,15 +388,21 @@ function dadosInput() {
             document.getElementById("input_slider_" + i.toString() + "_min").setAttribute("max", max_hash[slider]);
             document.getElementById("input_slider_" + i.toString() + "_max").setAttribute("max", max_hash[slider]);
             if(i == 5){
+                //*The follow commands will catch 1 decimal places of median withour rouding and the number 1 (1||0) represents the number of decimal places*//
+                var fixed = 1 || 0;
+                fixed = Math.pow(10, fixed);
+                const medianAux = Math.floor(median[i] * fixed) / fixed;
                 //the last field has a float number, so it is a special case
                 //this commands will position the label in the correct place
-                document.getElementById("label_slider_" + i.toString()).setAttribute("title", "Mediana: " + median[i].toLocaleString('pt-BR'));
-                document.getElementById("label_median_slider_" + i.toString()).innerText = median[i].toLocaleString('pt-BR');
+                const lastText = document.getElementById("label_slider_" + i.toString()).innerText;
+                document.getElementById("label_slider_" + i.toString()).setAttribute("title", lastText + " [ Mediana: " + medianAux.toLocaleString('pt-BR') + " ]");
+                document.getElementById("label_median_slider_" + i.toString()).innerText = medianAux.toLocaleString('pt-BR');
                 $("#label_median_slider_" + i.toString()).css('margin-left', (10+(77*median[i]/max_hash[slider])) + "%");
                 //OBS: the number '5' represents a correct position of label
             }
             else{
-                document.getElementById("label_slider_" + i.toString()).setAttribute("title", "Mediana: " + median[i]);
+                const lastText = document.getElementById("label_slider_" + i.toString()).innerText;
+                document.getElementById("label_slider_" + i.toString()).setAttribute("title", lastText + " [ Mediana: " + median[i] + " ]");
                 document.getElementById("label_median_slider_" + i.toString()).innerText = median[i];
                 $("#label_median_slider_" + i.toString()).css('margin-left', (15+(75*median[i]/max_hash[slider])) + "%");
                 //OBS: the number '15' represents the initil value of label position (look margin-left of cl)
