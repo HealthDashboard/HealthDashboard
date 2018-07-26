@@ -22,10 +22,8 @@ hr {
 }
 
 .info-text {
-  display: flex;
-  flex-direction: column;
   width: 47vw;
-  flex-grow: 0;
+  height: auto;
 }
 
 .btn-row {
