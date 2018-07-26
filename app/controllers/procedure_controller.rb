@@ -1,7 +1,7 @@
 class ProcedureController < ApplicationController
 	# Cons, AVOID USING NUMBERS, make a constant instead
 	NUM_FILTERS = 19
-	$MAX_SLIDERS = [351, 148, 99, 351, 100, 30]
+	$MAX_SLIDERS = [351,148,99,351,110786.71.ceil,52.4832033827607.ceil]
 
 	# GET /
 	# Return "busca avancada" page
@@ -106,6 +106,9 @@ class ProcedureController < ApplicationController
 		"cid_associated", "finance", "DA", "PR", "STS", "CRS", "complexity", "gestor_ide"]
 		sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
 
+		if params[:gender] == nil
+			return Procedure.all
+		end
 		update_session()
 
 		if session[:genders].length < 2
@@ -287,27 +290,50 @@ class ProcedureController < ApplicationController
 		render json: procedure
 	end
 
-	# GET /procedure/median
+	# GET /procedure/max_values
+	# return max filter values given the search parameters
+	def max_values
+		if params[:gender] == nil
+			render json: [351,148,99,351,110786.71.ceil,52.4832033827607.ceil] #default value for faster load time
+			return
+		end
+
+		procedure = getProcedures()
+		max = []
+		[:days, :days_uti, :days_ui, :days_total, :val_total, :distance].each do |filter|
+			max.append((procedure.maximum(filter)).ceil)
+		end
+		render json: max
+	end
+
+	# GET /procedure/procedure_median
+	# return the median for the filter values given the search parameters
 	def procedure_median
+		if params[:gender] == nil
+			render json: [3.0,0.0,0.0,3.0,0.0,4.96823522661767] # default value for faster load time
+			return
+		end
+
+		procedure = getProcedures()
 		median = []
 		# 1 - days(Total Geral de Diárias)
-		procedure = Procedure.pluck(:days)
-		median.append(DescriptiveStatistics::Stats.new(procedure).median)
+		days = procedure.pluck(:days)
+		median.append(DescriptiveStatistics::Stats.new(days).median)
 		# 2 - days_uti(Diárias UTI)
-		procedure = Procedure.pluck(:days_uti)
-		median.append(DescriptiveStatistics::Stats.new(procedure).median)
+		days_uti = procedure.pluck(:days_uti)
+		median.append(DescriptiveStatistics::Stats.new(days_uti).median)
 		# 3 - days_ui(Diárias UI)
-		procedure = Procedure.pluck(:days_ui)
-		median.append(DescriptiveStatistics::Stats.new(procedure).median)
+		days_ui = procedure.pluck(:days_ui)
+		median.append(DescriptiveStatistics::Stats.new(days_ui).median)
 		# 4 - days_total(Dias de permanência)
-		procedure = Procedure.pluck(:days_total)
-		median.append(DescriptiveStatistics::Stats.new(procedure).median)
+		days_total = procedure.pluck(:days_total)
+		median.append(DescriptiveStatistics::Stats.new(days_total).median)
 		# 5 - val_total(Valor da Parcela)
-		procedure = Procedure.pluck(:val_total)
-		median.append(DescriptiveStatistics::Stats.new(procedure).median)
+		val_total = procedure.pluck(:val_total)
+		median.append(DescriptiveStatistics::Stats.new(val_total).median)
 		# 6 - distance(Distância de Deslocamento)
-		procedure = Procedure.pluck(:distance)
-		median.append(DescriptiveStatistics::Stats.new(procedure).median)
+		distance = procedure.pluck(:distance)
+		median.append(DescriptiveStatistics::Stats.new(distance).median)
 		render json: median
 	end
 end
