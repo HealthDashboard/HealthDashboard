@@ -148,8 +148,8 @@ function buscar() {
 
     sliders = [];
     for (i = 0; i < 6; i++) {
-        sliders.push([parseInt(document.getElementById('input_slider_' + i +'_min').textContent),
-                      parseInt(document.getElementById('input_slider_' + i +'_max').textContent)]);
+        var values = $("#slider_" + i.toString()).slider("getValue"); 
+        sliders.push([values[0], values[1]]);
     }
 
     data = {filters: filters, gender: genders.toString(), start_date: start_date.toString(), end_date: end_date.toString(), sliders: sliders};
