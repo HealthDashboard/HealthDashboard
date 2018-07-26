@@ -32,3 +32,19 @@
   font-size: 10px;
   margin-left: 15%;
 }
+
+.markSelect {
+  color: blue;
+}
+
+.markRadio {
+  color: red;
+}
+
+.markSlider {
+  color: green;
+}
+
+.markPeriodo {
+  color: rgb(211, 106, 9);
+}

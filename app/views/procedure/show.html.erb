@@ -41,13 +41,41 @@
                         <input type="checkbox" id="automatic_search_checkbox" onchange="automatic_search()">
                         <span class="sliderOn round"></span>
                     </label>
-                </div> 
+                </div>
+                <div class="col-sm-12"><hr></div> <!-- Space line -->
+
+            <div class="col-sm-12">
+              <label for="select_health_centre" title="Mostrar o limite administrativo no mapa"><b>Limites Administrativos: <mark class="markRadio">&FilledSmallSquare;</mark></b></label>
+            </div>
+
+            <div class="col-sm-12" id="viewType">
+              <form>
+                <div class="radio">
+                  <label><input type="radio" name="optRadio" value="0" onchange="setShape('Shape_SP.geojson', null)"> Município de São Paulo</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="optRadio" value="1" onchange="setShape('Shape_CRS.geojson', null)"> Coordenadoria Regional de Saúde</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="optRadio" value="2" onchange="setShape('Shape_STS.geojson', null)"> Supervisão Técnica de Saúde</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="optRadio" value="3" onchange="setShape('Shape_PR.geojson', null)"> Prefeitura Regional</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="optRadio" value="4" onchange="setShape('Shape_DA.geojson', null)"> Distritos Administrativos</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="optRadio" value="5" onchange="setShape('Shape_UBS.geojson', null)"> Áreas de Abrangência de UBS</label>
+                </div>
+              </form>
+            </div>
                 <div class="col-sm-12"><hr></div> <!-- Space line -->
 
                 <% @filters.each_with_index do |f, i| %>
                     <div class="col-sm-12">
                         <label for="<%= i %>" title="<%= @titles_filters[i] %>"><b>
-                            <%= f %>
+                            <%= f %> <mark class="markSelect">&FilledSmallSquare;</mark>
                         </b></label>
                         <select class="select-<%= i %> form-control" id="<%= i %>" multiple="multiple" onchange='change()'>
                             <% @options[i].each do |v| %>
@@ -84,8 +112,8 @@
 
                 <% @sliders.each_with_index do |slid, index| %>
                     <div class="col-sm-12">
-                        <label id="label_slider_<%= index %>" for="<%= index %>" title="<%= @titles_sliders[index] %>"><b>
-                            <%= slid %>
+                        <label id="label_slider_<%= index %>" for="<%= index %>" title="<%= @titles_sliders[index] %>">
+                            <%= slid %> <mark class="markSlider">&FilledSmallSquare;</mark><b>
                         </b></label>
                         <div class="row slider-div">
                             <div class="col-sm-1 text-right left">
@@ -104,7 +132,7 @@
                 <% end %>
 
                 <div class="col-sm-12">
-                    <label title="Intervalo de tempo de busca"><b>Período</b></label>
+                    <label title="Intervalo de tempo de busca"><b>Período<mark class="markPeriodo">&FilledSmallSquare;</mark><b></b></label>
                     <div class="input-daterange input-group" id="datepicker">
                         <input type="text" class="input-sm form-control" id="intervalStart" onchange="change()" />
                         <span class="input-group-addon" id="intervalTo">até</span>
