@@ -433,6 +433,13 @@ function filters_value(data) {
                 document.getElementById("label_median_slider_" + i.toString()).innerText = medianAux.toLocaleString('pt-BR');
                 $("#label_median_slider_" + i.toString()).css('margin-left', (13+(75*median[i]/max_hash[slider])) + "%");
                 //OBS: the number '13' represents a correct position of label
+                $("#" + slider).slider({
+                    min: 0,
+                    max: max_hash[slider],
+                    step: 1,
+                    value: [0, max_hash[slider]],
+                    rangeHighlights: [{ "start": medianAux-1, "end": medianAux+1}],
+                });                
             }
             else{
                 const lastText = document.getElementById("label_slider_" + i.toString()).innerText;
@@ -442,7 +449,21 @@ function filters_value(data) {
                 //OBS: the number '15' represents the initil value of label position (look margin-left of cl)
                 //OBS: this is not totally correct because it is not possible explain why the value '75' was choose, it just works
                 //OBS: if another field with different characteristics needs to be represented in that way, possibly the label will be in a wrong position
+                $("#" + slider).slider({
+                    min: 0,
+                    max: max_hash[slider],
+                    step: 1,
+                    value: [0, max_hash[slider]],
+                    rangeHighlights: [{ "start": median[i]-1, "end": median[i]+1}],
+                    tooltip: 'hide',
+                });
             }
+            $("#slider_" + i.toString()).on("slide", function(slideEvt) {
+                slider_min  = "input_" + slideEvt.currentTarget.id + "_min";
+                slider_max  = "input_" + slideEvt.currentTarget.id + "_max";
+                document.getElementById(slider_min).value = slideEvt.value[0];
+                document.getElementById(slider_max).value = slideEvt.value[1];
+            });
         }
     });
 }

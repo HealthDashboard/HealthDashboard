@@ -48,3 +48,7 @@
 .markPeriodo {
   color: rgb(211, 106, 9);
 }
+
+.slider-rangeHighlight {
+	background: black;
+}
