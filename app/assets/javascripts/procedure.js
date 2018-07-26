@@ -265,9 +265,15 @@ function setVisible(visibility) {
 function limpar() {
     cleaning = true;
     $("#slider_distance").slider('refresh');
-    $("#slider_distance_min").html('0');
-    $("#slider_distance_max").html('30+');
-
+    MAX_SLIDERS = MAX_SLIDERS.replace('[', '')
+    MAX_SLIDERS = MAX_SLIDERS.replace(']', '')
+    var fields = MAX_SLIDERS.split(',');
+    var max_hash = {"slider_0" : parseInt(fields[0]), "slider_1" : parseInt(fields[1]), "slider_2" : parseInt(fields[2]), "slider_3" : parseInt(fields[3]), "slider_4" : parseInt(fields[4]), "slider_5" : parseInt(fields[5])}
+    for (i = 0; i < 6; i++){
+        document.getElementById("input_slider_" + i.toString() + "_min").value = 0;
+        document.getElementById("input_slider_" + i.toString() + "_max").value = max_hash["slider_" + i.toString()];
+        $("#slider_" + i.toString()).slider("setValue", [0, max_hash["slider_" + i.toString()]]);
+    }
     for (i = 0; i < 24; i++) {
         name = ".select-" + i;
         $(name).val('').trigger('change');
@@ -396,8 +402,8 @@ function dadosInput() {
                 const lastText = document.getElementById("label_slider_" + i.toString()).innerText;
                 document.getElementById("label_slider_" + i.toString()).setAttribute("title", lastText + " [ Mediana: " + medianAux.toLocaleString('pt-BR') + " ]");
                 document.getElementById("label_median_slider_" + i.toString()).innerText = medianAux.toLocaleString('pt-BR');
-                $("#label_median_slider_" + i.toString()).css('margin-left', (10+(85*median[i]/max_hash[slider])) + "%");
-                //OBS: the number '5' represents a correct position of label
+                $("#label_median_slider_" + i.toString()).css('margin-left', (13+(75*median[i]/max_hash[slider])) + "%");
+                //OBS: the number '13' represents a correct position of label
             }
             else{
                 const lastText = document.getElementById("label_slider_" + i.toString()).innerText;
