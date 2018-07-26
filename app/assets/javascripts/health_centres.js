@@ -37,10 +37,15 @@ function load_all_points() {
             if(point.adm === 'ESTADUAL'){
                 health_centre_icon = '/health_centre_icon.png';
             }
-            var hcIcon = L.icon({iconUrl: health_centre_icon});
-            marker = L.marker(L.latLng(point.lat, point.long), {icon: hcIcon, point: point});
-            text = healthCentreClick(point)
-            marker.bindPopup(text);
+
+            var hcIcon = L.icon({iconUrl: health_centre_icon, iconAnchor: [25, 0]});
+            marker = L.marker(L.latLng(point.lat, point.long), {icon: hcIcon, point: point, alt: point.name, riseOnHover:true, interactive: true});
+            marker.bindTooltip(point.name, {direction:'top'});
+            marker.on('click', onClick);
+            function onClick(e) {
+                healthCentreClick(point);
+                show_clusters(point.id, point.lat, point.long);
+            }
             marker.addTo(map);
             hcMarkers.push(marker);
         });
@@ -60,8 +65,6 @@ function load_all_points() {
     };
     legend.addTo(map);
 }
-
-
 
 function healthCentreClick(point) {
     if (point.phone == null) {
