@@ -17,10 +17,75 @@ hr {
   width: 50vw;
   height: 100vh;
   z-index: 1;
+  overflow: hidden;
 }
 
 .fixed {
   position: fixed;
+}
+
+.select {
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  color: #e2e0e0;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 20em;
+  bottom: 0;
+  font-size: smaller;
+  transform: translateY(240px);
+  transition: transform 300ms ease-in-out;
+}
+
+.select:hover {
+  transform: translateY(0);
+}
+
+.select-header {
+  background-color: rgba(9, 9, 9, 0.8);
+  padding: .5em 1em .5em 1em;
+}
+
+.select-header p {
+  font-family: 'Raleway', sans-serif;
+  margin: 0;
+}
+
+.select-header p::before {
+  font-family: "Font Awesome 5 Free";
+  content: "\f0ad";
+  font-weight: 900;
+  margin-right: .5em;
+}
+
+.select-body {
+  padding: .5em 1em .5em 1em;
+  height: 240px;
+  overflow: auto;
+}
+
+.select-body p {
+  font-weight: bold;
+}
+
+.select-body li {
+  display: inline-flex;
+  align-content: center;
+}
+
+input[type="radio"] {
+  margin-right: .25em;
+}
+
+.info {
+  padding-left: 2vw;
+  padding-right: 1vw;
+  padding-top: 50px;
+  width: 50vw;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 50px);
 }
 
 .info-text {
@@ -63,36 +128,12 @@ hr {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1vh;
-}
-
-.select {
+  background-color: #fff;
   z-index: 2;
-  display: flex;
-  flex-direction: row;
-  position: fixed;
-  color: #e2e0e0;
-  background-color: rgba(0, 0, 0, 0.5);
-  width: 50vw;
-  bottom: 0;
-  font-size: smaller;
 }
 
 #search-name {
   font-family: 'Raleway', sans-serif;
-}
-
-li {
-  display: inline-flex; 
-}
-
-.info {
-  padding-left: 2vw;
-  padding-right: 1vw;
-  padding-top: 50px;
-  width: 50vw;
-  display: flex;
-  flex-direction: column;
-  height: calc(100vh - 50px);
 }
 
 .grafico {
