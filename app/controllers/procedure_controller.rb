@@ -106,9 +106,6 @@ class ProcedureController < ApplicationController
 		"cid_associated", "finance", "DA", "PR", "STS", "CRS", "complexity", "gestor_ide"]
 		sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
 
-		if params[:gender] == nil
-			return Procedure.all
-		end
 		update_session()
 
 		if session[:genders].length < 2
@@ -323,7 +320,7 @@ class ProcedureController < ApplicationController
 	# GET /procedure/max_values
 	# return max filter values given the search parameters
 	def max_values
-		if params[:gender] == nil
+		if params[:send_all] == "True"
 			render json: [351,148,99,351,110786.71.ceil,52.4832033827607.ceil] #default value for faster load time
 			return
 		end
@@ -339,7 +336,7 @@ class ProcedureController < ApplicationController
 	# GET /procedure/procedure_median
 	# return the median for the filter values given the search parameters
 	def procedure_median
-		if params[:gender] == nil
+		if params[:send_all] == "True"
 			render json: [3.0,0.0,0.0,3.0,0.0,4.96823522661767] # default value for faster load time
 			return
 		end

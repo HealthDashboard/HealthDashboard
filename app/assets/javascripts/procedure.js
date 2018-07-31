@@ -278,28 +278,17 @@ function setVisible(visibility) {
 function limpar() {
     cleaning = true;
     $("#slider_distance").slider('refresh');
-    var max_hash = {}
-    $.getJSON('/procedure/max_values', function(result) {
-        $.each(result, function(index, max) {
-            max_hash["slider_" + index.toString()] = max
-        });
-    
-        for (i = 0; i < 6; i++){
-            document.getElementById("input_slider_" + i.toString() + "_min").value = 0;
-            document.getElementById("input_slider_" + i.toString() + "_max").value = max_hash["slider_" + i.toString()];
-            $("#slider_" + i.toString()).slider("setValue", [0, max_hash["slider_" + i.toString()]]);
-        }
-        for (i = 0; i < 24; i++) {
-            name = ".select-" + i;
-            $(name).val('').trigger('change');
-        }
-        $("#intervalStart").val('').datepicker('destroy').datepicker();
-        $("#intervalEnd").val('').datepicker('destroy').datepicker();
-        $("#sexo_masculino").prop("checked", true);
-        $("#sexo_feminino").prop("checked", true);
-        cleaning = false;
-        clearMap();
-    });
+    filters_value({send_all: "True"});
+    for (i = 0; i < 24; i++) {
+        name = ".select-" + i;
+        $(name).val('').trigger('change');
+    }
+    $("#intervalStart").val('').datepicker('destroy').datepicker();
+    $("#intervalEnd").val('').datepicker('destroy').datepicker();
+    $("#sexo_masculino").prop("checked", true);
+    $("#sexo_feminino").prop("checked", true);
+    cleaning = false;
+    clearMap();
 }
 
 //** Clears features on the map **//
@@ -476,7 +465,7 @@ function dadosInput() {
         container:'#datepicker',
     });
 
-    filters_value(null);
+    filters_value({send_all: "True"});
 
     for (i = 0; i < 24; i++) {
         name = "#" + i;
