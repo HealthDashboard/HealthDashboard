@@ -348,3 +348,12 @@ function show_menu(id) {
     $(id).removeClass("active");
   }
 }
+
+function show_config2() {
+    if (document.getElementById("div-adm").style.transform === "translateY(240px)") {
+      document.getElementById("div-adm").style.transform = "translateY(0)";
+    }
+    else {
+      document.getElementById("div-adm").style.transform = "translateY(240px)";
+    }
+  }
