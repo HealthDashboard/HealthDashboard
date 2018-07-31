@@ -4,17 +4,23 @@
 <div class="mapa">
   <div class="mapa fixed" id='map'></div>
   <div class="select" id="div-adm">
-    <form>
-      <ul id="radio-list">
-        <li><input type="radio" name="optRadio" value="0" onchange="setShape('Shape_SP.geojson', null)"> Município de São Paulo</li>
-        <li><input type="radio" name="optRadio" value="1" onchange="setShape('Shape_CRS.geojson', null)"> Coordenadoria Regional de Saúde</li>
-        <li><input type="radio" name="optRadio" value="2" onchange="setShape('Shape_STS.geojson', null)"> Supervisão Técnica de Saúde</li>
-        <li><input type="radio" name="optRadio" value="3" onchange="setShape('Shape_PR.geojson', null)"> Prefeitura Regional</li>
-        <li><input type="radio" name="optRadio" value="4" onchange="setShape('Shape_DA.geojson', null)"> Distritos Administrativos</li>
-        <li><input type="radio" name="optRadio" value="5" onchange="setShape('Shape_UBS.geojson', null)"> Áreas de Abrangência de UBS</li>
-        <li><input type="radio" name="optRadio" value="5" onchange="setShape(null, null)"> Nenhum</li>
-      </ul>
-    </form>
+    <div class="select-header">
+      <p>Configurações do mapa</p>
+    </div>
+    <div class="select-body">
+      <p>Limites Administrativos:</p>
+      <form>
+        <ul id="radio-list">
+          <li><input type="radio" name="optRadio" value="0" onchange="setShape('Shape_SP.geojson', null)"> Município de São Paulo</li>
+          <li><input type="radio" name="optRadio" value="1" onchange="setShape('Shape_CRS.geojson', null)"> Coordenadoria Regional de Saúde</li>
+          <li><input type="radio" name="optRadio" value="2" onchange="setShape('Shape_STS.geojson', null)"> Supervisão Técnica de Saúde</li>
+          <li><input type="radio" name="optRadio" value="3" onchange="setShape('Shape_PR.geojson', null)"> Prefeitura Regional</li>
+          <li><input type="radio" name="optRadio" value="4" onchange="setShape('Shape_DA.geojson', null)"> Distritos Administrativos</li>
+          <li><input type="radio" name="optRadio" value="5" onchange="setShape('Shape_UBS.geojson', null)"> Áreas de Abrangência de UBS</li>
+          <li><input type="radio" name="optRadio" value="5" onchange="setShape(null, null)" checked> Nenhum</li>
+        </ul>
+      </form>
+    </div>
   </div>
 </div>
 <div class="info">
