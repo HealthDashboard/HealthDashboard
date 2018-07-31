@@ -11,14 +11,14 @@ class ProcedureController < ApplicationController
 			"Tipo de financiamento", "Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Complexidade", "Gestão"]
 
 		#'Hints' to display on each label
-		@titles_filters = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Raça/Cor", "Nível de instrução", "Competência (aaaamm)",
-			"Grupo do procedimento autorizado", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)",
-			"Tipo de financiamento", "Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Complexidade", "Gestão"]
+		@titles_filters = ["Estabelecimento de ocorrência do procedimento de busca.", "Faixa etária dos pacientes internados.", "Especialidade do leito do paciente.", "Caráter da internação do paciente.", "Etnia do paciente.", "Escolaridade/grau de intrução do paciente.", "Competência de apresentação da AIH. Ex: 201506(junho de 2015).",
+			"Grupo do procedimento autorizado ao paciente.", "Código do diagnóstico principal de internação.", "Código do diagnóstico secundário de internação.", "Código do diagnóstico secundário 2 de internação.", "Código do diagnóstico secundário 3 de internação.",
+			"Tipo de financiamento da internação do paciente.", "Distrito administrativo da internação.", "Subprefeitura da internação.", "Supervisão técnica de saúde", "Coordenadoria regional de saúde", "Complexidade da internação.", "Gestão(Municipal/Estadual)."]
 
 		@sliders = ["Total geral de diárias", "Diárias UTI", "Diárias UI", "Dias de permanência", "Valor da parcela", "Distância de deslocamento(Km)"]
 
 		# 'Hints' to display on each slider
-		@titles_sliders = ["Total geral de diárias", "Diárias UTI", "Diárias UI", "Dias de permanência", "Valor da parcela", "Distância de deslocamento(Km)"]
+		@titles_sliders = ["Total geral de diárias de internações.", "Diárias de unidade de tratamento intensiva.", "Diárias de unidade intermediária.", "Dias de permanência do paciente internado.", "Valor da parcela de financiamento.", "Distância de deslocamento do paciente."]
 
 		# Values for filters
 		health_centres = JSON.parse(File.read(Rails.root.join('public/health_centres.json')))
