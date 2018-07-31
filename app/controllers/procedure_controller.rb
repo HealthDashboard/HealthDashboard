@@ -218,16 +218,46 @@ class ProcedureController < ApplicationController
 	# Because of this we cannot pass data directly in its call.
 	# The workaround is first we use update_session to pass data to the controller then it's possible to
 	# call this method to download filtered procedures.
-	# TODO handle calls that maybe done before a update_session. *throws a error in current version *
 	# Return CSV file.
-	def download
-	    procedures = getProcedures()
 
-	    respond_to do |format|
-	      format.html
-	      format.csv { send_data procedures.copy_to_string, filename: "internacoes-hospitalares-#{Date.today}.csv", :disposition => "inline"}
-	  	end
-    end
+	def download
+		if session[:filters] == nil
+			procedures = Procedure.all
+		else
+			procedures = getProcedures()
+		end
+
+		procedures = procedures.select('id as "ID"', 'lat AS "LAT_SC"', 'long as "LONG_SC"', 'gender as "P_SEXO"', 
+			'age_number as "P_IDADE"', 'race as "P_RACA"', 'lv_instruction as "LV_INSTRU"', 'cnes_id as "CNES"', 
+			'gestor_ide as "GESTOR_ID"', 'treatment_type as "CAR_INTEN"', 'cmpt as "CMPT"', 'date as "DT_EMISSAO"', 
+			'date_in as "DT_INTERNA"', 'date_out as "DT_SAIDA"', 'complexity as "COMPLEXIDA"', 'proce_re as "PROC_RE"', 
+			'cid_primary as "DIAG_PR"', 'cid_secondary as "DIAG_SE1"', 'cid_secondary2 as "DIAG_SE2"', 
+			'cid_associated as "DIAG_SE3"', 'days as "DIARIAS"', 'days_uti as "DIARIAS_UT"', 'days_ui as "DIARIAS_UI"', 
+			'days_total as "DIAS_PERM"', 'finance as "FINANC"', 'val_total as "VAL_TOT"', '"DA" as "DA"', '"PR" as "SUB"', 
+			'"STS" as "STS"', '"CRS" as "CRS"', 'distance as "DISTANCIA_KM"')
+
+		enumerator = procedures.copy_to_enumerator(:buffer_lines => 100)
+		# Tell Rack to stream the content
+		headers.delete("Content-Length")
+
+		# Don't cache anything from this generated endpoint
+		headers["Cache-Control"] = "no-cache"
+
+		# Tell the browser this is a CSV file
+		headers["Content-Type"] = "text/csv"
+
+		# Make the file download with a specific filename
+		headers["Content-Disposition"] = "inline; filename=\"internacoes-hospitalares-#{Date.today}.csv\""
+
+		# Don't buffer when going through proxy servers
+		headers["X-Accel-Buffering"] = "no"
+
+		# Set an Enumerator as the body
+		self.response_body = enumerator
+
+		# Set the status to success
+		response.status = 200
+	end
 
 	# Total number of procedures on metrics page
 	# GET /procedure/health_centres_search
