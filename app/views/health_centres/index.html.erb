@@ -3,8 +3,23 @@
 <div class="page">
 <div class="mapa">
   <div class="mapa fixed" id='map'></div>
-  <div class="select" id="div-adm">
-    <div class="select-header">
+  <div class="map-config legend" id="legend">
+    <div class="map-config-header legend-header" onclick="show_legend()">
+      <p>Legendas</p>
+    </div>
+    <div class="legend-body">
+      <div class="legend-item">
+        <%= image_tag("/health_centre_icon.png", :class => "legend-img") %>
+        <p>ESTADUAL</p>
+      </div>
+      <div class="legend-item">
+        <%= image_tag("/health_centre_icon2.png", :class => "legend-img") %>
+        <p>MUNICIPAL</p>
+      </div>
+    </div>
+  </div>
+  <div class="map-config select" id="div-adm">
+    <div class="map-config-header select-header" onclick="show_config()">
       <p>Configurações do mapa</p>
     </div>
     <div class="select-body">

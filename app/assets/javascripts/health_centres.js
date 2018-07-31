@@ -50,20 +50,6 @@ function load_all_points() {
             hcMarkers.push(marker);
         });
     });
-    var legend = L.control({position: 'topright'}); //position where the legend will be fixed
-    legend.onAdd = function (map) {
-        //creating the div
-        var div = L.DomUtil.create('div', 'info_legend_icons'),
-            labels = ["MUNICIPAL", "ESTADUAL"],
-            icons = ["/health_centre_icon2.png","/health_centre_icon.png"];
-        // iteration to add the legend with labels and icons
-        for (var i = 0; i < labels.length; i++) {
-            div.innerHTML += "<strong>" + labels[i] + "</strong>" + (" <img src="+ icons[i] +
-                " height='50' width='50'>") +'<br>';
-        }
-        return div;
-    };
-    legend.addTo(map);
 }
 
 function healthCentreClick(point) {
@@ -352,4 +338,22 @@ function update_right_graph_text(data) {
 
 function about() {
     window.open("about");
+}
+
+function show_legend() {
+  if (document.getElementById("legend").style.transform === "translateY(120px)") {
+    document.getElementById("legend").style.transform = "translateY(0)";
+  }
+  else {
+    document.getElementById("legend").style.transform = "translateY(120px)";
+  }
+}
+
+function show_config() {
+  if (document.getElementById("div-adm").style.transform === "translateY(240px) translateX(12em)") {
+    document.getElementById("div-adm").style.transform = "translateY(0) translateX(12em)";
+  }
+  else {
+    document.getElementById("div-adm").style.transform = "translateY(240px) translateX(12em)";
+  }
 }
