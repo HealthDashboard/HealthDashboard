@@ -74,14 +74,7 @@ hr {
 .legend {
   width: 12em;
   transform: translateY(120px);
-}
-
-.legend.active {
-  transform: translateY(0);
-}
-
-.legend-header p::before {
-  content: "\f03a";
+  transition: transform 300ms ease-in-out;
 }
 
 .legend-body {

@@ -1,0 +1,85 @@
+.map-config {
+  z-index: 2;
+  position: fixed;
+  color: #e2e0e0;
+  background-color: rgba(0, 0, 0, 0.5);
+  bottom: 0;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  font-size: smaller;
+}
+
+.map-config-header {
+  background-color: rgba(9, 9, 9, 0.8);
+  padding: .5em 1em .5em 1em;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  cursor: pointer;
+}
+
+.map-config-header p {
+  font-family: 'Raleway', sans-serif;
+  margin: 0;
+}
+
+.map-config-header p::before {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+}
+
+.legend {
+  width: 12em;
+  transform: translateY(120px);
+    transition: transform 300ms ease-in-out;
+}
+
+.legend-body {
+  display: flex;
+  flex-direction: column;
+  padding: .5em 1em .5em 1em;
+  height: 120px;
+}
+
+.legend-item {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+  align-items: center;
+  justify-content: space-around;
+  font-family: 'Raleway', sans-serif;
+  font-weight: bold;
+}
+
+.select {
+  display: flex;
+  flex-direction: column;
+  width: 20em;
+  transform: translateY(240px);
+  transition: transform 300ms ease-in-out;
+}
+
+.legend-header p::before {
+  content: "\f03a";
+}
+
+.select-header p::before {
+  content: "\f0ad";
+}
+
+.select-body {
+  padding: .5em 1em .5em 1em;
+  height: 240px;
+  overflow: auto;
+}
+
+.select-body p {
+  font-weight: bold;
+}
+
+.select-body li {
+  display: inline-flex;
+  align-content: center;
+}
+
+input[type="radio"] {
+}

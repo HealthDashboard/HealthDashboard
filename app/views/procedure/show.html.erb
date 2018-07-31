@@ -1,3 +1,4 @@
+<%= stylesheet_link_tag "procedure.css" %>
 <div class="container">
 <div class = "row">
     <%= javascript_tag do %>
@@ -11,6 +12,25 @@
     </div>
     <div class="col-sm-9">
         <h1> </h1>
+    </div>
+    <div class="map-config select" id="div-adm">
+        <div class="map-config-header select-header" onclick="show_config2()">
+        <p>Configurações do mapa</p>
+        </div>
+        <div class="select-body">
+        <p>Visualizar limites administrativos:</p>
+        <form>
+            <ul id="radio-list">
+            <li><input type="radio" name="optRadio" value="0" onchange="setShape('Shape_SP.geojson', null)"> Município de São Paulo</li>
+            <li><input type="radio" name="optRadio" value="1" onchange="setShape('Shape_CRS.geojson', null)"> Coordenadoria Regional de Saúde</li>
+            <li><input type="radio" name="optRadio" value="2" onchange="setShape('Shape_STS.geojson', null)"> Supervisão Técnica de Saúde</li>
+            <li><input type="radio" name="optRadio" value="3" onchange="setShape('Shape_PR.geojson', null)"> Prefeitura Regional</li>
+            <li><input type="radio" name="optRadio" value="4" onchange="setShape('Shape_DA.geojson', null)"> Distritos Administrativos</li>
+            <li><input type="radio" name="optRadio" value="5" onchange="setShape('Shape_UBS.geojson', null)"> Áreas de Abrangência de UBS</li>
+            <li><input type="radio" name="optRadio" value="5" onchange="setShape(null, null)" checked> Nenhum</li>
+            </ul>
+        </form>
+        </div>
     </div>
     <div class ="col-sm-3">
         <div class="card card-block">
