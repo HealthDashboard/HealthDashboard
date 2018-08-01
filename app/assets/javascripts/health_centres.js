@@ -339,20 +339,11 @@ function about() {
     window.open("about");
 }
 
-function show_legend() {
-  if (document.getElementById("legend").style.transform === "translateY(120px)") {
-    document.getElementById("legend").style.transform = "translateY(0)";
+function show_menu(id) {
+  if (!$(id).hasClass("active")) {
+    $(id).addClass("active");
   }
   else {
-    document.getElementById("legend").style.transform = "translateY(120px)";
-  }
-}
-
-function show_config() {
-  if (document.getElementById("div-adm").style.transform === "translateY(240px) translateX(12em)") {
-    document.getElementById("div-adm").style.transform = "translateY(0) translateX(12em)";
-  }
-  else {
-    document.getElementById("div-adm").style.transform = "translateY(240px) translateX(12em)";
+    $(id).removeClass("active");
   }
 }

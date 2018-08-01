@@ -32,7 +32,10 @@ hr {
   bottom: 0;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  font-size: smaller;
+  font-size: .8em;
+  transition: transform 250ms ease-in-out;
+  border: solid 1px rgba(0, 0, 0, 0.5);
+  border-bottom: none;
 }
 
 .map-config-header {
@@ -54,10 +57,31 @@ hr {
   margin-right: .5em;
 }
 
+.map-config-header p::after {
+  content: "\f077";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  position: absolute;
+  right: 1em;
+  transition: transform 250ms 250ms ease-in-out;
+}
+
+.map-config.active .map-config-header p::after {
+  transform: rotate(180deg);
+}
+
+
 .legend {
   width: 12em;
   transform: translateY(120px);
-    transition: transform 300ms ease-in-out;
+}
+
+.legend.active {
+  transform: translateY(0);
+}
+
+.legend-header p::before {
+  content: "\f03a";
 }
 
 .legend-body {
@@ -82,11 +106,10 @@ hr {
   flex-direction: column;
   width: 20em;
   transform: translateY(240px) translateX(12em);
-  transition: transform 300ms ease-in-out;
 }
 
-.legend-header p::before {
-  content: "\f03a";
+.select.active {
+  transform: translateY(0) translateX(12em);
 }
 
 .select-header p::before {
