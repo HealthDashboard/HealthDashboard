@@ -68,6 +68,8 @@ function initProcedureMap() {
         popup.setLatLng(e.latlng)
         map.openPopup(popup);
     });
+
+    L.control.scale({imperial: false, position: 'bottomright'}).addTo(map);
 }
 
 //** Called when a visualization shape is selected, remove any previous selected shape and draws a new one **//
