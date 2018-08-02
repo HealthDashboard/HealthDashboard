@@ -1,4 +1,5 @@
 <%= stylesheet_link_tag "home.css" %>
+<%= javascript_include_tag "home.js" %>
 
 <!--<body>
   <header class="header">
@@ -28,51 +29,49 @@
 </body>-->
 <div class="container">
   <div class="header">
-    <div>
-      <%= image_tag("sms.jpg", :class => "logo-img") %>
-    </div>
-    <h1 class="titulo">Health Dashboard</h1>
+    <%= image_tag("sms.jpg", :class => "logo-img") %>
+    <h1 class="title">Health Dashboard</h1>
   </div>
+</div>
 
   <div class="intro">
-    <p>  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      Mauris hendrerit nisl nec pulvinar feugiat.
-      Curabitur nec feugiat dolor.
-      Aliquam nec augue non metus tempus bibendum id in turpis.
-      Interdum et malesuada fames ac ante ipsum primis in faucibus.
-      Fusce tristique lacus eu imperdiet ultrices.
-      Vestibulum maximus ac felis non viverra.
-      Aenean posuere ipsum vitae leo tristique, quis condimentum nunc volutpat.
-      Morbi tristique fermentum aliquam.
-      Duis lacinia elit quam, et lobortis mi gravid sit amet.
-      Vestibulum feugiat lacinia dui.
-      Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-      Aenean ultrices erat in felis lacinia maximus.
-      Sed sit amet lectus eu velit eleifend volutpat.
-      Mauris ac dolor eu justo vulputate imperdiet suscipit sed massa.
-      Quisque a ornare dui.
-      Donec pulvinar felis elementum sodales ultrices.
-      Nam ullamcorper fermentum ligula, placerat maximus diam consequat sed.
-      Vestibulum condimentum erat eu sem tincidunt, eu cursus quam rutrum.
-      Etiam rutrum tortor nisl, in dapibus est posuere at.
-      Nam euismod massa non diam pellentesque consequat.
-      Nullam tellus nunc, lobortis non sapien vitae, consectetur tincidunt ante.
-      Etiam et erat sit amet arcu viverra imperdiet.
-    </p>
-    <div class="data">
-      20
+    <div class="slider" id="slideshow">
+      <i class="fas fa-2x fa-chevron-left slider-btn left" onclick="plusDivs(-1)"></i>
+      <img src="https://picsum.photos/1200/250/?random" alt="Random Image" class="slider-img active" id="slider1">
+      <img src="https://picsum.photos/1201/250/?random" alt="Random Image" class="slider-img" id="slider2">
+      <img src="https://picsum.photos/1200/251/?random" alt="Random Image" class="slider-img" id="slider3">
+      <img src="https://picsum.photos/1201/251/?random" alt="Random Image" class="slider-img" id="slider4">
+      <i class="fas fa-2x fa-chevron-right slider-btn right" onclick="plusDivs(1)"></i>
+    </div>
+    <div class="data-row">
+      <div class="data">
+        <p class="data-num">500.000</p>
+        <p class="data-label">Procedimentos</p>
+      </div>
+      <div class="data">
+        <p class="data-num">50</p>
+        <p class="data-label">Hospitais</p>
+      </div>
+      <div class="data">
+        <p class="data-num">3.442</p>
+        <p class="data-label">Coisa</p>
+      </div>
+      <div class="data">
+        <p class="data-num">30.050</p>
+        <p class="data-label">Info</p>
+      </div>
     </div>
   </div>
 
-  <div class="servicos">
-    <h2 class="title"> SERVIÇOS </h2>
+<div class="container">
+    <h2 class="section"> SERVIÇOS </h2>
 
     <div class="grid">
       <a href="<%= dados_gerais_path %>">
         <div class="item">
-          <img src="https://picsum.photos/501/301/?random" alt="Random Image" class="grid-img">
-          <h3 class="img-title">Dados Gerais</h3>
-          <p class="img-descript">
+          <img src="https://picsum.photos/501/301/?random" alt="Random Image" class="item-img">
+          <h3 class="item-title">Dados Gerais</h3>
+          <p class="item-descript">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             Phasellus viverra faucibus pretium.
             Quisque at nisl nulla.
@@ -84,9 +83,9 @@
       </a>
       <a href="<%= busca_path %>">
         <div class="item">
-          <img src="https://picsum.photos/500/300/?random" alt="Random Image" class="grid-img">
-          <h3 class="img-title">Busca Avançada</h3>
-          <p class="img-descript">
+          <img src="https://picsum.photos/500/300/?random" alt="Random Image" class="item-img">
+          <h3 class="item-title">Busca Avançada</h3>
+          <p class="item-descript">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             Phasellus viverra faucibus pretium.
             Quisque at nisl nulla.
@@ -98,9 +97,9 @@
       </a>
       <a href="<%= estabelecimentos_path %>">
         <div class="item">
-          <img src="https://picsum.photos/501/300/?random" alt="Random Image" class="grid-img">
-          <h3 class="img-title">Estabelecimentos</h3>
-          <p class="img-descript">
+          <img src="https://picsum.photos/501/300/?random" alt="Random Image" class="item-img">
+          <h3 class="item-title">Estabelecimentos</h3>
+          <p class="item-descript">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             Phasellus viverra faucibus pretium.
             Quisque at nisl nulla.
@@ -112,9 +111,9 @@
       </a>
       <a href="<%= about_path %>">
         <div class="item">
-          <img src="https://picsum.photos/500/301/?random" alt="Random Image" class="grid-img">
-          <h3 class="img-title">Sobre nós</h3>
-          <p class="img-descript">
+          <img src="https://picsum.photos/500/301/?random" alt="Random Image" class="item-img">
+          <h3 class="item-title">Sobre nós</h3>
+          <p class="item-descript">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             Phasellus viverra faucibus pretium.
             Quisque at nisl nulla.
@@ -125,7 +124,7 @@
         </div>
       </a>
     </div>
-  </div>
+
 </div>
 <footer class="rodape">
 </footer>

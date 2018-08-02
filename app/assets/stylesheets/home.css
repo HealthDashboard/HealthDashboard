@@ -38,7 +38,7 @@ body {
 
 body {
   position: relative;
-  padding-bottom: calc(100px + 2em);
+  padding-bottom: 110px;
 }
 
 a {
@@ -50,6 +50,7 @@ a:hover {
 
 .container {
   max-width: 1170px;
+  margin: 20px auto;
 }
 
 .header {
@@ -59,20 +60,81 @@ a:hover {
   align-items: center;
 }
 
-.titulo {
-  font-family: 'Raleway', sans-serif;
-  font-size: 3em;
-}
-
-.data {
-  background-color: #777;
+.logo-img {
+  flex-grow: 0;
 }
 
 .title {
   font-family: 'Raleway', sans-serif;
+  font-size: 3em;
+  flex-grow: 3;
+  text-align: center;
 }
 
-.title::after {
+.slider {
+  width: calc(100vw - (100vw - 100%));
+  position: relative;
+  overflow: hidden;
+}
+
+.slider-btn {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  color: #fff;
+  text-shadow: 3px 4px 3px rgba(0, 0, 0, 0.3);
+}
+
+.slider-btn:hover {
+  text-shadow: 2px 3px 1px rgba(0, 0, 0, 0.3);
+  transform: scale(.9);
+}
+
+.slider-btn.left {
+  left: 0;
+}
+
+.slider-btn.right {
+  right: 0;
+}
+
+.slider-img {
+  width: 100%;
+  position: relative;
+  top: 0;
+  display: none;
+}
+
+.slider-img.active {
+  display: block;
+}
+
+.data-row {
+  background-color: #777;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.data {
+  color: #fff;
+  text-align: center;
+}
+
+.data-num {
+  font-size: 3em;
+  margin: 0;
+}
+
+.data-label {
+  font-family: 'Raleway', sans-serif;
+}
+
+.section {
+  font-family: 'Raleway', sans-serif;
+}
+
+.section::after {
   content: '';
   display: block;
   background-color: #000;
@@ -106,11 +168,11 @@ a:hover {
   opacity: 0.5;
 }
 
-.grid-img {
+.item-img {
   width: 100%;
 }
 
-.img-title {
+.item-title {
   position: absolute;
   top: 2em;
   left: 1em;
@@ -122,11 +184,11 @@ a:hover {
   z-index: 1;
 }
 
-.item:hover .img-title {
+.item:hover .item-title {
   transform: translateY(-1em);
 }
 
-.img-title::after {
+.item-title::after {
   content: '';
   height: 4px;
   display: block;
@@ -136,11 +198,11 @@ a:hover {
   transition: transform 250ms ease-in-out;
 }
 
-.item:hover .img-title::after {
+.item:hover .item-title::after {
   transform: scaleX(1);
 }
 
-.img-descript {
+.item-descript {
   color: #fff;
   position: absolute;
   top: 50%;
@@ -151,7 +213,7 @@ a:hover {
   z-index: 1;
 }
 
-.item:hover .img-descript {
+.item:hover .item-descript {
   transform: translateY(-1em);
   opacity: 1;
 }
@@ -160,6 +222,7 @@ a:hover {
   position: absolute;
   bottom: 0;
   width: calc(100vw - (100vw - 100%));
-  background-color: rgb(101, 250, 255);
+  background-color: #333;
   height: 100px;
+  z-index: 2;
 }
