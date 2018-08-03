@@ -404,56 +404,89 @@ function filters_value(data) {
                 document.getElementById(slider_max).value = slideEvt.value[1];
             });
         });
-        inputSlider()
-    });
-
-    $.getJSON('/procedure/procedure_median', data, function(median) {
-        for (i = 0; i < 6; i++) {
-            slider = "slider_" + i.toString();
-            if(median[i] != parseInt(median[i], 10)){
-                //*The follow commands will catch 1 decimal places of median withour rouding and the number 1 (1||0) represents the number of decimal places*//
-                var fixed = 1 || 0;
-                fixed = Math.pow(10, fixed);
-                const medianAux = Math.floor(median[i] * fixed) / fixed;
-                //the last field has a float number, so it is a special case
-                //this commands will position the label in the correct place
-                const lastText = document.getElementById("label_slider_" + i.toString()).innerText;
-                document.getElementById("label_slider_" + i.toString()).setAttribute("title", lastText + " [ Mediana: " + medianAux.toLocaleString('pt-BR') + " ]");
-                document.getElementById("label_median_slider_" + i.toString()).innerText = medianAux.toLocaleString('pt-BR');
-                $("#label_median_slider_" + i.toString()).css('margin-left', (13+(75*median[i]/max_hash[slider])) + "%");
-                //OBS: the number '13' represents a correct position of label
-                $("#" + slider).slider({
-                    min: 0,
-                    max: max_hash[slider],
-                    step: 1,
-                    value: [0, max_hash[slider]],
-                    rangeHighlights: [{ "start": medianAux-1, "end": medianAux+1}],
-                });                
-            }
-            else{
-                const lastText = document.getElementById("label_slider_" + i.toString()).innerText;
-                document.getElementById("label_slider_" + i.toString()).setAttribute("title", lastText + " [ Mediana: " + median[i] + " ]");
-                document.getElementById("label_median_slider_" + i.toString()).innerText = median[i];
-                $("#label_median_slider_" + i.toString()).css('margin-left', (15+(75*median[i]/max_hash[slider])) + "%");
-                //OBS: the number '15' represents the initil value of label position (look margin-left of cl)
-                //OBS: this is not totally correct because it is not possible explain why the value '75' was choose, it just works
-                //OBS: if another field with different characteristics needs to be represented in that way, possibly the label will be in a wrong position
-                $("#" + slider).slider({
-                    min: 0,
-                    max: max_hash[slider],
-                    step: 1,
-                    value: [0, max_hash[slider]],
-                    rangeHighlights: [{ "start": median[i]-1, "end": median[i]+1}],
-                    tooltip: 'hide',
+        $.getJSON('/procedure/procedure_median', data, function(median) {
+            for (i = 0; i < 6; i++) {
+                slider = "slider_" + i.toString();
+                if(median[i] != parseInt(median[i], 10)){
+                    //*The follow commands will catch 1 decimal places of median withour rouding and the number 1 (1||0) represents the number of decimal places*//
+                    var fixed = 1 || 0;
+                    fixed = Math.pow(10, fixed);
+                    const medianAux = Math.floor(median[i] * fixed) / fixed;
+                    //the last field has a float number, so it is a special case
+                    //this commands will position the label in the correct place
+                    //const lastText = document.getElementById("label_slider_" + i.toString()).innerText;
+                    //document.getElementById("label_slider_" + i.toString()).setAttribute("title", lastText + " [ Mediana: " + medianAux.toLocaleString('pt-BR') + " ]");
+                    //document.getElementById("label_median_slider_" + i.toString()).innerText = medianAux.toLocaleString('pt-BR');
+                    //$("#label_median_slider_" + i.toString()).css('margin-left', (13+(75*median[i]/max_hash[slider])) + "%");
+                    //OBS: the number '13' represents a correct position of label
+                    $("#" + slider).slider({
+                        min: 0,
+                        max: max_hash[slider],
+                        step: 1,
+                        value: [0, max_hash[slider]],
+                        rangeHighlights: [{ "start": medianAux-1, "end": medianAux+1}],
+                    });                
+                }
+                else{
+                    const lastText = document.getElementById("label_slider_" + i.toString()).innerText;
+                    //document.getElementById("label_slider_" + i.toString()).setAttribute("title", lastText + " [ Mediana: " + median[i] + " ]");
+                    //document.getElementById("label_median_slider_" + i.toString()).innerText = median[i];
+                    //$("#label_median_slider_" + i.toString()).css('margin-left', (15+(75*median[i]/max_hash[slider])) + "%");
+                    //OBS: the number '15' represents the initil value of label position (look margin-left of cl)
+                    //OBS: this is not totally correct because it is not possible explain why the value '75' was choose, it just works
+                    //OBS: if another field with different characteristics needs to be represented in that way, possibly the label will be in a wrong position
+                    $("#" + slider).slider({
+                        min: 0,
+                        max: max_hash[slider],
+                        step: 1,
+                        value: [0, max_hash[slider]],
+                        rangeHighlights: [{ "start": median[i]-1, "end": median[i]+1}],
+                        tooltip: 'show',
+                    });
+                }
+                $("#slider_" + i.toString()).on("slide", function(slideEvt) {
+                    slider_min  = "input_" + slideEvt.currentTarget.id + "_min";
+                    slider_max  = "input_" + slideEvt.currentTarget.id + "_max";
+                    document.getElementById(slider_min).value = slideEvt.value[0];
+                    document.getElementById(slider_max).value = slideEvt.value[1];
                 });
             }
-            $("#slider_" + i.toString()).on("slide", function(slideEvt) {
-                slider_min  = "input_" + slideEvt.currentTarget.id + "_min";
-                slider_max  = "input_" + slideEvt.currentTarget.id + "_max";
-                document.getElementById(slider_min).value = slideEvt.value[0];
-                document.getElementById(slider_max).value = slideEvt.value[1];
+            $("#slider_0").slider({
+                formatter: function(value) {
+                    return 'Mediana: ' + median[0];
+                }
             });
-        }
+            $("#slider_1").slider({
+                formatter: function(value) {
+                    return 'Mediana: ' + median[1];
+                }
+            });
+            $("#slider_2").slider({
+                formatter: function(value) {
+                    return 'Mediana: ' + median[2];
+                }
+            });
+            $("#slider_3").slider({
+                formatter: function(value) {
+                    return 'Mediana: ' + median[3];
+                }
+            });
+            $("#slider_4").slider({
+                formatter: function(value) {
+                    return 'Mediana: ' + median[4];
+                }
+            });
+            $("#slider_5").slider({
+                formatter: function(value) {
+                    var fixed = 1 || 0;
+                    fixed = Math.pow(10, fixed);
+                    const medianAux = Math.floor(median[5] * fixed) / fixed;
+                    return 'Mediana: ' + medianAux;
+                }
+            });
+            // inputSlider();
+            slider_fix()
+        });
     });
 }
 
