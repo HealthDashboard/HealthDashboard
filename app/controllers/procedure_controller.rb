@@ -9,11 +9,26 @@ class ProcedureController < ApplicationController
 		@filters = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Raça/Cor", "Nível de instrução", "Competência (aaaamm)",
 			"Grupo do procedimento autorizado", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)",
 			"Tipo de financiamento", "Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Complexidade", "Gestão"]
+		
+		@diagnostic = ["Estabelecimento de ocorrência", "Competência (aaaamm)", "Grupo do procedimento autorizado", "Especialidade do leito", "Caráter do atendimento", 
+		"Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Complexidade"]
+		@patient_info = ["Faixa etária", "Raça/Cor", "Nível de instrução"]
+		@location = ["Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde"]
+		@establishment = ["Gestão", "Tipo de financiamento"]
 
 		#'Hints' to display on each label
 		@titles_filters = ["Estabelecimento de ocorrência do procedimento de busca.", "Faixa etária dos pacientes internados.", "Especialidade do leito do paciente.", "Caráter da internação do paciente.", "Etnia do paciente.", "Escolaridade/grau de intrução do paciente.", "Competência de apresentação da AIH. Ex: 201506(junho de 2015).",
 			"Grupo do procedimento autorizado ao paciente.", "Código do diagnóstico principal de internação.", "Código do diagnóstico secundário de internação.", "Código do diagnóstico secundário 2 de internação.", "Código do diagnóstico secundário 3 de internação.",
 			"Tipo de financiamento da internação do paciente.", "Distrito administrativo da internação.", "Subprefeitura da internação.", "Supervisão técnica de saúde", "Coordenadoria regional de saúde", "Complexidade da internação.", "Gestão(Municipal/Estadual)."]
+		
+		@titles_diagnostic_filters = ["Estabelecimento de ocorrência do procedimento de busca.", "Competência de apresentação da AIH. Ex: 201506(junho de 2015).", "Grupo do procedimento autorizado ao paciente.", "Especialidade do leito do paciente.", "Caráter da internação do paciente.",
+			"Código do diagnóstico principal de internação.", "Código do diagnóstico secundário de internação.", "Código do diagnóstico secundário 2 de internação.", "Código do diagnóstico secundário 3 de internação.", "Complexidade da internação."]
+
+		@titles_patient_info_filters = ["Faixa etária dos pacientes internados.", "Etnia do paciente.", "Escolaridade/grau de intrução do paciente."]
+
+		@titles_location_filters = ["Distrito administrativo da internação.", "Subprefeitura da internação.", "Supervisão técnica de saúde", "Coordenadoria regional de saúde"]
+
+		@titles_establishment_filters = ["Gestão(Municipal/Estadual).", "Tipo de financiamento da internação do paciente."]
 
 		@sliders = ["Total geral de diárias", "Diárias UTI", "Diárias UI", "Dias de permanência", "Valor da parcela", "Distância de deslocamento(Km)"]
 
@@ -47,6 +62,11 @@ class ProcedureController < ApplicationController
 				  {"id" => "01", "text" => "MUNICIPAL"}];
 
 		@options = [health_centres, age_group, specialties, treatments, race, lv_instruction, cmpt, proce_re, cid, cid, cid, cid, finance, da, pr, sts, crs, complexity, gestor]
+		@options_diagnostic = [health_centres, cmpt, proce_re, specialties, treatments, cid, cid, cid, cid, complexity]
+		@options_patient_info = [age_group, race, lv_instruction]
+		@options_location = [da, pr, sts, crs]
+		@options_establishment = [gestor, finance]
+
 	end
 
 	# GET /procedure/update_session{data}
@@ -102,9 +122,11 @@ class ProcedureController < ApplicationController
 	# maybe send all data instead.
 	# Return procedures based on the values passed in your last update_session
 	def getProcedures
-		filters_name = ["cnes_id", "age_code", "specialty_id", "treatment_type", "race", "lv_instruction", "cmpt", "proce_re", "cid_primary", "cid_secondary", "cid_secondary2",
-		"cid_associated", "finance", "DA", "PR", "STS", "CRS", "complexity", "gestor_ide"]
-		sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
+		#filters_name = ["cnes_id", "age_code", "specialty_id", "treatment_type", "race", "lv_instruction", "cmpt", "proce_re", "cid_primary", "cid_secondary", "cid_secondary2",
+		#"cid_associated", "finance", "DA", "PR", "STS", "CRS", "complexity", "gestor_ide"]
+		filters_name = ["cnes_id", "cmpt", "proce_re", "specialty_id", "treatment_type", "cid_primary", "cid_secondary", "cid_secondary2",
+			"cid_associated", "complexity", "age_code", "race", "lv_instruction", "DA", "PR", "STS", "CRS", "finance", "gestor_ide"]
+			sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
 
 		update_session()
 
