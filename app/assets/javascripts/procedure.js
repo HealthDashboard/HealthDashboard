@@ -424,7 +424,7 @@ function filters_value(data) {
                         max: max_hash[slider],
                         step: 1,
                         value: [0, max_hash[slider]],
-                        rangeHighlights: [{ "start": medianAux-1, "end": medianAux+1}],
+                        //rangeHighlights: [{ "start": medianAux-1, "end": medianAux+1}],
                     });                
                 }
                 else{
@@ -440,7 +440,7 @@ function filters_value(data) {
                         max: max_hash[slider],
                         step: 1,
                         value: [0, max_hash[slider]],
-                        rangeHighlights: [{ "start": median[i]-1, "end": median[i]+1}],
+                        //rangeHighlights: [{ "start": median[i]-1, "end": median[i]+1}],
                         tooltip: 'show',
                     });
                 }
