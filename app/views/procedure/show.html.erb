@@ -42,95 +42,118 @@
                         <span class="sliderOn round"></span>
                     </label>
                 </div>
+
                 <div class="col-sm-12"><hr></div> <!-- Space line -->
 
-            <div class="col-sm-12">
-              <label for="select_health_centre" title="Mostrar o limite administrativo no mapa."><b>Limites Administrativos: </b></label>
-            </div>
-
-            <div class="col-sm-12" id="viewType">
-              <form>
-                <div class="radio">
-                  <label><input type="radio" name="optRadio" value="0" onchange="setShape('Shape_SP.geojson', null)"> Município de São Paulo</label>
-                </div>
-                <div class="radio">
-                  <label><input type="radio" name="optRadio" value="1" onchange="setShape('Shape_CRS.geojson', null)"> Coordenadoria Regional de Saúde</label>
-                </div>
-                <div class="radio">
-                  <label><input type="radio" name="optRadio" value="2" onchange="setShape('Shape_STS.geojson', null)"> Supervisão Técnica de Saúde</label>
-                </div>
-                <div class="radio">
-                  <label><input type="radio" name="optRadio" value="3" onchange="setShape('Shape_PR.geojson', null)"> Prefeitura Regional</label>
-                </div>
-                <div class="radio">
-                  <label><input type="radio" name="optRadio" value="4" onchange="setShape('Shape_DA.geojson', null)"> Distritos Administrativos</label>
-                </div>
-                <div class="radio">
-                  <label><input type="radio" name="optRadio" value="5" onchange="setShape('Shape_UBS.geojson', null)"> Áreas de Abrangência de UBS</label>
-                </div>
-              </form>
-            </div>
-                <div class="col-sm-12"><hr></div> <!-- Space line -->
-
-                <% @filters.each_with_index do |f, i| %>
-                    <div class="col-sm-12">
-                        <label for="<%= i %>" title="<%= @titles_filters[i] %>"><b>
+                <button class="collapsible">Diagnóstico</button>
+                <% j = 0 %>
+                <div class="content">
+                    <% @diagnostic.each_with_index do |f, i| %>
+                        <div class="col-sm-12">
+                            <label for="<%= i %>" title="<%= @titles_diagnostic_filters[i] %>"><b>
                             <%= f %>
-                        </b></label>
-                        <select class="select-<%= i %> form-control" id="<%= i %>" multiple="multiple" onchange='change()'>
-                            <% @options[i].each do |v| %>
-                                <option value= "<%= v["id"] %>" > <%= v["text"] %> </option>
-                            <% end %>
-                        </select>
+                            </b></label>
+                            <select class="select-<%= i %> form-control" id="<%= j %>" multiple="multiple" onchange='change()'>
+                                <%= @options_diagnostic[i].each do |v| %>
+                                    <option value= "<%= v["id"] %>" > <%= v["text"] %> </option>
+                                <% end %>
+                            </select>
+                        </div>
+                        <% j = j + 1 %>
+                        <div class="col-sm-12"><hr></div> <!-- Space line -->
+                    <% end %>
+                </div>
+                <button class="collapsible">Informações do Paciente</button>
+                <div class="content">
+                    <% @patient_info.each_with_index do |f, i| %>
+                        <div class="col-sm-12">
+                            <label for="<%= i %>" title="<%= @titles_patient_info_filters[i] %>"><b>
+                                <%= f %>
+                            </b></label>
+                            <select class="select-<%= i %> form-control" id="<%= j %>" multiple="multiple" onchange='change()'>
+                                <%= @options_patient_info[i].each do |v| %>
+                                    <option value= "<%= v["id"] %>" > <%= v["text"] %> </option>
+                                <% end %>
+                            </select>
+                        </div>
+                        <% j = j + 1 %>
+                        <div class="col-sm-12"><hr></div> <!-- Space line -->
+                    <% end %>
+                    <div class = "col-sm-2">
+                        <label title="Selecionar o(s) sexo(s) de busca dos pacientes."><b>Sexo</b></label>
                     </div>
-
-                    <div class="col-sm-12"><hr></div> <!-- Space line -->
-                <% end %>
-
-                <div class="col-sm-12">
-                    <div class = "row">
-                        <div class = "col-sm-2">
-                            <label title="Selecionar o(s) sexo(s) de busca dos pacientes."><b>Sexo</b></label>
-                        </div>
-                        <div class = "col-sm-5">
-                            <div class="form-check form-check-inline" style = "max-width = 140px;">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="checkbox" id="sexo_masculino" value="M" checked="unchecked" onchange="change()">Masculino
-                                </label>
-                            </div>
-                        </div>
-                        <div class = "col-sm-5">
-                            <div class="form-check form-check-inline" style = "max-width = 120px;">
-                            <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" id="sexo_feminino" value="F" checked="unchecked" onchange="change()">Feminino
+                    <div class = "col-sm-5">
+                        <div class="form-check form-check-inline" style = "max-width = 140px;">
+                        <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="sexo_masculino" value="M" checked="unchecked" onchange="change()">Masculino
                             </label>
-                            </div>
+                        </div>
+                    </div>
+                    <div class = "col-sm-5">
+                        <div class="form-check form-check-inline" style = "max-width = 120px;">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" id="sexo_feminino" value="F" checked="unchecked" onchange="change()">Feminino
+                        </label>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-12"><hr></div> <!-- Space line -->
-
-                <% @sliders.each_with_index do |slid, index| %>
-                    <div class="col-sm-12">
-                        <label id="label_slider_<%= index %>" for="<%= index %>" title="<%= @titles_sliders[index] %>">
-                            <%= slid %><b>
-                        </b></label>
-                        <div class="row slider-div">
-                            <div class="col-sm-1 text-right left">
-                                <span id="slider_<%= index %>_min"><input id="input_slider_<%= index %>_min" class="min-number" type="number" name="minSlider" value="0" onchange="inputSlider()" min="0"></span>
-                            </div>
-                            <div class="col-sm-9 left">
-                                <input class="slider" id="slider_<%= index %>" type="text" style="width: 85%" title="TEsteee"/>
-                                <label id="label_median_slider_<%= index %>" class="label-median"></label>
-                            </div>
-                            <div class="col-sm-1 left" style = "text-align: left" id="text-left">
-                                <span id="slider_<%= index %>_max"><input id="input_slider_<%= index %>_max" class="max-number" type="number" name="maxSlider" value="<%= $MAX_SLIDERS[index].to_s %>" onchange="inputSlider()" min="0"></span>
+                <button class="collapsible">Localização</button>
+                <div class="content">
+                    <% @location.each_with_index do |f, i| %>
+                        <div class="col-sm-12">
+                            <label for="<%= i %>" title="<%= @titles_location_filters[i] %>"><b>
+                                <%= f %>
+                            </b></label>
+                            <select class="select-<%= i %> form-control" id="<%= j %>" multiple="multiple" onchange='change()'>
+                                <%= @options_location[i].each do |v| %>
+                                    <option value= "<%= v["id"] %>" > <%= v["text"] %> </option>
+                                <% end %>
+                            </select>
+                        </div>
+                        <% j = j + 1 %>
+                        <div class="col-sm-12"><hr></div> <!-- Space line -->
+                    <% end %>
+                </div>
+                <button class="collapsible">Estabelecimento</button>
+                <div class="content">
+                    <% @establishment.each_with_index do |f, i| %>
+                        <div class="col-sm-12">
+                            <label for="<%= i %>" title="<%= @titles_establishment_filters[i] %>"><b>
+                                <%= f %>
+                            </b></label>
+                            <select class="select-<%= i %> form-control" id="<%= j %>" multiple="multiple" onchange='change()'>
+                                <%= @options_establishment[i].each do |v| %>
+                                    <option value= "<%= v["id"] %>" > <%= v["text"] %> </option>
+                                <% end %>
+                            </select>
+                        </div>
+                        <% j = j + 1 %>
+                        <div class="col-sm-12"><hr></div> <!-- Space line -->
+                    <% end %>
+                </div>
+                <button class="collapsible">Valores de Busca</button>
+                <div class="content">
+                    <% @sliders.each_with_index do |slid, index| %>
+                        <div class="col-sm-12">
+                            <label id="label_slider_<%= index %>" for="<%= index %>" title="<%= @titles_sliders[index] %>">
+                                <%= slid %><b>
+                            </b></label>
+                            <div class="row slider-div">
+                                <div class="col-sm-1 text-right left">
+                                    <span id="slider_<%= index %>_min"><input id="input_slider_<%= index %>_min" class="min-number" type="number" name="minSlider" value="0" onchange="inputSlider()" min="0"></span>
+                                </div>
+                                <div class="col-sm-9 left">
+                                    <input class="slider" id="slider_<%= index %>" type="text" style="width: 85%" title="TEsteee"/>
+                                    <label id="label_median_slider_<%= index %>" class="label-median"></label>
+                                </div>
+                                <div class="col-sm-1 left" style = "text-align: left" id="text-left">
+                                    <span id="slider_<%= index %>_max"><input id="input_slider_<%= index %>_max" class="max-number" type="number" name="maxSlider" value="<%= $MAX_SLIDERS[index].to_s %>" onchange="inputSlider()" min="0"></span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-sm-12"><hr></div> <!-- Space line -->
-                <% end %>
-
+                        <div class="col-sm-12"><hr></div> <!-- Space line -->
+                    <% end %>
+                </div>
                 <div class="col-sm-12">
                     <label title="Intervalo de tempo de busca."><b>Período</b></label>
                     <div class="input-daterange input-group" id="datepicker">
@@ -170,4 +193,18 @@
 <script>
     $(document).ready(initProcedureMap);
     $(document).ready(dadosInput);
+    /* COLLAPSIBLE FUNCTION */
+    var collap = document.getElementsByClassName("collapsible");
+    for(var i = 0; i < collap.length; i++) {
+        collap[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if(content.style.display == "block"){
+                content.style.display = "none";
+            }
+            else{
+                content.style.display = "block";
+            }
+        });
+    }
 </script>
