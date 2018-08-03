@@ -45,7 +45,7 @@
 
                 <div class="col-sm-12"><hr></div> <!-- Space line -->
 
-                <button class="collapsible">Diagnóstico</button>
+                <button class="collapsible diagnostic"><h4><b>Diagnóstico</b></h4></button>
                 <% j = 0 %>
                 <div class="content">
                     <% @diagnostic.each_with_index do |f, i| %>
@@ -63,7 +63,7 @@
                         <div class="col-sm-12"><hr></div> <!-- Space line -->
                     <% end %>
                 </div>
-                <button class="collapsible">Informações do Paciente</button>
+                <button class="collapsible patient_info"><h4><b>Informações do Paciente</b></h4></button>
                 <div class="content">
                     <% @patient_info.each_with_index do |f, i| %>
                         <div class="col-sm-12">
@@ -97,7 +97,7 @@
                         </div>
                     </div>
                 </div>
-                <button class="collapsible">Localização</button>
+                <button class="collapsible location"><h4><b>Localização</b></h4></button>
                 <div class="content">
                     <% @location.each_with_index do |f, i| %>
                         <div class="col-sm-12">
@@ -114,7 +114,7 @@
                         <div class="col-sm-12"><hr></div> <!-- Space line -->
                     <% end %>
                 </div>
-                <button class="collapsible">Estabelecimento</button>
+                <button class="collapsible establishment"><h4><b>Estabelecimento</b></h4></button>
                 <div class="content">
                     <% @establishment.each_with_index do |f, i| %>
                         <div class="col-sm-12">
@@ -131,7 +131,7 @@
                         <div class="col-sm-12"><hr></div> <!-- Space line -->
                     <% end %>
                 </div>
-                <button class="collapsible">Valores de Busca</button>
+                <button class="collapsible values_search"><h4><b>Valores de Busca</b></h4></button>
                 <div class="content">
                     <% @sliders.each_with_index do |slid, index| %>
                         <div class="col-sm-12">
