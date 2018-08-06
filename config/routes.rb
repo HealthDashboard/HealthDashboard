@@ -33,6 +33,7 @@ Rails.application.routes.draw do
   # get '/procedure/quartiles', to: 'procedure#proceduresQuartiles'
 
   get '/about', to: 'application#about'
+  get '/faq', to: 'application#faq'
 
 
   resources :procedure do
