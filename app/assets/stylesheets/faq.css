@@ -17,20 +17,20 @@
 }
 
 .collapsible-header {
-  background-color: #d1d1d1;
-  color: #000000;
+  background-color: #ffffff;
+  color: #225da1;
   cursor: pointer;
   padding: 20px;
   width: 60vw;
   border: none;
   text-align: left;
   outline: none;
-  font-size: 20px;
+  font-size: 14px;
   transition: 1.0s;
 }
 
 .active, .collapsible-header:hover {
-  background-color: #31313191;
+  background-color: #c4c4c450;
 }
 
 .collapsible-header:after {
@@ -51,10 +51,18 @@
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.5s ease-out;
+  padding-left: 40px;
 }
 
 h2 {
   font-family: 'Raleway', sans-serif;
+}
+
+h4 {
+  background-color: #d1d1d1;
+  color: #000000;
+  line-height: 5vh;
+  font-size: 20px;
 }
 
 .line {
