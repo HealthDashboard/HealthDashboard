@@ -83,11 +83,18 @@ a:hover {
   z-index: 1;
   color: #fff;
   text-shadow: 3px 4px 3px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
 }
 
 .slider-btn:hover {
   text-shadow: 2px 3px 1px rgba(0, 0, 0, 0.3);
   transform: scale(.9);
+}
+
+.slider-btn:active {
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+  transform: scale(.8);
+  color: #eee;
 }
 
 .slider-btn.left {
@@ -99,14 +106,30 @@ a:hover {
 }
 
 .slider-img {
-  width: 100%;
-  position: relative;
-  top: 0;
   display: none;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .slider-img.active {
   display: block;
+  position: relative;
+  transform: translateX(0);
+  transition: transform 350ms ease-in-out;
+}
+
+.slider-img.right {
+  display: block;
+  transform: translateX(100%);
+  transition: transform 350ms ease-in-out;
+}
+
+.slider-img.left {
+  display: block;
+  transform: translateX(-100%);
+  transition: transform 350ms ease-in-out;
 }
 
 .data-row {
