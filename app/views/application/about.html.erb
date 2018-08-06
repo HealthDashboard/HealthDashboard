@@ -1,79 +1,199 @@
-<%= stylesheet_link_tag "about2.css" %>
+<%= stylesheet_link_tag "about.css" %>
+<%= javascript_include_tag "about.js" %>
 
-<div class="main-div">
-  <div class="fixed">
-  <div class="texto-div">
-    <h2 class="titulo">Health Dashboard</h2>
-    <div class="text-section">
-      <div class="right-text-section">
-          <%= image_tag("handshake.svg", :class => "image-section") %> 
-        <p>O Projeto Health Dashboard é uma colaboração entre o <a href="http://interscity.org/">Projeto InterSCity</a> sediado no IME-USP e a <a href="http://www.prefeitura.sp.gov.br/cidade/secretarias/saude/">Secretaria Municipal da Saúde de São Paulo</a>.</p>
-      </div>
-      <div class="left-text-section">
-        <%= image_tag("browser.svg", :class => "image-section") %> 
-        <p>O objetivo do projeto é utilizar técnicas avançadas de Ciência da Computação (Big Data, Visualização e Ciência de Dados) para fornecer ferramentas inovadoras para profissionais de saúde e gestores em saúde pública.</p>
-      </div>
-      <div class="right-text-section">
-        <%= image_tag("laptop.svg", :class => "image-section") %> 
-        <p>O projeto está aberto a colaborações de todos os interessados que possam contribuir para a melhoria das ferramentas desenvolvidas e tem como o objetivo produzir tanto software livre útil para a gestão de saúde quanto avanços científicos na área de Informática e Big Data em Saúde. </p>
-      </div>
-      <div class="left-text-section">
-        <%= image_tag("money.svg", :class => "image-section") %> 
-        <p> O InterSCity é financiado com recursos da FAPESP, CNPq e CAPES.</p>
-      </div>
+<div class="main">
+  <div class="section section-1">
+    <div class="content" data-aos="fade-up">
+      <h1 class="header header-1">Health Dashboard</h1>
+      <p class="text">O Projeto Health Dashboard é uma colaboração entre o <a href="http://interscity.org/">Projeto InterSCity</a> sediado no IME-USP e a <a href="http://www.prefeitura.sp.gov.br/cidade/secretarias/saude/">Secretaria Municipal da Saúde de São Paulo</a>.
+      O objetivo do projeto é utilizar técnicas avançadas de Ciência da Computação (Big Data, Visualização e Ciência de Dados) para fornecer ferramentas inovadoras para profissionais de saúde e gestores em saúde pública.
+      O projeto está aberto a colaborações de todos os interessados que possam contribuir para a melhoria das ferramentas desenvolvidas e tem como o objetivo produzir tanto software livre útil para a gestão de saúde quanto avanços científicos na área de Informática e Big Data em Saúde.
+      O InterSCity é financiado com recursos da FAPESP, CNPq e CAPES.<p>
     </div>
   </div>
+
+  <div class="section section-2">
+    <div class="content" data-aos="fade-up">
+      <h2 class="header header-2">Loren Ipsum</h2>
+      <p class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<p>
+    </div>
   </div>
-    <div class="membros-div">
-    <div class="membros-panel">
-      <h2 class="membros-titulo">Nossa equipe:</h2>
-    <div class="membros-list-div">
-        <div class="membro-div">
-          <%= image_tag("Cat.png", :class => "membro-div-img") %> 
-          <a class="membro-div-name">Prof. Fabio Kon</a>
-          <p>IME/USP</p>
+
+  <div class="section section-3">
+    <div class="content" data-aos="fade-up">
+      <h2 class="header header-3">Duis quis sagittis lorem</h2>
+      <p class="text">Duis quis sagittis lorem. Fusce id ex aliquet, faucibus sapien in, imperdiet tortor.
+        Proin porta, quam vel placerat luctus, lectus elit tristique sapien, in pellentesque tellus metus non justo.
+        Pellentesque consectetur fermentum tortor, nec porta mauris rutrum vestibulum.
+        Etiam vitae nunc efficitur, molestie urna eu, rutrum diam. Etiam maximus erat eros, vitae pretium orci consectetur et.
+        Aliquam tincidunt nulla vel egestas accumsan. Fusce non condimentum dolor, sit amet aliquet mauris.
+        Nam id rhoncus tortor. Vestibulum ac ligula eget nulla posuere porttitor eu vitae massa.
+        Donec ante nibh, pulvinar et dignissim eu, ultrices id nibh. <p>
+    </div>
+  </div>
+
+  <div class="section section-membros">
+    <div class="content-membros" data-aos="fade-up">
+      <h3 class="header header-membros">Membros</h3>
+      <div class="side-buttons">
+        <i class="fas fa-2x fa-chevron-left side-btn" onclick="scroll_left()"></i>
+        <div class="membros-container" id="membros-container">
+          <div class="membro">
+            <%= image_tag("Cat.png", :class => "membro-img") %>
+            <div class="membro-text">
+              <p class="nome">Prof. Fabio Kon</p>
+              <p class="instituto">IME/USP</p>
+              <p class="descricao">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                 In orci leo, tristique non sem ut, molestie sodales lorem.
+                 Fusce quam neque, maximus nec scelerisque ut, laoreet ut purus.
+                 Aliquam eu lectus et libero sodales porttitor a eu enim.<p>
+              <div class="media">
+                <i class="fab fa-lg fa-facebook"></i>
+                <i class="fab fa-lg fa-google-plus-square"></i>
+                <i class="fab fa-lg fa-github-square"></i>
+              </div>
+            </div>
+          </div>
+          <div class="membro">
+            <%= image_tag("Cat.png", :class => "membro-img") %>
+            <div class="membro-text">
+              <p class="nome">Profª. Kelly Braghetto</p>
+              <p class="instituto">IME/USP</p>
+              <p class="descricao">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                 In orci leo, tristique non sem ut, molestie sodales lorem.
+                 Fusce quam neque, maximus nec scelerisque ut, laoreet ut purus.
+                 Aliquam eu lectus et libero sodales porttitor a eu enim.</p>
+              <div class="media">
+                <i class="fab fa-lg fa-facebook"></i>
+                <i class="fab fa-lg fa-google-plus-square"></i>
+                <i class="fab fa-lg fa-github-square"></i>
+              </div>
+            </div>
+          </div>
+          <div class="membro">
+            <%= image_tag("Cat.png", :class => "membro-img") %>
+            <div class="membro-text">
+              <p class="nome">Prof. Paulo Meirelles</p>
+              <p class="instituto">UNIFESP</p>
+              <p class="descricao">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                 In orci leo, tristique non sem ut, molestie sodales lorem.
+                 Fusce quam neque, maximus nec scelerisque ut, laoreet ut purus.
+                 Aliquam eu lectus et libero sodales porttitor a eu enim.</p>
+              <div class="media">
+                <i class="fab fa-lg fa-facebook"></i>
+                <i class="fab fa-lg fa-google-plus-square"></i>
+                <i class="fab fa-lg fa-github-square"></i>
+              </div>
+            </div>
+          </div>
+          <div class="membro">
+            <%= image_tag("Cat.png", :class => "membro-img") %>
+            <div class="membro-text">
+              <p class="nome">Débora Ciriaco</p>
+              <p class="instituto">IME/USP</p>
+              <p class="descricao">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                 In orci leo, tristique non sem ut, molestie sodales lorem.
+                 Fusce quam neque, maximus nec scelerisque ut, laoreet ut purus.
+                 Aliquam eu lectus et libero sodales porttitor a eu enim.</p>
+              <div class="media">
+                <i class="fab fa-lg fa-facebook"></i>
+                <i class="fab fa-lg fa-google-plus-square"></i>
+                <i class="fab fa-lg fa-github-square"></i>
+              </div>
+            </div>
+          </div>
+          <div class="membro">
+            <%= image_tag("Cat.png", :class => "membro-img") %>
+            <div class="membro-text">
+              <p class="nome">Eduardo Pinheiro</p>
+              <p class="instituto">IME/USP</p>
+              <p class="descricao">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                 In orci leo, tristique non sem ut, molestie sodales lorem.
+                 Fusce quam neque, maximus nec scelerisque ut, laoreet ut purus.
+                 Aliquam eu lectus et libero sodales porttitor a eu enim.</p>
+              <div class="media">
+                <i class="fas fa-lg fa-envelope-square" onclick="show_email(this)"></i>
+                <p class="email">eduardo.goncalves.pinheiro@usp.com</p>
+                <i class="fab fa-lg fa-google-plus-square"></i>
+                <i class="fab fa-lg fa-github-square"></i>
+              </div>
+            </div>
+          </div>
+          <div class="membro">
+            <%= image_tag("Cat.png", :class => "membro-img") %>
+            <div class="membro-text">
+              <p class="nome">Camila Kodaira</p>
+              <p class="instituto">IME/USP</p>
+              <p class="descricao">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                 In orci leo, tristique non sem ut, molestie sodales lorem.
+                 Fusce quam neque, maximus nec scelerisque ut, laoreet ut purus.
+                 Aliquam eu lectus et libero sodales porttitor a eu enim.</p>
+              <div class="media">
+                <i class="fas fa-lg fa-envelope-square" onclick="show_email(this)"></i>
+                <p class="email">naomicamila@hotmail.com</p>
+                <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/camila-kodaira-043635160/"><i class="fab fa-lg fa-linkedin"></i>
+                <a target="_blank" rel="noopener noreferrer" href="https://gitlab.com/NaomiKodaira"><i class="fab fa-lg fa-git-square"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="membro">
+            <%= image_tag("Cat.png", :class => "membro-img") %>
+            <div class="membro-text">
+              <p class="nome">Yurick Honda</p>
+              <p class="instituto">IME/USP</p>
+              <p class="descricao">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                 In orci leo, tristique non sem ut, molestie sodales lorem.
+                 Fusce quam neque, maximus nec scelerisque ut, laoreet ut purus.
+                 Aliquam eu lectus et libero sodales porttitor a eu enim.</p>
+              <div class="media">
+                <i class="fab fa-lg fa-facebook"></i>
+                <i class="fab fa-lg fa-google-plus-square"></i>
+                <i class="fab fa-lg fa-github-square"></i>
+              </div>
+            </div>
+          </div>
+          <div class="membro">
+            <%= image_tag("Cat.png", :class => "membro-img") %>
+            <div class="membro-text">
+              <p class="nome">Breno Aguiar</p>
+              <p class="instituto">SMS/SP</p>
+              <p class="descricao">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                 In orci leo, tristique non sem ut, molestie sodales lorem.
+                 Fusce quam neque, maximus nec scelerisque ut, laoreet ut purus.
+                 Aliquam eu lectus et libero sodales porttitor a eu enim.</p>
+              <div class="media">
+                <i class="fab fa-lg fa-facebook"></i>
+                <i class="fab fa-lg fa-google-plus-square"></i>
+                <i class="fab fa-lg fa-github-square"></i>
+              </div>
+            </div>
+          </div>
+          <div class="membro">
+            <%= image_tag("Cat.png", :class => "membro-img") %>
+            <div class="membro-text">
+              <p class="nome">Marcelo Failla</p>
+              <p class="instituto">SMS/SP</p>
+              <p class="descricao">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                 In orci leo, tristique non sem ut, molestie sodales lorem.
+                 Fusce quam neque, maximus nec scelerisque ut, laoreet ut purus.
+                 Aliquam eu lectus et libero sodales porttitor a eu enim.</p>
+              <div class="media">
+                <i class="fab fa-lg fa-facebook"></i>
+                <i class="fab fa-lg fa-google-plus-square"></i>
+                <i class="fab fa-lg fa-github-square"></i>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="membro-div">
-          <%= image_tag("Rabbit.png", :class => "membro-div-img") %> 
-          <a class="membro-div-name">Profª. Kelly Braghetto</a>
-          <p>IME/USP</p>
-        </div>
-        <div class="membro-div">
-          <%= image_tag("Cat.png", :class => "membro-div-img") %> 
-          <a class="membro-div-name">Prof. Paulo Meirelles</a>
-          <p>UNIFESP</p>
-        </div>
-        <div class="membro-div">
-          <%= image_tag("Dog.png", :class => "membro-div-img") %>
-          <a class="membro-div-name">Débora Ciriaco</a>
-          <p>IME/USP</p>
-        </div>
-        <div class="membro-div">
-          <%= image_tag("Cat.png", :class => "membro-div-img") %>
-          <a class="membro-div-name" href="mailto:eduardo.goncalves.pinheiro@usp.com">Eduardo Pinheiro</a>
-          <p>IME/USP</p>
-        </div>
-        <div class="membro-div">
-          <%= image_tag("Rabbit.png", :class => "membro-div-img") %>
-          <a class="membro-div-name">Camila Kodaira</a>
-          <p>IME/USP</p>
-        </div>
-        <div class="membro-div">
-          <%= image_tag("Cat.png", :class => "membro-div-img") %>
-          <a class="membro-div-name">Yurick Honda</a>
-          <p>IME/USP</p>
-        </div>
-        <div class="membro-div">
-          <%= image_tag("Dog.png", :class => "membro-div-img") %>
-          <a class="membro-div-name">Breno Aguiar</a>
-          <p>SMS/SP</p>
-        </div>
-        <div class="membro-div">
-          <%= image_tag("Rabbit.png", :class => "membro-div-img") %>
-          <a class="membro-div-name">Marcelo Failla</a>
-          <p>SMS/SP</p>
-        </div>
+        <i class="fas fa-2x fa-chevron-right side-btn" onclick="scroll_right()"></i>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  AOS.init();
+</script>
