@@ -174,7 +174,7 @@ function buscar(data) {
     markerList = []
     cluster = L.markerClusterGroup({ chunkedLoading: true }); // chunkedLoading prevents browser freezing
     var dotIcon = L.icon({
-        iconUrl: "https://storage.googleapis.com/support-kms-prod/SNP_2752125_en_v0",
+        iconUrl: "https://storage.googleapis.com/support-kms-prod/SNP_2752125_en_v0", iconAnchor: [5, 0]
     });
     Num_procedures = 0;
     $.getJSON("procedure/procedures_total", data, function(result) {
@@ -224,16 +224,31 @@ function markerOnClick(e) {
     if (e.target.getPopup() === undefined) {
         $.getJSON(procedure_info_path, function(result) {
             cnes = result[0].cnes_id;
-            text =  "<strong>Estabelecimento: </strong>" + health_centres_array[parseInt(cnes)] + "<br>";
-            text += "<strong>Sexo: </strong>" + sexp_var[result[0].gender] + "<br>";
-            text +=  "<strong>Idade: </strong>" + result[0].age_number + "<br>";
-            text += "<strong>CID: </strong>" + cid_array[result[0].cid_primary] + "<br>";
-            text += "<strong>CRS: </strong>" + result[0].CRS + "<br>";
-            text += "<strong>Data: </strong>" + result[0].date + "<br>";
-            text += "<strong>Distância: </strong>" + parseFloat(result[0].distance).toFixed(1).replace(".", ",") + " Km <br>";
-            e.target.bindPopup(text, {cnes: cnes});
-            e.target.openPopup();
-            health_centres_makers(cnes);
+            $.getJSON("procedure/health_centres_procedure", {cnes: cnes.toString()}, function(hc_latlong) {
+                procedure_latlong = e.target.getLatLng();
+                path_distance_real = "http:\/\/router.project-osrm.org\/route\/v1\/driving\/" 
+                + hc_latlong[0].long + "," + hc_latlong[0].lat + ";" + procedure_latlong.lng + "," 
+                + procedure_latlong.lat + "?overview=false";
+                
+                $.getJSON(path_distance_real, function(distance) { //get Real distance usign router.project-osrm.org
+                    v_distance = parseFloat(distance.routes[0].distance);
+                    v_distance = v_distance / 1000; // m -> km
+                    console.log(distance)
+
+                    text =  "<strong>Estabelecimento: </strong>" + health_centres_array[parseInt(cnes)] + "<br>";
+                    text += "<strong>Sexo: </strong>" + sexp_var[result[0].gender] + "<br>";
+                    text +=  "<strong>Idade: </strong>" + result[0].age_number + "<br>";
+                    text += "<strong>CID: </strong>" + cid_array[result[0].cid_primary] + "<br>";
+                    text += "<strong>CRS: </strong>" + result[0].CRS + "<br>";
+                    text += "<strong>Data: </strong>" + result[0].date + "<br>";
+                    text += "<strong>Distância: </strong>" + parseFloat(result[0].distance).toFixed(1).replace(".", ",") + " Km <br>";
+                    text += "<strong>Distância viária: </strong>" + v_distance.toFixed(1).replace(".", ",") + " Km <br>";
+
+                    e.target.bindPopup(text, {direction:'top', cnes: cnes});
+                    e.target.openPopup();
+                    health_centres_makers(cnes);
+                });
+            });
         });
     } else {
         cnes = e.target.getPopup().options.cnes;
