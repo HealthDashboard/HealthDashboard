@@ -60,4 +60,5 @@ function showDivs(n) {
   else {
     $(x[slideIndex]).addClass("left");
   }
+  setTimeout(function() { plusDivs(1) }, 5000);
 }
