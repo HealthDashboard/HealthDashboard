@@ -96,3 +96,7 @@
 .values_search {
   background-color: rgb(240, 240, 240);
 }
+
+.leaflet-heatmap-layer {
+  opacity: .6;
+}
