@@ -1,4 +1,5 @@
 var slideIndex = 1;
+var timeout;
 showDivs(slideIndex);
 getData();
 
@@ -34,6 +35,7 @@ function plusDivs(n) {
 }
 
 function showDivs(n) {
+  clearTimeout(timeout);
   var i;
   var x = document.getElementsByClassName("slider-img");
   if (n > x.length) {
@@ -60,5 +62,5 @@ function showDivs(n) {
   else {
     $(x[slideIndex]).addClass("left");
   }
-  setTimeout(function() { plusDivs(1) }, 5000);
+  timeout = setTimeout(function() { plusDivs(1) }, 5000);
 }
