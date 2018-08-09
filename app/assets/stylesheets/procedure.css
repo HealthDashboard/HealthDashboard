@@ -3,6 +3,22 @@
   padding: 0;
 }
 
+.container {
+  margin: 50px 0 0 0;
+}
+
+.map-wrapper {
+  height: calc(100vh - 50px);
+}
+
+#automatic_search_checkbox {
+  opacity: 0;
+}
+
+.card-block {
+  padding-top: 1em;
+}
+
 .min-number {
   width: 3.5vw;
   position: absolute;
@@ -15,7 +31,7 @@
   width: 3.5vw;
   position: absolute;
   border: 1px solid black;
-  text-align: center;  
+  text-align: center;
   z-index: 1;
 }
 
@@ -38,6 +54,7 @@
 }
 
 .collapsible {
+  background-color: rgb(240, 240, 240);
   color: rgb(0, 0, 0);
   cursor: pointer;
   padding: 18px;
@@ -46,24 +63,25 @@
   text-align: left;
   outline: none;
   font-size: 15px;
-  margin-bottom: 0.8vh;
-  transition: 2.0s;
+  margin-top: 0.8vh;
+  transition: background-color 300ms;
 }
 
-.active, .collapsible:hover {
-  background-color: #555;
+.collapsible:hover {
+  background-color: #aaa;
 }
 
-.collapsible:before {
+.collapsible h4:before {
   content: '\f078';
   font-family: "Font Awesome 5 Free";
   font-weight: bold;
-  float: right !important;
+  float: right;
+  text-align: center;
+  transition: transform 500ms 250ms ease-in-out;
 }
 
-.collapsible.active:before {
-  content: "\f077";
-  font-family: "Font Awesome 5 Free";
+.collapsible.active h4:before {
+  transform: rotate(180deg);
 }
 
 .content {
@@ -71,6 +89,7 @@
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.5s ease-out;
+  box-shadow: inset 0px 0px 3px 2px rgba(203, 203, 203, 0.17);
 }
 
 .form-control {
