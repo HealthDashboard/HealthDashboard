@@ -4,7 +4,11 @@
 }
 
 hr {
-  border-top: 1px solid #8e8e8e;
+  margin-top: 0;
+  padding-top: 20px;
+  background-color: #fff;
+  border-top: 0;
+  border-bottom: 1px solid #8e8e8e;
 }
 
 .page {
@@ -191,6 +195,17 @@ input[type="radio"] {
 
 #search-name {
   font-family: 'Raleway', sans-serif;
+}
+
+.hosp-info-text {
+  max-height: 300px;
+  transition: max-height 300ms;
+  z-index: -1;
+}
+
+.hosp-info-text.active {
+  max-height: 0;
+  overflow: hidden;
 }
 
 .grafico {
