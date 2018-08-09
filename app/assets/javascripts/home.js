@@ -1,9 +1,9 @@
 var slideIndex = 1;
 var timeout;
-showDivs(slideIndex);
-getData();
+// showDivs(slideIndex);
+// getDataHomePage();
 
-function getData() {
+function getDataHomePage() {
   $.getJSON("/distance_metric.json", data, function(result) {
     sum = 0;
     $.each(result,function(key, value) {
@@ -31,17 +31,18 @@ function getData() {
 }
 
 function plusDivs(n) {
-  showDivs(slideIndex += n);
+  slideIndex += n
+  showDivs();
 }
 
-function showDivs(n) {
+function showDivs() {
   clearTimeout(timeout);
   var i;
   var x = document.getElementsByClassName("slider-img");
-  if (n > x.length) {
+  if (slideIndex > x.length) {
     slideIndex = 1
   }
-  if (n < 1) {
+  if (slideIndex < 1) {
     slideIndex = x.length
   }
   for (i = 0; i < x.length; i++) {
