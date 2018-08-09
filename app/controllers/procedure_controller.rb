@@ -246,16 +246,16 @@ class ProcedureController < ApplicationController
 			procedures = getProcedures()
 		end
 
-		procedures = procedures.select('id as "ID"', 'lat AS "LAT_SC"', 'long as "LONG_SC"', 'gender as "P_SEXO"', 
+		procedures = procedures.select('id as "COD"', 'lat AS "LAT_SC"', 'long as "LONG_SC"', 'gender as "P_SEXO"', 
 			'age_number as "P_IDADE"', 'race as "P_RACA"', 'lv_instruction as "LV_INSTRU"', 'cnes_id as "CNES"', 
 			'gestor_ide as "GESTOR_ID"', 'treatment_type as "CAR_INTEN"', 'cmpt as "CMPT"', 'date as "DT_EMISSAO"', 
 			'date_in as "DT_INTERNA"', 'date_out as "DT_SAIDA"', 'complexity as "COMPLEXIDA"', 'proce_re as "PROC_RE"', 
 			'cid_primary as "DIAG_PR"', 'cid_secondary as "DIAG_SE1"', 'cid_secondary2 as "DIAG_SE2"', 
 			'cid_associated as "DIAG_SE3"', 'days as "DIARIAS"', 'days_uti as "DIARIAS_UT"', 'days_ui as "DIARIAS_UI"', 
-			'days_total as "DIAS_PERM"', 'finance as "FINANC"', 'val_total as "VAL_TOT"', '"DA" as "DA"', '"PR" as "SUB"', 
-			'"STS" as "STS"', '"CRS" as "CRS"', 'distance as "DISTANCIA_KM"')
+			'days_total as "DIAS_PERM"', 'finance as "FINANC"', 'replace(val_total::text, \'.\', \',\') as "VAL_TOT"', '"DA" as "DA"', '"PR" as "SUB"', 
+			'"STS" as "STS"', '"CRS" as "CRS"', 'replace(distance::text, \'.\', \',\') as "DISTANCIA_KM"')
 
-		enumerator = procedures.copy_to_enumerator(:buffer_lines => 100)
+		enumerator = procedures.copy_to_enumerator(:buffer_lines => 100, :delimiter => ";")
 		# Tell Rack to stream the content
 		headers.delete("Content-Length")
 
