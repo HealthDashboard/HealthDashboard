@@ -56,7 +56,7 @@ function healthCentreClick(point) {
         point.phone = "Não Informado";
     }
     latlng = L.latLng(point.lat, point.long);
-    text = '<div id="hosp-info-text">'
+    text = '<div id="hosp-info-text" class="hosp-info-text">'
     + '<strong>Telefone:</strong> ' + point.phone
     + '<br><strong>Leitos:</strong> ' + point.beds
     + '<br><strong>Distrito Administrativo:</strong> ' + point.DA
@@ -72,15 +72,16 @@ function healthCentreClick(point) {
 }
 
 function hide_info() {
-  var x = document.getElementById("hosp-info-text");
-  if (x.style.display === "none") {
-      x.style.display = "block";
-      document.getElementById("hide_btn").innerHTML = "Esconder info";
-  } else {
-      x.style.display = "none";
-      document.getElementById("hide_btn").innerHTML = "Mostrar info";
+  if (!$("#hosp-info-text").hasClass("active")) {
+    $("#hosp-info-text").addClass("active");
+    document.getElementById("hide_btn").innerHTML = "Mostrar info";
+  }
+  else {
+    $("#hosp-info-text").removeClass("active");
+    document.getElementById("hide_btn").innerHTML = "Esconder info";
   }
 }
+
 
 function show_clusters(id, lat, long) {
     if (cluster_status === false) {
