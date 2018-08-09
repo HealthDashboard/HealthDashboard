@@ -334,7 +334,7 @@ class ProcedureController < ApplicationController
 	# GET /procedure/procedure_info/:id
 	# Given a procedure id returns its information
 	def procedure_info
-		procedure = Procedure.where(id: params[:id]).select(:cnes_id, :gender, :age_number, :cid_primary, :CRS, :date, :distance).to_a
+		procedure = Procedure.where(id: params[:id]).select(:cnes_id, :gender, :age_number, :cid_primary, :CRS, :date, :distance, :lat, :long).to_a
 
 		render json: procedure
 	end
