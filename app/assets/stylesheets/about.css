@@ -196,3 +196,31 @@ h1, h2 {
   vertical-align: -15%;
   margin: 0;
 }
+
+.rodape {
+  position: relative;
+  bottom: 0;
+  width: calc(100vw - (100vw - 100%));
+  background-color: #333;
+  height: 100px;
+  z-index: 2;
+}
+
+.footer-container {
+  color: #fff;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  max-width: 1170px;
+  margin: auto;
+}
+
+ul.footer-item {
+  margin: auto;
+  list-style: none;
+}
+
+.footer-img {
+  flex-grow: 0;
+  margin: 24px 24px;
+}
