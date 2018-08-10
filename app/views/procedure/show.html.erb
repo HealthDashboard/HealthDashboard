@@ -24,10 +24,24 @@
             <li><input type="radio" name="optRadio" value="3" onchange="setShape('Shape_PR.geojson', null)"> Prefeitura Regional</li>
             <li><input type="radio" name="optRadio" value="4" onchange="setShape('Shape_DA.geojson', null)"> Distritos Administrativos</li>
             <li><input type="radio" name="optRadio" value="5" onchange="setShape('Shape_UBS.geojson', null)"> Áreas de Abrangência de UBS</li>
-            <li><input type="radio" name="optRadio" value="5" onchange="setShape(null, null)" checked> Nenhum</li>
+            <li><input type="radio" name="optRadio" value="6" onchange="setShape(null, null)" checked> Nenhum</li>
             </ul>
         </form>
         </div>
+    </div>
+    <div class="btn-column">
+      <div class="btn-item clear" id="btn-clear" onclick="limpar()">
+          <p class="btn-text">Limpar</p>
+      </div>
+      <div class="btn-item print" id="btn-print" onclick="print_maps()">
+          <p class="btn-text">Imprimir</p>
+      </div>
+      <div class="btn-item graphs" id="btn-graphs" onclick="graphs()">
+          <p class="btn-text">Dados Gerais</p>
+      </div>
+      <div class="btn-item download" id="btn-graphs">
+          <p class="btn-text"><%= link_to "Download", download_procedure_index_path(format: "csv") %></p>
+      </div>
     </div>
     <div class ="col-sm-3">
         <div class="card card-block">
@@ -167,18 +181,6 @@
                     <hr>
                     <button class="btn btn-success" type="button" id="btn-submit" onclick="buscar()">
                         <i class="fa fa-search" aria-hidden="true"></i> Buscar
-                    </button>
-                    <button class="btn btn-warning" type="button" id="btn-clear" onclick="limpar()">
-                        <i class="fa fa-search" aria-hidden="true"></i> Limpar
-                    </button>
-                    <button class="btn btn-info" type="button" id="btn-print" onclick="print_maps()">
-                        <i class="fa fa-search" aria-hidden="true"></i> Imprimir
-                    </button>
-                    <button class="btn btn-info" type="button" id="btn-graphs" onclick="graphs()">
-                        <i class="fa fa-search" aria-hidden="true"></i> Dados Gerais
-                    </button>
-                    <button class="btn btn-info" type="button" id="btn-graphs">
-                        <%= link_to "Download", download_procedure_index_path(format: "csv") %>
                     </button>
                 </div>
                 <div class = "col-sm-12" style = "height: 10px;"></div>
