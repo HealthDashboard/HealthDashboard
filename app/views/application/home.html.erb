@@ -52,15 +52,15 @@
           </p>
         </div>
       </a>
-      <a href="<%= estabelecimentos_path %>">
+      <%= link_to estabelecimentos_path, class: 'lnk', data: { turbolinks: false } do %>
         <div class="item">
-          <%= image_tag("estabelecimento.png",:class => "item-img") %>
+          <%= image_tag("estabelecimento.png", :class => "item-img") %>
           <h3 class="item-title">Estabelecimentos</h3>
           <p class="item-descript">
             Informações gerais coletadas nos dados de internações hospitalares realizadas em estabelecimentos de saúde do município a partir de suas especialidades.
           </p>
         </div>
-      </a>
+      <% end %>
       <a href="<%= dados_gerais_path %>">
         <div class="item">
           <%= image_tag("dadosGerais.png",:class => "item-img") %>
