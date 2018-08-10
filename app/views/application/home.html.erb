@@ -12,10 +12,11 @@
   <div class="intro">
     <div class="slider" id="slideshow">
       <i class="fas fa-2x fa-chevron-left slider-btn left" onclick="plusDivs(-1)"></i>
-      <img src="https://picsum.photos/1200/250/?random" alt="Random Image" class="slider-img active" id="slider1">
-      <img src="https://picsum.photos/1201/250/?random" alt="Random Image" class="slider-img left" id="slider2">
-      <img src="https://picsum.photos/1200/251/?random" alt="Random Image" class="slider-img" id="slider3">
-      <img src="https://picsum.photos/1201/251/?random" alt="Random Image" class="slider-img right" id="slider4">
+      <%= image_tag("slide2.jpeg", :alt => "Random Image",:class => "slider-img active", :id => "slider2") %>
+      <%= image_tag("slide3.jpeg", :alt => "Random Image",:class => "slider-img active", :id => "slider3") %>
+      <%= image_tag("slide1.jpeg", :alt => "Random Image",:class => "slider-img active", :id => "slider1") %>
+
+
       <i class="fas fa-2x fa-chevron-right slider-btn right" onclick="plusDivs(1)"></i>
     </div>
     <div class="data-row">
@@ -42,23 +43,9 @@
     <h2 class="section"> SERVIÇOS </h2>
 
     <div class="grid">
-      <a href="<%= dados_gerais_path %>">
-        <div class="item">
-          <img src="https://picsum.photos/501/301/?random" alt="Random Image" class="item-img">
-          <h3 class="item-title">Dados Gerais</h3>
-          <p class="item-descript">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Phasellus viverra faucibus pretium.
-            Quisque at nisl nulla.
-            Etiam faucibus orci eget volutpat vulputate.
-            Morbi dictum pulvinar iaculis.
-            Nullam varius posuere tempus.
-          </p>
-        </div>
-      </a>
       <a href="<%= busca_path %>">
         <div class="item">
-          <img src="https://picsum.photos/500/300/?random" alt="Random Image" class="item-img">
+          <%= image_tag("buscaAvancada.png",:class => "item-img") %>
           <h3 class="item-title">Busca Avançada</h3>
           <p class="item-descript">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -72,8 +59,22 @@
       </a>
       <a href="<%= estabelecimentos_path %>">
         <div class="item">
-          <img src="https://picsum.photos/501/300/?random" alt="Random Image" class="item-img">
+          <%= image_tag("estabelecimento.png",:class => "item-img") %>
           <h3 class="item-title">Estabelecimentos</h3>
+          <p class="item-descript">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Phasellus viverra faucibus pretium.
+            Quisque at nisl nulla.
+            Etiam faucibus orci eget volutpat vulputate.
+            Morbi dictum pulvinar iaculis.
+            Nullam varius posuere tempus.
+          </p>
+        </div>
+      </a>
+      <a href="<%= dados_gerais_path %>">
+        <div class="item">
+          <%= image_tag("dadosGerais.png",:class => "item-img") %>
+          <h3 class="item-title">Dados Gerais</h3>
           <p class="item-descript">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             Phasellus viverra faucibus pretium.
