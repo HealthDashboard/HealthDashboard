@@ -149,7 +149,7 @@ function getData() {
 
     sliders = [];
     for (i = 0; i < 6; i++) {
-        var values = $("#slider_" + i.toString()).slider("getValue"); 
+        var values = $("#slider_" + i.toString()).slider("getValue");
         sliders.push([values[0], values[1]]);
     }
 
@@ -207,6 +207,10 @@ function buscar(data) {
             // Doing Something
             handleLargeCluster(data, dotIcon);
         }
+        // Divida tecnica
+        checked = $('input[name=optRadio]:checked', '#radio-list');
+        $('input[name=optRadio][value=6]', '#radio-list').trigger('click');
+        $(checked).attr('checked', true).trigger('click');
     });
 }
 
@@ -334,6 +338,8 @@ function limpar() {
     $("#sexo_masculino").prop("checked", true);
     $("#sexo_feminino").prop("checked", true);
     cleaning = false;
+
+    $('input[name=optRadio][value=6]', '#radio-list').trigger('click');
     clearMap();
 }
 
@@ -468,7 +474,7 @@ function filters_value(data) {
                         step: 1,
                         value: [0, max_hash[slider]],
                         //rangeHighlights: [{ "start": medianAux-1, "end": medianAux+1}],
-                    });                
+                    });
                 }
                 else{
                     const lastText = document.getElementById("label_slider_" + i.toString()).innerText;

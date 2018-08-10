@@ -11,6 +11,58 @@
   height: calc(100vh - 50px);
 }
 
+.btn-column {
+  position: absolute;
+  right: 25%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow: hidden;
+  margin-top: 5px;
+  position: fixed;
+}
+
+.btn-item {
+  background-color: #fff;
+  padding: .25em .5em 0 .5em;
+  text-align: center;
+  margin-bottom: 5px;
+  transform: translateX(120px);
+  cursor: pointer;
+  transition: transform 250ms ease-in-out;
+}
+
+.btn-item:hover {
+  transform: translateX(0);
+}
+
+.btn-item:active {
+  background-color: #ddd;
+}
+
+.btn-text::before {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  margin-right: .5em;
+  float: left;
+}
+
+.clear .btn-text::before {
+  content: "\f12d";
+}
+
+.print .btn-text::before {
+  content: "\f02f";
+}
+
+.graphs .btn-text::before {
+  content: "\f080";
+}
+
+.download .btn-text::before {
+  content: "\f019";
+}
+
 #automatic_search_checkbox {
   opacity: 0;
 }
