@@ -43,5 +43,6 @@ Rails.application.routes.draw do
     get :procedures_distance_group,  on: :collection
     get :procedure_median, on: :collection
     get :max_values, on: :collection
+    get :procedure_large_cluster, on: :collection
   end
 end

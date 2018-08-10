@@ -204,11 +204,40 @@ function buscar(data) {
                 $('#loading_overlay').hide();
             });
         } else {
-            if (shape == null)
-                setShape("Shape_SP.geojson", "<strong>" + Num_procedures.toString() + " Internações Hospitalares</strong><br>Para buscas com resultado<br> menor ou igual 50.000 está dispónivel<br> visualização por cluster.");
-            $('#loading_overlay').hide();
-            // Do Something
+            // Doing Something
+            handleLargeCluster(data, dotIcon);
         }
+    });
+}
+
+function handleLargeCluster(data, icon) {
+    cluster = L.markerClusterGroup({
+        maxClusterRadius: 120,
+        iconCreateFunction: function(cluster) {
+            var markers = cluster.getAllChildMarkers();
+            var n = 0;
+            for (var i = 0; i < markers.length; i++) {
+                n += markers[i].number;
+            }
+            var small = n < 200;
+            var className = small ? 'mycluster1' : 'mycluster2';
+            var size = small ? 40 : 60;
+            return L.divIcon({ html: n, className: className, iconSize: L.point(size, size) });
+        },
+        //Disable all of the defaults:
+        spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false
+    });
+
+    $.getJSON("procedure/procedure_large_cluster", data, function(procedures) {
+        markerList = []
+        $.each(procedures, function(index, latlong){
+            marker = L.marker(L.latLng(latlong[0]), {icon: icon})
+            marker.number = latlong[1];
+            markerList.push(marker);
+        });
+        cluster.addLayers(markerList);
+        map.addLayer(cluster);
+        $('#loading_overlay').hide();
     });
 }
 
@@ -316,12 +345,9 @@ function clearMap() {
     if (heat != null)
         map.removeLayer(heat);
 
-    if (shape != null)
-        map.removeLayer(shape);
     setVisible(false);
     heat = null;
     cluster = null;
-    shape = null;
 }
 
 //** Called when "Dados Gerais" button is clicked, open "Dados Gerais" page and passes filter values to it **//

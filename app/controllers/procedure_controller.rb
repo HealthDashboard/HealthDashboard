@@ -339,6 +339,16 @@ class ProcedureController < ApplicationController
 		render json: procedure
 	end
 
+	# GET /procedure/procedure_large_cluster
+	# For search results of 50k or more points
+	# Return a array of [[lat, long], number_of_pacients]
+	def procedure_large_cluster
+		procedures = getProcedures();
+		procedures = procedures.group(:lat, :long).order(:count).count
+
+		render json: procedures.to_a
+	end
+
 	# GET /procedure/max_values
 	# return max filter values given the search parameters
 	def max_values
