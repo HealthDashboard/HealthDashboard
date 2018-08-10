@@ -23,6 +23,7 @@ function initialize() {
     latlng = L.latLng(-23.56, -46.58);
     map = L.map('map', { center: latlng, zoom: 11, layers: [tiles] });
     L.control.scale({imperial: false, position: 'bottomright'}).addTo(map);
+    $('#loading_overlay').hide();
 }
 
 function load_all_points() {
@@ -98,6 +99,7 @@ function show_clusters(id, lat, long) {
 }
 
 function setup_cluster(id, lat, long) {
+    $('#loading_overlay').show();
     markers_visible(false, id);
     var procedure_path = ["/procedures/", id].join("");
 
@@ -123,6 +125,7 @@ function show_procedures(procedures) {
     });
     markerCluster.addLayers(markerList);
     map.addLayer(markerCluster);
+    $('#loading_overlay').hide();
 }
 
 // Remove clusters
