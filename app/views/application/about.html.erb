@@ -34,34 +34,32 @@
         <i class="fas fa-2x fa-chevron-left side-btn" onclick="scroll_left()"></i>
         <div class="membros-container" id="membros-container">
           <div class="membro">
-            <%= image_tag("Cat.png", :class => "membro-img") %>
+            <%= image_tag("fkon.png", :class => "membro-img") %>
             <div class="membro-text">
               <p class="nome">Prof. Fabio Kon</p>
               <p class="instituto">IME/USP</p>
-              <p class="descricao">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                 In orci leo, tristique non sem ut, molestie sodales lorem.
-                 Fusce quam neque, maximus nec scelerisque ut, laoreet ut purus.
-                 Aliquam eu lectus et libero sodales porttitor a eu enim.<p>
+              <p class="descricao">Professor titular do Departamento de Ciência da Computação (DCC) 
+              do Instituto de Matemática e Estatística (IME) da Universidade de São Paulo (USP).<p>
               <div class="media">
-                <i class="fab fa-lg fa-facebook"></i>
-                <i class="fab fa-lg fa-google-plus-square"></i>
-                <i class="fab fa-lg fa-github-square"></i>
+                <i class="fas fa-lg fa-envelope-square" onclick="show_email(this)"></i>
+                  <p class="email">kon@ime.usp.br</p>
+                <a target="_blank" rel="noopener noreferrer" href="https://twitter.com/fabiokon"><i class="fab fa-lg fa-twitter-square"></i></a>
+                <a target="_blank" rel="noopener noreferrer" href="https://www.ime.usp.br/~kon/"><i class="fas fa-globe"></i></a>
               </div>
             </div>
           </div>
           <div class="membro">
-            <%= image_tag("Cat.png", :class => "membro-img") %>
+            <%= image_tag("kbraghetto.jpg", :class => "membro-img") %>
             <div class="membro-text">
               <p class="nome">Profª. Kelly Braghetto</p>
               <p class="instituto">IME/USP</p>
-              <p class="descricao">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                 In orci leo, tristique non sem ut, molestie sodales lorem.
-                 Fusce quam neque, maximus nec scelerisque ut, laoreet ut purus.
-                 Aliquam eu lectus et libero sodales.</p>
+              <p class="descricao">Professora do Departamento de Ciência da Computação (DCC) 
+              do Instituto de Matemática e Estatística (IME-USP)</p>
               <div class="media">
-                <i class="fab fa-lg fa-facebook"></i>
-                <i class="fab fa-lg fa-google-plus-square"></i>
-                <i class="fab fa-lg fa-github-square"></i>
+                <i class="fas fa-lg fa-envelope-square" onclick="show_email(this)"></i>
+                <p class="email">kellyrb@ime.usp.br</p>
+                <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/kelly-rosa-braghetto-94b30344/"><i class="fab fa-lg fa-linkedin"></i>
+                <a target="_blank" rel="noopener noreferrer" href="https://www.ime.usp.br/~kellyrb/"><i class="fas fa-globe"></i></a>
               </div>
             </div>
           </div>
@@ -70,10 +68,8 @@
             <div class="membro-text">
               <p class="nome">Prof. Paulo Meirelles</p>
               <p class="instituto">UNIFESP</p>
-              <p class="descricao">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                 In orci leo, tristique non sem ut, molestie sodales lorem.
-                 Fusce quam neque, maximus nec scelerisque ut, laoreet ut purus.
-                 Aliquam eu lectus et libero sodales.</p>
+              <p class="descricao">Professor adjujnto do Departamento de Informática em Saúde 
+              da Unifersidade Federal de São Paulo (UNIFESP).</p>
               <div class="media">
                 <i class="fas fa-lg fa-envelope-square" onclick="show_email(this)"></i>
                 <p class="email">paulo.meirelles@unifesp.br</p>
@@ -87,10 +83,8 @@
             <div class="membro-text">
               <p class="nome">Débora Ciriaco</p>
               <p class="instituto">IME/USP</p>
-              <p class="descricao">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                 In orci leo, tristique non sem ut, molestie sodales lorem.
-                 Fusce quam neque, maximus nec scelerisque ut, laoreet ut purus.
-                 Aliquam eu lectus et libero sodales porttitor a eu enim.</p>
+              <p class="descricao">Mestranda em Ciência da Computação do Instituto de 
+              Matemática e Estatística (IME) da Universidade de São Paulo (USP).</p>
               <div class="media">
                 <i class="fas fa-lg fa-envelope-square" onclick="show_email(this)"></i>
                 <p class="email">dciriaco@ime.usp.br</p>
@@ -99,31 +93,28 @@
             </div>
           </div>
           <div class="membro">
-            <%= image_tag("Cat.png", :class => "membro-img") %>
+            <%= image_tag("epinheiro.jpg", :class => "membro-img") %>
             <div class="membro-text">
               <p class="nome">Eduardo Pinheiro</p>
               <p class="instituto">IME/USP</p>
-              <p class="descricao">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                 In orci leo, tristique non sem ut, molestie sodales lorem.
-                 Fusce quam neque, maximus nec scelerisque ut, laoreet ut purus.
-                 Aliquam eu lectus et libero sodales porttitor a eu enim.</p>
+              <p class="descricao">Estudante do Bacharelado em Ciência da Computação 
+                do Instituto de Matemática e Estatística (IME) da Universidade de São 
+                Paulo (USP).</p>
               <div class="media">
                 <i class="fas fa-lg fa-envelope-square" onclick="show_email(this)"></i>
-                <p class="email">eduardo.goncalves.pinheiro@usp.com</p>
-                <i class="fab fa-lg fa-google-plus-square"></i>
-                <i class="fab fa-lg fa-github-square"></i>
+                <p class="email">eduardo.goncalves.pinheiro@usp.br</p>
+                <a target="_blank" rel="noopener noreferrer" href="https://gitlab.com/eduardopinheiro482"><i class="fab fa-lg fa-git-square"></i></a>
               </div>
             </div>
           </div>
           <div class="membro">
-            <%= image_tag("Cat.png", :class => "membro-img") %>
+            <%= image_tag("ckodaira.jpg", :class => "membro-img") %>
             <div class="membro-text">
               <p class="nome">Camila Kodaira</p>
               <p class="instituto">IME/USP</p>
-              <p class="descricao">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                 In orci leo, tristique non sem ut, molestie sodales lorem.
-                 Fusce quam neque, maximus nec scelerisque ut, laoreet ut purus.
-                 Aliquam eu lectus et libero sodales porttitor a eu enim.</p>
+              <p class="descricao">Estudante do Bacharelado em Ciência da Computação 
+                do Instituto de Matemática e Estatística (IME) da Universidade de São 
+                Paulo (USP).</p>
               <div class="media">
                 <i class="fas fa-lg fa-envelope-square" onclick="show_email(this)"></i>
                 <p class="email">naomicamila@hotmail.com</p>
@@ -133,14 +124,13 @@
             </div>
           </div>
           <div class="membro">
-            <%= image_tag("Cat.png", :class => "membro-img") %>
+            <%= image_tag("gpereira.webp", :class => "membro-img") %>
             <div class="membro-text">
               <p class="nome">Gabriely Pereira</p>
               <p class="instituto">IME/USP</p>
-              <p class="descricao">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                 In orci leo, tristique non sem ut, molestie sodales lorem.
-                 Fusce quam neque, maximus nec scelerisque ut, laoreet ut purus.
-                 Aliquam eu lectus et libero sodales porttitor a eu enim.</p>
+              <p class="descricao">Estudante do Bacharelado em Ciência da Computação 
+                do Instituto de Matemática e Estatística (IME) da Universidade de São 
+                Paulo (USP).</p>
               <div class="media">
                 <i class="fas fa-lg fa-envelope-square" onclick="show_email(this)"></i>
                 <p class="email">gabriely.pereira@usp.br</p>
@@ -154,10 +144,9 @@
             <div class="membro-text">
               <p class="nome">Yurick Honda</p>
               <p class="instituto">IME/USP</p>
-              <p class="descricao">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                 In orci leo, tristique non sem ut, molestie sodales lorem.
-                 Fusce quam neque, maximus nec scelerisque ut, laoreet ut purus.
-                 Aliquam eu lectus et libero sodales porttitor a eu enim.</p>
+              <p class="descricao">Estudante do Bacharelado em Ciência da Computação 
+                do Instituto de Matemática e Estatística (IME) da Universidade de São 
+                Paulo (USP).</p>
               <div class="media">
                 <i class="fab fa-lg fa-facebook"></i>
                 <i class="fab fa-lg fa-google-plus-square"></i>
@@ -170,10 +159,9 @@
             <div class="membro-text">
               <p class="nome">Breno Aguiar</p>
               <p class="instituto">SMS/SP</p>
-              <p class="descricao">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                 In orci leo, tristique non sem ut, molestie sodales lorem.
-                 Fusce quam neque, maximus nec scelerisque ut, laoreet ut purus.
-                 Aliquam eu lectus et libero sodales porttitor a eu enim.</p>
+              <p class="descricao">Técnico na Gerência de Geoprocessamento e 
+              Informações Socioambientais (GISA) na Secretaria Municipal da Saúde de 
+              São Paulo (SMS).</p>
               <div class="media">
                 <i class="fab fa-lg fa-facebook"></i>
                 <i class="fab fa-lg fa-google-plus-square"></i>
@@ -186,10 +174,9 @@
             <div class="membro-text">
               <p class="nome">Marcelo Failla</p>
               <p class="instituto">SMS/SP</p>
-              <p class="descricao">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                 In orci leo, tristique non sem ut, molestie sodales lorem.
-                 Fusce quam neque, maximus nec scelerisque ut, laoreet ut purus.
-                 Aliquam eu lectus et libero sodales porttitor a eu enim.</p>
+              <p class="descricao">Técnico na Gerência de Geoprocessamento e 
+              Informações Socioambientais (GISA) na Secretaria Municipal da Saúde de 
+              São Paulo (SMS).</p>
               <div class="media">
                 <i class="fab fa-lg fa-facebook"></i>
                 <i class="fab fa-lg fa-google-plus-square"></i>
