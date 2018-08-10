@@ -15,7 +15,7 @@ hr {
 .mapa {
   padding-top: 50px;
   width: 50vw;
-  height: 100vh;
+  height: calc(100vh - 50px);
   z-index: 1;
   overflow: hidden;
 }

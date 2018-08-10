@@ -22,6 +22,7 @@ function initialize() {
     }),
     latlng = L.latLng(-23.56, -46.58);
     map = L.map('map', { center: latlng, zoom: 11, layers: [tiles] });
+    L.control.scale({imperial: false, position: 'bottomright'}).addTo(map);
     load_all_points();
     create_chart();
 }
