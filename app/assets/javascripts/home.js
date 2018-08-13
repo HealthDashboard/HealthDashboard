@@ -52,16 +52,16 @@ function showDivs() {
   }
   $(x[slideIndex-1]).addClass("active");
   if (slideIndex == 1) {
-    $(x[3]).addClass("right");
+    $(x[x.length - 1]).addClass("right");
   }
   else {
     $(x[slideIndex-2]).addClass("right");
   }
-  if (slideIndex == 4) {
+  if (slideIndex == x.length) {
     $(x[0]).addClass("left");
   }
   else {
     $(x[slideIndex]).addClass("left");
   }
-  timeout = setTimeout(function() { plusDivs(1) }, 5000);
+  timeout = setTimeout(function() { plusDivs(-1) }, 5000);
 }

@@ -11,13 +11,13 @@
 
   <div class="intro">
     <div class="slider" id="slideshow">
-      <i class="fas fa-2x fa-chevron-left slider-btn left" onclick="plusDivs(-1)"></i>
-      <%= image_tag("slide2.jpg", :alt => "Random Image",:class => "slider-img active", :id => "slider2") %>
-      <%= image_tag("slide3.jpg", :alt => "Random Image",:class => "slider-img active", :id => "slider3") %>
-      <%= image_tag("slide1.jpg", :alt => "Random Image",:class => "slider-img active", :id => "slider1") %>
-
-
-      <i class="fas fa-2x fa-chevron-right slider-btn right" onclick="plusDivs(1)"></i>
+      <i class="fas fa-2x fa-chevron-left slider-btn left" onclick="plusDivs(1)"></i>
+      <!-- O slider nao funciona com menos de 4 imagens -->
+      <%= image_tag("slide1.jpg", :alt => "Imagem da vista de São Paulo a noite",:class => "slider-img active", :id => "slider1") %>
+      <%= image_tag("slide2.jpg", :alt => "Imagem da vista da Avenida Paulista",:class => "slider-img left", :id => "slider2") %>
+      <%= image_tag("slide3.jpg", :alt => "Imagem da vista de São Paulo de dia",:class => "slider-img right", :id => "slider3") %>
+      <%= image_tag("slide4.png", :alt => "Imagem da Ponte Estaiada",:class => "slider-img", :id => "slider4") %>
+      <i class="fas fa-2x fa-chevron-right slider-btn right" onclick="plusDivs(-1)"></i>
     </div>
     <div class="data-row">
       <div class="data">
@@ -73,7 +73,7 @@
       <a href="<%= about_path %>">
         <div class="item">
           <%= image_tag("about.png",:class => "item-img") %>
-          <h3 class="item-title">Sobre nós</h3>
+          <h3 class="item-title">Sobre o projeto</h3>
           <p class="item-descript">
             Conheça o projeto, informações tecnicas e a fonte dos dados, bem como a equipe do Universidade de São Paulo, Universidade Federal de São Paulo e Secretaria Municipal de Saúde que estão desenvolvendo o projeto.
           </p>
