@@ -21,7 +21,7 @@ var health_centre_markers;
 var filters_text, filters, genders, start_date, end_date, dist_min, dist_max;
 
 //** Open Street view vars **//
-var heat, cluster, shape;
+var heat, cluster, shape, clean_up_cluster;
 
 //** Display name for printing **//
 var filters_print = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Grupo étnico", "Nível de instrução", "Competência",
@@ -44,6 +44,7 @@ function initProcedureMap() {
     cluster = null;
     heat = null;
     shape = null;
+    clean_up_cluster = [];
 
     $('#loading_overlay').hide();
     var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -170,11 +171,6 @@ function buscar(data) {
 
     // Show Data
     $('#loading_overlay').show();
-    markerList = []
-    cluster = L.markerClusterGroup({ chunkedLoading: true }); // chunkedLoading prevents browser freezing
-    var dotIcon = L.icon({
-        iconUrl: "https://storage.googleapis.com/support-kms-prod/SNP_2752125_en_v0", iconAnchor: [5, 0]
-    });
     Num_procedures = 0;
     $.getJSON("procedure/procedures_total", data, function(result) {
         Num_procedures = parseInt(result);
@@ -188,22 +184,12 @@ function buscar(data) {
 
                 heat = L.heatLayer(locations, { radius: 35 });
                 map.addLayer(heat);
-
-                markerList = procedures.map(function(procedure, i) {
-                    var lat = procedure[0];
-                    var lng = procedure[1];
-                    var id = procedure[2];
-                    marker = L.marker(L.latLng(lat, lng), {icon: dotIcon, id: id}).on('click', markerOnClick);
-                    return marker;
-                });
-                cluster.addLayers(markerList);
-                map.addLayer(cluster);
-                $('#loading_overlay').hide();
             });
-        } else {
-            // Doing Something
-            handleLargeCluster(data);
         }
+
+        // handling all cluster now
+        handleLargeCluster(data);
+
         // Divida tecnica
         checked = $('input[name=optRadio]:checked', '#radio-list');
         $('input[name=optRadio][value=6]', '#radio-list').trigger('click');
@@ -213,7 +199,7 @@ function buscar(data) {
 
 function handleLargeCluster(data) {
     cluster = L.markerClusterGroup({
-        // maxClusterRadius: 120,
+        chunkedLoading: true,
         iconCreateFunction: function(cluster) {
             var markers = cluster.getAllChildMarkers();
             var n = 0;
@@ -232,8 +218,6 @@ function handleLargeCluster(data) {
             }
             return L.divIcon({ html: n, className: className, iconSize: L.point(size, size) });
         }
-        //Disable all of the defaults:
-        // spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false
     });
 
     $.getJSON("procedure/procedure_large_cluster", data, function(procedures) {
@@ -276,6 +260,7 @@ function CustomMarkerOnClick(e) {
             });
             marker.cluster.addLayers(list);
             marker.cluster.addTo(map);
+            clean_up_cluster.push(marker.cluster);
 
             $.each(marker.cluster.getLayers(), function(index, layer) {
                 layer.__parent.spiderfy();
@@ -404,9 +389,14 @@ function clearMap() {
     if (heat != null)
         map.removeLayer(heat);
 
+    $.each(clean_up_cluster, function(index, point){
+        map.removeLayer(point)
+    });
+
     setVisible(false);
     heat = null;
     cluster = null;
+    clean_up_cluster = [];
 }
 
 //** Called when "Dados Gerais" button is clicked, open "Dados Gerais" page and passes filter values to it **//

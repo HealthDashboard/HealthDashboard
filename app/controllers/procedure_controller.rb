@@ -74,6 +74,10 @@ class ProcedureController < ApplicationController
 	# To pass the data add to your ajax call data = {values}
 	# Session variable is updated
 	def update_session
+		if params[:hasData] != nil
+			session[:hasData] = true
+		end
+
 		if session[:filters] == nil || params[:filters] != nil
 			session[:filters] = Array.new(NUM_FILTERS)
 		end
@@ -351,7 +355,7 @@ class ProcedureController < ApplicationController
 		if params[:hasData] == nil
 			procedures = Procedure.all
 		else
-			procedures = getProcedures();
+			procedures = getProcedures()
 		end
 
 		procedures = procedures.group(:lat, :long).count
@@ -360,8 +364,13 @@ class ProcedureController < ApplicationController
 	end
 
 	def procedure_setor
-		procedures = Procedure.where(:lat => params[:lat], :long => params[:long]).pluck(:id)
+		if session[:hasData] == true
+			procedures = getProcedures()
+		else
+			procedures = Procedure.all
+		end
 
+		procedures = procedures.where(:lat => params[:lat], :long => params[:long]).pluck(:id)
 		render json: procedures
 	end
 
