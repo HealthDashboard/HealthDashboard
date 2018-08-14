@@ -359,6 +359,12 @@ class ProcedureController < ApplicationController
 		render json: procedures.to_a
 	end
 
+	def procedure_setor
+		procedures = Procedure.where(:lat => params[:lat], :long => params[:long]).pluck(:id)
+
+		render json: procedures
+	end
+
 	# GET /procedure/max_values
 	# return max filter values given the search parameters
 	def max_values
