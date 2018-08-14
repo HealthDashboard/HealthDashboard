@@ -17,9 +17,6 @@ var max_sliders = null
 //** Health Centres icon on map **//
 var health_centre_markers;
 
-//** Region name **//
-var regions = ['oeste', 'norte', 'leste', 'sul', 'sudeste', 'centro'];
-
 //** Print vars **//
 var filters_text, filters, genders, start_date, end_date, dist_min, dist_max;
 
@@ -153,7 +150,7 @@ function getData() {
         sliders.push([values[0], values[1]]);
     }
 
-    data = {filters: filters, gender: genders.toString(), start_date: start_date.toString(), end_date: end_date.toString(), sliders: sliders};
+    data = {hasData: 1, filters: filters, gender: genders.toString(), start_date: start_date.toString(), end_date: end_date.toString(), sliders: sliders};
     return data
 }
 

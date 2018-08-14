@@ -10,6 +10,16 @@ class HealthCentresController < ApplicationController
         render json: health_centres_points
     end
 
+    # GET /health_centre_count
+    def health_centre_count
+        render json: HealthCentre.all.count
+    end
+
+    # GET /heath_centre_count
+    def total_distance_average
+        render json: Procedure.average(:distance).to_f.round(1)
+    end
+
     # GET /hospital/:id
     def hospital
       health_centre = HealthCentre.find_by(id: params[:id])

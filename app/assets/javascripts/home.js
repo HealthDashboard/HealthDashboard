@@ -1,32 +1,20 @@
 var slideIndex = 1;
 var timeout;
-// showDivs(slideIndex);
-// getDataHomePage();
 
 function getDataHomePage() {
-  $.getJSON("/distance_metric.json", data, function(result) {
-    sum = 0;
-    $.each(result,function(key, value) {
-        sum += parseInt(value, 10);
-    });
-    sum = sum.toLocaleString('pt-BR');
-    $("#procedure-data").html(sum);
+  $.getJSON("procedure/procedures_total", data, function(count) {
+    count = count.toLocaleString('pt-BR');
+    $("#procedure-data").html(count);
   });
-  $.getJSON("/points", data, function(result) {
-    $("#hospital-data").html(result.length);
+
+  $.getJSON("/health_centre_count", data, function(count) {
+    $("#hospital-data").html(count.toLocaleString('pt-BR'));
   });
-  $.getJSON("/specialties_procedure_distance_average", data, function(result) {
-    distances = Object.values(result);
-    nspec = distances.length;
-    med = 0;
-    for (var i = 0; i < nspec; i++) {
-      med += distances[i];
-    }
-   med = med/nspec;
-   med = Math.round(med * 100) / 100;
-   med = med.toLocaleString('pt-BR');
-   $("#spec-data").html(nspec);
-   $("#desloc-data").html(med + " km");
+
+  $.getJSON("/total_distance_average", data, function(average) {
+    average = average.toLocaleString('pt-BR');
+    $("#spec-data").html("9"); // should get this number
+    $("#desloc-data").html(average + " Km");
   });
 }
 

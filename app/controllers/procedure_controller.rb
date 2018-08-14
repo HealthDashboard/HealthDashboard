@@ -126,7 +126,8 @@ class ProcedureController < ApplicationController
 		#"cid_associated", "finance", "DA", "PR", "STS", "CRS", "complexity", "gestor_ide"]
 		filters_name = ["cnes_id", "cmpt", "proce_re", "specialty_id", "treatment_type", "cid_primary", "cid_secondary", "cid_secondary2",
 			"cid_associated", "complexity", "age_code", "race", "lv_instruction", "DA", "PR", "STS", "CRS", "finance", "gestor_ide"]
-			sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
+		
+		sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
 
 		update_session()
 
@@ -226,10 +227,14 @@ class ProcedureController < ApplicationController
 	end
 
 	# Total number of procedures on metrics page
-	# GET /procedure/procedures_distance_group
+	# GET /procedure/procedures_total
 	# Ajax call, no template to render on browser
 	def procedures_total
-		render json: getProcedures().count
+		if params[:hasData] == nil
+			render json: Procedure.all.count
+		else
+			render json: getProcedures().count
+		end
 	end
 
 	# Download csv file
@@ -343,8 +348,13 @@ class ProcedureController < ApplicationController
 	# For search results of 50k or more points
 	# Return a array of [[lat, long], number_of_pacients]
 	def procedure_large_cluster
-		procedures = getProcedures();
-		procedures = procedures.group(:lat, :long).order(:count).count
+		if params[:hasData] == nil
+			procedures = Procedure.all
+		else
+			procedures = getProcedures();
+		end
+
+		procedures = procedures.group(:lat, :long).count
 
 		render json: procedures.to_a
 	end
