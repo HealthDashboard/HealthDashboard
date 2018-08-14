@@ -202,7 +202,7 @@ function buscar(data) {
             });
         } else {
             // Doing Something
-            handleLargeCluster(data, dotIcon);
+            handleLargeCluster(data);
         }
         // Divida tecnica
         checked = $('input[name=optRadio]:checked', '#radio-list');
@@ -211,29 +211,41 @@ function buscar(data) {
     });
 }
 
-function handleLargeCluster(data, icon) {
+function handleLargeCluster(data) {
     cluster = L.markerClusterGroup({
-        maxClusterRadius: 120,
+        // maxClusterRadius: 120,
         iconCreateFunction: function(cluster) {
             var markers = cluster.getAllChildMarkers();
             var n = 0;
             for (var i = 0; i < markers.length; i++) {
                 n += markers[i].number;
             }
-            var small = n < 200;
-            var className = small ? 'mycluster1' : 'mycluster2';
-            var size = small ? 40 : 60;
+            if (n < 5000) {
+                className = 'map-marker marker-5k a-class'
+                size = 40
+            } else if (n < 100000) {
+                className = 'map-marker marker-10k a-class'
+                size = 60
+            } else if (n >= 100000) {
+                className = 'map-marker marker-100k a-class'
+                size = 80
+            }
             return L.divIcon({ html: n, className: className, iconSize: L.point(size, size) });
-        },
+        }
         //Disable all of the defaults:
-        spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false
+        // spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false
     });
 
     $.getJSON("procedure/procedure_large_cluster", data, function(procedures) {
         markerList = []
         $.each(procedures, function(index, latlong){
+            icon = L.divIcon({ html: latlong[1], className: 'map-marker marker-single a-class', iconSize: L.point(30, 30) });
             marker = L.marker(L.latLng(latlong[0]), {icon: icon})
+            marker.latlong = latlong[0];
             marker.number = latlong[1];
+            marker.clusterOpen = false;
+            marker.cluster = null;
+            marker.on('click', CustomMarkerOnClick);
             markerList.push(marker);
         });
         cluster.addLayers(markerList);
@@ -242,7 +254,51 @@ function handleLargeCluster(data, icon) {
     });
 }
 
-//** Called when a procedure marker is clicked, fetch the specific proprieties of the selected procedure such as health centre, cid, distance and more. Also draws on map the associated health centre **//
+function CustomMarkerOnClick(e) {
+    marker = e.target
+    if (marker.cluster == null) { //Happens only once per cluster
+        console.log("Here")
+        marker.cluster = L.markerClusterGroup({
+            chunkedLoading: true,
+            iconCreateFunction: function(cluster) {
+                return L.divIcon({ html: "", className: "Invisible Cluster", iconSize: L.point(0, 0) });
+            }
+        });
+        var dotIcon = L.icon({
+            iconUrl: "https://storage.googleapis.com/support-kms-prod/SNP_2752125_en_v0", iconAnchor: [5, 0]
+        });
+
+        list = []
+        $.getJSON("procedure/procedure_setor", {lat: marker.latlong[0], long: marker.latlong[1]}, function(procedures){
+            $.each(procedures, function(index, id){
+                single_point_marker = L.marker(L.latLng(marker.latlong[0], marker.latlong[1]), {icon: dotIcon, id: id}).on('click', markerOnClick);
+                list.push(single_point_marker)
+            });
+            marker.cluster.addLayers(list);
+            marker.cluster.addTo(map);
+
+            $.each(marker.cluster.getLayers(), function(index, layer) {
+                layer.__parent.spiderfy();
+            });
+            marker.clusterOpen = true;
+        });
+    }
+
+    if (!marker.clusterOpen) {
+        $.each(marker.cluster.getLayers(), function(index, layer) {
+            layer.__parent.spiderfy();
+        });
+        marker.clusterOpen = true;
+    } else {
+        $.each(marker.cluster.getLayers(), function(index, layer) {
+            layer.__parent.unspiderfy();
+        });
+        marker.clusterOpen = false;
+    }
+}
+
+//** Called when a procedure marker is clicked, fetch the specific proprieties of the selected procedure 
+//   such as health centre, cid, distance and more. Also draws on map the associated health centre **//
 function markerOnClick(e) {
     id = e.target.options.id
     var sexp_var = {};

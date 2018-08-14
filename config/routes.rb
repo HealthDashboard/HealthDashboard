@@ -47,5 +47,6 @@ Rails.application.routes.draw do
     get :procedure_median, on: :collection
     get :max_values, on: :collection
     get :procedure_large_cluster, on: :collection
+    get :procedure_setor, on: :collection 
   end
 end
