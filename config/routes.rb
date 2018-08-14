@@ -15,6 +15,8 @@ Rails.application.routes.draw do
   get '/rank_health_centres', to: 'health_centres#rank_health_centres'
   get '/distance_metric', to: 'health_centres#distance_metric'
   get '/distance_quartis/:id', to: 'health_centres#distance_quartis'
+  get '/health_centre_count', to: 'health_centres#health_centre_count'
+  get '/total_distance_average', to: 'health_centres#total_distance_average'
 
   get 'estabelecimentos', to: 'health_centres#index'
   get 'dados-gerais', to: 'dashboard#index'
