@@ -136,36 +136,30 @@
   transform: rotate(180deg);
 }
 
+.wrap {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.5s ease-out;
+}
+
+.wrap.active {
+  max-height: none;
+}
+
 .content {
   background-color: rgb(231, 231, 231);
-  max-height: 0;
   overflow: hidden;
-  transition: max-height 0.5s ease-out;
+  transition: transform 0.5s ease-out;
   box-shadow: inset 0px 0px 3px 2px rgba(203, 203, 203, 0.17);
+  transform: translateY(-100%);
+}
+
+.content.active {
+  transform: translateY(0);
 }
 
 .form-control {
   width: 22vw;
-}
-
-.diagnostic {
-  background-color: rgb(240, 240, 240);
-}
-
-.patient_info {
-  background-color: rgb(240, 240, 240);
-}
-
-.location {
-  background-color: rgb(240, 240, 240);
-}
-
-.establishment {
-  background-color: rgb(240, 240, 240);
-}
-
-.values_search {
-  background-color: rgb(240, 240, 240);
 }
 
 .leaflet-heatmap-layer {
@@ -181,7 +175,7 @@
   color: #fff;
   border-radius: 50%;
 
-  filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5)); 
+  filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5));
 }
 
 .map-marker.marker-single {
