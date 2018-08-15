@@ -17,15 +17,3 @@ function show_email(e) {
     }
   }
 }
-
-function scroll_left() {
-  var elem = document.getElementById("membros-container")
-  var current = elem.scrollLeft - 270;
-  $("#membros-container").animate({scrollLeft: current}, 200);
-}
-
-function scroll_right() {
-  var elem = document.getElementById("membros-container")
-  var current = elem.scrollLeft + 270;
-  $("#membros-container").animate({scrollLeft: current}, 200);
-}
