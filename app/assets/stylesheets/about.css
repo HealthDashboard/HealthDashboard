@@ -7,6 +7,15 @@ h1, h2 {
   margin: 0;
 }
 
+p a {
+  color: #eee;
+}
+
+p a:hover, p a:focus {
+  color: #777;
+  text-decoration: none;
+}
+
 .section:first-child {
   margin-top: 50px;
 }
@@ -71,11 +80,11 @@ h1, h2 {
 }
 
 .header-2::before {
-  content: "\f481";
+  content: "\f121";
 }
 
 .header-3::before {
-  content: "\f279";
+  content: "\f1c0";
 }
 
 .header-membros::before {
@@ -86,65 +95,53 @@ h1, h2 {
   text-align: center;
 }
 
-.side-buttons {
+.membros-container {
   width: 90vw;
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.side-btn {
-  color: #cdcdcd;
-}
-
-.side-btn:hover {
-  color: #8e8e8e;
-  cursor: pointer;
-}
-
-.membros-container {
-  width: 80vw;
-  height: 600px;
-  overflow-x: auto;
-  display: flex;
-  flex-direction: row;
-}
-
-.membros-container::-webkit-scrollbar {
-  display: none;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .membro {
   width: 250px;
   min-width: 250px;
   height: 500px;
-  margin: 15px 10px 0 10px;
+  margin: 15px 5px 0 5px;
   position: relative;
-  flex-grow: 0;
 }
 
-.membro-img {
+.membro-img-frame {
   box-sizing: border-box;
   margin-left: auto;
   margin-right: auto;
-  height: 100px;
-  width: 100px;
+  height: 124px;
+  width: 124px;
   border: 7px solid #fff;
-  box-shadow: 0 0 5px 2px rgba(204, 204, 204, 0.5),
-              0 0 5px 4px rgba(159, 159, 159, 0.45) inset;
+  box-shadow: 0 0 5px 2px rgba(204, 204, 204, 0.5);
   z-index: 2;
   position: relative;
   display: block;
   border-radius: 30px;
+  overflow: hidden;
 }
+
+.membro-img {
+  width:110px;
+  height: auto;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translateY(-50%) translateX(-50%);
+}
+
+
 
 .membro-text {
   width: inherit;
   background-color: #fff;
   position: absolute;
-  top: 45px;
-  padding: 60px 1em 1em 1em;
+  top: 55px;
+  padding: 75px 1em 1em 1em;
   z-index: 1;
   text-align: center;
 }

@@ -5,40 +5,82 @@
   <div class="section section-1">
     <div class="content" data-aos="fade-up">
       <h1 class="header header-1">Health Dashboard</h1>
-      <p class="text">O Projeto Health Dashboard é uma colaboração entre o <a href="http://interscity.org/">Projeto InterSCity</a> sediado no IME-USP e a <a href="http://www.prefeitura.sp.gov.br/cidade/secretarias/saude/">Secretaria Municipal da Saúde de São Paulo</a>.
-      O objetivo do projeto é utilizar técnicas avançadas de Ciência da Computação (Big Data, Visualização e Ciência de Dados) para fornecer ferramentas inovadoras para profissionais de saúde e gestores em saúde pública.
-      O projeto está aberto a colaborações de todos os interessados que possam contribuir para a melhoria das ferramentas desenvolvidas e tem como o objetivo produzir tanto software livre útil para a gestão de saúde quanto avanços científicos na área de Informática e Big Data em Saúde.
-      O InterSCity é financiado com recursos da FAPESP, CNPq e CAPES.<p>
+      <p class="text">
+        O Projeto Health Dashboard é fruto de uma colaboração entre o <a href="http://interscity.org/">Projeto InterSCity</a>, sediado no IME-USP, e a <a href="http://www.prefeitura.sp.gov.br/cidade/secretarias/saude/">Secretaria Municipal da Saúde de São Paulo</a>.
+        Nosso objetivo é utilizar técnicas avançadas de Ciência da Computação (Big Data, Visualização e Ciência de Dados) para fornecer ferramentas inovadoras para profissionais e gestores da saúde pública.
+        Este é um projeto de software livre e assim, aberto a colaborações a fim de desenvolver avanços científicos na área de Informática e Big Data em Saúde.
+        O InterSCity é financiado com recursos da FAPESP, CNPq e CAPES.
+      <p>
     </div>
   </div>
 
   <div class="section section-2">
     <div class="content" data-aos="fade-up">
       <h2 class="header header-2">Desenvolvimento</h2>
-      <p class="text">A plataforma é software livre licenciado sob a Mozilla Public License 2.0, escrita em Ruby on Rails e JavaScript, usa a API do OpenStreetMap, e seu repositório está disponível no  <a href="https://gitlab.com/interscity/health-dashboard/health-smart-city">GitLab</a>. Um conjunto de issues para atendermos as demandas sugeridas pela SMS-SP já está mapeada em <a href="https://gitlab.com/interscity/health-dashboard/health-smart-city/milestones?sort=due_date_desc&state=all">milestones no repositório</a>.<p>
-
+      <p class="text">
+        A plataforma de visualização de dados é um software livre licenciado sob a Mozilla Public License 2.0, que está sendo desenvolvida em Ruby on Rails e JavaScript e utilizando a API do OpenStreetMap.
+        Seu repositório está disponível no <a href="https://gitlab.com/interscity/health-dashboard/health-smart-city">GitLab</a>.
+      <p>
     </div>
   </div>
 
   <div class="section section-3">
     <div class="content" data-aos="fade-up">
       <h2 class="header header-3">Dados</h2>
-      <p class="text">Dados georreferenciados do Sistema de Informação Hospitalar (SIH), fornecidos pela Secretaria Municipal de Saúde de São Paulo, anonimizados, i.e., não há informações pessoais sobre pacientes específicos e o domicílio do paciente não é fornecido na forma de endereço, mas apenas com a identificação do setor censitário correspondente (uma região com população entre 3 e 5 mil pessoas). <p>
+      <p class="text">
+        A plataforma apresenta os dados georreferenciados das internações custeadas pelo Sistema Único de Saúde, constantes no Sistema de Informação Hospitalar (SIH), fornecidos pela Secretaria Municipal de Saúde de São Paulo.
+        A base de dados está anonimizada, não havendo informações sensíveis sobre os indivíduos e a localização dos domicílios foi generalizada para o centróide do setor censitário correspondente (territórios com população média de 600 habitantes, no município de São Paulo.
+        <br><br>A ferramenta também apresenta(rá) informações demográficas, oriundas do Censo de 2010 realizado pelo IBGE e das projeções populacionais disponibilizadas pela Fundação SEADE,  estratificadas por sexo, faixa etária e raça/cor segundo as unidades territoriais administrativas da Prefeitura de São Paulo e da Secretaria Municipal da Saúde.
+      <p>
     </div>
   </div>
 
   <div class="section section-membros">
     <div class="content-membros" data-aos="fade-up">
       <h3 class="header header-membros">Membros</h3>
-      <div class="side-buttons">
-        <i class="fas fa-2x fa-chevron-left side-btn" onclick="scroll_left()"></i>
         <div class="membros-container" id="membros-container">
           <div class="membro">
-            <%= image_tag("fkon.png", :class => "membro-img") %>
+            <div class="membro-img-frame">
+              <%= image_tag("baguiar.jpg", :class => "membro-img") %>
+            </div>
+            <div class="membro-text">
+              <p class="nome">Breno Aguiar</p>
+              <p class="instituto">SMS/SP</p>
+              <p class="descricao">Técnico na Gerência de Geoprocessamento e
+              Informações Socioambientais (GISA) na Secretaria Municipal da Saúde de
+              São Paulo (SMS).</p>
+              <div class="media">
+                <i class="fab fa-lg fa-facebook"></i>
+                <i class="fab fa-lg fa-google-plus-square"></i>
+                <i class="fab fa-lg fa-github-square"></i>
+              </div>
+            </div>
+          </div>
+          <div class="membro">
+            <div class="membro-img-frame">
+              <%= image_tag("mfailla.jpg", :class => "membro-img") %>
+            </div>
+            <div class="membro-text">
+              <p class="nome">Marcelo Failla</p>
+              <p class="instituto">SMS/SP</p>
+              <p class="descricao">Técnico na Gerência de Geoprocessamento e
+              Informações Socioambientais (GISA) na Secretaria Municipal da Saúde de
+              São Paulo (SMS).</p>
+              <div class="media">
+                <i class="fab fa-lg fa-facebook"></i>
+                <i class="fab fa-lg fa-google-plus-square"></i>
+                <i class="fab fa-lg fa-github-square"></i>
+              </div>
+            </div>
+          </div>
+          <div class="membro">
+            <div class="membro-img-frame">
+              <%= image_tag("fkon.png", :class => "membro-img") %>
+            </div>
             <div class="membro-text">
               <p class="nome">Prof. Fabio Kon</p>
               <p class="instituto">IME/USP</p>
-              <p class="descricao">Professor titular do Departamento de Ciência da Computação (DCC) 
+              <p class="descricao">Professor titular do Departamento de Ciência da Computação (DCC)
               do Instituto de Matemática e Estatística (IME) da Universidade de São Paulo (USP).<p>
               <div class="media">
                 <a target="_blank" rel="noopener noreferrer" href="https://br.linkedin.com/in/fabiokon"><i class="fab fa-lg fa-linkedin"></i>
@@ -48,11 +90,13 @@
             </div>
           </div>
           <div class="membro">
-            <%= image_tag("kbraghetto.jpg", :class => "membro-img") %>
+            <div class="membro-img-frame">
+              <%= image_tag("kbraghetto.jpg", :class => "membro-img") %>
+            </div>
             <div class="membro-text">
               <p class="nome">Profª. Kelly Braghetto</p>
               <p class="instituto">IME/USP</p>
-              <p class="descricao">Professora do Departamento de Ciência da Computação (DCC) 
+              <p class="descricao">Professora do Departamento de Ciência da Computação (DCC)
               do Instituto de Matemática e Estatística (IME-USP)</p>
               <div class="media">
                 <i class="fas fa-lg fa-envelope-square" onclick="show_email(this)"></i>
@@ -63,11 +107,13 @@
             </div>
           </div>
           <div class="membro">
-            <%= image_tag("pmeirelles.png", :class => "membro-img") %>
+            <div class="membro-img-frame">
+              <%= image_tag("pmeirelles.png", :class => "membro-img") %>
+            </div>
             <div class="membro-text">
               <p class="nome">Prof. Paulo Meirelles</p>
               <p class="instituto">UNIFESP</p>
-              <p class="descricao">Professor adjujnto do Departamento de Informática em Saúde 
+              <p class="descricao">Professor adjujnto do Departamento de Informática em Saúde
               da Unifersidade Federal de São Paulo (UNIFESP).</p>
               <div class="media">
                 <i class="fas fa-lg fa-envelope-square" onclick="show_email(this)"></i>
@@ -78,11 +124,13 @@
             </div>
           </div>
           <div class="membro">
-            <%= image_tag("dciriaco.jpg", :class => "membro-img") %>
+            <div class="membro-img-frame">
+              <%= image_tag("dciriaco.jpg", :class => "membro-img") %>
+            </div>
             <div class="membro-text">
               <p class="nome">Débora Ciriaco</p>
               <p class="instituto">IME/USP</p>
-              <p class="descricao">Mestranda em Ciência da Computação do Instituto de 
+              <p class="descricao">Mestranda em Ciência da Computação do Instituto de
               Matemática e Estatística (IME) da Universidade de São Paulo (USP).</p>
               <div class="media">
                 <i class="fas fa-lg fa-envelope-square" onclick="show_email(this)"></i>
@@ -92,12 +140,14 @@
             </div>
           </div>
           <div class="membro">
-            <%= image_tag("epinheiro.jpg", :class => "membro-img") %>
+            <div class="membro-img-frame">
+              <%= image_tag("epinheiro.jpg", :class => "membro-img") %>
+            </div>
             <div class="membro-text">
               <p class="nome">Eduardo Pinheiro</p>
               <p class="instituto">IME/USP</p>
-              <p class="descricao">Estudante do Bacharelado em Ciência da Computação 
-                do Instituto de Matemática e Estatística (IME) da Universidade de São 
+              <p class="descricao">Estudante do Bacharelado em Ciência da Computação
+                do Instituto de Matemática e Estatística (IME) da Universidade de São
                 Paulo (USP).</p>
               <div class="media">
                 <i class="fas fa-lg fa-envelope-square" onclick="show_email(this)"></i>
@@ -107,12 +157,14 @@
             </div>
           </div>
           <div class="membro">
-            <%= image_tag("ckodaira.jpg", :class => "membro-img") %>
+            <div class="membro-img-frame">
+              <%= image_tag("ckodaira.jpg", :class => "membro-img") %>
+            </div>
             <div class="membro-text">
               <p class="nome">Camila Kodaira</p>
               <p class="instituto">IME/USP</p>
-              <p class="descricao">Estudante do Bacharelado em Ciência da Computação 
-                do Instituto de Matemática e Estatística (IME) da Universidade de São 
+              <p class="descricao">Estudante do Bacharelado em Ciência da Computação
+                do Instituto de Matemática e Estatística (IME) da Universidade de São
                 Paulo (USP).</p>
               <div class="media">
                 <i class="fas fa-lg fa-envelope-square" onclick="show_email(this)"></i>
@@ -123,12 +175,14 @@
             </div>
           </div>
           <div class="membro">
-            <%= image_tag("gpereira.jpg", :class => "membro-img") %>
+            <div class="membro-img-frame">
+              <%= image_tag("gpereira.jpg", :class => "membro-img") %>
+            </div>
             <div class="membro-text">
               <p class="nome">Gabriely Pereira</p>
               <p class="instituto">IME/USP</p>
-              <p class="descricao">Estudante do Bacharelado em Ciência da Computação 
-                do Instituto de Matemática e Estatística (IME) da Universidade de São 
+              <p class="descricao">Estudante do Bacharelado em Ciência da Computação
+                do Instituto de Matemática e Estatística (IME) da Universidade de São
                 Paulo (USP).</p>
               <div class="media">
                 <i class="fas fa-lg fa-envelope-square" onclick="show_email(this)"></i>
@@ -139,12 +193,14 @@
             </div>
           </div>
           <div class="membro">
-            <%= image_tag("yhonda.jpg", :class => "membro-img") %>
+            <div class="membro-img-frame">
+              <%= image_tag("yhonda.jpg", :class => "membro-img") %>
+            </div>
             <div class="membro-text">
               <p class="nome">Yurick Honda</p>
               <p class="instituto">IME/USP</p>
-              <p class="descricao">Estudante do Bacharelado em Ciência da Computação 
-                do Instituto de Matemática e Estatística (IME) da Universidade de São 
+              <p class="descricao">Estudante do Bacharelado em Ciência da Computação
+                do Instituto de Matemática e Estatística (IME) da Universidade de São
                 Paulo (USP).</p>
               <div class="media">
                 <i class="fas fa-lg fa-envelope-square" onclick="show_email(this)"></i>
@@ -154,39 +210,7 @@
               </div>
             </div>
           </div>
-          <div class="membro">
-            <%= image_tag("baguiar.jpg", :class => "membro-img") %>
-            <div class="membro-text">
-              <p class="nome">Breno Aguiar</p>
-              <p class="instituto">SMS/SP</p>
-              <p class="descricao">Técnico na Gerência de Geoprocessamento e 
-              Informações Socioambientais (GISA) na Secretaria Municipal da Saúde de 
-              São Paulo (SMS).</p>
-              <div class="media">
-                <i class="fab fa-lg fa-facebook"></i>
-                <i class="fab fa-lg fa-google-plus-square"></i>
-                <i class="fab fa-lg fa-github-square"></i>
-              </div>
-            </div>
-          </div>
-          <div class="membro">
-            <%= image_tag("mfailla.jpg", :class => "membro-img") %>
-            <div class="membro-text">
-              <p class="nome">Marcelo Failla</p>
-              <p class="instituto">SMS/SP</p>
-              <p class="descricao">Técnico na Gerência de Geoprocessamento e 
-              Informações Socioambientais (GISA) na Secretaria Municipal da Saúde de 
-              São Paulo (SMS).</p>
-              <div class="media">
-                <i class="fab fa-lg fa-facebook"></i>
-                <i class="fab fa-lg fa-google-plus-square"></i>
-                <i class="fab fa-lg fa-github-square"></i>
-              </div>
-            </div>
-          </div>
         </div>
-        <i class="fas fa-2x fa-chevron-right side-btn" onclick="scroll_right()"></i>
-      </div>
     </div>
   </div>
 </div>
