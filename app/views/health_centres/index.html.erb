@@ -1,20 +1,21 @@
 <%= stylesheet_link_tag "health_centres.css" %>
 
 <div class="page">
-<div class="mapa">
-  <div class="mapa fixed" id='map'></div>
-  <div class="map-config legend" id="legend">
-    <div class="map-config-header legend-header" onclick="show_menu('#legend')">
-      <p>Legendas</p>
-    </div>
-    <div class="legend-body">
-      <div class="legend-item">
-        <%= image_tag("/health_centre_icon.png", :class => "legend-img") %>
-        <p>ESTADUAL</p>
+  <div class="map">
+    <div class="mapa fixed" id='map'></div>
+    <div class="map-config legend" id="legend">
+      <div class="map-config-header legend-header" onclick="show_menu('#legend')">
+        <p>Legendas</p>
       </div>
-      <div class="legend-item">
-        <%= image_tag("/health_centre_icon2.png", :class => "legend-img") %>
-        <p>MUNICIPAL</p>
+      <div class="legend-body">
+        <div class="legend-item">
+          <%= image_tag("/health_centre_icon.png", :class => "legend-img") %>
+          <p>ESTADUAL</p>
+        </div>
+        <div class="legend-item">
+          <%= image_tag("/health_centre_icon2.png", :class => "legend-img") %>
+          <p>MUNICIPAL</p>
+        </div>
       </div>
       <div class="heatmap-legend">
           <div class="heat-legend">
@@ -50,13 +51,15 @@
       </form>
     </div>
   </div>
-</div>
-<div class="info">
-    <div class="name">
-      <h1 id="search-name">SÃO PAULO</h1>
-      <div id="labelOverlay">
-        <p class="n_procedures"></p>
-        <p class="atendimentos"></p>
+
+  <div class="info">
+    <div class="info-text">
+      <div class="name">
+        <h1 id="search-name">SÃO PAULO</h1>
+        <div id="labelOverlay">
+          <p class="n_procedures"></p>
+          <p class="atendimentos"></p>
+        </div>
       </div>
       <div id="hosp-info"></div>
     </div>
