@@ -23,6 +23,8 @@ var filters_text, filters, genders, start_date, end_date, dist_min, dist_max;
 //** Open Street view vars **//
 var heat, cluster, shape, clean_up_cluster;
 
+NUM_FILTERS = 19;
+
 //** Display name for printing **//
 var filters_print = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Grupo étnico", "Nível de instrução", "Competência",
       "Grupo do procedimento autorizado", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Total geral de diárias",
@@ -122,7 +124,7 @@ function getData() {
     var filters = [];
     var filters_text = [];
 
-    for (i = 0; i < 24; i++) {
+    for (i = 0; i < NUM_FILTERS; i++) {
         var aux = [];
         var aux_name = [];
         var select_name = $('#' + i + ' option:selected');
@@ -171,30 +173,15 @@ function buscar(data) {
 
     // Show Data
     $('#loading_overlay').show();
-    Num_procedures = 0;
-    $.getJSON("procedure/procedures_total", data, function(result) {
-        Num_procedures = parseInt(result);
-        if (Num_procedures < 50000) {
-            health_centres_makers(health_centres);
-            $.getJSON("procedure/procedures_latlong", data, function(procedures) {
-                var locations = procedures.map(function(procedure) {
-                    var location = L.latLng(procedure[0], procedure[1]);
-                    return location;
-                });
 
-                heat = L.heatLayer(locations, { radius: 35 });
-                map.addLayer(heat);
-            });
-        }
+    // handling all cluster now
+    health_centres_makers(health_centres);
+    handleLargeCluster(data);
 
-        // handling all cluster now
-        handleLargeCluster(data);
-
-        // Divida tecnica
-        checked = $('input[name=optRadio]:checked', '#radio-list');
-        $('input[name=optRadio][value=6]', '#radio-list').trigger('click');
-        $(checked).attr('checked', true).trigger('click');
-    });
+    // Divida tecnica
+    checked = $('input[name=optRadio]:checked', '#radio-list');
+    $('input[name=optRadio][value=6]', '#radio-list').trigger('click');
+    $(checked).attr('checked', true).trigger('click');
 }
 
 function handleLargeCluster(data) {
@@ -222,18 +209,23 @@ function handleLargeCluster(data) {
 
     $.getJSON("procedure/procedure_large_cluster", data, function(procedures) {
         markerList = []
+        Num_procedures = 0
         $.each(procedures, function(index, latlong){
-            icon = L.divIcon({ html: latlong[1], className: 'map-marker marker-single a-class', iconSize: L.point(30, 30) });
-            marker = L.marker(L.latLng(latlong[0]), {icon: icon})
-            marker.latlong = latlong[0];
-            marker.number = latlong[1];
+            icon = L.divIcon({ html: latlong[2], className: 'map-marker marker-single a-class', iconSize: L.point(30, 30) });
+            marker = L.marker(L.latLng(latlong[0], latlong[1]), {icon: icon})
+            marker.latlong = [latlong[0], latlong[1]];
+            marker.number = latlong[2];
             marker.clusterOpen = false;
             marker.cluster = null;
             marker.on('click', CustomMarkerOnClick);
             markerList.push(marker);
+            Num_procedures += latlong[2]
         });
         cluster.addLayers(markerList);
         map.addLayer(cluster);
+
+        heat = L.heatLayer(procedures, {max: Num_procedures, maxZoom: 11, radius: 80, gradient: {0.1: 'blue', 0.2: 'lime', 0.3: 'yellow', 0.4: 'pink', 0.5: 'red'}}); // Add heatmap
+        map.addLayer(heat);
         $('#loading_overlay').hide();
     });
 }
@@ -241,7 +233,6 @@ function handleLargeCluster(data) {
 function CustomMarkerOnClick(e) {
     marker = e.target
     if (marker.cluster == null) { //Happens only once per cluster
-        console.log("Here")
         marker.cluster = L.markerClusterGroup({
             chunkedLoading: true,
             iconCreateFunction: function(cluster) {
@@ -298,15 +289,13 @@ function markerOnClick(e) {
         $.getJSON(procedure_info_path, function(procedure) {
             cnes = procedure[0].cnes_id;
             $.getJSON("procedure/health_centres_procedure", {cnes: cnes.toString()}, function(hc_latlong) {
-                // procedure_latlong = e.target.getLatLng();
                 path_distance_real = "http:\/\/router.project-osrm.org\/route\/v1\/driving\/" 
-                + hc_latlong[0].long + "," + hc_latlong[0].lat + ";" + procedure[0].long + "," 
+                + hc_latlong[0][1] + "," + hc_latlong[0][0] + ";" + procedure[0].long + "," 
                 + procedure[0].lat + "?overview=false";
                 
                 $.getJSON(path_distance_real, function(distance) { //get Real distance usign router.project-osrm.org
                     v_distance = parseFloat(distance.routes[0].distance);
                     v_distance = v_distance / 1000; // m -> km
-                    console.log(distance)
 
                     text =  "<strong>Estabelecimento: </strong>" + health_centres_array[parseInt(cnes)] + "<br>";
                     text += "<strong>Sexo: </strong>" + sexp_var[procedure[0].gender] + "<br>";
@@ -346,7 +335,7 @@ function create_markers(health_centre, icon_path) {
     var hcIcon = L.icon({
         iconUrl: icon_path,
     });
-    var marker = L.marker(L.latLng(health_centre.lat, health_centre.long), {icon: hcIcon});
+    var marker = L.marker(L.latLng(health_centre[0], health_centre[1]), {icon: hcIcon});
     health_centre_markers.push(marker);
 }
 

@@ -4,7 +4,8 @@ class ProcedureController < ApplicationController
 	$MAX_SLIDERS = [351,148,99,351,110786.71.ceil,52.4832033827607.ceil]
 
 	# GET /
-	# Return "busca avancada" page
+	# Params: None
+	# Return: "busca avancada" page
 	def show
 		@filters = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Raça/Cor", "Nível de instrução", "Competência (aaaamm)",
 			"Grupo do procedimento autorizado", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)",
@@ -69,10 +70,11 @@ class ProcedureController < ApplicationController
 
 	end
 
-	# GET /procedure/update_session{data}
 	# Ajax call, no template to render on browser
 	# To pass the data add to your ajax call data = {values}
-	# Session variable is updated
+	# GET /procedure/update_session{params}
+	# Params: [filters values array]
+	# Return: Session variable is updated
 	def update_session
 		if params[:hasData] != nil
 			session[:hasData] = true
@@ -84,9 +86,7 @@ class ProcedureController < ApplicationController
 
 		if params[:filters] != nil
 			params[:filters].each_with_index do |filter, i|
-				if filter != ""
-					session[:filters][i] = filter.split(";")
-				end
+					session[:filters][i] = filter.split(";") unless filter == ""
 			end
 		end
 
@@ -122,38 +122,29 @@ class ProcedureController < ApplicationController
 	end
 
 	# NO ROUTE, intern method
+	# Params: [filters values array]
+	# Return: procedures based on the values passed in your last update_session
 	# TODO - handle calls with no previous update_session. It probably throws a error now,
 	# maybe send all data instead.
-	# Return procedures based on the values passed in your last update_session
 	def getProcedures
-		#filters_name = ["cnes_id", "age_code", "specialty_id", "treatment_type", "race", "lv_instruction", "cmpt", "proce_re", "cid_primary", "cid_secondary", "cid_secondary2",
-		#"cid_associated", "finance", "DA", "PR", "STS", "CRS", "complexity", "gestor_ide"]
 		filters_name = ["cnes_id", "cmpt", "proce_re", "specialty_id", "treatment_type", "cid_primary", "cid_secondary", "cid_secondary2",
-			"cid_associated", "complexity", "age_code", "race", "lv_instruction", "DA", "PR", "STS", "CRS", "finance", "gestor_ide"]
+			"cid_associated", "complexity", "age_code", "race", "lv_instruction", "DA", "PR", "STS", "CRS", "gestor_ide", "finance"]
 		
 		sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
 
 		update_session()
 
-		if session[:genders].length < 2
-			procedures = Procedure.where(gender: session[:genders])
-		else
-			procedures = Procedure.all
-		end
+		procedures = session[:genders].length < 2 ? Procedure.where(gender: session[:genders]) : procedures = Procedure.all
 
 		filters_name.each_with_index do |filter, i|
-			if session[:filters][i] != nil
-				procedures = procedures.where(filter => session[:filters][i])
-			end
+				procedures = procedures.where(filter => session[:filters][i]) unless session[:filters][i] == nil
 		end
 
 		sliders_name.each_with_index do |slider, i|
 			min =  session[:sliders][i][0]
 			max = session[:sliders][i][1]
 			if max == $MAX_SLIDERS[i]
-				if min != 0
-					procedures = procedures.where(slider + ' >= ?', min)
-				end
+					procedures = procedures.where(slider + ' >= ?', min) unless min == 0
 			else
 				procedures = procedures.where(slider + ' >= ? AND ' + slider + ' <= ?', min, max)
 			end
@@ -167,19 +158,18 @@ class ProcedureController < ApplicationController
 	end
 
 
-	# Procedures group by distance
-	# GET /procedure/procedures_distance_group
-	# Ajax call, no template to render on browser
-	# Return JSON file
+	# GET /procedure/procedures_distance_group{params}
+	# Params: [filters values array]
+	# Return: Hash of {interval => count_of_procedures}
 	def procedures_distance_group
 		procedures = getProcedures()
 		result = {"<= 1 Km" => procedures.where("distance <= ?", 1).count, "> 1 Km e <= 5 Km" =>  procedures.where("distance > ? AND distance <= ?", 1, 5).count, "> 5 Km e <= 10 Km" => procedures.where("distance > ? AND distance <= ?", 5, 10).count, "> 10 Km" => procedures.where("distance > ?", 10).count}
 		render json: result
 	end
 
-	# Procedures group by month on metrics page
-	# GET /procedure/procedures_distance_group
-	# Ajax call, no template to render on browser
+	# GET /procedure/procedures_per_month{params}
+	# Params: [filters values array]
+	# Return: An array of [procedures_per_month]
 	def procedures_per_month
 		procedures = getProcedures()
 		result = Array.new(12)
@@ -191,9 +181,9 @@ class ProcedureController < ApplicationController
 		render json: result
 	end
 
-	# Procedures group by health centre on metrics page
-	# GET /procedure/procedures_distance_group
-	# Ajax call, no template to render on browser
+	# GET /procedure/procedures_per_health_centre{params}
+	# Params: [filters values array]
+	# Return: Hash of {helath_centre => total_of_procedures}
 	def procedures_per_health_centre
 		procedures = getProcedures()
 		result = {}
@@ -204,9 +194,9 @@ class ProcedureController < ApplicationController
 		render json: result
 	end
 
-	# Procedures group by specialties count metrics page
-	# GET /procedure/procedures_distance_group
-	# Ajax call, no template to render on browser
+	# GET /procedure/procedures_per_specialties{params}
+	# Params: [filters values array]
+	# Return: Hash of {specialty => total_of_procedures}
 	def procedures_per_specialties
 		procedures = getProcedures()
 		procedures = procedures.where("specialty_id < ?", 10).order(:specialty_id).group(:specialty_id).count
@@ -217,9 +207,9 @@ class ProcedureController < ApplicationController
 		render json: result
 	end
 
-	# Procedures group by specialties distance avarega on metrics page
-	# GET /procedure/procedures_distance_group
-	# Ajax call, no template to render on browser
+	# GET /procedure/procedures_distance{params}
+	# Params: [filters values array]
+	# Return: Hash of {specialty => distance_average}
 	def procedures_distance
 		procedures = getProcedures()
 		result = {}
@@ -230,9 +220,9 @@ class ProcedureController < ApplicationController
 		render json: result
 	end
 
-	# Total number of procedures on metrics page
-	# GET /procedure/procedures_total
-	# Ajax call, no template to render on browser
+	# GET /procedure/procedures_total{params}
+	# Params: [filters values array]
+	# Return: Procedures counter
 	def procedures_total
 		if params[:hasData] == nil
 			render json: Procedure.all.count
@@ -246,8 +236,9 @@ class ProcedureController < ApplicationController
 	# Because of this we cannot pass data directly in its call.
 	# The workaround is first we use update_session to pass data to the controller then it's possible to
 	# call this method to download filtered procedures.
-	# Return CSV file.
-
+	# GET /procedure/download.csv
+	# Params: [filters values array]
+	# Return: CSV file.
 	def download
 		if session[:filters] == nil
 			procedures = Procedure.all
@@ -255,8 +246,8 @@ class ProcedureController < ApplicationController
 			procedures = getProcedures()
 		end
 
-		procedures = procedures.select('id as "COD"', 'lat AS "LAT_SC"', 'long as "LONG_SC"', 'gender as "P_SEXO"', 
-			'age_number as "P_IDADE"', 'race as "P_RACA"', 'lv_instruction as "LV_INSTRU"', 'cnes_id as "CNES"', 
+		procedures = procedures.select('id as "COD"', 'replace(lat::text, \'.\', \',\') AS "LAT_SC"', 'replace(long::text, \'.\', \',\') as "LONG_SC"', 
+			'gender as "P_SEXO"', 'age_number as "P_IDADE"', 'race as "P_RACA"', 'lv_instruction as "LV_INSTRU"', 'cnes_id as "CNES"', 
 			'gestor_ide as "GESTOR_ID"', 'treatment_type as "CAR_INTEN"', 'cmpt as "CMPT"', 'date as "DT_EMISSAO"', 
 			'date_in as "DT_INTERNA"', 'date_out as "DT_SAIDA"', 'complexity as "COMPLEXIDA"', 'proce_re as "PROC_RE"', 
 			'cid_primary as "DIAG_PR"', 'cid_secondary as "DIAG_SE1"', 'cid_secondary2 as "DIAG_SE2"', 
@@ -287,70 +278,45 @@ class ProcedureController < ApplicationController
 		response.status = 200
 	end
 
-	# Total number of procedures on metrics page
-	# GET /procedure/health_centres_search
-	# Ajax call, no template to render on browser
-	# Returns JSON file(s).
-	def health_centres_search
-		procedures = getProcedures()
-
-		hc = [];
-		procedures.each do |p|
-			hc << p.cnes_id
-		end
-
-		health_centres = HealthCentre.where(cnes: hc.uniq)
-		procedures = procedures.select("long, lat, distance")
-		procedures = procedures.to_a
-
-		dist_min = params[:dist_min].to_f
-		dist_max = params[:dist_max].to_f
-		procedures.delete_if do |procedure|
-			dist = procedure.distance
-			if(dist == nil || dist < dist_min || (dist_max < 10 &&  dist > dist_max))
-				true
-			end
-		end
-
-		if params[:show_hc] == "true" and params[:show_rp] == "true"
-			render json: {:health_centres => health_centres, :procedures => Procedures}
-		elsif params[:show_hc] == "true"
-			render json: {:health_centres => health_centres}
-		elsif params[:show_rp] == "true"
-			render json: {:procedures => Procedures}
-		else
-			render json: {:result => ""}
-		end
-	end
-
+	# GET /procedure/health_centres_procedure{params}
+	# Params: Cnes numbers
+	# Return: An array of [health_centres]
 	def health_centres_procedure
 		cnes = params[:cnes].to_s
 		cnes = cnes.split(",")
-		health_centres = HealthCentre.where(cnes: cnes)
-		render json: health_centres.to_a
+		health_centres = HealthCentre.where(cnes: cnes).pluck(:lat, :long)
+		render json: health_centres
 	end
 
+	# GET /procedure/procedures_by_hc/{params}
+	# Params: Cnes number
+	# Return: An array of [procedures_per_health_centre]
 	def procedures_by_hc
 		procedures = Procedure.where(cnes_id: params[:cnes].to_s)
 		render json: procedures.to_a
 	end
 
+	# GET /procedure/procedures_latlong/{params}
+	# Params: [filters values array]
+	# Return: An array of [procedures_latlong]
 	def procedures_latlong
 		procedures = getProcedures().pluck(:lat, :long, :id);
 		render json: procedures
 	end
 
-	# GET /procedure/procedure_info/:id
-	# Given a procedure id returns its information
+	# GET /procedure/procedure_info/{params}
+	# Params: id
+	# Return: Info about the procedure with the given id 
 	def procedure_info
 		procedure = Procedure.where(id: params[:id]).select(:cnes_id, :gender, :age_number, :cid_primary, :CRS, :date, :distance, :lat, :long).to_a
 
 		render json: procedure
 	end
 
-	# GET /procedure/procedure_large_cluster
-	# For search results of 50k or more points
-	# Return a array of [[lat, long], number_of_pacients]
+	# Handles clustering for large amount of data
+	# GET /procedure/procedure_large_cluster/{params}
+	# Params: [filters values array]
+	# Return: An array of [lat, long, number_of_pacients]
 	def procedure_large_cluster
 		if params[:hasData] == nil
 			procedures = Procedure.all
@@ -358,11 +324,14 @@ class ProcedureController < ApplicationController
 			procedures = getProcedures()
 		end
 
-		procedures = procedures.group(:lat, :long).count
+		procedures = procedures.group(:lat, :long).count.to_a.flatten.each_slice(3).to_a #Convert hash {[lat, long] => count} to array [lat, long, count]
 
-		render json: procedures.to_a
+		render json: procedures
 	end
 
+	# GET /procedure/procedure_setor/{params}
+	# Params: [filters values array]
+	# Return: An array of [ids]
 	def procedure_setor
 		if session[:hasData] == true
 			procedures = getProcedures()
@@ -374,8 +343,9 @@ class ProcedureController < ApplicationController
 		render json: procedures
 	end
 
-	# GET /procedure/max_values
-	# return max filter values given the search parameters
+	# GET /procedure/max_values/{params}
+	# Params: [filters values array]
+	# Return: An array of [max for the filters values]
 	def max_values
 		if params[:send_all] == "True"
 			render json: [351,148,99,351,110786.71.ceil,52.4832033827607.ceil] #default value for faster load time
@@ -390,8 +360,9 @@ class ProcedureController < ApplicationController
 		render json: max
 	end
 
-	# GET /procedure/procedure_median
-	# return the median for the filter values given the search parameters
+	# GET /procedure/procedure_median/{params}
+	# Params: [filters values array]
+	# Return: An array of [median for the filters values]
 	def procedure_median
 		if params[:send_all] == "True"
 			render json: [3.0,0.0,0.0,3.0,0.0,4.96823522661767] # default value for faster load time

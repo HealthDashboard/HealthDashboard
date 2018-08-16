@@ -21,10 +21,8 @@ var dashboard_legend_clicked = false;
 function init_dashboard_chart() {
     dynamic = false;
     dashboard_legend_clicked = false;
-    
-    console.log(window._data_filters)
+
     if (window._data_filters != null && window._data_filters != []) {
-        console.log("WHY ARE YOU HERE?")
         dynamic = true;
         data = window._data_filters
         var element = document.getElementById("avarage_distance_div").style.visibility = "hidden";
@@ -128,7 +126,6 @@ function create_analise() {
 }
 
 function populate_procedures_by_date() {
-    console.log(dynamic)
     if (dynamic == false) {
         var path = "/procedures_by_date.json";
     } else {

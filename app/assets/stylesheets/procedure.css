@@ -169,7 +169,7 @@
 }
 
 .leaflet-heatmap-layer {
-  opacity: .6;
+  /*opacity: .6;*/
 }
 
 .map-marker{
