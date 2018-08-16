@@ -2,16 +2,16 @@ var slideIndex = 1;
 var timeout;
 
 function getDataHomePage() {
-  $.getJSON("procedure/procedures_total", data, function(count) {
+  $.getJSON("procedure/procedures_total", function(count) {
     count = count.toLocaleString('pt-BR');
     $("#procedure-data").html(count);
   });
 
-  $.getJSON("/health_centre_count", data, function(count) {
+  $.getJSON("/health_centre_count", function(count) {
     $("#hospital-data").html(count.toLocaleString('pt-BR'));
   });
 
-  $.getJSON("/total_distance_average", data, function(average) {
+  $.getJSON("/total_distance_average", function(average) {
     average = average.toLocaleString('pt-BR');
     $("#spec-data").html("9"); // should get this number
     $("#desloc-data").html(average + " Km");
