@@ -174,9 +174,14 @@ function buscar(data) {
     // Show Data
     $('#loading_overlay').show();
 
+    var pixels_bounds_cluster = $("#slider_cluster").slider("getValue");
+    var pixels_bounds_heatmap = $("#slider_heatmap").slider("getValue");
+
+    console.log(pixels_bounds_cluster)
+
     // handling all cluster now
     health_centres_makers(health_centres);
-    handleLargeCluster(data);
+    handleLargeCluster(data, pixels_bounds_cluster, pixels_bounds_heatmap);
 
     // Divida tecnica
     checked = $('input[name=optRadio]:checked', '#radio-list');
@@ -184,8 +189,9 @@ function buscar(data) {
     $(checked).attr('checked', true).trigger('click');
 }
 
-function handleLargeCluster(data) {
+function handleLargeCluster(data, max_cluster, max_heatmap) {
     cluster = L.markerClusterGroup({
+        maxClusterRadius: max_cluster,
         chunkedLoading: true,
         iconCreateFunction: function(cluster) {
             var markers = cluster.getAllChildMarkers();
@@ -224,7 +230,7 @@ function handleLargeCluster(data) {
         cluster.addLayers(markerList);
         map.addLayer(cluster);
 
-        heat = L.heatLayer(procedures, {max: Num_procedures, maxZoom: 11, radius: 80, gradient: {0.1: 'blue', 0.2: 'lime', 0.3: 'yellow', 0.4: 'pink', 0.5: 'red'}}); // Add heatmap
+        heat = L.heatLayer(procedures, {max: Num_procedures, maxZoom: 11, radius: max_heatmap, gradient: {0.1: 'blue', 0.2: 'lime', 0.3: 'yellow', 0.4: 'pink', 0.5: 'red'}}); // Add heatmap
         map.addLayer(heat);
         $('#loading_overlay').hide();
     });
@@ -578,6 +584,10 @@ function dadosInput() {
         language: "pt-BR",
         container:'#datepicker',
     });
+
+    $("#slider_cluster").slider({min: 0, max: 500, step: 1, value: 80});
+
+    $("#slider_heatmap").slider({min: 0, max: 500, step: 1, value: 80});
 
     filters_value({send_all: "True"});
 
