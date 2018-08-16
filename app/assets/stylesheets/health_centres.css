@@ -16,8 +16,15 @@ hr {
   flex-direction: row;
 }
 
-.mapa {
+.map {
   padding-top: 50px;
+  width: 50vw;
+  height: calc(100vh - 50px);
+  z-index: 1;
+  overflow: hidden;
+}
+
+.mapa {
   width: 50vw;
   height: calc(100vh - 50px);
   z-index: 1;
@@ -252,4 +259,40 @@ input[type="radio"] {
   height: 80px;
   line-height: 60pt;
   font-size: 22px
+
+@media (max-width:1000px) {
+  .page {
+    flex-direction: column;
+  }
+
+  .mapa, .map {
+    width: calc(100vw - (100vw - 100%));
+    position: relative;
+  }
+
+  .map {
+    height: calc(50vh + 50px);
+  }
+
+  .mapa {
+    height: 50vh;
+  }
+
+  .info {
+    width:  calc(100vw - (100vw - 100%));
+    height: calc(50vh - 50px);
+    padding: 0 1vw 0 1vw;
+  }
+
+  .info-text {
+    width: inherit;
+  }
+
+  .grafico {
+    width: inherit;
+  }
+
+  .map-config {
+    position: absolute !important;
+  }
 }

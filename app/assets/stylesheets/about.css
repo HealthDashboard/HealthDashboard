@@ -22,7 +22,8 @@ p a:hover, p a:focus {
 
 .section {
   width: calc(100vw - (100vw - 100%));
-  height: calc(100vh - 50px);
+  min-height: calc(100vh - 50px);
+  height: auto;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -42,8 +43,6 @@ p a:hover, p a:focus {
 
 .section-membros {
   background-color: #eee;
-  min-height: calc(100vh - 50px);
-  height: auto;
 }
 
 .content {
@@ -199,7 +198,6 @@ p a:hover, p a:focus {
   bottom: 0;
   width: calc(100vw - (100vw - 100%));
   background-color: #333;
-  height: 100px;
   z-index: 2;
 }
 
@@ -215,6 +213,10 @@ p a:hover, p a:focus {
 ul.footer-item {
   margin: auto;
   list-style: none;
+}
+
+ul.footer-item li {
+  word-break: break-all;
 }
 
 .footer-img {
