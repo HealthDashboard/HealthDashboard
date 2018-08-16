@@ -12,7 +12,7 @@ class HealthCentresController < ApplicationController
 
     # GET /health_centre_count
     def health_centre_count
-        render json: HealthCentre.all.count
+        render json: HealthCentre.count
     end
 
     # GET /heath_centre_count
@@ -117,6 +117,7 @@ class HealthCentresController < ApplicationController
         q2 = distances.value_from_percentile(50).round(2).to_s
         q3 = distances.value_from_percentile(75).round(2).to_s
         distance_quartis = [q3, q2, q1]
+        distances = nil
         render json: distance_quartis
     end
 
