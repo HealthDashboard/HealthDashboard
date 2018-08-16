@@ -247,14 +247,14 @@ ul.footer-item li {
 }
 
 @media (min-width:1001px) and (max-width:1600px) {
-  html.zoomed { 
+  html.zoomed {
       zoom: 3;
       -moz-transform: scale(3);
       -moz-transform-origin: 0 0;
   }
 }
 
-@media (max-width:1000px) {
+ @media screen and (orientation:portrait) {
   .grid {
     grid-template-columns: 1fr;
     grid-gap: 30px;
