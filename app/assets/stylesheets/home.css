@@ -246,15 +246,7 @@ ul.footer-item li {
   margin: 24px 24px;
 }
 
-@media (min-width:1001px) and (max-width:1600px) {
-  html.zoomed {
-      zoom: 3;
-      -moz-transform: scale(3);
-      -moz-transform-origin: 0 0;
-  }
-}
-
- @media screen and (orientation:portrait) {
+@media (max-width:1000px) {
   .grid {
     grid-template-columns: 1fr;
     grid-gap: 30px;
@@ -271,5 +263,14 @@ ul.footer-item li {
 
   .data-num {
     font-size: 2em;
+  }
+}
+
+@media (min-width:1001px) and (max-width:1400px) {
+  body {
+    zoom: 0.8;
+    /* Other non-webkit browsers */
+    zoom: 80%;
+    /* Webkit browsers */
   }
 }
