@@ -355,9 +355,32 @@ class ProcedureController < ApplicationController
 		procedure = getProcedures()
 		max = []
 		[:days, :days_uti, :days_ui, :days_total, :val_total, :distance].each do |filter|
-			max.append((procedure.maximum(filter)).ceil)
+			maximum  = procedure.maximum(filter)
+			if maximum != nil
+				max.append(maximum.ceil)
+			else
+				max.append(0)
+			end
 		end
 		render json: max
+	end
+
+	# NO Route, intern method
+	# Params: A hash of {value => counter}
+	# Return: The median value for the hash table
+	def median_calc(groups)
+		total = 0
+		groups.each do |group| 
+			total += group[1]  # To avoid calling .count on procedure, may be a little slower but uses less memory
+		end
+
+		m_value = (total + 1) / 2 # For odd values takes the floor one not the mean of the two in the middle
+		groups.each do |group|
+			m_value = m_value - group[1]
+			if m_value <= 0
+				return group[0]
+			end
+		end
 	end
 
 	# GET /procedure/procedure_median/{params}
@@ -372,23 +395,30 @@ class ProcedureController < ApplicationController
 		procedure = getProcedures()
 		median = []
 		# 1 - days(Total Geral de Diárias)
-		days = procedure.pluck(:days)
-		median.append(DescriptiveStatistics::Stats.new(days).median)
+		days = procedure.group(:days).order(:days).count
+		median.append(median_calc(days))
+		days = nil
 		# 2 - days_uti(Diárias UTI)
-		days_uti = procedure.pluck(:days_uti)
-		median.append(DescriptiveStatistics::Stats.new(days_uti).median)
+		days_uti = procedure.group(:days_uti).order(:days_uti).count
+		median.append(median_calc(days_uti))
+		days_uti = nil
 		# 3 - days_ui(Diárias UI)
-		days_ui = procedure.pluck(:days_ui)
-		median.append(DescriptiveStatistics::Stats.new(days_ui).median)
+		days_ui = procedure.group(:days_ui).order(:days_ui).count
+		median.append(median_calc(days_ui))
+		days_ui = nil
 		# 4 - days_total(Dias de permanência)
-		days_total = procedure.pluck(:days_total)
-		median.append(DescriptiveStatistics::Stats.new(days_total).median)
+		days_total = procedure.group(:days_total).order(:days_total).count
+		median.append(median_calc(days_total))
+		days_total = nil
 		# 5 - val_total(Valor da Parcela)
-		val_total = procedure.pluck(:val_total)
-		median.append(DescriptiveStatistics::Stats.new(val_total).median)
+		val_total = procedure.group(:val_total).order(:val_total).count
+		median.append(median_calc(val_total))
+		val_total = nil
 		# 6 - distance(Distância de Deslocamento)
-		distance = procedure.pluck(:distance)
-		median.append(DescriptiveStatistics::Stats.new(distance).median)
+		distance = procedure.group(:distance).order(:distance).count
+		median.append(median_calc(distance))
+		distance = nil
+
 		render json: median
 	end
 end
