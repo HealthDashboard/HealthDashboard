@@ -258,9 +258,10 @@ input[type="radio"] {
   width: 80px;
   height: 80px;
   line-height: 60pt;
-  font-size: 22px
+  font-size: 22px;
+}
 
-@media (max-width:1000px) {
+@media (orientation: portrait){
   .page {
     flex-direction: column;
   }
