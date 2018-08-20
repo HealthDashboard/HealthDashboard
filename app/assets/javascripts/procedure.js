@@ -79,8 +79,23 @@ function initProcedureMap() {
 function setShape(name, popup) {
     var myStyle = {
         "color": "#444444",
-        "opacity": 0.35
+        "opacity": 0.9,
+        "stroke": true,
+        "fill": false,
     };
+
+    if(name === 'Shape_ESF.geojson'){
+        myStyle = {
+            "color": "#444444",
+            "opacity": 0.55,
+            "stroke": true,
+            "lineCap": "butt",
+            "fillColor": "#4e4e4e",
+            "fillRule": "nonzero",
+            "fill": false,
+            "fillOpacity": 0.9,
+        };
+    }
 
     if (shape != null)
         map.removeLayer(shape);
