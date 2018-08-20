@@ -76,7 +76,7 @@ function initProcedureMap() {
 function setShape(name, popup) {
     var myStyle = {
         "color": "#444444",
-        "opacity": 0.55
+        "opacity": 0.35
     };
 
     if (shape != null)
@@ -177,11 +177,11 @@ function buscar(data) {
     var pixels_bounds_cluster = $("#slider_cluster").slider("getValue");
     var pixels_bounds_heatmap = $("#slider_heatmap").slider("getValue");
 
-    console.log(pixels_bounds_cluster)
+    var heatmap_opacity = $("#slider_opacity").slider("getValue");
 
     // handling all cluster now
     health_centres_makers(health_centres);
-    handleLargeCluster(data, pixels_bounds_cluster, pixels_bounds_heatmap);
+    handleLargeCluster(data, pixels_bounds_cluster, pixels_bounds_heatmap, heatmap_opacity);
 
     // Divida tecnica
     checked = $('input[name=optRadio]:checked', '#radio-list');
@@ -189,7 +189,7 @@ function buscar(data) {
     $(checked).attr('checked', true).trigger('click');
 }
 
-function handleLargeCluster(data, max_cluster, max_heatmap) {
+function handleLargeCluster(data, max_cluster, max_heatmap, heatmap_opacity) {
     cluster = L.markerClusterGroup({
         maxClusterRadius: max_cluster,
         chunkedLoading: true,
@@ -230,8 +230,12 @@ function handleLargeCluster(data, max_cluster, max_heatmap) {
         cluster.addLayers(markerList);
         map.addLayer(cluster);
 
+
         heat = L.heatLayer(procedures, {max: Num_procedures, maxZoom: 11, radius: max_heatmap, gradient: {0.1: 'blue', 0.2: 'lime', 0.3: 'yellow', 0.4: 'pink', 0.5: 'red'}}); // Add heatmap
         map.addLayer(heat);
+        X = document.getElementsByClassName("leaflet-heatmap-layer")
+        X[0].style["opacity"] = heatmap_opacity / 100
+    
         $('#loading_overlay').hide();
     });
 }
@@ -588,6 +592,8 @@ function dadosInput() {
     $("#slider_cluster").slider({min: 0, max: 500, step: 1, value: 80});
 
     $("#slider_heatmap").slider({min: 0, max: 500, step: 1, value: 80});
+
+    $("#slider_opacity").slider({min: 0, max: 100, step: 1, value: 40});
 
     filters_value({send_all: "True"});
 
