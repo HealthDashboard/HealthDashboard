@@ -27,7 +27,7 @@
   padding: .25em .5em 0 .5em;
   text-align: center;
   margin-bottom: 5px;
-  transform: translateX(120px);
+  transform: translateX(123px);
   cursor: pointer;
   transition: transform 250ms ease-in-out;
 }
@@ -207,4 +207,13 @@
   height: 80px;
   line-height: 60pt;
   font-size: 22px
+}
+
+/* Changes the height of the map menu */
+.select-body {
+  height: 350px;
+}
+
+.select.translateX-0 {
+  transform: translateY(350px);
 }
