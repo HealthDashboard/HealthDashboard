@@ -4,7 +4,12 @@
 }
   
 .main {
-  display: flex;
+  width: 100%;
+  display: table;
+}
+
+.container {
+  display: table-row
 }
 
 .question-container {
@@ -14,6 +19,21 @@
   height: 100vh;
   overflow-x: auto;
   padding-left: 2px;
+  float: left;
+  display: table-cell;
+}
+
+.form-container {
+  padding-top: 50px;
+  padding-left: 10px;
+  float: left;
+  width: 38vw;
+  background-color: white;
+  height: 100vh;
+  padding-right: 2px;
+  display: table-cell;
+  float: left;
+  border-left: 1px #6e6e6e solid;
 }
 
 .collapsible-header {
