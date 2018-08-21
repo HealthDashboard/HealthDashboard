@@ -81,20 +81,11 @@
 }
 
 .select.translateX-0 {
-  transform: translateY(430px);
+  transform: translateY(230px);
 }
 
 .select.translateX-legendsize {
-  transform: translateY(430px) translateX(12em);
-}
-
-
-.select.health_centre.translateX-0 {
-  transform: translateY(240px);
-}
-
-.select.health_centre.translateX-legendsize {
-  transform: translateY(240px) translateX(12em);
+  transform: translateY(230px) translateX(12em);
 }
 
 .select.active.translateX-0 {
@@ -111,13 +102,7 @@
 
 .select-body {
   padding: .5em 1em .5em 1em;
-  height: 430px;
-  overflow: auto;
-}
-
-.select-body.health_centre {
-  padding: .5em 1em .5em 1em;
-  height: 240px;
+  height: 230px;
   overflow: auto;
 }
 
