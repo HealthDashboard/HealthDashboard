@@ -74,7 +74,9 @@
 .min-number {
   width: 3.5vw;
   position: absolute;
-  border: 1px solid black;
+  top: 5px;
+  padding-left: 10px;
+  border: 1px solid #d2d2d2;
   text-align: center;
   z-index: 1;
 }
@@ -82,7 +84,9 @@
 .max-number {
   width: 3.5vw;
   position: absolute;
-  border: 1px solid black;
+  top: 5px;
+  padding-left: 10px;
+  border: 1px solid #d2d2d2;
   text-align: center;
   z-index: 1;
 }
@@ -93,6 +97,25 @@
 
 .slider-div {
   z-index: 2;
+}
+
+.slider-handle {
+  border-radius: 50%;
+  width: 1.5em;
+  height: 1.5em;
+  background: linear-gradient(#555, #454545);
+}
+
+.slider-track {
+  border-radius: 10px;
+  background-image: linear-gradient(to bottom, #d6d5d5 0%, #f9f9f9 100%);
+  width: 100%;
+  height: 1em !important;
+}
+
+.slider-selection {
+  background-image: none;
+  background-color: #1b79e330;
 }
 
 .label-median {
