@@ -49,7 +49,6 @@ class ProcedureController < ApplicationController
 		cmpt = JSON.parse(File.read(Rails.root.join('public/cmpt.json')))
 		proce_re = JSON.parse(File.read(Rails.root.join('public/proc_re.json')))
 		cid = JSON.parse(File.read(Rails.root.join('public/CID10.json')))
-		days = JSON.parse(File.read(Rails.root.join('public/total_days.json')))
 		finance = JSON.parse(File.read(Rails.root.join('public/finance.json')))
 		da = JSON.parse(File.read(Rails.root.join('public/DA.json')))
 		pr = JSON.parse(File.read(Rails.root.join('public/PR.json')))
