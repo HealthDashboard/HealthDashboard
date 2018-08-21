@@ -11,30 +11,27 @@ class ProcedureController < ApplicationController
 			"Grupo do procedimento autorizado", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)",
 			"Tipo de financiamento", "Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Complexidade", "Gestão"]
 		
-		@diagnostic = ["Estabelecimento de ocorrência", "Competência (aaaamm)", "Grupo do procedimento autorizado", "Especialidade do leito", "Caráter do atendimento", 
-		"Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Complexidade"]
+		@procedure = ["Estabelecimento de ocorrência", "Competência (aaaamm)", "Grupo do procedimento autorizado", "Especialidade do leito", "Caráter do atendimento", 
+		"Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Complexidade", "Tipo de financiamento"]
 		@patient_info = ["Faixa etária", "Raça/Cor", "Nível de instrução"]
-		@location = ["Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde"]
-		@establishment = ["Gestão", "Tipo de financiamento"]
+		@establishment = ["Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Gestão"]
 
 		#'Hints' to display on each label
-		@titles_filters = ["Estabelecimento de ocorrência do procedimento de busca.", "Faixa etária dos pacientes internados.", "Especialidade do leito do paciente.", "Caráter da internação do paciente.", "Etnia do paciente.", "Escolaridade/grau de intrução do paciente.", "Competência de apresentação da AIH. Ex: 201506(junho de 2015).",
-			"Grupo do procedimento autorizado ao paciente.", "Código do diagnóstico principal de internação.", "Código do diagnóstico secundário de internação.", "Código do diagnóstico secundário 2 de internação.", "Código do diagnóstico secundário 3 de internação.",
-			"Tipo de financiamento da internação do paciente.", "Distrito administrativo da internação.", "Subprefeitura da internação.", "Supervisão técnica de saúde", "Coordenadoria regional de saúde", "Complexidade da internação.", "Gestão(Municipal/Estadual)."]
+		@titles_filters = ["Estabelecimento do atendimento prestado.", "Faixa etária do paciente.", "Especialidade do leito de internação.", "Caráter da internação.", "Raça/Cor do paciente.", "Grau de instrução do paciente.", "Ano/mês de processamento da AIH. Ex: 201506(junho de 2015).",
+			"Grupo do procedimento.", "Motivo da internação.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.",
+			"Tipo de financiamento do procedimento.", "Distrito administrativo da internação.", "Subprefeitura do estabelecimento.", "Supervisão técnica de saúde.", "Coordenadoria regional de saúde.", "Nível de atenção para realização do procedimento.", "Secretaria responsável."]
 		
-		@titles_diagnostic_filters = ["Estabelecimento de ocorrência do procedimento de busca.", "Competência de apresentação da AIH. Ex: 201506(junho de 2015).", "Grupo do procedimento autorizado ao paciente.", "Especialidade do leito do paciente.", "Caráter da internação do paciente.",
-			"Código do diagnóstico principal de internação.", "Código do diagnóstico secundário de internação.", "Código do diagnóstico secundário 2 de internação.", "Código do diagnóstico secundário 3 de internação.", "Complexidade da internação."]
+		@titles_procedure_filters = ["Estabelecimento do atendimento prestado.", "Ano/mês de processamento da AIH. Ex: 201506(junho de 2015).", "Grupo do procedimento autorizado ao paciente.", "Especialidade do leito de internação.", "Caráter da internação.",
+			"Motivo da internação.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.", "Nível de atenção para realização do procedimento.", "Tipo de financiamento do procedimento."]
 
-		@titles_patient_info_filters = ["Faixa etária dos pacientes internados.", "Etnia do paciente.", "Escolaridade/grau de intrução do paciente."]
+		@titles_patient_info_filters = ["Faixa etária do paciente.", "Raça/Cor do paciente.", "Grau de instrução do paciente."]
 
-		@titles_location_filters = ["Distrito administrativo da internação.", "Subprefeitura da internação.", "Supervisão técnica de saúde", "Coordenadoria regional de saúde"]
-
-		@titles_establishment_filters = ["Gestão(Municipal/Estadual).", "Tipo de financiamento da internação do paciente."]
+		@titles_establishment_filters = ["Distrito administrativo da internação.", "Subprefeitura do estabelecimento.", "Supervisão técnica de saúde.", "Coordenadoria regional de saúde.", "Secretaria responsável."]
 
 		@sliders = ["Total geral de diárias", "Diárias UTI", "Diárias UI", "Dias de permanência", "Valor da parcela", "Distância de deslocamento(Km)"]
 
 		# 'Hints' to display on each slider
-		@titles_sliders = ["Total geral de diárias de internações.", "Diárias de unidade de tratamento intensiva.", "Diárias de unidade intermediária.", "Dias de permanência do paciente internado.", "Valor da parcela de financiamento.", "Distância de deslocamento do paciente."]
+		@titles_sliders = ["Total geral de dias de internação.", "Diárias de unidade de tratamento intensiva.", "Diárias de unidade intermediária.", "Total de dias de internação.", "Valor do serviço.", "Distância de deslocamento do paciente."]
 
 		# Values for filters
 		health_centres = JSON.parse(File.read(Rails.root.join('public/health_centres.json')))
@@ -63,10 +60,9 @@ class ProcedureController < ApplicationController
 				  {"id" => "01", "text" => "MUNICIPAL"}];
 
 		@options = [health_centres, age_group, specialties, treatments, race, lv_instruction, cmpt, proce_re, cid, cid, cid, cid, finance, da, pr, sts, crs, complexity, gestor]
-		@options_diagnostic = [health_centres, cmpt, proce_re, specialties, treatments, cid, cid, cid, cid, complexity]
+		@options_procedure = [health_centres, cmpt, proce_re, specialties, treatments, cid, cid, cid, cid, complexity, finance]
 		@options_patient_info = [age_group, race, lv_instruction]
-		@options_location = [da, pr, sts, crs]
-		@options_establishment = [gestor, finance]
+		@options_establishment = [da, pr, sts, crs, gestor]
 
 	end
 
@@ -368,57 +364,107 @@ class ProcedureController < ApplicationController
 	# NO Route, intern method
 	# Params: A hash of {value => counter}
 	# Return: The median value for the hash table
-	def median_calc(groups)
+	def quartiles_calc(groups)
 		total = 0
 		groups.each do |group| 
 			total += group[1]  # To avoid calling .count on procedure, may be a little slower but uses less memory
 		end
-
+		quartiles = []
 		m_value = (total + 1) / 2 # For odd values takes the floor one not the mean of the two in the middle
+		q1_value = (total + 1) / 4 # For odd values takes the floor one not the mean of the two in the middle
+		q3_value = (total + 1) * 3 / 4 # For odd values takes the floor one not the mean of the two in the middle
+		# each loop will calculate the quartiles until the variables values are not zero
 		groups.each do |group|
-			m_value = m_value - group[1]
-			if m_value <= 0
-				return group[0]
+			if q1_value > 0
+				q1_value = q1_value - group[1]
+			end
+			if q1_value <= 0
+				quartiles.append(group[0])
+				break
 			end
 		end
+		groups.each do |group|
+			if m_value > 0
+				m_value = m_value - group[1]
+			end
+			if m_value <= 0
+				quartiles.append(group[0])
+				break
+			end
+		end		
+		groups.each do |group|			
+			if q3_value > 0
+				q3_value = q3_value - group[1]
+			end
+			if q3_value <= 0
+				quartiles.append(group[0])
+				break
+			end
+		end
+		return quartiles
 	end
 
-	# GET /procedure/procedure_median/{params}
-	# Params: [filters values array]
-	# Return: An array of [median for the filters values]
-	def procedure_median
+	# GET /procedure/procedure_quartiles
+	# Params: [filter values array]
+	# Return: An array of [q1, q2(median), q3 for the filter values]
+	def procedure_quartiles
 		if params[:send_all] == "True"
-			render json: [3.0,0.0,0.0,3.0,0.0,4.96823522661767] # default value for faster load time
+			render json: [[2, 3.0, 6], [0, 0.0, 0], [0, 0.0, 0], [2, 3.0, 6], [0.0, 0.0, 0.0], [2.34493573228911, 4.96823522661767, 10.4606915236337]] # default value for faster load time
 			return
 		end
 
 		procedure = getProcedures()
-		median = []
+		quartiles = []
 		# 1 - days(Total Geral de Diárias)
 		days = procedure.group(:days).order(:days).count
-		median.append(median_calc(days))
+		quartiles.append(quartiles_calc(days))
 		days = nil
 		# 2 - days_uti(Diárias UTI)
 		days_uti = procedure.group(:days_uti).order(:days_uti).count
-		median.append(median_calc(days_uti))
+		quartiles.append(quartiles_calc(days_uti))
 		days_uti = nil
 		# 3 - days_ui(Diárias UI)
 		days_ui = procedure.group(:days_ui).order(:days_ui).count
-		median.append(median_calc(days_ui))
+		quartiles.append(quartiles_calc(days_ui))
 		days_ui = nil
 		# 4 - days_total(Dias de permanência)
 		days_total = procedure.group(:days_total).order(:days_total).count
-		median.append(median_calc(days_total))
+		quartiles.append(quartiles_calc(days_total))
 		days_total = nil
 		# 5 - val_total(Valor da Parcela)
 		val_total = procedure.group(:val_total).order(:val_total).count
-		median.append(median_calc(val_total))
+		quartiles.append(quartiles_calc(val_total))
 		val_total = nil
 		# 6 - distance(Distância de Deslocamento)
 		distance = procedure.group(:distance).order(:distance).count
-		median.append(median_calc(distance))
+		quartiles.append(quartiles_calc(distance))
 		distance = nil
 
-		render json: median
+		render json: quartiles
+		# days = procedure.pluck(:days).extend(DescriptiveStatistics)
+		# quartiles.append(quartiles(days))
+		# # 2 - days_uti(Diárias UTI)
+		# days_uti = procedure.pluck(:days_uti).extend(DescriptiveStatistics)
+		# quartiles.append(quartiles(days_uti))
+		# # 3 - days_ui(Diárias UI)
+		# days_ui = procedure.pluck(:days_ui).extend(DescriptiveStatistics)
+		# quartiles.append(quartiles(days_ui))
+		# # 4 - days_total(Dias de permanência)
+		# days_total = procedure.pluck(:days_total).extend(DescriptiveStatistics)
+		# quartiles.append(quartiles(days_total))
+		# # 5 - val_total(Valor da Parcela)
+		# val_total = procedure.pluck(:val_total).extend(DescriptiveStatistics)
+		# quartiles.append(quartiles(val_total))
+		# # 6 - distance(Distância de Deslocamento)
+		# distance = procedure.pluck(:distance).extend(DescriptiveStatistics)
+		# quartiles.append(quartiles(distance))
+		# render json: quartiles
+	end
+
+	def quartiles(array)
+		median = array.median
+		q1 = array.value_from_percentile(25)
+		q3 = array.value_from_percentile(75)
+		return [q1, median, q3]
 	end
 end

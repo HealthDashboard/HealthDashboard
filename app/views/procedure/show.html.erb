@@ -84,99 +84,80 @@
 
                 <div class="col-sm-12"><hr></div> <!-- Space line -->
 
-                <button class="collapsible diagnostic"><h4><b>Diagnóstico</b></h4></button>
+                <button class="collapsible diagnostic"><h4><b>Procedimento</b></h4></button>
                 <% j = 0 %>
                 <div class="wrap">
-                  <div class="content">
-                      <% @diagnostic.each_with_index do |f, i| %>
-                          <div class="col-sm-12">
-                              <label for="<%= i %>" title="<%= @titles_diagnostic_filters[i] %>"><b>
-                              <%= f %>
-                              </b></label>
-                              <select class="select-<%= i %> form-control" id="<%= j %>" multiple="multiple" onchange='change()'>
-                                  <%= @options_diagnostic[i].each do |v| %>
-                                      <option value= "<%= v["id"] %>" > <%= v["text"] %> </option>
-                                  <% end %>
-                              </select>
-                          </div>
-                          <% j = j + 1 %>
-                          <div class="col-sm-12"><hr></div> <!-- Space line -->
-                      <% end %>
-                  </div>
+                    <div class="content">
+                        <% @procedure.each_with_index do |f, i| %>
+                            <div class="col-sm-12">
+                                <label for="<%= i %>" title="<%= @titles_procedure_filters[i] %>"><b>
+                                <%= f %>
+                                </b></label>
+                                <select class="select-<%= i %> form-control" id="<%= j %>" multiple="multiple" onchange='change()'>
+                                    <%= @options_procedure[i].each do |v| %>
+                                        <option value= "<%= v["id"] %>" > <%= v["text"] %> </option>
+                                    <% end %>
+                                </select>
+                            </div>
+                            <% j = j + 1 %>
+                            <div class="col-sm-12"><hr></div> <!-- Space line -->
+                        <% end %>
+                    </div>
                 </div>
                 <button class="collapsible patient_info"><h4><b>Informações do Paciente</b></h4></button>
                 <div class="wrap">
-                  <div class="content">
-                      <% @patient_info.each_with_index do |f, i| %>
-                          <div class="col-sm-12">
-                              <label for="<%= i %>" title="<%= @titles_patient_info_filters[i] %>"><b>
-                                  <%= f %>
-                              </b></label>
-                              <select class="select-<%= i %> form-control" id="<%= j %>" multiple="multiple" onchange='change()'>
-                                  <%= @options_patient_info[i].each do |v| %>
-                                      <option value= "<%= v["id"] %>" > <%= v["text"] %> </option>
-                                  <% end %>
-                              </select>
-                          </div>
-                          <% j = j + 1 %>
-                          <div class="col-sm-12"><hr></div> <!-- Space line -->
-                      <% end %>
-                      <div class = "col-sm-2">
-                          <label title="Selecionar o(s) sexo(s) de busca dos pacientes."><b>Sexo</b></label>
-                      </div>
-                      <div class = "col-sm-5">
-                          <div class="form-check form-check-inline" style = "max-width = 140px;">
-                          <label class="form-check-label">
-                                  <input class="form-check-input" type="checkbox" id="sexo_masculino" value="M" checked="unchecked" onchange="change()">Masculino
-                              </label>
-                          </div>
-                      </div>
-                      <div class = "col-sm-5">
-                          <div class="form-check form-check-inline" style = "max-width = 120px;">
-                          <label class="form-check-label">
-                              <input class="form-check-input" type="checkbox" id="sexo_feminino" value="F" checked="unchecked" onchange="change()">Feminino
-                          </label>
-                          </div>
-                      </div>
-                  </div>
+                    <div class="content">
+                        <% @patient_info.each_with_index do |f, i| %>
+                            <div class="col-sm-12">
+                                <label for="<%= i %>" title="<%= @titles_patient_info_filters[i] %>"><b>
+                                    <%= f %>
+                                </b></label>
+                                <select class="select-<%= i %> form-control" id="<%= j %>" multiple="multiple" onchange='change()'>
+                                    <%= @options_patient_info[i].each do |v| %>
+                                        <option value= "<%= v["id"] %>" > <%= v["text"] %> </option>
+                                    <% end %>
+                                </select>
+                            </div>
+                            <% j = j + 1 %>
+                            <div class="col-sm-12"><hr></div> <!-- Space line -->
+                        <% end %>
+                        <div class = "col-sm-2">
+                            <label title="Selecionar o(s) sexo(s) de busca dos pacientes."><b>Sexo</b></label>
+                        </div>
+                        <div class = "col-sm-5">
+                            <div class="form-check form-check-inline" style = "max-width = 140px;">
+                            <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" id="sexo_masculino" value="M" checked="unchecked" onchange="change()">Masculino
+                                </label>
+                            </div>
+                        </div>
+                        <div class = "col-sm-5">
+                            <div class="form-check form-check-inline" style = "max-width = 120px;">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="sexo_feminino" value="F" checked="unchecked" onchange="change()">Feminino
+                            </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <button class="collapsible location"><h4><b>Localização</b></h4></button>
+                <button class="collapsible location"><h4><b>Estabelecimento</b></h4></button>
                 <div class="wrap">
-                  <div class="content">
-                      <% @location.each_with_index do |f, i| %>
-                          <div class="col-sm-12">
-                              <label for="<%= i %>" title="<%= @titles_location_filters[i] %>"><b>
-                                  <%= f %>
-                              </b></label>
-                              <select class="select-<%= i %> form-control" id="<%= j %>" multiple="multiple" onchange='change()'>
-                                  <%= @options_location[i].each do |v| %>
-                                      <option value= "<%= v["id"] %>" > <%= v["text"] %> </option>
-                                  <% end %>
-                              </select>
-                          </div>
-                          <% j = j + 1 %>
-                          <div class="col-sm-12"><hr></div> <!-- Space line -->
-                      <% end %>
-                  </div>
-                </div>
-                  <button class="collapsible establishment"><h4><b>Estabelecimento</b></h4></button>
-                <div class="wrap">
-                  <div class="content">
-                      <% @establishment.each_with_index do |f, i| %>
-                          <div class="col-sm-12">
-                              <label for="<%= i %>" title="<%= @titles_establishment_filters[i] %>"><b>
-                                  <%= f %>
-                              </b></label>
-                              <select class="select-<%= i %> form-control" id="<%= j %>" multiple="multiple" onchange='change()'>
-                                  <%= @options_establishment[i].each do |v| %>
-                                      <option value= "<%= v["id"] %>" > <%= v["text"] %> </option>
-                                  <% end %>
-                              </select>
-                          </div>
-                          <% j = j + 1 %>
-                          <div class="col-sm-12"><hr></div> <!-- Space line -->
-                      <% end %>
-                  </div>
+                    <div class="content">
+                        <% @establishment.each_with_index do |f, i| %>
+                            <div class="col-sm-12">
+                                <label for="<%= i %>" title="<%= @titles_establishment_filters[i] %>"><b>
+                                    <%= f %>
+                                </b></label>
+                                <select class="select-<%= i %> form-control" id="<%= j %>" multiple="multiple" onchange='change()'>
+                                    <%= @options_establishment[i].each do |v| %>
+                                        <option value= "<%= v["id"] %>" > <%= v["text"] %> </option>
+                                    <% end %>
+                                </select>
+                            </div>
+                            <% j = j + 1 %>
+                            <div class="col-sm-12"><hr></div> <!-- Space line -->
+                        <% end %>
+                    </div>
                 </div>
                 <button class="collapsible values_search"><h4><b>Valores de Busca</b></h4></button>
                 <div class="wrap">
@@ -191,7 +172,7 @@
                                       <span id="slider_<%= index %>_min"><input id="input_slider_<%= index %>_min" class="min-number" type="number" name="minSlider" value="0" onchange="inputSlider()" min="0"></span>
                                   </div>
                                   <div class="col-sm-9 left">
-                                      <input class="slider" id="slider_<%= index %>" type="text" style="width: 85%" title="TEsteee"/>
+                                      <input class="slider" id="slider_<%= index %>" type="text" style="width: 85%"/>
                                       <label id="label_median_slider_<%= index %>" class="label-median"></label>
                                   </div>
                                   <div class="col-sm-1 left" style = "text-align: left" id="text-left">
