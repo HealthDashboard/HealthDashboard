@@ -1,38 +1,52 @@
 class HealthCentresController < ApplicationController
     # GET /
+    # Params: None
+    # Return: "Estabeleciementos" Page
     def index
         health_centres = HealthCentre.all
     end
 
     # GET /points
+    # Params: None
+    # Return: Return all helth centres
     def points
         health_centres_points = HealthCentre.all
         render json: health_centres_points
     end
 
     # GET /health_centre_count
+    # Params: None
+    # Return: Return the number of health centres
     def health_centre_count
         render json: HealthCentre.count
     end
 
-    # GET /heath_centre_count
+    # GET /total_distance_average
+    # Params: None
+    # Return: the average distance between pacients and health centre
     def total_distance_average
         render json: Procedure.average(:distance).to_f.round(1)
     end
 
     # GET /hospital/:id
+    # Params: id
+    # Return: health centre details given a id
     def hospital
       health_centre = HealthCentre.find_by(id: params[:id])
       render json: health_centre
     end
 
     # GET /procedures/:id
+    # Params: id
+    # Return: [lat, long] for all procedures from a health centre(id)
     def procedures
         health_centre = HealthCentre.find_by(id: params[:id])
         render json: health_centre.procedures.pluck(:lat, :long);
     end
 
     # GET /specialties/:id
+    # Params: id
+    # Return: number of procedures group by specialties from a health centre(id)
     def specialties
         health_centre = HealthCentre.find_by(id: params[:id])
         procedures = health_centre.procedures.group(:specialty).count
@@ -45,6 +59,8 @@ class HealthCentresController < ApplicationController
     end
 
     # GET /specialty_distance/:id
+    # Params: id
+    # Return: number of procedures group by specialties and distance from a health centre(id)
     def specialty_distance
       health_centre = HealthCentre.find_by(id: params[:id])
       procedures = health_centre.procedures
@@ -73,6 +89,9 @@ class HealthCentresController < ApplicationController
       render json: result
     end
 
+    # No route
+    # Params: array
+    # Return: array of Specialty_name => number of procedures
     def trata_specialty_distance(array)
       result = {}
       array.each do |a|
@@ -85,6 +104,8 @@ class HealthCentresController < ApplicationController
     end
 
     # GET /specialties_count
+    # Params: None
+    # Return: Number of procedures group by specialty
     def specialties_count
         result = {}
 
@@ -97,6 +118,8 @@ class HealthCentresController < ApplicationController
     end
 
     # GET /specialties_procedure_distance_average
+    # Params: None
+    # Return: Average distance group by specialty
     def specialties_procedure_distance_average
         result = {}
 
@@ -109,6 +132,8 @@ class HealthCentresController < ApplicationController
     end
 
     # GET /distance_quartis/:id
+    # Params: id
+    # Return: Quartis distance for a helath centre
     def distance_quartis
         health_centre = HealthCentre.find_by(id: params[:id])
         procedures = health_centre.procedures.pluck(:distance);
@@ -122,6 +147,8 @@ class HealthCentresController < ApplicationController
     end
 
     # GET /rank_health_centres
+    # Params: None
+    # Return: Return TOP10 health centres by number of procedures 
     def rank_health_centres
       health_centres = HealthCentre.all.to_a
       health_centres.sort! { |first, second|  first.procedure_count <=> second.procedure_count }
@@ -135,12 +162,16 @@ class HealthCentresController < ApplicationController
     end
 
     # GET /procedures_specialties/:id
+    # Params: id
+    # Return: all procedures for a specialty 
     def procedures_specialties
         procedures = Procedure.where(specialty_id: params[:id])
         render json: procedures
     end
 
     # GET /distances/:id
+    # Params: id
+    # Return: Number of procedures group by distance intervals for a health centre
     def distances
         health_centre = HealthCentre.find_by(id: params[:id])
         procedures = health_centre.procedures
@@ -155,6 +186,8 @@ class HealthCentresController < ApplicationController
     end
 
     # GET /distance_metric
+    # Params: None
+    # Return: Number of procedures group by distance intervals
     def distance_metric
         distance_metric = {'< 1 km': Procedure.where("distance <= ?", 1).count,
                             '> 1 km e < 5 km': Procedure.where("distance > ? AND distance <= ?", 1, 5).count,
