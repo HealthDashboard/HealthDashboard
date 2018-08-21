@@ -26,7 +26,7 @@ Rails.application.routes.draw do
   get '/procedure/health_centres', to: 'procedure#health_centres'
   get '/procedure/specialties', to: 'procedure#specialties'
   get 'procedure/procedure_info/:id', to: 'procedure#procedure_info'
-  # get '/procedure/median', to: 'procedure#procedure_median'
+  # get '/procedure/quartiles', to: 'procedure#procedure_quartiles'
 
   get '/about', to: 'application#about'
 
@@ -43,7 +43,7 @@ Rails.application.routes.draw do
     get :update_session, on: :collection
     get :procedures_latlong, on: :collection
     get :procedures_distance_group,  on: :collection
-    get :procedure_median, on: :collection
+    get :procedure_quartiles, on: :collection
     get :max_values, on: :collection
     get :procedure_large_cluster, on: :collection
     get :procedure_setor, on: :collection 

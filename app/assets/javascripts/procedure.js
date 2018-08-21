@@ -495,15 +495,14 @@ function filters_value(data) {
                 document.getElementById(slider_max).value = slideEvt.value[1];
             });
         });
-
-        $.getJSON('/procedure/procedure_median', data, function(median) {
+        $.getJSON('/procedure/procedure_quartiles', data, function(quartiles) {
             for (i = 0; i < 6; i++) {
                 slider = "slider_" + i.toString();
-                if(median[i] != parseInt(median[i], 10)){
+                if(quartiles[i][1] != parseInt(quartiles[i][1], 10)){
                     //*The follow commands will catch 1 decimal places of median withour rouding and the number 1 (1||0) represents the number of decimal places*//
                     var fixed = 1 || 0;
                     fixed = Math.pow(10, fixed);
-                    const medianAux = Math.floor(median[i] * fixed) / fixed;
+                    const medianAux = Math.floor(quartiles[i][1] * fixed) / fixed;
                     //the last field has a float number, so it is a special case
                     //this commands will position the label in the correct place
                     //const lastText = document.getElementById("label_slider_" + i.toString()).innerText;
@@ -516,7 +515,9 @@ function filters_value(data) {
                         max: max_hash[slider],
                         step: 1,
                         value: [0, max_hash[slider]],
-                        //rangeHighlights: [{ "start": medianAux-1, "end": medianAux+1}],
+                        //highlight the [quartile1, quartile3] interval
+                        rangeHighlights: [{ "start": quartiles[i][0], "end": quartiles[i][2]}],
+                        tooltip: 'show',
                     });
                 }
                 else{
@@ -532,7 +533,8 @@ function filters_value(data) {
                         max: max_hash[slider],
                         step: 1,
                         value: [0, max_hash[slider]],
-                        //rangeHighlights: [{ "start": median[i]-1, "end": median[i]+1}],
+                        //highlight the [quartile1, quartile3] interval
+                        rangeHighlights: [{ "start": quartiles[i][0], "end": quartiles[i][2]}],
                         tooltip: 'show',
                     });
                 }
@@ -545,36 +547,37 @@ function filters_value(data) {
             }
             $("#slider_0").slider({
                 formatter: function(value) {
-                    return 'Mediana: ' + median[0];
-                }
+                    return 'Mediana: ' + quartiles[0][1];
+                },
             });
             $("#slider_1").slider({
                 formatter: function(value) {
-                    return 'Mediana: ' + median[1];
+                    return 'Mediana: ' + quartiles[1][1];
                 }
             });
             $("#slider_2").slider({
                 formatter: function(value) {
-                    return 'Mediana: ' + median[2];
-                }
+                    return 'Mediana: ' + quartiles[2][1];
+                },
             });
             $("#slider_3").slider({
                 formatter: function(value) {
-                    return 'Mediana: ' + median[3];
-                }
+                    return 'Mediana: ' + quartiles[3][1];
+                
+                },
             });
             $("#slider_4").slider({
                 formatter: function(value) {
-                    return 'Mediana: ' + median[4];
-                }
+                    return 'Mediana: ' + quartiles[4][1];
+                },
             });
             $("#slider_5").slider({
                 formatter: function(value) {
                     var fixed = 1 || 0;
                     fixed = Math.pow(10, fixed);
-                    const medianAux = Math.floor(median[5] * fixed) / fixed;
-                    return 'Mediana: ' + medianAux;
-                }
+                    const medianAux = Math.floor(quartiles[5][1] * fixed) / fixed;
+                    return 'Mediana: ' + medianAux.toLocaleString('pt-BR');;
+                },
             });
             // inputSlider();
             slider_fix()
