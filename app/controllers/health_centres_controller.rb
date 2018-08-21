@@ -41,8 +41,19 @@ class HealthCentresController < ApplicationController
     # Return: [lat, long] for all procedures from a health centre(id)
     def procedures
         health_centre = HealthCentre.find_by(id: params[:id])
-        render json: health_centre.procedures.pluck(:lat, :long);
+        procedures = health_centre.procedures
+        procedures = procedures.group(:lat, :long).count.to_a.flatten.each_slice(3)
+        render json: procedures
     end
+
+    # GET /procedures_setor_healthcentre/:id
+    def procedures_setor_healthcentre
+        health_centre = HealthCentre.find_by(id: params[:id])
+        procedures = health_centre.procedures
+        procedures = procedures.where(:lat => params[:lat], :long => params[:long]).pluck(:id)
+        render json: procedures
+    end
+
 
     # GET /specialties/:id
     # Params: id
