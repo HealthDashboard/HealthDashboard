@@ -18,6 +18,10 @@ Rails.application.routes.draw do
   get '/health_centre_count', to: 'health_centres#health_centre_count'
   get '/total_distance_average', to: 'health_centres#total_distance_average'
 
+  resources :health_centres do
+    get :procedures_setor_healthcentre, on: :collection
+  end
+
   get 'estabelecimentos', to: 'health_centres#index'
   get 'dados-gerais', to: 'dashboard#index'
   get 'specialties', to: 'specialties#index'

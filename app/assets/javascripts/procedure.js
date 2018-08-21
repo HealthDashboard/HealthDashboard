@@ -23,6 +23,8 @@ var filters_text, filters, genders, start_date, end_date, dist_min, dist_max;
 //** Open Street view vars **//
 var heat, cluster, shape, clean_up_cluster;
 
+var id;
+
 NUM_FILTERS = 19;
 
 //** Display name for printing **//
@@ -47,6 +49,7 @@ function initProcedureMap() {
     heat = null;
     shape = null;
     clean_up_cluster = [];
+    id = "Procedure"
 
     $('#loading_overlay').hide();
     var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -181,7 +184,7 @@ function buscar(data) {
 
     // handling all cluster now
     health_centres_makers(health_centres);
-    handleLargeCluster(data, pixels_bounds_cluster, pixels_bounds_heatmap, heatmap_opacity);
+    handleLargeCluster(map, "procedure/procedure_large_cluster", data, pixels_bounds_cluster, pixels_bounds_heatmap, heatmap_opacity, CustomMarkerOnClick);
 
     // Divida tecnica
     checked = $('input[name=optRadio]:checked', '#radio-list');
@@ -189,7 +192,7 @@ function buscar(data) {
     $(checked).attr('checked', true).trigger('click');
 }
 
-function handleLargeCluster(data, max_cluster, max_heatmap, heatmap_opacity) {
+function handleLargeCluster(map, path,data, max_cluster, max_heatmap, heatmap_opacity, function_maker) {
     cluster = L.markerClusterGroup({
         maxClusterRadius: max_cluster,
         chunkedLoading: true,
@@ -213,7 +216,7 @@ function handleLargeCluster(data, max_cluster, max_heatmap, heatmap_opacity) {
         }
     });
 
-    $.getJSON("procedure/procedure_large_cluster", data, function(procedures) {
+    $.getJSON(path, data, function(procedures) {
         markerList = []
         Num_procedures = 0
         $.each(procedures, function(index, latlong){
@@ -223,7 +226,7 @@ function handleLargeCluster(data, max_cluster, max_heatmap, heatmap_opacity) {
             marker.number = latlong[2];
             marker.clusterOpen = false;
             marker.cluster = null;
-            marker.on('click', CustomMarkerOnClick);
+            marker.on('click', function_maker);
             markerList.push(marker);
             Num_procedures += latlong[2]
         });
@@ -233,6 +236,7 @@ function handleLargeCluster(data, max_cluster, max_heatmap, heatmap_opacity) {
 
         heat = L.heatLayer(procedures, {max: Num_procedures, maxZoom: 11, radius: max_heatmap, gradient: {0.1: 'blue', 0.2: 'lime', 0.3: 'yellow', 0.4: 'pink', 0.5: 'red'}}); // Add heatmap
         map.addLayer(heat);
+
         X = document.getElementsByClassName("leaflet-heatmap-layer")
         X[0].style["opacity"] = heatmap_opacity / 100
     
@@ -253,8 +257,10 @@ function CustomMarkerOnClick(e) {
             iconUrl: "https://storage.googleapis.com/support-kms-prod/SNP_2752125_en_v0", iconAnchor: [5, 0]
         });
 
+        path = "procedure/procedure_setor"
+
         list = []
-        $.getJSON("procedure/procedure_setor", {lat: marker.latlong[0], long: marker.latlong[1]}, function(procedures){
+        $.getJSON(path, {lat: marker.latlong[0], long: marker.latlong[1]}, function(procedures){
             $.each(procedures, function(index, id){
                 single_point_marker = L.marker(L.latLng(marker.latlong[0], marker.latlong[1]), {icon: dotIcon, id: id}).on('click', markerOnClick);
                 list.push(single_point_marker)
