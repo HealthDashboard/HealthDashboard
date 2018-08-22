@@ -241,3 +241,50 @@
 .select.translateX-0 {
   transform: translateY(450px);
 }
+
+.heat-legend {
+  position: fixed;
+  z-index: 0;
+  right: 0;
+  bottom: 0;
+  margin-right: 34vw;
+  overflow: hidden;
+  margin: 1px solid #919191;
+}
+.heat-legend .legend-title {
+  text-align: center;
+  margin-bottom: 8px;
+  font-weight: bold;
+  font-size: 90%;
+}
+.heat-legend .legend-scale ul {
+  margin: 0;
+  padding: 0;
+  float: left;
+  list-style: none;
+}
+.heat-legend .legend-scale ul li {
+  display: block;
+  float: left;
+  width: 70px;
+  margin-bottom: 3px;
+  text-align: left;
+  font-size: 80%;
+  list-style: none;
+}
+.heat-legend ul.legend-labels li span {
+  display: block;
+  float: left;
+  height: 15px;
+  width: 70px; /* size of each interval */
+  border-right: 1px black solid;
+  border-left: 1px black solid;
+}
+.heat-legend .legend-source {
+  font-size: 70%;
+  color: #999;
+  clear: both;
+}
+.heat-legend {
+  color: rgb(46, 46, 46);
+}

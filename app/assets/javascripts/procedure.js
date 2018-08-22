@@ -255,6 +255,13 @@ function handleLargeCluster(map, path,data, max_cluster, max_heatmap, heatmap_op
 
 
         heat = L.heatLayer(heatmap_procedure, {maxZoom: 11, radius: max_heatmap, gradient: {.4:"#B0276D",.6:"#BC255F",.7:"#C82351",.8:"#D42143",1:"#E01F35"}}); // Add heatmap
+        /* When the heatLayer is done, the legend will calculate the intervals */
+        document.getElementById("legend-label-1").innerText = Num_procedures*0.1 + "-" + Num_procedures*0.2; 
+        document.getElementById("legend-label-2").innerText = Num_procedures*0.2 + "-" + Num_procedures*0.3;
+        document.getElementById("legend-label-3").innerText = Num_procedures*0.3 + "-" + Num_procedures*0.4;
+        document.getElementById("legend-label-4").innerText = Num_procedures*0.4 + "-" + Num_procedures*0.5;
+        document.getElementById("legend-label-5").innerText = Num_procedures*0.5 + "-" + Num_procedures
+        
         map.addLayer(heat);
 
         X = document.getElementsByClassName("leaflet-heatmap-layer")
