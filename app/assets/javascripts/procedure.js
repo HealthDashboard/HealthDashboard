@@ -87,13 +87,12 @@ function setShape(name, popup) {
     if(name === 'Shape_ESF.geojson'){
         myStyle = {
             "color": "#444444",
-            "opacity": 0.55,
             "stroke": true,
             "lineCap": "butt",
             "fillColor": "#4e4e4e",
             "fillRule": "nonzero",
             "fill": false,
-            "fillOpacity": 0.9,
+            "opacity": 0.4,
         };
     }
 
