@@ -7,10 +7,6 @@ class ProcedureController < ApplicationController
 	# Params: None
 	# Return: "busca avancada" page
 	def show
-		@filters = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Raça/Cor", "Nível de instrução", "Competência (aaaamm)",
-			"Grupo do procedimento autorizado", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)",
-			"Tipo de financiamento", "Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Complexidade", "Gestão"]
-		
 		@procedure = ["Estabelecimento de ocorrência", "Competência (aaaamm)", "Grupo do procedimento autorizado", "Especialidade do leito", "Caráter do atendimento", 
 		"Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Complexidade", "Tipo de financiamento"]
 		@patient_info = ["Faixa etária", "Raça/Cor", "Nível de instrução"]
@@ -123,7 +119,7 @@ class ProcedureController < ApplicationController
 	# maybe send all data instead.
 	def getProcedures
 		filters_name = ["cnes_id", "cmpt", "proce_re", "specialty_id", "treatment_type", "cid_primary", "cid_secondary", "cid_secondary2",
-			"cid_associated", "complexity", "age_code", "race", "lv_instruction", "DA", "PR", "STS", "CRS", "gestor_ide", "finance"]
+			"cid_associated", "complexity", "finance", "age_code", "race", "lv_instruction", "DA", "PR", "STS", "CRS", "gestor_ide"]
 		
 		sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
 
@@ -440,24 +436,6 @@ class ProcedureController < ApplicationController
 		distance = nil
 
 		render json: quartiles
-		# days = procedure.pluck(:days).extend(DescriptiveStatistics)
-		# quartiles.append(quartiles(days))
-		# # 2 - days_uti(Diárias UTI)
-		# days_uti = procedure.pluck(:days_uti).extend(DescriptiveStatistics)
-		# quartiles.append(quartiles(days_uti))
-		# # 3 - days_ui(Diárias UI)
-		# days_ui = procedure.pluck(:days_ui).extend(DescriptiveStatistics)
-		# quartiles.append(quartiles(days_ui))
-		# # 4 - days_total(Dias de permanência)
-		# days_total = procedure.pluck(:days_total).extend(DescriptiveStatistics)
-		# quartiles.append(quartiles(days_total))
-		# # 5 - val_total(Valor da Parcela)
-		# val_total = procedure.pluck(:val_total).extend(DescriptiveStatistics)
-		# quartiles.append(quartiles(val_total))
-		# # 6 - distance(Distância de Deslocamento)
-		# distance = procedure.pluck(:distance).extend(DescriptiveStatistics)
-		# quartiles.append(quartiles(distance))
-		# render json: quartiles
 	end
 
 	def quartiles(array)
