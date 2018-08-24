@@ -235,9 +235,9 @@
 
 /* Changes the height of the map menu */
 .select-body {
-  height: 430px;
+  height: 450px;
 }
 
 .select.translateX-0 {
-  transform: translateY(430px);
+  transform: translateY(450px);
 }
