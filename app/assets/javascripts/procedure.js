@@ -416,7 +416,9 @@ function limpar() {
     $("#sexo_masculino").prop("checked", true);
     $("#sexo_feminino").prop("checked", true);
     cleaning = false;
-
+    for(var i=1; i < 7; i++){
+        document.getElementById("legend-label-" + i).innerText = "";
+    }
     $('input[name=optRadio][value=6]', '#radio-list').trigger('click');
     clearMap();
 }
