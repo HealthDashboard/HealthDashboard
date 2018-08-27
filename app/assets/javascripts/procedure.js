@@ -217,22 +217,24 @@ function handleLargeCluster(map, path,data, max_cluster, max_heatmap, heatmap_op
                 n += markers[i].number;
             }
             if (n < 5000) {
-                className = 'map-marker marker-5k a-class'
-                size = 40
+                className = 'map-marker marker-5k a-class';
+                size = 40;
             } else if (n < 100000) {
-                className = 'map-marker marker-10k a-class'
-                size = 60
+                className = 'map-marker marker-10k a-class';
+                size = 60;
             } else if (n >= 100000) {
-                className = 'map-marker marker-100k a-class'
-                size = 80
+                className = 'map-marker marker-100k a-class';
+                size = 80;
             }
             return L.divIcon({ html: n, className: className, iconSize: L.point(size, size) });
         }
     });
 
     $.getJSON(path, data, function(procedures) {
-        markerList = []
-        Num_procedures = 0
+        markerList = [];
+        heatmap_procedure = [];
+        Num_procedures = 0;
+
         $.each(procedures, function(index, latlong){
             icon = L.divIcon({ html: latlong[2], className: 'map-marker marker-single a-class', iconSize: L.point(30, 30) });
             marker = L.marker(L.latLng(latlong[0], latlong[1]), {icon: icon})
@@ -247,8 +249,12 @@ function handleLargeCluster(map, path,data, max_cluster, max_heatmap, heatmap_op
         cluster.addLayers(markerList);
         map.addLayer(cluster);
 
+        $.each(procedures, function(index, procedure) {
+            heatmap_procedure.push([procedure[0], procedure[1], (procedure[2] / Num_procedures) * 100]);
+        });
 
-        heat = L.heatLayer(procedures, {max: Num_procedures, maxZoom: 11, radius: max_heatmap, gradient: {0.1: 'blue', 0.2: 'lime', 0.3: 'yellow', 0.4: 'pink', 0.5: 'red'}}); // Add heatmap
+
+        heat = L.heatLayer(heatmap_procedure, {maxZoom: 11, radius: max_heatmap, gradient: {.4:"#B0276D",.6:"#BC255F",.7:"#C82351",.8:"#D42143",1:"#E01F35"}}); // Add heatmap
         map.addLayer(heat);
 
         X = document.getElementsByClassName("leaflet-heatmap-layer")
@@ -615,7 +621,7 @@ function dadosInput() {
 
     $("#slider_cluster").slider({min: 0, max: 500, step: 1, value: 80});
 
-    $("#slider_heatmap").slider({min: 0, max: 500, step: 1, value: 80});
+    $("#slider_heatmap").slider({min: 0, max: 500, step: 1, value: 25});
 
     $("#slider_opacity").slider({min: 0, max: 100, step: 1, value: 40});
 
