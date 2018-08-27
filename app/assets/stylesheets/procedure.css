@@ -246,7 +246,7 @@
   position: fixed;
   z-index: 0;
   right: 0;
-  bottom: 0;
+  bottom: 35px;
   margin-right: 34vw;
   overflow: hidden;
   margin: 1px solid #919191;
@@ -272,13 +272,20 @@
   font-size: 80%;
   list-style: none;
 }
-.heat-legend ul.legend-labels li span {
+.heat-legend ul.legend-labels li .span-normal {
   display: block;
   float: left;
   height: 15px;
   width: 70px; /* size of each interval */
   border-right: 1px black solid;
   border-left: 1px black solid;
+}
+
+.last_span {
+  display: block;
+  float: left;
+  height: 15px;
+  width: 70px; /* size of each interval */
 }
 .heat-legend .legend-source {
   font-size: 70%;
@@ -287,4 +294,20 @@
 }
 .heat-legend {
   color: rgb(46, 46, 46);
+}
+.legend-data {
+  position: fixed;
+  z-index: 0;
+  right: 0;
+  bottom: 10px;
+  margin-right: 31.5vw;
+  overflow: hidden;
+}
+.legend-data-li {
+  display: block;
+  float: left;
+  text-align: center;
+  width: 70px;
+  list-style: none;
+  font-size: 70%;
 }
