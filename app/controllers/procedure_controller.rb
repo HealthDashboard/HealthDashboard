@@ -403,8 +403,10 @@ class ProcedureController < ApplicationController
 	# Params: [filter values array]
 	# Return: An array of [q1, q2(median), q3 for the filter values]
 	def procedure_quartiles
+		params.require(:send_all)
+
 		if params[:send_all] == "True"
-			render json: [[2, 3.0, 6], [0, 0.0, 0], [0, 0.0, 0], [2, 3.0, 6], [0.0, 0.0, 0.0], [2.34493573228911, 4.96823522661767, 10.4606915236337]] # default value for faster load time
+			render json: [[2, 3.0, 6], [0, 0.0, 0], [0, 0.0, 0], [2, 3.0, 6], [0.0, 0.0, 0.0], [2.34493573228911, 4.96823522661767, 10.4606915236337]], status: 200 # default value for faster load time
 			return
 		end
 
