@@ -170,7 +170,7 @@ function getData() {
         sliders.push([values[0], values[1]]);
     }
 
-    data = {hasData: 1, filters: filters, gender: genders.toString(), start_date: start_date.toString(), end_date: end_date.toString(), sliders: sliders};
+    data = {send_all: false, hasData: 1, filters: filters, gender: genders.toString(), start_date: start_date.toString(), end_date: end_date.toString(), sliders: sliders};
     return data
 }
 
