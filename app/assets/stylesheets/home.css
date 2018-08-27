@@ -104,8 +104,6 @@ a:hover {
   display: block;
   transform: translateX(-100%);
   transition: transform 350ms ease-in-out;
-<<<<<<< HEAD
-=======
 }*/
 
 .main {
@@ -131,10 +129,10 @@ a:hover {
   bottom: 0;
   left: 0;
   right: 0;
+<<<<<<< HEAD
   background-color: rgba(0, 0, 0, 0.1);
 }*/
 
-<<<<<<< HEAD
 .opacity-overlay {
   position: absolute;
   display: block;
@@ -148,11 +146,6 @@ a:hover {
 
 .header-text {
   position: absolute;
-=======
-/*.banner {
-  width: calc(100vw - (100vw - 100%));
-  background-color: #ccc;
->>>>>>> fbfb41a... Maybe the start of the official home
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -168,7 +161,6 @@ a:hover {
   max-height: 200px;
 }
 
-<<<<<<< HEAD
 .title {
   font-family: 'Raleway', sans-serif;
   font-size: 3em;
@@ -176,21 +168,18 @@ a:hover {
 }
 
 .slogan {
-=======
-.banner-media {
-  width: 60vw;
   background-color: #000;
-  color: #fff;
+  opacity: 0.3;
 }*/
 
-.header {
+.header-text {
+  position: absolute;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  padding: 3em 2em 3em 2em;
->>>>>>> fbfb41a... Maybe the start of the official home
->>>>>>> bf33abd... Maybe the start of the official home
+  padding: 250px 0 0 2em;
+  z-index: 1;
 }
 
 .logo-img {
