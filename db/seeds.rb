@@ -26,7 +26,7 @@ def get_health_centres()
 
   hc_counter = 0
   CSV.foreach(hc_csv_path, :headers => true) do |row|
-    h = HealthCentre.new cnes: row[0], name: row[1], beds: row[2], long: row[4], lat: row[3], phone: row[7], adm: row[8], DA: row[9], PR: row[10], STS: row[11], CRS: row[12]
+    h = HealthCentre.new cnes: row[0], name: row[1], name_r: row[2], beds: row[3], long: row[5], lat: row[4], phone: row[8], adm: row[9], DA: row[10], PR: row[11], STS: row[12], CRS: row[13]
     h.save!
     hc_counter += 1
     print "."
