@@ -21,7 +21,7 @@ var health_centre_markers;
 var filters_text, filters, genders, start_date, end_date, dist_min, dist_max;
 
 //** Open Street view vars **//
-var heat, cluster, shape, clean_up_cluster;
+var heat, cluster, shape, clean_up_cluster, max;
 
 var id;
 
@@ -207,6 +207,7 @@ function buscar(data) {
 }
 
 function handleLargeCluster(map, path,data, max_cluster, max_heatmap, heatmap_opacity, function_maker) {
+    max = 0;
     cluster = L.markerClusterGroup({
         maxClusterRadius: max_cluster,
         chunkedLoading: true,
@@ -226,6 +227,11 @@ function handleLargeCluster(map, path,data, max_cluster, max_heatmap, heatmap_op
                 className = 'map-marker marker-100k a-class';
                 size = 80;
             }
+            if (n > max) {
+                max = n;
+            }
+            document.getElementById("legend-label-6").innerText = (max);
+
             return L.divIcon({ html: n, className: className, iconSize: L.point(size, size) });
         }
     });
@@ -253,23 +259,10 @@ function handleLargeCluster(map, path,data, max_cluster, max_heatmap, heatmap_op
             heatmap_procedure.push([procedure[0], procedure[1], (procedure[2] / Num_procedures) * 100]);
         });
 
+        heat = L.heatLayer(heatmap_procedure, {maxZoom: 11, radius: max_heatmap, blur: 50, gradient: {.4:"#F8A5B2",.6:"#F97C85",.7:"#FB5459",.8:"#FC2C2D",1:"#FE0401"}}); // Add heatmap
 
-        heat = L.heatLayer(heatmap_procedure, {maxZoom: 11, radius: max_heatmap, blur: 50, gradient: {.4:"#B0276D",.6:"#BC255F",.7:"#C82351",.8:"#D42143",1:"#E01F35"}}); // Add heatmap
-        /* When the heatLayer is done, the legend will calculate the intervals */
-        for(var i=1; i < 5; i++){
-            var tmp = (Num_procedures*(i/10)); 
-            if(tmp%1 != 0){
-                //check if the value is integer or float
-                tmp = tmp.toFixed(2).replace(".", ",");
-            }
-            else{
-                tmp = tmp.toString();
-            }
-            document.getElementById("legend-label-" + (i+1)).innerText = tmp;
-        }
         //inserting the first and last values
         document.getElementById("legend-label-1").innerText = 0.0;
-        document.getElementById("legend-label-6").innerText = (Num_procedures);
         map.addLayer(heat);
 
         X = document.getElementsByClassName("leaflet-heatmap-layer")

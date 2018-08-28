@@ -242,12 +242,19 @@
   transform: translateY(450px);
 }
 
-.heat-legend {
+.heatmap-legend {
   position: fixed;
+  width: 200px;
   z-index: 0;
   right: 0;
-  bottom: 35px;
-  margin-right: 34vw;
+  bottom: 12px;
+  margin-right: 32vw;
+  overflow: hidden;
+}
+
+.heat-legend {
+  z-index: 0;
+  right: 0;
   overflow: hidden;
   margin: 1px solid #919191;
 }
@@ -266,7 +273,7 @@
 .heat-legend .legend-scale ul li {
   display: block;
   float: left;
-  width: 70px;
+  width: 200px;
   margin-bottom: 3px;
   text-align: left;
   font-size: 80%;
@@ -276,7 +283,7 @@
   display: block;
   float: left;
   height: 15px;
-  width: 70px; /* size of each interval */
+  width: 200px; /* size of each interval */
   border-right: 1px black solid;
   border-left: 1px black solid;
 }
@@ -296,11 +303,11 @@
   color: rgb(46, 46, 46);
 }
 .legend-data {
-  position: fixed;
+  display: flex;
+  justify-content: space-between;
   z-index: 0;
   right: 0;
   bottom: 10px;
-  margin-right: 31.7vw;
   overflow: hidden;
 }
 .legend-data-li {
