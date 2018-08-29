@@ -15,10 +15,10 @@ class ProcedureController < ApplicationController
 		#'Hints' to display on each label
 		@titles_filters = ["Estabelecimento do atendimento prestado.", "Faixa etária do paciente.", "Especialidade do leito de internação.", "Caráter da internação.", "Raça/Cor do paciente.", "Grau de instrução do paciente.", "Ano/mês de processamento da AIH. Ex: 201506(junho de 2015).",
 			"Grupo do procedimento.", "Motivo da internação.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.",
-			"Tipo de financiamento do procedimento.", "Distrito administrativo da internação.", "Subprefeitura do estabelecimento.", "Supervisão técnica de saúde.", "Coordenadoria regional de saúde.", "Nível de atenção para realização do procedimento.", "Secretaria responsável."]
+			"Tipo de financiamento da internação.", "Divisão administrativa da internação.", "Subprefeitura do estabelecimento.", "Supervisão técnica de saúde.", "Coordenadoria regional de saúde.", "Nível de atenção para realização do procedimento.", "Secretaria responsável."]
 		
 		@titles_procedure_filters = ["Estabelecimento do atendimento prestado.", "Ano/mês de processamento da AIH. Ex: 201506(junho de 2015).", "Grupo do procedimento autorizado ao paciente.", "Especialidade do leito de internação.", "Caráter da internação.",
-			"Motivo da internação.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.", "Nível de atenção para realização do procedimento.", "Tipo de financiamento do procedimento."]
+			"Motivo da internação.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.", "Nível de atenção para realização do procedimento.", "Tipo de financiamento da internação."]
 
 		@titles_patient_info_filters = ["Faixa etária do paciente.", "Raça/Cor do paciente.", "Grau de instrução do paciente."]
 
