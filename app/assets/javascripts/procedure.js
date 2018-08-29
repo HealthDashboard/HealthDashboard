@@ -206,8 +206,15 @@ function buscar(data) {
     $(checked).attr('checked', true).trigger('click');
 }
 
-function handleLargeCluster(map, path,data, max_cluster, max_heatmap, heatmap_opacity, function_maker) {
-    max = 0;
+function handleLargeCluster(map, path, data, max_cluster, max_heatmap, heatmap_opacity, function_maker) {
+    var max = 0;
+    var zoomValues = new Array(map.getMaxZoom() + 1);
+    map.on('zoom', function() {
+        max = 0;
+        if(zoomValues[map.getZoom()] != undefined){
+            document.getElementById("legend-label-2").innerText = zoomValues[map.getZoom()];
+        }
+    });
     cluster = L.markerClusterGroup({
         maxClusterRadius: max_cluster,
         chunkedLoading: true,
@@ -230,10 +237,10 @@ function handleLargeCluster(map, path,data, max_cluster, max_heatmap, heatmap_op
             if (n > max) {
                 max = n;
             }
-            document.getElementById("legend-label-6").innerText = (max);
-
+            document.getElementById("legend-label-2").innerText = max;
+            zoomValues[map.getZoom()] = max;
             return L.divIcon({ html: n, className: className, iconSize: L.point(size, size) });
-        }
+        },
     });
 
     $.getJSON(path, data, function(procedures) {
@@ -409,7 +416,7 @@ function limpar() {
     $("#sexo_masculino").prop("checked", true);
     $("#sexo_feminino").prop("checked", true);
     cleaning = false;
-    for(var i=1; i < 7; i++){
+    for(var i=1; i < 3; i++){
         document.getElementById("legend-label-" + i).innerText = "";
     }
     $('input[name=optRadio][value=6]', '#radio-list').trigger('click');
