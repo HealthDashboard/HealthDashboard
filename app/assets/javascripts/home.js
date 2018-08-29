@@ -63,6 +63,7 @@ function scrollBanner() {
   if (scrollPos <= 600) {
       headerText.style.transform =  "translateY(" + (-scrollPos/3) +"px" + ")";
       headerDiv.style.transform =  "translateY(" + (-scrollPos/5) +"px" + ")";
-      headerText.style.opacity = 1 - (scrollPos/600);
+      opacityOver.style.opacity =  scrollPos/550;
+      headerText.style.opacity = 1 - (scrollPos/550);
   }
 }
