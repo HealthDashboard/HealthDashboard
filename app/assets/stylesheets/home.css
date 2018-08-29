@@ -121,7 +121,7 @@ a:hover {
   box-shadow: inset 0px 0px 5px 4px rgba(0,0,0,0.2);
 }
 
-/*.header-paralax::after {
+.header-paralax::after {
   content: '';
   position: absolute;
   display: block;
@@ -129,9 +129,8 @@ a:hover {
   bottom: 0;
   left: 0;
   right: 0;
-<<<<<<< HEAD
-  background-color: rgba(0, 0, 0, 0.1);
-}*/
+  background-color: rgba(0, 0, 0, .1);
+}
 
 .opacity-overlay {
   position: absolute;
@@ -140,8 +139,8 @@ a:hover {
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: #444444;
-  opacity: .1;
+  background-color: #eee;
+  opacity: 0;
 }
 
 .header-text {
@@ -168,29 +167,7 @@ a:hover {
 }
 
 .slogan {
-  background-color: #000;
-  opacity: 0.3;
-}*/
-
-.header-text {
-  position: absolute;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 250px 0 0 2em;
-  z-index: 1;
 }
-
-.logo-img {
-  margin-right: 1em;
-}
-
-.title {
-  font-family: 'Raleway', sans-serif;
-  font-size: 3em;
-}
-
 
 .data-row {
   background-color: #777;
