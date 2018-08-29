@@ -3,6 +3,7 @@ class CreateHealthCentres < ActiveRecord::Migration[5.0]
     create_table :health_centres do |t|
       t.integer :cnes
       t.string :name
+      t.string :name_r
       t.integer :beds
       t.float :long
       t.float :lat
