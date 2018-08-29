@@ -208,9 +208,9 @@ function buscar(data) {
 
 function handleLargeCluster(map, path, data, max_cluster, max_heatmap, heatmap_opacity, function_maker) {
     var max = 0;
-    var zoomValues = new Array(map.getMaxZoom() + 1);
+    var zoomValues = new Array(map.getMaxZoom() + 1); //creating a array to max values of each zoom level
     map.on('zoom', function() {
-        max = 0;
+        max = 0; // reset max values because zoom level changed
         if(zoomValues[map.getZoom()] != undefined){
             document.getElementById("legend-label-2").innerText = zoomValues[map.getZoom()];
         }
@@ -238,7 +238,7 @@ function handleLargeCluster(map, path, data, max_cluster, max_heatmap, heatmap_o
                 max = n;
             }
             document.getElementById("legend-label-2").innerText = max;
-            zoomValues[map.getZoom()] = max;
+            zoomValues[map.getZoom()] = max; //if zoomValues[current Zoom] is empty, then store the value
             return L.divIcon({ html: n, className: className, iconSize: L.point(size, size) });
         },
     });
