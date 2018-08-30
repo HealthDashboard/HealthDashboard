@@ -237,8 +237,10 @@ function handleLargeCluster(map, path, data, max_cluster, max_heatmap, heatmap_o
             if (n > max) {
                 max = n;
             }
-            document.getElementById("legend-label-2").innerText = max;
-            zoomValues[map.getZoom()] = max; //if zoomValues[current Zoom] is empty, then store the value
+            if ((zoomValues[map.getZoom()] == undefined) || zoomValues[map.getZoom()] < max) {
+                zoomValues[map.getZoom()] = max; //if zoomValues[current Zoom] is empty, then store the value
+            }
+            document.getElementById("legend-label-2").innerText = zoomValues[map.getZoom()];            
             return L.divIcon({ html: n, className: className, iconSize: L.point(size, size) });
         },
     });
