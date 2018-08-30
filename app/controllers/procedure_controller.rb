@@ -71,6 +71,12 @@ class ProcedureController < ApplicationController
 			session[:hasData] = true
 		end
 
+		if params[:send_all] == "True"
+			session[:send_all] = "True"
+		else
+			session[:send_all] = "False"
+		end
+
 		if session[:filters] == nil || params[:filters] != nil
 			session[:filters] = Array.new(NUM_FILTERS)
 		end
@@ -91,8 +97,8 @@ class ProcedureController < ApplicationController
 			end
 		end
 
-		if params[:gender] != nil
-			session[:genders] = params[:gender].to_s
+		if params[:genders] != nil
+			session[:genders] = params[:genders].to_s
 			session[:genders] = session[:genders].split(",")
 		end
 
@@ -115,23 +121,41 @@ class ProcedureController < ApplicationController
 	# NO ROUTE, intern method
 	# Params: [filters values array]
 	# Return: procedures based on the values passed in your last update_session
-	# TODO - handle calls with no previous update_session. It probably throws a error now,
-	# maybe send all data instead.
 	def getProcedures
 		filters_name = ["cnes_id", "cmpt", "proce_re", "specialty_id", "treatment_type", "cid_primary", "cid_secondary", "cid_secondary2",
 			"cid_associated", "complexity", "finance", "age_code", "race", "lv_instruction", "DA", "PR", "STS", "CRS", "gestor_ide"]
 		
 		sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
 
+		procedures = nil
+
 		update_session()
 
-		procedures = session[:genders].length < 2 ? Procedure.where(gender: session[:genders]) : procedures = Procedure.all
+		if session[:send_all] == "True"
+			return Procedure.all
+		end
+
+		if session[:genders] != nil
+			procedures = session[:genders].length < 2 ? Procedure.where(gender: session[:genders]) : procedures = Procedure.all
+		end
 
 		filters_name.each_with_index do |filter, i|
-				procedures = procedures.where(filter => session[:filters][i]) unless session[:filters][i] == nil
+			if session[:filters][i] == nil
+				next
+			end
+
+			if procedures == nil
+				procedures = Procedure.where(filter => session[:filters][i])
+			else
+				procedures = procedures.where(filter => session[:filters][i])
+			end
 		end
 
 		sliders_name.each_with_index do |slider, i|
+			if session[:sliders][i] == nil
+				next
+			end
+
 			min =  session[:sliders][i][0]
 			max = session[:sliders][i][1]
 			if max == $MAX_SLIDERS[i]
@@ -142,10 +166,18 @@ class ProcedureController < ApplicationController
 		end
 
 		if session[:start_date] != nil && session[:end_date] != nil
-			procedures = procedures.where('date BETWEEN ? AND ?', session[:start_date], session[:end_date])
+			if procedures != nil
+				procedures = procedures.where('date BETWEEN ? AND ?', session[:start_date], session[:end_date])
+			else
+				procedures = Procedure.where('date BETWEEN ? AND ?', session[:start_date], session[:end_date])
+			end
+
 		end
 
-		return procedures
+		if procedures == nil
+			return nil
+		end
+		return procedures.count > 0 ? procedures : nil
 	end
 
 
@@ -215,10 +247,12 @@ class ProcedureController < ApplicationController
 	# Params: [filters values array]
 	# Return: Procedures counter
 	def procedures_total
-		if params[:hasData] == nil
-			render json: Procedure.all.count
+		procedures = getProcedures()
+
+		if procedures == nil
+			render json: nil, status: 200
 		else
-			render json: getProcedures().count
+			render json: getProcedures().count, status: 200
 		end
 	end
 
@@ -309,29 +343,31 @@ class ProcedureController < ApplicationController
 	# Params: [filters values array]
 	# Return: An array of [lat, long, number_of_pacients]
 	def procedure_large_cluster
-		if params[:hasData] == nil
-			procedures = Procedure.all
-		else
-			procedures = getProcedures()
+		procedures = getProcedures()
+
+		if procedures == nil
+			render json: procedures, status: 400
+			return
 		end
 
 		procedures = procedures.group(:lat, :long).count.to_a.flatten.each_slice(3).to_a #Convert hash {[lat, long] => count} to array [lat, long, count]
 
-		render json: procedures
+		render json: procedures, status: 200
 	end
 
 	# GET /procedure/procedure_setor/{params}
 	# Params: [filters values array]
 	# Return: An array of [ids]
 	def procedure_setor
-		if session[:hasData] == true
-			procedures = getProcedures()
-		else
-			procedures = Procedure.all
+		procedures = getProcedures()
+
+		if procedures == nil
+			render json: procedures, status: 400
+			return
 		end
 
 		procedures = procedures.where(:lat => params[:lat], :long => params[:long]).pluck(:id)
-		render json: procedures
+		render json: procedures, status: 200
 	end
 
 	# GET /procedure/max_values/{params}
