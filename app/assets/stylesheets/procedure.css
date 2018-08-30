@@ -250,6 +250,9 @@
   bottom: 12px;
   margin-right: 32vw;
   overflow: hidden;
+  background-color: #ffffff99;
+  border-radius: 20px;
+  padding: 10px;
 }
 
 .heat-legend {
@@ -282,10 +285,8 @@
 .heat-legend ul.legend-labels li .span-normal {
   display: block;
   float: left;
-  height: 15px;
+  height: 25px;
   width: 200px; /* size of each interval */
-  border-right: 1px black solid;
-  border-left: 1px black solid;
 }
 
 .last_span {
@@ -314,7 +315,6 @@
   display: block;
   float: left;
   text-align: center;
-  width: 70px;
   list-style: none;
   font-size: 70%;
 }
