@@ -30,48 +30,76 @@
     </header>
 
 
-<div class="container">
-    <h2 class="section"> SERVIÇOS </h2>
 
-    <div class="grid">
-      <a href="<%= busca_path %>">
-        <div class="item">
-          <%= image_tag("buscaAvancada.png",:class => "item-img") %>
-          <h3 class="item-title">Busca Avançada</h3>
-          <p class="item-descript">
-            Consulta de internações hospitalares, a partir de certos parâmetros de interesse, com a localização de ocorrência georreferenciada.
-          </p>
-        </div>
-      </a>
-      <%= link_to estabelecimentos_path, class: 'lnk', data: { turbolinks: false } do %>
-        <div class="item">
-          <%= image_tag("estabelecimento.png", :class => "item-img") %>
-          <h3 class="item-title">Estabelecimentos</h3>
-          <p class="item-descript">
-            Informações gerais coletadas nos dados de internações hospitalares realizadas em estabelecimentos de saúde do município a partir de suas especialidades.
-          </p>
-        </div>
-      <% end %>
-      <a href="<%= dados_gerais_path %>">
-        <div class="item">
-          <%= image_tag("dadosGerais.png",:class => "item-img") %>
-          <h3 class="item-title">Dados Gerais</h3>
-          <p class="item-descript">
-            Análise e resumo  de informações obtidas a partir dos dados de internações hospitalares, apresentadas de forma visual.
-          </p>
-        </div>
-      </a>
-      <a href="<%= about_path %>">
-        <div class="item">
-          <%= image_tag("about.png",:class => "item-img") %>
-          <h3 class="item-title">Sobre o projeto</h3>
-          <p class="item-descript">
-            Conheça o projeto, informações tecnicas e a fonte dos dados, bem como a equipe do Universidade de São Paulo, Universidade Federal de São Paulo e Secretaria Municipal de Saúde que estão desenvolvendo o projeto.
-          </p>
-        </div>
-      </a>
+  <div class="main">
+    <div class="data-row">
+      <div class="data">
+        <p class="data-num" id="procedure-data">0</p>
+        <p class="data-label">Internações Hospitalares</p>
+      </div>
+      <div class="data">
+        <p class="data-num" id="hospital-data">0</p>
+        <p class="data-label">Estabelecimentos de Saúde</p>
+      </div>
+      <div class="data">
+        <p class="data-num" id="spec-data">0</p>
+        <p class="data-label">Especialidades</p>
+      </div>
+      <div class="data">
+        <p class="data-num" id="desloc-data">0 km</p>
+        <p class="data-label">Média de Deslocamento</p>
+      </div>
     </div>
+    <div class="container">
+      <h2 class="section"> SOBRE </h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+         Vivamus sed luctus est, commodo luctus enim.
+         Fusce quis nisl cursus, porttitor augue a, accumsan quam.
+         Donec dignissim quam non laoreet maximus.
+         Praesent imperdiet dui id orci sagittis, vitae fermentum odio gravida.
+         Phasellus dolor mauris, varius a lectus nec, viverra convallis ipsum.
+       </p>
 
+      <h2 class="section"> SERVIÇOS </h2>
+
+      <div class="grid">
+        <a href="<%= busca_path %>">
+          <div class="item">
+            <%= image_tag("buscaAvancada.png",:class => "item-img") %>
+            <h3 class="item-title">Busca Avançada</h3>
+            <p class="item-descript">
+              Consulta de internações hospitalares, a partir de certos parâmetros de interesse, com a localização de ocorrência georreferenciada.
+            </p>
+          </div>
+        </a>
+        <%= link_to estabelecimentos_path, class: 'lnk', data: { turbolinks: false } do %>
+          <div class="item">
+            <%= image_tag("estabelecimento.png", :class => "item-img") %>
+            <h3 class="item-title">Estabelecimentos</h3>
+            <p class="item-descript">
+              Informações gerais coletadas nos dados de internações hospitalares realizadas em estabelecimentos de saúde do município a partir de suas especialidades.
+            </p>
+          </div>
+        <% end %>
+        <a href="<%= dados_gerais_path %>">
+          <div class="item">
+            <%= image_tag("dadosGerais.png",:class => "item-img") %>
+            <h3 class="item-title">Dados Gerais</h3>
+            <p class="item-descript">
+              Análise e resumo  de informações obtidas a partir dos dados de internações hospitalares, apresentadas de forma visual.
+            </p>
+          </div>
+        </a>
+        <a href="<%= about_path %>">
+          <div class="item">
+            <%= image_tag("about.png",:class => "item-img") %>
+            <h3 class="item-title">Sobre o projeto</h3>
+            <p class="item-descript">
+              Conheça o projeto, informações tecnicas e a fonte dos dados, bem como a equipe do Universidade de São Paulo, Universidade Federal de São Paulo e Secretaria Municipal de Saúde que estão desenvolvendo o projeto.
+            </p>
+          </div>
+        </a>
+      </div>
 </div>
 <footer class="rodape">
   <div class="footer-container">
@@ -89,8 +117,7 @@
 </footer>
 
 <script>
-  $(document).ready(showDivs);
+  // $(document).ready(showDivs);
   $(document).ready(getDataHomePage);
   $(document).ready(window.addEventListener('scroll', scrollBanner));
-  window.addEventListener('scroll', scrollBanner);
 </script>
