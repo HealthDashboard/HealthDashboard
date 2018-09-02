@@ -171,9 +171,9 @@ function markerClick(e) {
     sexp_var["M"] = "Masculino";
     sexp_var["F"] = "Feminino";
     id = e.target.options.id
-    var procedure_info_path = ["/procedure/procedure_info", id].join("/");
+    var proceduresInfo_path = ["/procedure/proceduresInfo", id].join("/");
     var text_marker = ""
-    $.getJSON(procedure_info_path, function(procedure) {
+    $.getJSON(proceduresInfo_path, function(procedure) {
         text_marker += "<strong>Sexo: </strong>" + sexp_var[procedure[0].gender] + "<br>";
         text_marker +=  "<strong>Idade: </strong>" + procedure[0].age_number + "<br>";
         text_marker += "<strong>CID: </strong>" + procedure[0].cid_primary + "<br>";

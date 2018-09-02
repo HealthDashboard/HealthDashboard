@@ -2,7 +2,8 @@
 <div class="container">
 <div class = "row">
     <%= javascript_tag do %>
-      window.MAX_SLIDERS = '<%= $MAX_SLIDERS.inspect.html_safe %>';
+      window.MAX_SLIDERS = '<%= @MAX_SLIDERS.inspect.html_safe %>';
+      window.NUM_FILTERS = '<%= @NUM_FILTERS.inspect.html_safe %>';
     <% end %>
     <div id="map-affix" class = "col-sm-9 affix">
         <div class = "map-wrapper" id = "procedure_map"> </div>
@@ -191,7 +192,7 @@
                                       <label id="label_median_slider_<%= index %>" class="label-median"></label>
                                   </div>
                                   <div class="col-sm-1 left" style = "text-align: left" id="text-left">
-                                      <span id="slider_<%= index %>_max"><input id="input_slider_<%= index %>_max" class="max-number" type="number" name="maxSlider" value="<%= $MAX_SLIDERS[index].to_s %>" onchange="inputSlider()" min="0"></span>
+                                      <span id="slider_<%= index %>_max"><input id="input_slider_<%= index %>_max" class="max-number" type="number" name="maxSlider" value="<%= @MAX_SLIDERS[index].to_s %>" onchange="inputSlider()" min="0"></span>
                                   </div>
                               </div>
                           </div>

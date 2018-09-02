@@ -29,27 +29,27 @@ Rails.application.routes.draw do
 
   get '/procedure/health_centres', to: 'procedure#health_centres'
   get '/procedure/specialties', to: 'procedure#specialties'
-  get 'procedure/procedure_info/:id', to: 'procedure#procedure_info'
-  # get '/procedure/quartiles', to: 'procedure#procedure_quartiles'
+  get 'procedure/proceduresInfo/:id', to: 'procedure#proceduresInfo'
+  # get '/procedure/quartiles', to: 'procedure#proceduresQuartiles'
 
   get '/about', to: 'application#about'
 
 
   resources :procedure do
-    get :health_centres_procedure, on: :collection
-    get :procedures_by_hc, on: :collection
-    get :procedures_per_month, on: :collection
-    get :procedures_per_health_centre, on: :collection
-    get :procedures_per_specialties, on: :collection
-    get :procedures_distance, on: :collection
-    get :procedures_total, on: :collection
+    get :healthCentresCnes, on: :collection
+    get :proceduresByHealthCentre, on: :collection
+    get :proceduresPerMonth, on: :collection
+    get :proceduresPerHealthCentre, on: :collection
+    get :proceduresPerSpecialties, on: :collection
+    get :proceduresDistance, on: :collection
+    get :proceduresTotal, on: :collection
     get :download, on: :collection
     get :update_session, on: :collection
-    get :procedures_latlong, on: :collection
-    get :procedures_distance_group,  on: :collection
-    get :procedure_quartiles, on: :collection
-    get :max_values, on: :collection
-    get :procedure_large_cluster, on: :collection
-    get :procedure_setor, on: :collection 
+    get :proceduresLatLong, on: :collection
+    get :proceduresDistanceGroup,  on: :collection
+    get :proceduresQuartiles, on: :collection
+    get :proceduresMaxValues, on: :collection
+    get :proceduresClusterPoints, on: :collection
+    get :proceduresSetorCensitario, on: :collection 
   end
 end

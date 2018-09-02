@@ -1,24 +1,23 @@
 class ProcedureController < ApplicationController
-	# Cons, AVOID USING NUMBERS, make a constant instead
-	NUM_FILTERS = 19
-	$MAX_SLIDERS = [351,148,99,351,110786.71.ceil,52.4832033827607.ceil]
+	before_action :updateSession, :getProcedures, only: [:proceduresDistanceGroup, :proceduresPerMonth,
+		:proceduresPerHealthCentre, :proceduresPerSpecialties, :proceduresDistance, :proceduresTotal, 
+		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario]
 
-	# GET /
-	# Params: None
-	# Return: "busca avancada" page
-	def show
+	def initialize
+		# Cons, AVOID USING NUMBERS, make a constant instead
+		@NUM_FILTERS = 19
+		@MAX_SLIDERS = [351,148,99,351,110786.71.ceil,52.4832033827607.ceil]
+
+		@procedures = nil
+
 		@procedure = ["Estabelecimento de ocorrência", "Competência (aaaamm)", "Grupo do procedimento autorizado", "Especialidade do leito", "Caráter do atendimento", 
-		"Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Complexidade", "Tipo de financiamento"]
+					  "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Complexidade", "Tipo de financiamento"]
 		@patient_info = ["Faixa etária", "Raça/Cor", "Nível de instrução"]
 		@establishment = ["Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Gestão"]
 
 		#'Hints' to display on each label
-		@titles_filters = ["Estabelecimento do atendimento prestado.", "Faixa etária do paciente.", "Especialidade do leito de internação.", "Caráter da internação.", "Raça/Cor do paciente.", "Grau de instrução do paciente.", "Ano/mês de processamento da AIH. Ex: 201506(junho de 2015).",
-			"Grupo do procedimento.", "Motivo da internação.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.",
-			"Tipo de financiamento da internação.", "Divisão administrativa da internação.", "Subprefeitura do estabelecimento.", "Supervisão técnica de saúde.", "Coordenadoria regional de saúde.", "Nível de atenção para realização do procedimento.", "Secretaria responsável."]
-		
 		@titles_procedure_filters = ["Estabelecimento do atendimento prestado.", "Ano/mês de processamento da AIH. Ex: 201506(junho de 2015).", "Grupo do procedimento autorizado ao paciente.", "Especialidade do leito de internação.", "Caráter da internação.",
-			"Motivo da internação.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.", "Nível de atenção para realização do procedimento.", "Tipo de financiamento da internação."]
+									 "Motivo da internação.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.", "Nível de atenção para realização do procedimento.", "Tipo de financiamento da internação."]
 
 		@titles_patient_info_filters = ["Faixa etária do paciente.", "Raça/Cor do paciente.", "Grau de instrução do paciente."]
 
@@ -30,230 +29,221 @@ class ProcedureController < ApplicationController
 		@titles_sliders = ["Total geral de dias de internação.", "Diárias de unidade de tratamento intensiva.", "Diárias de unidade intermediária.", "Total de dias de internação.", "Valor do serviço.", "Distância de deslocamento do paciente."]
 
 		# Values for filters
-		health_centres = JSON.parse(File.read(Rails.root.join('public/health_centres.json')))
-		age_group = JSON.parse(File.read(Rails.root.join('public/age_group.json')))
-		specialties = JSON.parse(File.read(Rails.root.join('public/specialties.json')))
-		treatments = [
+		@health_centres = JSON.parse(File.read(Rails.root.join('public/health_centres.json')))
+		@age_group = JSON.parse(File.read(Rails.root.join('public/age_group.json')))
+		@specialties = JSON.parse(File.read(Rails.root.join('public/specialties.json')))
+		@treatments = [
 			{ "id" => "1", "text" => "ELETIVO" },
 			{ "id" => "2", "text" => "URGENCIA" },
 			{ "id" => "3", "text" => "ACIDENTE NO LOCAL DE TRABALHO OU A SERVICO DA EMPRESA" },
 			{ "id" => "5", "text" => "OUTROS TIPOS DE ACIDENTE DE TRANSITO" },
 			{ "id" => "6", "text" => "OUTROS TIPOS DE LESOES E ENVENENAMENTOS POR AGENTES QUIMICOS OU FISICOS" },
 		];
-		race = JSON.parse(File.read(Rails.root.join('public/race.json')))
-		lv_instruction = JSON.parse(File.read(Rails.root.join('public/lv_instruction.json')))
-		cmpt = JSON.parse(File.read(Rails.root.join('public/cmpt.json')))
-		proce_re = JSON.parse(File.read(Rails.root.join('public/proc_re.json')))
-		cid = JSON.parse(File.read(Rails.root.join('public/CID10.json')))
-		finance = JSON.parse(File.read(Rails.root.join('public/finance.json')))
-		da = JSON.parse(File.read(Rails.root.join('public/DA.json')))
-		pr = JSON.parse(File.read(Rails.root.join('public/PR.json')))
-		sts = JSON.parse(File.read(Rails.root.join('public/STS.json')))
-		crs = JSON.parse(File.read(Rails.root.join('public/CRS.json')))
-		complexity = JSON.parse(File.read(Rails.root.join('public/complexity.json')))
-		gestor = [{"id" => "00", "text" => "ESTADUAL"},
+		@race = JSON.parse(File.read(Rails.root.join('public/race.json')))
+		@lv_instruction = JSON.parse(File.read(Rails.root.join('public/lv_instruction.json')))
+		@cmpt = JSON.parse(File.read(Rails.root.join('public/cmpt.json')))
+		@proce_re = JSON.parse(File.read(Rails.root.join('public/proc_re.json')))
+		@cid = JSON.parse(File.read(Rails.root.join('public/CID10.json')))
+		@finance = JSON.parse(File.read(Rails.root.join('public/finance.json')))
+		@da = JSON.parse(File.read(Rails.root.join('public/DA.json')))
+		@pr = JSON.parse(File.read(Rails.root.join('public/PR.json')))
+		@sts = JSON.parse(File.read(Rails.root.join('public/STS.json')))
+		@crs = JSON.parse(File.read(Rails.root.join('public/CRS.json')))
+		@complexity = JSON.parse(File.read(Rails.root.join('public/complexity.json')))
+		@gestor = [{"id" => "00", "text" => "ESTADUAL"},
 				  {"id" => "01", "text" => "MUNICIPAL"}];
 
-		@options = [health_centres, age_group, specialties, treatments, race, lv_instruction, cmpt, proce_re, cid, cid, cid, cid, finance, da, pr, sts, crs, complexity, gestor]
-		@options_procedure = [health_centres, cmpt, proce_re, specialties, treatments, cid, cid, cid, cid, complexity, finance]
-		@options_patient_info = [age_group, race, lv_instruction]
-		@options_establishment = [da, pr, sts, crs, gestor]
+		@options_procedure = [@health_centres, @cmpt, @proce_re, @specialties, @treatments, @cid, @cid, @cid, @cid, @complexity, @finance]
+		@options_patient_info = [@age_group, @race, @lv_instruction]
+		@options_establishment = [@da, @pr, @sts, @crs, @gestor]
 
-	end
-
-	# Ajax call, no template to render on browser
-	# To pass the data add to your ajax call data = {values}
-	# GET /procedure/update_session{params}
-	# Params: [filters values array]
-	# Return: Session variable is updated
-	def update_session
-		if params[:hasData] != nil
-			session[:hasData] = true
-		end
-
-		if params[:send_all] == "True"
-			session[:send_all] = "True"
-		else
-			session[:send_all] = "False"
-		end
-
-		if session[:filters] == nil || params[:filters] != nil
-			session[:filters] = Array.new(NUM_FILTERS)
-		end
-
-		if params[:filters] != nil
-			params[:filters].each_with_index do |filter, i|
-					session[:filters][i] = filter.split(";") unless filter == ""
-			end
-		end
-
-		if session[:sliders] == nil || params[:sliders] != nil
-			session[:sliders] = Array.new(6)
-		end
-
-		if params[:sliders] != nil
-			params[:sliders].each_with_index do |slider, i|
-				session[:sliders][i] = [slider[1][0].to_i, slider[1][1].to_i]
-			end
-		end
-
-		if params[:genders] != nil
-			session[:genders] = params[:genders].to_s
-			session[:genders] = session[:genders].split(",")
-		end
-
-		if params[:start_date] != nil && params[:start_date].to_s != ""
-			session[:start_date] = params[:start_date]
-			session[:start_date] = Date.parse session[:start_date]
-		elsif params[:start_date].to_s == ""
-			session[:start_date] = nil
-		end
-
-		if params[:end_date] != nil && params[:end_date].to_s != ""
-			session[:end_date] = params[:end_date]
-			session[:end_date] = Date.parse session[:end_date]
-		elsif params[:end_date].to_s == ""
-			session[:end_date] = nil
-		end
-		return
-	end
-
-	# NO ROUTE, intern method
-	# Params: [filters values array]
-	# Return: procedures based on the values passed in your last update_session
-	def getProcedures
-		filters_name = ["cnes_id", "cmpt", "proce_re", "specialty_id", "treatment_type", "cid_primary", "cid_secondary", "cid_secondary2",
+		@filters_name = ["cnes_id", "cmpt", "proce_re", "specialty_id", "treatment_type", "cid_primary", "cid_secondary", "cid_secondary2",
 			"cid_associated", "complexity", "finance", "age_code", "race", "lv_instruction", "DA", "PR", "STS", "CRS", "gestor_ide"]
 		
-		sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
-
-		procedures = nil
-
-		update_session()
-
-		if session[:send_all] == "True"
-			return Procedure.all
-		end
-
-		if session[:genders] != nil
-			procedures = session[:genders].length < 2 ? Procedure.where(gender: session[:genders]) : procedures = Procedure.all
-		end
-
-		filters_name.each_with_index do |filter, i|
-			if session[:filters][i] == nil
-				next
-			end
-
-			if procedures == nil
-				procedures = Procedure.where(filter => session[:filters][i])
-			else
-				procedures = procedures.where(filter => session[:filters][i])
-			end
-		end
-
-		sliders_name.each_with_index do |slider, i|
-			if session[:sliders][i] == nil
-				next
-			end
-
-			min =  session[:sliders][i][0]
-			max = session[:sliders][i][1]
-			if max == $MAX_SLIDERS[i]
-					procedures = procedures.where(slider + ' >= ?', min) unless min == 0
-			else
-				procedures = procedures.where(slider + ' >= ? AND ' + slider + ' <= ?', min, max)
-			end
-		end
-
-		if session[:start_date] != nil && session[:end_date] != nil
-			if procedures != nil
-				procedures = procedures.where('date BETWEEN ? AND ?', session[:start_date], session[:end_date])
-			else
-				procedures = Procedure.where('date BETWEEN ? AND ?', session[:start_date], session[:end_date])
-			end
-
-		end
-
-		if procedures == nil
-			return nil
-		end
-		return procedures.count > 0 ? procedures : nil
+		@sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
+		super
 	end
 
-
-	# GET /procedure/procedures_distance_group{params}
+	# GET /procedure/proceduresDistanceGroup{params}
 	# Params: [filters values array]
 	# Return: Hash of {interval => count_of_procedures}
-	def procedures_distance_group
-		procedures = getProcedures()
+	def proceduresDistanceGroup
+		render json: "Bad request", status: 400 and return unless @procedures != nil
+
 		result = {"<= 1 Km" => procedures.where("distance <= ?", 1).count, "> 1 Km e <= 5 Km" =>  procedures.where("distance > ? AND distance <= ?", 1, 5).count, "> 5 Km e <= 10 Km" => procedures.where("distance > ? AND distance <= ?", 5, 10).count, "> 10 Km" => procedures.where("distance > ?", 10).count}
-		render json: result
+		render json: result, status: 200
 	end
 
-	# GET /procedure/procedures_per_month{params}
+	# GET /procedure/proceduresPerMonth{params}
 	# Params: [filters values array]
-	# Return: An array of [procedures_per_month]
-	def procedures_per_month
-		procedures = getProcedures()
+	# Return: An array of [proceduresPerMonth]
+	def proceduresPerMonth
+		render json: "Bad request", status: 400 and return unless @procedures != nil
+
 		result = Array.new(12)
 		year = 2015
 		procedures.where("date >= ? AND date <= ?", "2015-01-01", "2015-12-31")
 		.group_by_month(:date).count.each_with_index do |d, i|
 			result[i] = [year, i+1, d[1]]
 		end
-		render json: result
+		render json: result, status: 200
 	end
 
-	# GET /procedure/procedures_per_health_centre{params}
+	# GET /procedure/proceduresPerHealthCentre{params}
 	# Params: [filters values array]
 	# Return: Hash of {helath_centre => total_of_procedures}
-	def procedures_per_health_centre
-		procedures = getProcedures()
+	def proceduresPerHealthCentre
+		render json: "Bad request", status: 400 and return unless @procedures != nil
+
 		result = {}
 		procedures.group(:cnes_id).order("count_id DESC").limit(10)
 				  .count(:id).each_with_index do |p, i|
 				result[HealthCentre.find_by(cnes: p[0]).name.to_s] = p[1].to_i
 		end
-		render json: result
+		render json: result, status: 200
 	end
 
-	# GET /procedure/procedures_per_specialties{params}
+	# GET /procedure/proceduresPerSpecialties{params}
 	# Params: [filters values array]
 	# Return: Hash of {specialty => total_of_procedures}
-	def procedures_per_specialties
-		procedures = getProcedures()
+	def proceduresPerSpecialties
+		render json: "Bad request", status: 400 and return unless @procedures != nil
+
 		procedures = procedures.where("specialty_id < ?", 10).order(:specialty_id).group(:specialty_id).count
 		result = {}
 		procedures.each do |p|
 			result[Specialty.find_by(id: p[0]).name] = p[1].to_i
 		end
-		render json: result
+		render json: result, status: 200
 	end
 
-	# GET /procedure/procedures_distance{params}
+	# GET /procedure/proceduresDistance{params}
 	# Params: [filters values array]
 	# Return: Hash of {specialty => distance_average}
-	def procedures_distance
-		procedures = getProcedures()
+	def proceduresDistance
+		render json: "Bad request", status: 400 and return unless @procedures != nil
+
 		result = {}
 		procedures.where("specialty_id < ?", 10).order(:specialty_id).group(:specialty_id)
 				  .average(:distance).each_with_index do |p, i|
 				 	result[Specialty.find_by(id: p[0]).name.to_s] = p[1].round(2).to_f
 		end
-		render json: result
+		render json: result, status: 200
 	end
 
-	# GET /procedure/procedures_total{params}
+	# GET /procedure/proceduresTotal{params}
 	# Params: [filters values array]
 	# Return: Procedures counter
-	def procedures_total
-		procedures = getProcedures()
+	def proceduresTotal
+		render json: "Bad request", status: 400 and return unless @procedures != nil
 
-		if procedures == nil
-			render json: nil, status: 200
-		else
-			render json: getProcedures().count, status: 200
+		render json: @procedures.count, status: 200
+	end
+
+	# GET /procedure/proceduresLatLong/{params}
+	# Params: [filters values array]
+	# Return: An array of [proceduresLatLong]
+	def proceduresLatLong
+		render json: "Bad request", status: 400 and return unless @procedures != nil
+
+		latlong = @procedures.pluck(:lat, :long, :id);
+		render json: latlong, status: 200
+	end
+
+	# GET /procedure/proceduresInfo/{params}
+	# Params: id
+	# Return: Info about the procedure with the given id 
+	def proceduresInfo
+		info = Procedure.where(id: params[:id]).select(:cnes_id, :gender, :age_number, :cid_primary, :CRS, :date, :distance, :lat, :long).to_a
+
+		render json: info, status:  200
+	end
+
+	# Handles clustering for large amount of data
+	# GET /procedure/proceduresClusterPoints/{params}
+	# Params: [filters values array]
+	# Return: An array of [lat, long, number_of_pacients]
+	def proceduresClusterPoints
+		render json: "Bad request", status: 400 and return unless @procedures != nil
+
+		clusters = @procedures.group(:lat, :long).count.to_a.flatten.each_slice(3) #Convert hash {[lat, long] => count} to array [lat, long, count]
+
+		render json: clusters, status: 200
+	end
+
+	# GET /procedure/proceduresSetorCensitario/{params}
+	# Params: [filters values array]
+	# Return: An array of [ids]
+	def proceduresSetorCensitario
+		render json: "Bad request", status: 400 and return unless @procedures != nil
+
+		setor_cen = @procedures.where(:lat => params[:lat], :long => params[:long]).pluck(:id)
+		render json: setor_cen, status: 200
+	end
+
+	# GET /procedure/proceduresMaxValues/{params}
+	# Params: [filters values array]
+	# Return: An array of [max for the filters values]
+	def proceduresMaxValues
+		if params[:send_all] == "True"
+			render json: [351,148,99,351,110786.71.ceil,52.4832033827607.ceil], status: 200 and return #default value for faster load time
 		end
+
+		getProcedures()
+		render json: "Bad request", status: 400 and return unless @procedures != nil
+
+		max = []
+		[:days, :days_uti, :days_ui, :days_total, :val_total, :distance].each do |filter|
+			maximum  = @procedures.maximum(filter)
+			if maximum != nil
+				max.append(maximum.ceil)
+			else
+				max.append(0)
+			end
+		end
+		render json: max, status: 200
+	end
+
+	# GET /procedure/proceduresQuartiles
+	# Params: [filter values array]
+	# Return: An array of [q1, q2(median), q3 for the filter values]
+	def proceduresQuartiles
+		params.require(:send_all)
+
+		if params[:send_all] == "True"
+			render json: [[2, 3.0, 6], [0, 0.0, 0], [0, 0.0, 0], [2, 3.0, 6], [0.0, 0.0, 0.0], [2.34493573228911, 4.96823522661767, 10.4606915236337]], status: 200 and return # default value for faster load time
+		end
+
+		getProcedures()
+		render json: "Bad request", status: 400 and return unless @procedures != nil
+
+		quartiles = []
+		# 1 - days(Total Geral de Diárias)
+		days = @procedures.group(:days).order(:days).count
+		quartiles.append(quartiles_calc(days))
+		days = nil
+		# 2 - days_uti(Diárias UTI)
+		days_uti = @procedures.group(:days_uti).order(:days_uti).count
+		quartiles.append(quartiles_calc(days_uti))
+		days_uti = nil
+		# 3 - days_ui(Diárias UI)
+		days_ui = @procedures.group(:days_ui).order(:days_ui).count
+		quartiles.append(quartiles_calc(days_ui))
+		days_ui = nil
+		# 4 - days_total(Dias de permanência)
+		days_total = @procedures.group(:days_total).order(:days_total).count
+		quartiles.append(quartiles_calc(days_total))
+		days_total = nil
+		# 5 - val_total(Valor da Parcela)
+		val_total = @procedures.group(:val_total).order(:val_total).count
+		quartiles.append(quartiles_calc(val_total))
+		val_total = nil
+		# 6 - distance(Distância de Deslocamento)
+		distance = @procedures.group(:distance).order(:distance).count
+		quartiles.append(quartiles_calc(distance))
+		distance = nil
+
+		render json: quartiles, status: 200
 	end
 
 	# Download csv file
@@ -303,96 +293,133 @@ class ProcedureController < ApplicationController
 		response.status = 200
 	end
 
-	# GET /procedure/health_centres_procedure{params}
+	# GET /procedure/healthCentresCnes{params}
 	# Params: Cnes numbers
 	# Return: An array of [health_centres]
-	def health_centres_procedure
+	def healthCentresCnes
 		cnes = params[:cnes].to_s
 		cnes = cnes.split(",")
 		health_centres = HealthCentre.where(cnes: cnes).pluck(:lat, :long)
-		render json: health_centres
+		render json: health_centres, status: 200
 	end
 
-	# GET /procedure/procedures_by_hc/{params}
+	# GET /procedure/proceduresByHealthCentre/{params}
 	# Params: Cnes number
-	# Return: An array of [procedures_per_health_centre]
-	def procedures_by_hc
+	# Return: An array of [proceduresPerHealthCentre]
+	def proceduresByHealthCentre
 		procedures = Procedure.where(cnes_id: params[:cnes].to_s)
 		render json: procedures.to_a
 	end
 
-	# GET /procedure/procedures_latlong/{params}
+private
 	# Params: [filters values array]
-	# Return: An array of [procedures_latlong]
-	def procedures_latlong
-		procedures = getProcedures().pluck(:lat, :long, :id);
-		render json: procedures
-	end
-
-	# GET /procedure/procedure_info/{params}
-	# Params: id
-	# Return: Info about the procedure with the given id 
-	def procedure_info
-		procedure = Procedure.where(id: params[:id]).select(:cnes_id, :gender, :age_number, :cid_primary, :CRS, :date, :distance, :lat, :long).to_a
-
-		render json: procedure
-	end
-
-	# Handles clustering for large amount of data
-	# GET /procedure/procedure_large_cluster/{params}
-	# Params: [filters values array]
-	# Return: An array of [lat, long, number_of_pacients]
-	def procedure_large_cluster
-		procedures = getProcedures()
-
-		if procedures == nil
-			render json: procedures, status: 400
-			return
+	# Return: Session variable is updated
+	def updateSession
+		if params[:hasData] != nil
+			session[:hasData] = true
 		end
 
-		procedures = procedures.group(:lat, :long).count.to_a.flatten.each_slice(3).to_a #Convert hash {[lat, long] => count} to array [lat, long, count]
-
-		render json: procedures, status: 200
-	end
-
-	# GET /procedure/procedure_setor/{params}
-	# Params: [filters values array]
-	# Return: An array of [ids]
-	def procedure_setor
-		procedures = getProcedures()
-
-		if procedures == nil
-			render json: procedures, status: 400
-			return
-		end
-
-		procedures = procedures.where(:lat => params[:lat], :long => params[:long]).pluck(:id)
-		render json: procedures, status: 200
-	end
-
-	# GET /procedure/max_values/{params}
-	# Params: [filters values array]
-	# Return: An array of [max for the filters values]
-	def max_values
 		if params[:send_all] == "True"
-			render json: [351,148,99,351,110786.71.ceil,52.4832033827607.ceil] #default value for faster load time
-			return
+			session[:send_all] = "True"
+		else
+			session[:send_all] = "False"
 		end
 
-		procedure = getProcedures()
-		max = []
-		[:days, :days_uti, :days_ui, :days_total, :val_total, :distance].each do |filter|
-			maximum  = procedure.maximum(filter)
-			if maximum != nil
-				max.append(maximum.ceil)
-			else
-				max.append(0)
+		if session[:filters] == nil || params[:filters] != nil
+			session[:filters] = Array.new(@NUM_FILTERS)
+		end
+
+		if params[:filters] != nil
+			params[:filters].each_with_index do |filter, i|
+					session[:filters][i] = filter.split(";") unless filter == ""
 			end
 		end
-		render json: max
+
+		if session[:sliders] == nil || params[:sliders] != nil
+			session[:sliders] = Array.new(6)
+		end
+
+		if params[:sliders] != nil
+			params[:sliders].each_with_index do |slider, i|
+				session[:sliders][i] = [slider[1][0].to_i, slider[1][1].to_i]
+			end
+		end
+
+		if params[:genders] != nil
+			session[:genders] = params[:genders].to_s
+			session[:genders] = session[:genders].split(",")
+		end
+
+		if params[:start_date] != nil && params[:start_date].to_s != ""
+			session[:start_date] = params[:start_date]
+			session[:start_date] = Date.parse session[:start_date]
+		elsif params[:start_date].to_s == ""
+			session[:start_date] = nil
+		end
+
+		if params[:end_date] != nil && params[:end_date].to_s != ""
+			session[:end_date] = params[:end_date]
+			session[:end_date] = Date.parse session[:end_date]
+		elsif params[:end_date].to_s == ""
+			session[:end_date] = nil
+		end
+		return
 	end
 
-	# NO Route, intern method
+	# Params: [filters values array]
+	# Return: procedures based on the values passed in your last update_session
+	def getProcedures
+		@procedures = nil
+
+		if session[:send_all] == "True"
+			@procedures = Procedure.all
+		end
+
+		if session[:genders] != nil
+			@procedures = session[:genders].length < 2 ? Procedure.where(gender: session[:genders]) : @procedures = Procedure.all
+		end
+
+		@filters_name.each_with_index do |filter, i|
+			if session[:filters][i] == nil
+				next
+			end
+
+			if @procedures == nil
+				@procedures = Procedure.where(filter => session[:filters][i])
+			else
+				@procedures = @procedures.where(filter => session[:filters][i])
+			end
+		end
+
+		@sliders_name.each_with_index do |slider, i|
+			if session[:sliders][i] == nil
+				next
+			end
+
+			min =  session[:sliders][i][0]
+			max = session[:sliders][i][1]
+			if max == @MAX_SLIDERS[i]
+					@procedures = @procedures.where(slider + ' >= ?', min) unless min == 0
+			else
+				@procedures = @procedures.where(slider + ' >= ? AND ' + slider + ' <= ?', min, max)
+			end
+		end
+
+		if session[:start_date] != nil && session[:end_date] != nil
+			if @procedures != nil
+				@procedures = @procedures.where('date BETWEEN ? AND ?', session[:start_date], session[:end_date])
+			else
+				@procedures = Procedure.where('date BETWEEN ? AND ?', session[:start_date], session[:end_date])
+			end
+
+		end
+
+		if @procedures == nil
+			return
+		end
+		@procedures = @procedures.count > 0 ? @procedures : nil
+	end
+
 	# Params: A hash of {value => counter}
 	# Return: The median value for the hash table
 	def quartiles_calc(groups)
@@ -433,53 +460,5 @@ class ProcedureController < ApplicationController
 			end
 		end
 		return quartiles
-	end
-
-	# GET /procedure/procedure_quartiles
-	# Params: [filter values array]
-	# Return: An array of [q1, q2(median), q3 for the filter values]
-	def procedure_quartiles
-		params.require(:send_all)
-
-		if params[:send_all] == "True"
-			render json: [[2, 3.0, 6], [0, 0.0, 0], [0, 0.0, 0], [2, 3.0, 6], [0.0, 0.0, 0.0], [2.34493573228911, 4.96823522661767, 10.4606915236337]], status: 200 # default value for faster load time
-			return
-		end
-
-		procedure = getProcedures()
-		quartiles = []
-		# 1 - days(Total Geral de Diárias)
-		days = procedure.group(:days).order(:days).count
-		quartiles.append(quartiles_calc(days))
-		days = nil
-		# 2 - days_uti(Diárias UTI)
-		days_uti = procedure.group(:days_uti).order(:days_uti).count
-		quartiles.append(quartiles_calc(days_uti))
-		days_uti = nil
-		# 3 - days_ui(Diárias UI)
-		days_ui = procedure.group(:days_ui).order(:days_ui).count
-		quartiles.append(quartiles_calc(days_ui))
-		days_ui = nil
-		# 4 - days_total(Dias de permanência)
-		days_total = procedure.group(:days_total).order(:days_total).count
-		quartiles.append(quartiles_calc(days_total))
-		days_total = nil
-		# 5 - val_total(Valor da Parcela)
-		val_total = procedure.group(:val_total).order(:val_total).count
-		quartiles.append(quartiles_calc(val_total))
-		val_total = nil
-		# 6 - distance(Distância de Deslocamento)
-		distance = procedure.group(:distance).order(:distance).count
-		quartiles.append(quartiles_calc(distance))
-		distance = nil
-
-		render json: quartiles
-	end
-
-	def quartiles(array)
-		median = array.median
-		q1 = array.value_from_percentile(25)
-		q3 = array.value_from_percentile(75)
-		return [q1, median, q3]
 	end
 end

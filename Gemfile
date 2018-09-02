@@ -32,9 +32,10 @@ gem 'geocoder'
 # Using Open Street maps
 gem 'leaflet-rails'
 
+# Clusting with leaflet Marker cluster
 gem 'rails-assets-leaflet.markercluster', source: 'https://rails-assets.org'
 
-#
+# Statistics gem
 gem 'descriptive-statistics'
 
 #Make the post/get requests
@@ -42,41 +43,51 @@ gem 'rest-client'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.1'
-# Use sqlite3 as the database for Active Record
-# gem 'sqlite3'
+
 # Download csv files
 gem 'postgres-copy'
+
 # Read JSON files
 gem 'json', '~> 1.8.3'
+
 #Use postgres
 gem 'pg'
+
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
+
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
+
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
-# See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
+
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 
+# Turbolinks working together with jquery
 gem 'jquery-turbolinks'
+
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
+
+# Testing
+gem 'rails-controller-testing'
+
+# See https://github.com/rails/execjs#readme for more supported runtimes
+# gem 'therubyracer', platforms: :ruby
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-
 # Autocomplete gem
 # gem 'rails-jquery-autocomplete', '~> 1.0', '>= 1.0.3'
-
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

@@ -25,7 +25,7 @@ var heat, cluster, shape, clean_up_cluster, max;
 
 var id;
 
-NUM_FILTERS = 19;
+// NUM_FILTERS = 19;
 
 //** Display name for printing **//
 var filters_print = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Grupo étnico", "Nível de instrução", "Competência",
@@ -198,7 +198,7 @@ function buscar(data) {
 
     // handling all cluster now
     health_centres_makers(health_centres);
-    handleLargeCluster(map, "procedure/procedure_large_cluster", data, pixels_bounds_cluster, pixels_bounds_heatmap, heatmap_opacity, CustomMarkerOnClick);
+    handleLargeCluster(map, "procedure/proceduresClusterPoints", data, pixels_bounds_cluster, pixels_bounds_heatmap, heatmap_opacity, CustomMarkerOnClick);
 
     // Divida tecnica
     checked = $('input[name=optRadio]:checked', '#radio-list');
@@ -294,7 +294,7 @@ function CustomMarkerOnClick(e) {
             iconUrl: "https://storage.googleapis.com/support-kms-prod/SNP_2752125_en_v0", iconAnchor: [5, 0]
         });
 
-        path = "procedure/procedure_setor"
+        path = "procedure/proceduresSetorCensitario"
 
         list = []
         $.getJSON(path, {lat: marker.latlong[0], long: marker.latlong[1]}, function(procedures){
@@ -333,15 +333,15 @@ function markerOnClick(e) {
     var sexp_var = {};
     sexp_var["M"] = "Masculino";
     sexp_var["F"] = "Feminino";
-    var procedure_info_path = ["/procedure/procedure_info", id].join("/");
+    var proceduresInfo_path = ["/procedure/proceduresInfo", id].join("/");
 
     setVisible(false);
 
     //Only get the data the first time its clicked
     if (e.target.getPopup() === undefined) {
-        $.getJSON(procedure_info_path, function(procedure) {
+        $.getJSON(proceduresInfo_path, function(procedure) {
             cnes = procedure[0].cnes_id;
-            $.getJSON("procedure/health_centres_procedure", {cnes: cnes.toString()}, function(hc_latlong) {
+            $.getJSON("procedure/healthCentresCnes", {cnes: cnes.toString()}, function(hc_latlong) {
                 path_distance_real = "http:\/\/router.project-osrm.org\/route\/v1\/driving\/" 
                 + hc_latlong[0][1] + "," + hc_latlong[0][0] + ";" + procedure[0].long + "," 
                 + procedure[0].lat + "?overview=false";
@@ -375,7 +375,7 @@ function markerOnClick(e) {
 //** Called when a procedure marker is clicked. Show health centres markers on map **//
 function health_centres_makers(health_centres) {
     var health_centre_icon = '/health_centre_icon.png';
-    $.getJSON("procedure/health_centres_procedure", {cnes: health_centres.toString()}, function(result){
+    $.getJSON("procedure/healthCentresCnes", {cnes: health_centres.toString()}, function(result){
         $.each(result, function(index, health_centre){
             create_markers(health_centre, health_centre_icon);
         });
@@ -518,7 +518,7 @@ function print_maps() {
 
 function filters_value(data) {
     var max_hash = {}
-    $.getJSON('/procedure/max_values', data, function(result) {
+    $.getJSON('/procedure/proceduresMaxValues', data, function(result) {
         max_sliders = result;
         $.each(result, function(index, max) {
             slider = "slider_" + index.toString();
@@ -540,7 +540,7 @@ function filters_value(data) {
                 document.getElementById(slider_max).value = slideEvt.value[1];
             });
         });
-        $.getJSON('/procedure/procedure_quartiles', data, function(quartiles) {
+        $.getJSON('/procedure/proceduresQuartiles', data, function(quartiles) {
             for (i = 0; i < 6; i++) {
                 slider = "slider_" + i.toString();
                 if(quartiles[i][1] != parseInt(quartiles[i][1], 10)){
