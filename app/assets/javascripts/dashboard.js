@@ -36,7 +36,7 @@ function init_dashboard_chart() {
 }
 
 function create_dashboard_charts() {
-    create_procedures_per_specialties();
+    create_proceduresPerSpecialties();
     create_specialties_distance_between_patients_hospital();
     create_analise();
     populate_procedures_by_date();
@@ -64,7 +64,7 @@ function animate_legend() {
     });
 }
 
-function create_procedures_per_specialties() {
+function create_proceduresPerSpecialties() {
     var header = ["Especialidades", "Número de Internações", {role: "style" }]
     var chart = new google.visualization.PieChart(document.getElementById("chart_specialties"));
 
@@ -76,7 +76,7 @@ function create_procedures_per_specialties() {
     if (dynamic == false) {
         var specialty_path = "specialties_count"
     } else {
-        var specialty_path = "/procedure/procedures_per_specialties"
+        var specialty_path = "/procedure/proceduresPerSpecialties"
     }
     $.getJSON(specialty_path, data, function(result) {
         draw_chart(header, result, chart, options, specialties_color);
@@ -98,7 +98,7 @@ function create_specialties_distance_between_patients_hospital() {
     if (dynamic == false) {
         var distance_average_path = 'specialties_procedure_distance_average'
     } else {
-        var distance_average_path = '/procedure/procedures_distance'
+        var distance_average_path = '/procedure/proceduresDistance'
     }
     $.getJSON(distance_average_path, data, function(result) {
         draw_chart(header, result, chart, options, specialties_color);
@@ -118,7 +118,7 @@ function create_analise() {
     if (dynamic == false) {
         var path = '/distance_metric.json'
     } else {
-        var path = 'procedure/procedures_distance_group'
+        var path = 'procedure/proceduresDistanceGroup'
     }
     $.getJSON(path, function(result) {
         draw_chart(header, result, chart, options, specialties_color);
@@ -129,7 +129,7 @@ function populate_procedures_by_date() {
     if (dynamic == false) {
         var path = "/procedures_by_date.json";
     } else {
-        var path = "/procedure/procedures_per_month"
+        var path = "/procedure/proceduresPerMonth"
     }
 
     var options = {
@@ -170,7 +170,7 @@ function create_specialties_total() {
     if (dynamic == false) {
         var distance_average_path = 'specialties_count'
     } else {
-        var distance_average_path = '/procedure/procedures_per_specialties'
+        var distance_average_path = '/procedure/proceduresPerSpecialties'
     }
 
     $.getJSON(distance_average_path, data, function(result) {
@@ -223,7 +223,7 @@ function update_rank() {
     if (dynamic == false) {
         $.getJSON('/rank_health_centres.json', create_table_rank);
     } else {
-        $.getJSON('/procedure/procedures_per_health_centre', data, create_table_rank);
+        $.getJSON('/procedure/proceduresPerHealthCentre', data, create_table_rank);
     }
 }
 

@@ -2,7 +2,7 @@ var slideIndex = 1;
 var timeout;
 
 function getDataHomePage() {
-  $.getJSON("procedure/procedures_total", {send_all: "True"}, function(count) {
+  $.getJSON("procedure/proceduresTotal", {send_all: "True"}, function(count) {
     count = count.toLocaleString('pt-BR');
     $("#procedure-data").html(count);
   });
