@@ -89,7 +89,7 @@ def linkTypeHealthCentre
   hc_csv_path = File.join(__dir__, "csv/health_centres_real.csv")
   hc_counter = 0
     CSV.foreach(hc_csv_path, :headers => true) do |row|
-      t = Type.find_by(name: row[5])
+      t = Type.find_by(name: row[6])
       HealthCentre.find_by(cnes: row[0]).types << t
       hc_counter += 1
       print "."

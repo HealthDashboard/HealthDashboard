@@ -47,7 +47,7 @@ gem 'rails', '~> 5.0.1'
 # Download csv files
 gem 'postgres-copy'
 # Read JSON files
-gem 'json'
+gem 'json', '~> 1.8.3'
 #Use postgres
 gem 'pg'
 # Use Puma as the app server
