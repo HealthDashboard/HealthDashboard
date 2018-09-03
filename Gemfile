@@ -26,7 +26,12 @@ gem 'bootstrap-slider-rails'
 # Bootstrap datepicker
 gem 'bootstrap-datepicker-rails'
 
+
+gem 'execjs'
+gem 'therubyracer'
 gem 'autoprefixer-rails'
+
+# Geolocation gem
 gem 'geocoder'
 
 # Using Open Street maps
