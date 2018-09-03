@@ -1,7 +1,11 @@
 class ProcedureController < ApplicationController
 	before_action :updateSession, :getProcedures, only: [:proceduresDistanceGroup, :proceduresPerMonth,
 		:proceduresPerHealthCentre, :proceduresPerSpecialties, :proceduresDistance, :proceduresTotal, 
-		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario]
+		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario, :download]
+	after_action :procedureCleanUp, only: [:proceduresDistanceGroup, :proceduresPerMonth, :proceduresQuartiles,
+		:proceduresPerHealthCentre, :proceduresPerSpecialties, :proceduresDistance, :proceduresTotal, 
+		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario, :proceduresMaxValues, :download]
+	after_action :afterDownload, only: [:download]
 
 	def initialize
 		# Cons, AVOID USING NUMBERS, make a constant instead
@@ -9,6 +13,8 @@ class ProcedureController < ApplicationController
 		@MAX_SLIDERS = [351,148,99,351,110786.71.ceil,52.4832033827607.ceil]
 
 		@procedures = nil
+		@downloadable = nil
+		@enumerator = nil
 
 		@procedure = ["Estabelecimento de ocorrência", "Competência (aaaamm)", "Grupo do procedimento autorizado", "Especialidade do leito", "Caráter do atendimento", 
 					  "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Complexidade", "Tipo de financiamento"]
@@ -82,8 +88,8 @@ class ProcedureController < ApplicationController
 
 		result = Array.new(12)
 		year = 2015
-		procedures.where("date >= ? AND date <= ?", "2015-01-01", "2015-12-31")
-		.group_by_month(:date).count.each_with_index do |d, i|
+		@procedures.where("date >= ? AND date <= ?", "2015-01-01", "2015-12-31")
+		.group_by_month(:date).count.each.with_index do |d, i|
 			result[i] = [year, i+1, d[1]]
 		end
 		render json: result, status: 200
@@ -96,11 +102,12 @@ class ProcedureController < ApplicationController
 		render json: "Bad request", status: 400 and return unless @procedures != nil
 
 		result = {}
-		procedures.group(:cnes_id).order("count_id DESC").limit(10)
-				  .count(:id).each_with_index do |p, i|
+		@procedures.group(:cnes_id).order("count_id DESC").limit(10)
+				  .count(:id).each.with_index do |p, i|
 				result[HealthCentre.find_by(cnes: p[0]).name.to_s] = p[1].to_i
 		end
 		render json: result, status: 200
+		result = nil
 	end
 
 	# GET /procedure/proceduresPerSpecialties{params}
@@ -109,12 +116,13 @@ class ProcedureController < ApplicationController
 	def proceduresPerSpecialties
 		render json: "Bad request", status: 400 and return unless @procedures != nil
 
-		procedures = procedures.where("specialty_id < ?", 10).order(:specialty_id).group(:specialty_id).count
+		perSpecialties = @procedures.where("specialty_id < ?", 10).order(:specialty_id).group(:specialty_id).count
 		result = {}
-		procedures.each do |p|
-			result[Specialty.find_by(id: p[0]).name] = p[1].to_i
+		perSpecialties.each do |specialty|
+			result[Specialty.find_by(id: specialty[0]).name] = specialty[1].to_i
 		end
 		render json: result, status: 200
+		perSpecialties = nil
 	end
 
 	# GET /procedure/proceduresDistance{params}
@@ -124,11 +132,12 @@ class ProcedureController < ApplicationController
 		render json: "Bad request", status: 400 and return unless @procedures != nil
 
 		result = {}
-		procedures.where("specialty_id < ?", 10).order(:specialty_id).group(:specialty_id)
-				  .average(:distance).each_with_index do |p, i|
+		@procedures.where("specialty_id < ?", 10).order(:specialty_id).group(:specialty_id)
+				  .average(:distance).each.with_index do |p, i|
 				 	result[Specialty.find_by(id: p[0]).name.to_s] = p[1].round(2).to_f
 		end
 		render json: result, status: 200
+		result = nil
 	end
 
 	# GET /procedure/proceduresTotal{params}
@@ -148,6 +157,7 @@ class ProcedureController < ApplicationController
 
 		latlong = @procedures.pluck(:lat, :long, :id);
 		render json: latlong, status: 200
+		latlong = nil
 	end
 
 	# GET /procedure/proceduresInfo/{params}
@@ -157,6 +167,7 @@ class ProcedureController < ApplicationController
 		info = Procedure.where(id: params[:id]).select(:cnes_id, :gender, :age_number, :cid_primary, :CRS, :date, :distance, :lat, :long).to_a
 
 		render json: info, status:  200
+		info = nil
 	end
 
 	# Handles clustering for large amount of data
@@ -169,6 +180,7 @@ class ProcedureController < ApplicationController
 		clusters = @procedures.group(:lat, :long).count.to_a.flatten.each_slice(3) #Convert hash {[lat, long] => count} to array [lat, long, count]
 
 		render json: clusters, status: 200
+		clusters = nil
 	end
 
 	# GET /procedure/proceduresSetorCensitario/{params}
@@ -179,6 +191,7 @@ class ProcedureController < ApplicationController
 
 		setor_cen = @procedures.where(:lat => params[:lat], :long => params[:long]).pluck(:id)
 		render json: setor_cen, status: 200
+		setor_cen = nil
 	end
 
 	# GET /procedure/proceduresMaxValues/{params}
@@ -202,6 +215,7 @@ class ProcedureController < ApplicationController
 			end
 		end
 		render json: max, status: 200
+		max = 0
 	end
 
 	# GET /procedure/proceduresQuartiles
@@ -244,6 +258,7 @@ class ProcedureController < ApplicationController
 		distance = nil
 
 		render json: quartiles, status: 200
+		quartiles = nil
 	end
 
 	# Download csv file
@@ -255,13 +270,7 @@ class ProcedureController < ApplicationController
 	# Params: [filters values array]
 	# Return: CSV file.
 	def download
-		if session[:filters] == nil
-			procedures = Procedure.all
-		else
-			procedures = getProcedures()
-		end
-
-		procedures = procedures.select('id as "COD"', 'replace(lat::text, \'.\', \',\') AS "LAT_SC"', 'replace(long::text, \'.\', \',\') as "LONG_SC"', 
+		@downloadable = @procedures.select('id as "COD"', 'replace(lat::text, \'.\', \',\') AS "LAT_SC"', 'replace(long::text, \'.\', \',\') as "LONG_SC"', 
 			'gender as "P_SEXO"', 'age_number as "P_IDADE"', 'race as "P_RACA"', 'lv_instruction as "LV_INSTRU"', 'cnes_id as "CNES"', 
 			'gestor_ide as "GESTOR_ID"', 'treatment_type as "CAR_INTEN"', 'cmpt as "CMPT"', 'date as "DT_EMISSAO"', 
 			'date_in as "DT_INTERNA"', 'date_out as "DT_SAIDA"', 'complexity as "COMPLEXIDA"', 'proce_re as "PROC_RE"', 
@@ -270,7 +279,7 @@ class ProcedureController < ApplicationController
 			'days_total as "DIAS_PERM"', 'finance as "FINANC"', 'replace(val_total::text, \'.\', \',\') as "VAL_TOT"', '"DA" as "DA"', '"PR" as "SUB"', 
 			'"STS" as "STS"', '"CRS" as "CRS"', 'replace(distance::text, \'.\', \',\') as "DISTANCIA_KM"')
 
-		enumerator = procedures.copy_to_enumerator(:buffer_lines => 100, :delimiter => ";")
+		@enumerator = @downloadable.copy_to_enumerator(:buffer_lines => 100, :delimiter => ";")
 		# Tell Rack to stream the content
 		headers.delete("Content-Length")
 
@@ -287,7 +296,7 @@ class ProcedureController < ApplicationController
 		headers["X-Accel-Buffering"] = "no"
 
 		# Set an Enumerator as the body
-		self.response_body = enumerator
+		self.response_body = @enumerator
 
 		# Set the status to success
 		response.status = 200
@@ -301,6 +310,8 @@ class ProcedureController < ApplicationController
 		cnes = cnes.split(",")
 		health_centres = HealthCentre.where(cnes: cnes).pluck(:lat, :long)
 		render json: health_centres, status: 200
+		cnes = nil
+		health_centres = nil
 	end
 
 	# GET /procedure/proceduresByHealthCentre/{params}
@@ -309,6 +320,7 @@ class ProcedureController < ApplicationController
 	def proceduresByHealthCentre
 		procedures = Procedure.where(cnes_id: params[:cnes].to_s)
 		render json: procedures.to_a
+		procedures = nil
 	end
 
 private
@@ -330,7 +342,7 @@ private
 		end
 
 		if params[:filters] != nil
-			params[:filters].each_with_index do |filter, i|
+			params[:filters].each.with_index do |filter, i|
 					session[:filters][i] = filter.split(";") unless filter == ""
 			end
 		end
@@ -340,8 +352,8 @@ private
 		end
 
 		if params[:sliders] != nil
-			params[:sliders].each_with_index do |slider, i|
-				session[:sliders][i] = [slider[1][0].to_i, slider[1][1].to_i]
+			params[:sliders].each_value.with_index do |slider, i|
+				session[:sliders][i] = [slider[0].to_i, slider[1].to_i]
 			end
 		end
 
@@ -379,7 +391,7 @@ private
 			@procedures = session[:genders].length < 2 ? Procedure.where(gender: session[:genders]) : @procedures = Procedure.all
 		end
 
-		@filters_name.each_with_index do |filter, i|
+		@filters_name.each.with_index do |filter, i|
 			if session[:filters][i] == nil
 				next
 			end
@@ -391,7 +403,7 @@ private
 			end
 		end
 
-		@sliders_name.each_with_index do |slider, i|
+		@sliders_name.each.with_index do |slider, i|
 			if session[:sliders][i] == nil
 				next
 			end
@@ -413,11 +425,16 @@ private
 			end
 
 		end
+	end
 
-		if @procedures == nil
-			return
-		end
-		@procedures = @procedures.count > 0 ? @procedures : nil
+	# Tell garbage collector it can return the memory to the SO.
+	def procedureCleanUp
+		@procedures = nil
+	end
+
+	def afterDownload
+		@downloadable = nil
+		@enumerator = nil
 	end
 
 	# Params: A hash of {value => counter}
