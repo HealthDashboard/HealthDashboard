@@ -73,12 +73,12 @@ describe ProcedureController, type: 'controller' do
 			expect(assigns(:procedures)).to eq(nil)
 		end
 
-		it 'should return nil to a call without matching parameters' do
+		it 'should return empty Active relation to a call without matching parameters' do
 			filters = ["12455"]
 			controller.params[:filters] = filters
 			controller.send :updateSession
 			controller.send :getProcedures
-			expect(assigns(:procedures)).to eq(nil)
+			expect(assigns(:procedures)).to eq(Procedure.where(:cnes_id => 12455))
 		end
 
 		it 'should return all values in Procedure table with send_all set true' do
