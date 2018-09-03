@@ -1,0 +1,9 @@
+# database used for gitlab-ci
+test:
+  adapter: postgresql
+  host: postgres
+  database: <%= ENV["POSTGRES_DB"] %>
+  username: <%= ENV["POSTGRES_USER"] %>
+  password: <%= ENV["POSTGRES_PASSWORD"] %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  encoding: unicode
