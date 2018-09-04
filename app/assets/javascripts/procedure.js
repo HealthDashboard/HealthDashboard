@@ -228,7 +228,7 @@ function handleLargeCluster(map, path, data, max_cluster, max_heatmap, heatmap_o
         max = 0; // reset max values because zoom level changed
         if(zoomValues[map.getZoom()] != undefined){
             document.getElementById("legend-label-2").innerText = zoomValues[map.getZoom()];
-            document.getElementById("legend-scale").innerText = ("Internações num raio de " + (metresValues[map.getZoom()]*max_cluster/1000).toFixed(2).replace(".", ",") + " Km");
+            document.getElementById("legend-scale").innerText = ("Internações num raio de " + (metresValues[map.getZoom()]*max_cluster/1000) + " Km");
         }
     });
     cluster = L.markerClusterGroup({
@@ -260,20 +260,16 @@ function handleLargeCluster(map, path, data, max_cluster, max_heatmap, heatmap_o
                 else{
                     zoomValues[map.getZoom()] = max; //if zoomValues[current Zoom] is empty, then store the value
                 }
-                const metresPerPixel = 40075016.686*Math.abs(Math.cos(map.getCenter().lat*180/Math.PI))/Math.pow(2, map.getZoom()+8); //formula given by leaflet
+                const metresPerPixel = 40075016.686*Math.abs(Math.cos((-23.557296000000001)*180/Math.PI))/Math.pow(2, map.getZoom()+8); //formula given by leaflet
                 metresValues[map.getZoom()] = metresPerPixel;
             }
-<<<<<<< HEAD
+
             legendlabel2 = document.getElementById("legend-label-2")
             if (legendlabel2 !== null)
                 legendlabel2.innerText = zoomValues[map.getZoom()]; 
             legendscale = document.getElementById("legend-scale")
             if (legendscale !== null)
-                legendscale.innerText = ("Internações num raio de " + (metresValues[map.getZoom()]).toFixed(2).replace(".", ",") + " m");
-=======
-            document.getElementById("legend-label-2").innerText = zoomValues[map.getZoom()];    
-            document.getElementById("legend-scale").innerText = ("Internações num raio de " + (metresValues[map.getZoom()]*max_cluster/1000).toFixed(2).replace(".", ",") + " Km");
->>>>>>> 4bda23e... Cleaning unusable text.
+                legendscale.innerText = ("Internações num raio de " + (metresValues[map.getZoom()]*max_cluster/1000).toFixed(2).replace(".", ",") + " Km");
             return L.divIcon({ html: n, className: className, iconSize: L.point(size, size) });
         },
     });
