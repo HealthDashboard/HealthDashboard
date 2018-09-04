@@ -318,3 +318,10 @@
   list-style: none;
   font-size: 70%;
 }
+
+#legend-scale{
+  font-size: 60%;
+  right: 0;
+  position: relative;
+  margin-bottom: 5px;
+}
