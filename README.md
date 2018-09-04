@@ -1,6 +1,11 @@
 # Dashboard da Saúde
 
 Uma aplicação para visualização espacial de dados de internações hospitalares da cidade de São Paulo.
+
+[![pipeline status](https://gitlab.com/interscity/health-dashboard/health-smart-city/badges/master/pipeline.svg)](https://gitlab.com/interscity/health-dashboard/health-smart-city/commits/master)
+
+[![coverage report](https://gitlab.com/interscity/health-dashboard/health-smart-city/badges/master/coverage.svg)](https://gitlab.com/interscity/health-dashboard/health-smart-city/commits/master)
+
 ### Requerimentos
 ---
 * PostgreSQL >= 9.5.12

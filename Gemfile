@@ -26,6 +26,8 @@ gem 'bootstrap-slider-rails'
 # Bootstrap datepicker
 gem 'bootstrap-datepicker-rails'
 
+# Code coverage
+gem 'simplecov', require: false, group: :test
 
 gem 'execjs'
 gem 'therubyracer'

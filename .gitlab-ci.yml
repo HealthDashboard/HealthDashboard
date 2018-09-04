@@ -1,23 +1,32 @@
 image: ruby:2.3
 
-services:
-  - postgres:latest
-
-variables:
-  # Configure PostGreSQL environment variables (https://hub.docker.com/_/postgres/)
-  POSTGRES_USER: health_dashboard
-  POSTGRES_PASSWORD: health_dashboard
-  POSTGRES_DB: health_dashboard_test
-
-before_script:
-  - cp config/database-ci.yml config/database.yml
-  - ruby -v
-  - which ruby
-  - gem install bundler --no-ri --no-rdoc
-  - bundle check || bundle install
-  - RAILS_ENV=test bundle exec rake db:create
-  - RAILS_ENV=test bundle exec rake db:migrate
-
 rspec:
+  services:
+    - postgres:latest
+
+  variables:
+    POSTGRES_USER: health_dashboard
+    POSTGRES_PASSWORD: health_dashboard
+    POSTGRES_DB: health_dashboard_test
+
   script:
+    - cp config/database-ci.yml config/database.yml
+    - gem install bundler --no-ri --no-rdoc
+    - bundle check || bundle install
+    - RAILS_ENV=test bundle exec rake db:create
+    - RAILS_ENV=test bundle exec rake db:migrate
     - bundle exec rspec
+  artifacts:
+    paths:
+      - coverage/
+
+coverage:
+  stage: deploy
+  dependencies:
+    - rspec
+  script:
+    - mv coverage/ public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
