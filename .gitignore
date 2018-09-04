@@ -34,3 +34,5 @@ Gemfile.lock
 .rspec
 
 vendor/*
+
+coverage/*
