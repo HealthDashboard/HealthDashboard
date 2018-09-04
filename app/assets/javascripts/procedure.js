@@ -222,13 +222,13 @@ function handleLargeCluster(map, path, data, max_cluster, max_heatmap, heatmap_o
     var max = 0;
     var maxValuesSmallClusters = 0; //variable to store the max value of small(black) clusters
     var zoomValues = new Array(map.getMaxZoom() + 1); //creating a array to max values of each zoom level
-    var metresValues = new Array(map.getMaxZoom() + 1); //creating a array to metres per pixels of each zoom level
+    var metresValues = new Array(map.getMaxZoom() + 1); //creating a array to metres PER PIXELS of each zoom level
     //the formula is: metresPerPixel = C*cos(latitude)/2^(zoomLevel + 8) where C = 40075016.686
     map.on('zoom', function() {
         max = 0; // reset max values because zoom level changed
         if(zoomValues[map.getZoom()] != undefined){
             document.getElementById("legend-label-2").innerText = zoomValues[map.getZoom()];
-            document.getElementById("legend-scale").innerText = ("Internações num raio de " + (metresValues[map.getZoom()]).toFixed(2).replace(".", ",") + " m");
+            document.getElementById("legend-scale").innerText = ("Internações num raio de " + (metresValues[map.getZoom()]*max_heatmap/1000).toFixed(2).replace(".", ",") + " Km");
         }
     });
     cluster = L.markerClusterGroup({
@@ -476,6 +476,7 @@ function limpar() {
     for(var i=1; i < 3; i++){
         document.getElementById("legend-label-" + i).innerText = "";
     }
+    document.getElementById("legend-scale").innerText = "";
     $('input[name=optRadio][value=6]', '#radio-list').trigger('click');
     clearMap();
 }
