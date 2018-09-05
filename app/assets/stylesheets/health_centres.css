@@ -135,7 +135,7 @@ input[type="radio"] {
 .info {
   padding-left: 2vw;
   padding-right: 1vw;
-  padding-top: 50px;
+  margin-top: 50px;
   width: 50vw;
   display: flex;
   flex-direction: column;
@@ -203,12 +203,8 @@ input[type="radio"] {
 
 .grafico {
   width: 47vw;
+  flex: 1 1 auto;
 }
-
-.barras {
-  flex-grow: 1;
-}
-
 
 .map-marker{
   text-align: center;
