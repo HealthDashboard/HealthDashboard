@@ -83,10 +83,12 @@ function hide_info() {
   if (!$("#hosp-info-text").hasClass("active")) {
     $("#hosp-info-text").addClass("active");
     document.getElementById("hide_btn").innerHTML = "Mostrar info";
+    myChart.resize();
   }
   else {
     $("#hosp-info-text").removeClass("active");
     document.getElementById("hide_btn").innerHTML = "Esconder info";
+    myChart.resize();
   }
 }
 
@@ -100,9 +102,11 @@ function show_clusters(id, lat, long) {
             document.getElementById("search-name").innerHTML = hospital.name;
         });
 
+        myChart.resize();
         create_homepage_charts(id);
     } else {
         teardown_cluster(id);
+        myChart.resize();
         create_homepage_charts();
     }
 }
@@ -181,7 +185,7 @@ function markerClick(e) {
         text_marker += "<strong>CRS: </strong>" + procedure[0].CRS + "<br>";
         text_marker += "<strong>Data: </strong>" + procedure[0].date + "<br>";
         text_marker += "<strong>Distância: </strong>" + parseFloat(procedure[0].distance).toFixed(1).replace(".", ",") + " Km <br>";
-    
+
 
         e.target.bindPopup(text_marker, {direction:'top'});
         e.target.openPopup();
@@ -247,37 +251,37 @@ function markers_visible(visibility, id) {
     });
 }
 
-function update_chart(id) {
-    var specialty_path = ["/specialties/", id].join("");
-    $.getJSON(specialty_path, function(specialties) {
-        var values = [];
-        var i = 0;
-        $.each(specialties, function(name, number) {
-            values.push([name, number, colors[i]]);
-            i += 1;
-        });
-        var header = ["Elementos", "Número de Procedimentos", {role: "style"}];
-
-        values.unshift(header);
-        var data = google.visualization.arrayToDataTable(values);
-
-        var view = new google.visualization.DataView(data);
-        view.setColumns([0, 1, {calc: "stringify", sourceColumn: 1, type: "string", role: "annotation" }, 2]);
-
-        var options = {
-            bar: {groupWidth: "70%"},
-                chartArea: {left: 100},
-            legend: {position: "none"}
-        };
-
-        var chart = new google.visualization.BarChart(document.getElementById("chart_div"));
-        chart.draw(view, options);
-    });
-}
-
-function create_chart() {
-    google.charts.setOnLoadCallback(create_homepage_charts);
-}
+// function update_chart(id) {
+//     var specialty_path = ["/specialties/", id].join("");
+//     $.getJSON(specialty_path, function(specialties) {
+//         var values = [];
+//         var i = 0;
+//         $.each(specialties, function(name, number) {
+//             values.push([name, number, colors[i]]);
+//             i += 1;
+//         });
+//         var header = ["Elementos", "Número de Procedimentos", {role: "style"}];
+//
+//         values.unshift(header);
+//         var data = google.visualization.arrayToDataTable(values);
+//
+//         var view = new google.visualization.DataView(data);
+//         view.setColumns([0, 1, {calc: "stringify", sourceColumn: 1, type: "string", role: "annotation" }, 2]);
+//
+//         var options = {
+//             bar: {groupWidth: "70%"},
+//                 chartArea: {left: 100},
+//             legend: {position: "none"}
+//         };
+//
+//         var chart = new google.visualization.BarChart(document.getElementById("chart_div"));
+//         chart.draw(view, options);
+//     });
+// }
+//
+// function create_chart() {
+//     google.charts.setOnLoadCallback(create_homepage_charts);
+// }
 
 function LowerCase(data) {
   for (i = 0; i < data.length; i++) {
@@ -313,7 +317,7 @@ function create_homepage_charts(id) {
             i++;
           }
 
-          create_bottom_graphs("bt-graph2", dataSpecialty);
+          create_chart(dataSpecialty);
       });
     }
     else {
@@ -347,48 +351,134 @@ function create_homepage_charts(id) {
             i++;
           }
 
-          create_bottom_graphs("bt-graph2", dataSpecialty);
+          create_chart(dataSpecialty);
       });
     }
 }
 
-function create_bottom_graphs(id, data) {
-    var chart = new google.visualization.BarChart(document.getElementById(id));
-    var header = ['Genre', ' < 1 Km', '> 1 Km e < 5 Km',
-                  '> 5 Km e  < 10 Km', '> 10 Km', {role: 'annotation' }];
-    var options = {
-        legend: 'bottom',
-        isStacked: 'percent',
-        chartArea: {  width: "80%", height: "90%", left:278 },
-        vAxis: {minValue: 0,
-                ticks: [0, .2, .4, .6, .8, 1],
-                textStyle: {fontName: 'Arial',
-                            fontSize: '18'
-                           }
-        },
-        hAxis: {
-              textStyle: {fontName: 'Arial',
-                          fontSize: '18'
-                         }
-        },
-        bar: {groupWidth: '35%'},
-        series: {0:{color:'green'},
-                 1:{color:'yellow'},
-                 2:{color:'orange'},
-                 3:{color:'red'}
-                }
-    };
-    draw_bottom_graph(header, data, chart, options);
-}
+// function create_bottom_graphs(id, data) {
+//     var chart = new google.visualization.BarChart(document.getElementById(id));
+//     var header = ['Genre', ' < 1 Km', '> 1 Km e < 5 Km',
+//                   '> 5 Km e  < 10 Km', '> 10 Km', {role: 'annotation' }];
+//     var options = {
+//         legend: 'bottom',
+//         isStacked: 'percent',
+//         chartArea: {  width: "80%", height: "90%", left:278 },
+//         vAxis: {minValue: 0,
+//                 ticks: [0, .2, .4, .6, .8, 1],
+//                 textStyle: {fontName: 'Arial',
+//                             fontSize: '18'
+//                            }
+//         },
+//         hAxis: {
+//               textStyle: {fontName: 'Arial',
+//                           fontSize: '18'
+//                          }
+//         },
+//         bar: {groupWidth: '35%'},
+//         series: {0:{color:'green'},
+//                  1:{color:'yellow'},
+//                  2:{color:'orange'},
+//                  3:{color:'red'}
+//                 }
+//     };
+//     draw_bottom_graph(header, data, chart, options);
+// }
+//
+// function draw_bottom_graph(header, data, chart, options) {
+//     var values = data;
+//
+//     values.unshift(header);
+//     var data_table = google.visualization.arrayToDataTable(values);
+//     var view = new google.visualization.DataView(data_table);
+//     chart.draw(view, options);
+// }
 
-function draw_bottom_graph(header, data, chart, options) {
-    var values = data;
+function create_chart(data){
+  console.log(data);
+  option = {
+      legend: {
+        position: "bottom"
+      },
+      tooltip : {
+        trigger: 'axis',
+        axisPointer : {
+          type : 'shadow'
+        }
+      },
+      toolbox: {
+        show : true,
+        feature : {
+          mark : {show: true},
+          dataView : {show: true, readOnly: true},
+          magicType: {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+          restore : {show: true},
+          saveAsImage : {show: true}
+        }
+      },
+      grid: {
+        left: '0',
+        right: '0',
+        bottom: '2%',
+        top: '40px',
+        containLabel: true
+      },
+      dataset: {
+        dimensions: ["Especialidade","< 1km", "> 1km e < 5km", "> 5km e < 10km", "> 10km", ""],
+        source: data
+      },
+      xAxis: {type: 'value'},
+      yAxis: {type: 'category'},
+      // Declare several bar series, each will be mapped
+      // to a column of dataset.source by default.
+      series: [
+          {
+            type: 'bar',
+            stack: 's',
+            label: {
+              normal: {
+                show: true,
+                position: 'insideLeft'
+              }
+            },
+          },
+          {
+            type: 'bar',
+            stack: 's',
+            label: {
+              normal: {
+                show: true,
+                position: 'insideLeft'
+              }
+            },
+          },
+          {
+            type: 'bar',
+            stack: 's',
+            label: {
+              normal: {
+                show: true,
+                position: 'insideLeft'
+              }
+            },
+          },
+          {
+            type: 'bar',
+            stack: 's',
+            label: {
+              normal: {
+                show: true,
+                position: 'insideLeft'
+              }
+            },
+          }
+      ]
+  };
 
-    values.unshift(header);
-    var data_table = google.visualization.arrayToDataTable(values);
-    var view = new google.visualization.DataView(data_table);
-    chart.draw(view, options);
-}
+    // use configuration item and data specified to show chart
+    myChart.setOption(option);
+  }
+
 
 function update_right_graph_text(data) {
     var $graph_text1 = $('#labelOverlay .n_procedures');

@@ -20,3 +20,4 @@
 //= require_tree .
 //= require turbolinks
 //= require leaflet.markercluster
+//= require echarts-en

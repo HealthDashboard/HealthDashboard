@@ -47,7 +47,9 @@
       <div id="hosp-info"></div>
     </div>
     <hr>
-    <div class="grafico barras" id='bt-graph2'></div>
+    <!-- <div class="grafico barras" id='bt-graph2'></div> -->
+    <div id="bar-graph" class="grafico"></div>
+
   </div>
 </div>
 
@@ -72,7 +74,17 @@
 <div id="loading_overlay"class="loading">Loading&#8230;</div> <!-- Loading Overlay -->
 
 <script>
+
+    // based on prepared DOM, initialize echarts instance
+var myChart = echarts.init(document.getElementById('bar-graph'));
   $(document).ready(initialize)
   document.onload = load_all_points();
-  document.onload = create_chart();
+  document.onload = create_homepage_charts();
+
+  $(window).on('resize', function(){
+        if(myChart != null && myChart != undefined){
+            myChart.resize();
+        }
+    });
+
 </script>
