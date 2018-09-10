@@ -282,7 +282,7 @@ function markers_visible(visibility, id) {
 //     google.charts.setOnLoadCallback(create_homepage_charts);
 // }
 
-function LowerCase(data) {
+function lower_case(data) {
   for (i = 0; i < data.length; i++) {
     data[i][0] = data[i][0].toLowerCase();
     data[i][0] = data[i][0].substring(0,1).toLocaleUpperCase() + data[i][0].substring(1);
@@ -292,7 +292,7 @@ function LowerCase(data) {
 
 function create_homepage_charts(id) {
     /*create_right_graph(id);*/
-    var dataSpecialty, dataTotal, pathSpecialty, pathTotal, n, i
+    var dataSpecialty, dataTotal, pathSpecialty, pathTotal, dataNormalized, n, i
 
     if (id == undefined) {
       pathTotal = '/distance_metric.json';
@@ -304,19 +304,18 @@ function create_homepage_charts(id) {
         }),
         $.getJSON(pathSpecialty, function(data) {
           dataSpecialty = data;
-          dataSpecialty = LowerCase(dataSpecialty);
+          dataSpecialty = lower_case(dataSpecialty);
         })
       ).then(function(){
-          n = dataSpecialty.length;
-          dataSpecialty[n] = ["Total", 0, 0, 0, 0, ""];
+          dataSpecialty = add_total_to_data(dataTotal, dataSpecialty);
 
-          i = 1;
-          for (d in dataTotal) {
-            dataSpecialty[n][i] = dataTotal[d];
-            i++;
+          dataNormalized = dataSpecialty.slice(0);
+          console.log(dataNormalized)
+          for (i = 0; i < dataNormalized.length; i++) {
+            dataNormalized[i] = normalize_to_100(dataNormalized[i]);
           }
 
-          create_chart(dataSpecialty);
+;          create_chart(dataSpecialty, dataNormalized);
       });
     }
     else {
@@ -329,6 +328,7 @@ function create_homepage_charts(id) {
         }),
         $.getJSON(pathSpecialty, function(data) {
           dataSpecialty = data;
+          dataSpecialty = lower_case(dataSpecialty);
         })
       ).then(function(){
           for (i = 0; i < Object.keys(dataSpecialty).length; i++) {
@@ -339,20 +339,45 @@ function create_homepage_charts(id) {
           }
           dataSpecialty = Object.values(dataSpecialty);
 
-          dataSpecialty = LowerCase(dataSpecialty);
+          dataSpecialty = add_total_to_data(dataTotal, dataSpecialty);
 
-          n = dataSpecialty.length;
-          dataSpecialty[n] = ["Total", 0, 0, 0, 0, ""];
-
-          i = 1;
-          for (d in dataTotal) {
-            dataSpecialty[n][i] = dataTotal[d];
-            i++;
+          dataNormalized = $.extend( true, {}, dataSpecialty);
+          for (i = 0; i < dataNormalized.length; i++) {
+            dataNormalized[i] = normalize_to_100(dataNormalized[i]);
           }
+          console.log(dataNormalized)
 
-          create_chart(dataSpecialty);
+          create_chart(dataSpecialty, dataNormalized);
       });
     }
+}
+
+function add_total_to_data (dataTotal, data) {
+  n = data.length;
+  data[n] = ["Total", 0, 0, 0, 0, ""];
+
+  i = 1;
+  for (d in dataTotal) {
+    data[n][i] = dataTotal[d];
+    i++;
+  }
+
+  return data;
+}
+
+function normalize_to_100 (data) {
+  console.log("data")
+  let is_num = n => isNaN(n) ? 0 : n
+  var sum = data.reduce((a, b) =>
+    is_num(a) + is_num(b))
+  var ratio =  sum/ 100;
+  var i;
+
+  for (i = 1; i <= 4; i++) {
+    data[i] = data[i] / ratio;
+  }
+
+  return data;
 }
 
 // function create_bottom_graphs(id, data) {
@@ -393,11 +418,13 @@ function create_homepage_charts(id) {
 //     chart.draw(view, options);
 // }
 
-function create_chart(data){
-  console.log(data);
+function create_chart(data, dataNormalized){
+  // console.log(data);
   option = {
       legend: {
-        position: "bottom"
+        bottom: '5px',
+        right: '5px',
+        type: 'scroll'
       },
       tooltip : {
         trigger: 'axis',
@@ -417,17 +444,21 @@ function create_chart(data){
       },
       grid: {
         left: '0',
-        right: '0',
-        bottom: '2%',
+        right: '25px',
+        bottom: '35px',
         top: '40px',
         containLabel: true
       },
       dataset: {
         dimensions: ["Especialidade","< 1km", "> 1km e < 5km", "> 5km e < 10km", "> 10km", ""],
-        source: data
+        source: dataNormalized
       },
-      xAxis: {type: 'value'},
-      yAxis: {type: 'category'},
+      xAxis: {type: 'value',
+              max: 100},
+      yAxis: {type: 'category',
+              axisLabel: {interval : 0},
+              // name: 'Especialidades',
+             },
       // Declare several bar series, each will be mapped
       // to a column of dataset.source by default.
       series: [
