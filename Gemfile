@@ -29,9 +29,6 @@ gem 'bootstrap-datepicker-rails'
 # Code coverage
 gem 'simplecov', require: false, group: :test
 
-gem 'execjs'
-gem 'therubyracer'
-gem 'autoprefixer-rails'
 
 # Geolocation gem
 gem 'geocoder'
