@@ -50,6 +50,9 @@ gem 'rails', '~> 5.0.1'
 # Download csv files
 gem 'postgres-copy'
 
+# Faster seed
+gem 'activerecord-import'
+
 # Read JSON files
 gem 'json', '~> 1.8.3'
 

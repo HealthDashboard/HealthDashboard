@@ -2,9 +2,29 @@ require 'json'
 require 'csv'
 require 'rest-client'
 
-AGE_CODE = ["TP_0A4", "TP_5A9", "TP_10A14", "TP_15A19", "TP_20A24", "TP_25A29", "TP_30A34",
-             "TP_35A39", "TP_40A44", "TP_45A49", "TP_50A54", "TP_55A59", "TP_60A64", "TP_65A69",
-             "TP_70A74", "TP_75A79", "TP_80A84", "TP_85A89", "TP_90A94", "TP_95A99", "TP_100OUMA"]
+AGE_CODE = ["TP_0A4", "TP_0A4", "TP_0A4", "TP_0A4", "TP_0A4", "TP_5A9", "TP_5A9", "TP_5A9",
+ "TP_5A9", "TP_5A9", "TP_10A14", "TP_10A14", "TP_10A14", "TP_10A14", "TP_10A14", "TP_15A19", 
+ "TP_15A19", "TP_15A19", "TP_15A19", "TP_15A19", "TP_20A24", "TP_20A24", "TP_20A24", "TP_20A24", 
+ "TP_20A24", "TP_25A29", "TP_25A29", "TP_25A29", "TP_25A29", "TP_25A29", "TP_30A34", "TP_30A34", 
+ "TP_30A34", "TP_30A34", "TP_30A34", "TP_35A39", "TP_35A39", "TP_35A39", "TP_35A39", "TP_35A39", 
+ "TP_40A44", "TP_40A44", "TP_40A44", "TP_40A44", "TP_40A44", "TP_45A49", "TP_45A49", "TP_45A49", 
+ "TP_45A49", "TP_45A49", "TP_50A54", "TP_50A54", "TP_50A54", "TP_50A54", "TP_50A54", "TP_55A59", 
+ "TP_55A59", "TP_55A59", "TP_55A59", "TP_55A59", "TP_60A64", "TP_60A64", "TP_60A64", "TP_60A64", 
+ "TP_60A64", "TP_65A69", "TP_65A69", "TP_65A69", "TP_65A69", "TP_65A69", "TP_70A74", "TP_70A74", 
+ "TP_70A74", "TP_70A74", "TP_70A74", "TP_75A79", "TP_75A79", "TP_75A79", "TP_75A79", "TP_75A79", 
+ "TP_80A84", "TP_80A84", "TP_80A84", "TP_80A84", "TP_80A84", "TP_85A89", "TP_85A89", "TP_85A89", 
+ "TP_85A89", "TP_85A89", "TP_90A94", "TP_90A94", "TP_90A94", "TP_90A94", "TP_90A94", "TP_95A99", 
+ "TP_95A99", "TP_95A99", "TP_95A99", "TP_95A99", "TP_100OUMA"]
+
+def get_age_code(age)
+  if age >= 0 && age <= 99
+    return AGE_CODE[age]
+  elsif age > 99
+    return AGE_CODE[100]
+  else
+    return nil
+  end
+end
 
 
 def get_specialties()
@@ -26,7 +46,8 @@ def get_health_centres()
 
   hc_counter = 0
   CSV.foreach(hc_csv_path, :headers => true) do |row|
-    h = HealthCentre.new cnes: row[0], name: row[1], name_r: row[2], beds: row[3], lat: row[4], long: row[5], phone: row[8], adm: row[9], DA: row[10], PR: row[11], STS: row[12], CRS: row[13]
+    h = HealthCentre.new cnes: row[0], name: row[1], name_r: row[2], beds: row[3], lat: row[4], long: row[5], 
+    phone: row[8], adm: row[9], DA: row[10], PR: row[11], STS: row[12], CRS: row[13]
     h.save!
     hc_counter += 1
     print "."
@@ -36,7 +57,7 @@ def get_health_centres()
 end
 
 def create_procedures()
-  puts "Saving procedures."
+  puts "Saving SIH data."
   procedure_csv_path = File.join(__dir__, "csv/procedures.csv")
   specialties = []
   health_centres = {}
@@ -50,22 +71,37 @@ def create_procedures()
   end
 
   procedures_counter = 0
+  counter = 0
+  list  = []
   CSV.foreach(procedure_csv_path, :headers => true) do |row|
 
-    age_code = get_age_code(row[4].to_i)
-    spec = specialties[row[17].to_i]
-
-    p = Procedure.new lat: row[1], long: row[2], gender: row[3], age_code: age_code, age_number: row[4], race: row[5], lv_instruction: row[6], cnes_id: row[9], gestor_ide: row[10], treatment_type: row[11], cmpt: row[12], date: row[13], date_in: row[14], date_out: row[15],
-    complexity: row[16], specialty: spec, proce_re: row[18], cid_primary: row[19], cid_secondary: row[20], cid_secondary2: row[21], cid_associated: row[22], days: row[23], days_uti: row[24], days_ui: row[25], days_total: row[26], finance: row[27], val_total: row[28],
-    DA: row[30], PR: row[31], STS: row[32], CRS: row[33]
+    age_code = get_age_code(row[15].to_i)
+    spec = specialties[row[3].to_i]
+    p = Procedure.new long: row[1], lat: row[2], specialty: spec, cmpt: row[4], date: row[5], date_in: row[6], 
+    date_out: row[7], proce_re: row[8], treatment_type: row[9], cid_primary: row[10], cid_secondary: row[11],
+    cid_secondary2: row[12], gender: row[13], race: row[14], age_number: row[15], age_code: age_code, lv_instruction: row[16],
+    gestor_ide: row[17], days: row[18], days_uti: row[19], days_ui: row[20], complexity: row[21], finance: row[22],
+    val_total: row[23], days_total: row[24], cnes_id: row[25], DA: row[32], PR: row[33], STS: row[34], CRS: row[35]
     p.distance = p.calculate_distance
-    p.save!
-    print "."
-    procedures_counter += 1
+    list << p
+
+    counter += 1    
+    if counter == 1000
+      Procedure.import list
+      list = []
+
+      procedures_counter += counter
+      counter = 0
+      progress = ((procedures_counter.to_f / 554202.0) * 100.0)
+      printf("\rProgress: [%-100s] %d%%", "=" * progress, progress)
+    end
   end
 
+  Procedure.import list
+  printf("\rProgress: [%-100s] %d%%", "=" * 100, 100)
+  procedures_counter += counter
   puts ""
-  puts "#{procedures_counter} procedures successfully created"
+  puts "#{procedures_counter} rows successfully saved"
 end
 
 def health_centre_specialty()
@@ -96,54 +132,6 @@ def linkTypeHealthCentre
     end
     puts ""
     puts "#{hc_counter} Health Centres successfully updated"
-end
-
-def get_age_code(age)
-  if age >= 0 && age <= 4
-    return AGE_CODE[0]
-  elsif age >= 5 && age <= 9
-    return AGE_CODE[1]
-  elsif age >= 10 && age <= 14
-    return AGE_CODE[2]
-  elsif age >= 15 && age <= 19
-    return AGE_CODE[3]
-  elsif age >= 20 && age <= 24
-    return AGE_CODE[4]
-  elsif age >= 25 && age <= 29
-    return AGE_CODE[5]
-  elsif age >= 30 && age <= 34
-    return AGE_CODE[6]
-  elsif age >= 35 && age <= 39
-    return AGE_CODE[7]
-  elsif age >= 40 && age <= 44
-    return AGE_CODE[8]
-  elsif age >= 45 && age <= 49
-    return AGE_CODE[9]
-  elsif age >= 50 && age <= 54
-    return AGE_CODE[10]
-  elsif age >= 55 && age <= 59
-    return AGE_CODE[11]
-  elsif age >= 60 && age <= 64
-    return AGE_CODE[12]
-  elsif age >= 65 && age <= 69
-    return AGE_CODE[13]
-  elsif age >= 70 && age <= 74
-    return AGE_CODE[14]
-  elsif age >= 75 && age <= 79
-    return AGE_CODE[15]
-  elsif age >= 80 && age <= 84
-    return AGE_CODE[16]
-  elsif age >= 85 && age <= 89
-    return AGE_CODE[17]
-  elsif age >= 90 && age <= 94
-    return AGE_CODE[18]
-  elsif age >= 95 && age <= 99
-    return AGE_CODE[19]
-  elsif age >= 100
-    return AGE_CODE[20]
-  else
-    return AGE_CODE[0]
-  end
 end
 
 get_health_centres()
