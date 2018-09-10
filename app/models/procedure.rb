@@ -7,18 +7,6 @@ class Procedure < ApplicationRecord
 
   def calculate_distance
     health_centre = self.cnes
-    self.distance_to([health_centre.lat, health_centre.long]) if health_centre
-  end
-
-  def dist_to(latlong)
-  	return self.distance_to(latlong);
-  end
-
-  def calculate_distance_to(lat, long)
- 	  if self.distance != nil and self.distance < self.distance_to([lat, long])
- 		 return true
- 	  else
- 		 return false
- 	  end
+    self.distance_to([health_centre.lat, health_centre.long]).round(1) if health_centre
   end
 end
