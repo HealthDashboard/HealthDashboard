@@ -16,6 +16,7 @@ rspec:
 
   script:
     - cp config/database-ci.yml config/database.yml
+    - cp Gemfile-ci Gemfile
     - gem install bundler --no-ri --no-rdoc
     - bundle check || bundle install
     - RAILS_ENV=test bundle exec rake db:create
