@@ -36,6 +36,43 @@ describe ProcedureController, type: 'controller' do
 		end
 	end
 
+	describe 'Testing healthCentresCnes method' do
+		before :each do
+			HealthCentre.create id: 1, cnes: 1010, lat: -23.555885, long: -46.666458
+			HealthCentre.create id: 2, cnes: 2, lat: -23.59913, long: -46.714676
+		end
+
+		it 'Should return an empty JSON when no CNES is passed' do
+			self.send(:get, 'healthCentresCnes', format: :json)
+			expect(response.status).to eq(200)
+			expect(JSON.parse(response.body)).to eq([])
+		end
+
+		it 'Should return [lat, long] for the HealthCentre' do
+			self.send(:get, 'healthCentresCnes', params: {cnes: 1010}, format: :json)
+			expect(response.status).to eq(200)
+			expect(JSON.parse(response.body)).to eq([[-23.555885, -46.666458]])
+		end
+
+		it 'Should return an empty JSON for wrong CNES' do
+			self.send(:get, 'healthCentresCnes', params: {cnes: 2234}, format: :json)
+			expect(response.status).to eq(200)
+			expect(JSON.parse(response.body)).to eq([])
+		end
+
+		it 'Should return a list of [lat, long] for more than one CNES' do
+			self.send(:get, 'healthCentresCnes', params: {cnes: "1010, 2"}, format: :json)
+			expect(response.status).to eq(200)
+			expect(JSON.parse(response.body)).to eq([[-23.555885, -46.666458], [-23.59913, -46.714676]])
+		end
+
+		it 'Should return only the [lat, long] for the right CNES' do
+			self.send(:get, 'healthCentresCnes', params: {cnes: "1010, 2542"}, format: :json)
+			expect(response.status).to eq(200)
+			expect(JSON.parse(response.body)).to eq([[-23.555885, -46.666458]])
+		end
+	end
+
 	describe 'Testing getProcedures method' do
 		# Always use before :each, before :all saves the data leading to erros later on
 		before :each  do 
