@@ -228,7 +228,7 @@ function handleLargeCluster(map, path, data, max_cluster, max_heatmap, heatmap_o
         max = 0; // reset max values because zoom level changed
         if(zoomValues[map.getZoom()] != undefined){
             document.getElementById("legend-label-2").innerText = zoomValues[map.getZoom()];
-            document.getElementById("legend-scale").innerText = ("Internações num raio de " + (metresValues[map.getZoom()]*max_cluster/1000) + " Km");
+            document.getElementById("legend-scale").innerText = ("Internações num raio de " + Number(((metresValues[map.getZoom()]*max_cluster/1000)).toFixed(2)) + " Km");
         }
     });
     cluster = L.markerClusterGroup({
@@ -269,7 +269,7 @@ function handleLargeCluster(map, path, data, max_cluster, max_heatmap, heatmap_o
                 legendlabel2.innerText = zoomValues[map.getZoom()]; 
             legendscale = document.getElementById("legend-scale")
             if (legendscale !== null)
-                legendscale.innerText = ("Internações num raio de " + (metresValues[map.getZoom()]*max_cluster/1000).toFixed(2).replace(".", ",") + " Km");
+                legendscale.innerText = ("Internações num raio de " + Number(((metresValues[map.getZoom()]*max_cluster/1000)).toFixed(2)) + " Km");
             return L.divIcon({ html: n, className: className, iconSize: L.point(size, size) });
         },
     });
