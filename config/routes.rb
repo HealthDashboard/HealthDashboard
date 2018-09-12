@@ -37,15 +37,12 @@ Rails.application.routes.draw do
 
   resources :procedure do
     get :healthCentresCnes, on: :collection
-    get :proceduresByHealthCentre, on: :collection
     get :proceduresPerMonth, on: :collection
     get :proceduresPerHealthCentre, on: :collection
     get :proceduresPerSpecialties, on: :collection
     get :proceduresDistance, on: :collection
     get :proceduresTotal, on: :collection
     get :download, on: :collection
-    get :update_session, on: :collection
-    get :proceduresLatLong, on: :collection
     get :proceduresDistanceGroup,  on: :collection
     get :proceduresQuartiles, on: :collection
     get :proceduresMaxValues, on: :collection

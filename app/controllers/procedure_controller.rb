@@ -136,16 +136,6 @@ class ProcedureController < ApplicationController
 		render json: Procedure.count, status: 200
 	end
 
-	# GET /procedure/proceduresLatLong/{params}
-	# Params: [filters values array]
-	# Return: An array of [proceduresLatLong]
-	def proceduresLatLong
-		render json: "Bad request", status: 400 and return unless @procedures != nil
-
-		latlong = @procedures.pluck(:lat, :long, :id);
-		render json: latlong, status: 200
-	end
-
 	# GET /procedure/proceduresInfo/{params}
 	# Params: id
 	# Return: Info about the procedure with the given id 
@@ -272,14 +262,6 @@ class ProcedureController < ApplicationController
 		cnes = cnes.split(",")
 		health_centres = HealthCentre.where(cnes: cnes).pluck(:lat, :long)
 		render json: health_centres, status: 200
-	end
-
-	# GET /procedure/proceduresByHealthCentre/{params}
-	# Params: Cnes number
-	# Return: An array of [proceduresPerHealthCentre]
-	def proceduresByHealthCentre
-		procedures = Procedure.where(cnes_id: params[:cnes].to_s)
-		render json: procedures.to_a
 	end
 
 private
