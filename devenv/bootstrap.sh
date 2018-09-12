@@ -15,14 +15,3 @@ if [ -n "`apt-key fingerprint 0EBFCD88`" ]; then
 	apt-get install docker-ce -y
     usermod -a -G docker vagrant
 fi
-
-
-
-# Generate RSA keypair
-runuser -l vagrant -c "ssh-keygen -t rsa -f ~/.ssh/id_rsa -N ''"
-echo "******************************************************************"
-echo "*                                                                *"
-echo "* This is your public key to SSH. Add it to your GitLab account! *"
-echo "*                                                                *"
-echo "******************************************************************"
-runuser -l vagrant -c "cat ~/.ssh/id_rsa.pub"
