@@ -73,6 +73,54 @@ describe ProcedureController, type: 'controller' do
 		end
 	end
 
+	describe 'Testing proceduresPerHealthCentre method' do
+		before :each do
+			HealthCentre.create id: 1, name: "Teste1",cnes: 1, lat: -23.555885, long: -46.666458
+			HealthCentre.create id: 2, name: "Teste2", cnes: 2, lat: -23.555885, long: -46.666458
+
+			Specialty.create id: 1, name: "Specialty 1"
+
+			Procedure.create id: 1, cnes_id: 2, specialty_id: 1
+			Procedure.create id: 2, cnes_id: 1, specialty_id: 1, age_code: "TP_0A4"
+			Procedure.create id: 3, cnes_id: 1, specialty_id: 1, days: 50
+		 	Procedure.create id: 4, cnes_id: 1, specialty_id: 1, cmpt: 201502
+		 	Procedure.create id: 5, cnes_id: 1, specialty_id: 1, proce_re: 3030
+		 	Procedure.create id: 6, cnes_id: 1, specialty_id: 1
+		 	Procedure.create id: 7, cnes_id: 1, specialty_id: 1, treatment_type: 1
+		 	Procedure.create id: 8, cnes_id: 1, specialty_id: 1, cid_primary: "A42"
+		end
+
+		it 'should return bad request for calls without params' do
+			data = {}.to_json
+			self.send(:get, 'proceduresPerHealthCentre', params: {data: data}, as: :json)
+			expect(response.status).to eq(400)
+			expect(response.body).to eq("Bad request")
+		end
+
+		it 'should return nil for wrong parameters' do
+			data = {"filters" => [["3"]]}.to_json
+			self.send(:get, 'proceduresPerHealthCentre', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("{}")
+		end
+
+		it 'should return a hash of [HealthCentre => counter]' do
+			data = {"filters" => [["1"]]}.to_json
+			self.send(:get, 'proceduresPerHealthCentre', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			procedures = Procedure.where(cnes_id: 1)
+			hc = HealthCentre.find_by(cnes: 1)
+			expect(response.body).to eq({hc.name => procedures.count}.to_json)
+		end
+
+		it 'should return a hash of [HealthCentre => counter] for multiple cnes' do
+			data = {"filters" => [["1", "2"], [], []]}.to_json
+			self.send(:get, 'proceduresPerHealthCentre', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq({"Teste1" => 7, "Teste2" => 1}.to_json)
+		end
+	end
+
 	describe 'Testing getProcedures method' do
 		# Always use before :each, before :all saves the data leading to erros later on
 		before :each  do 

@@ -89,7 +89,7 @@ class ProcedureController < ApplicationController
 
 	# GET /procedure/proceduresPerHealthCentre{params}
 	# Params: [filters values array]
-	# Return: Hash of {helath_centre => total_of_procedures}
+	# Return: Hash of {health_centre => total_of_procedures}
 	def proceduresPerHealthCentre
 		render json: "Bad request", status: 400 and return unless @procedures != nil
 
@@ -300,7 +300,7 @@ private
 		end
 		
 		@filters_name.each.with_index do |filter, i|
-			if !(parsed_json["filters"][i].to_a.empty?)
+			if parsed_json["filters"] != nil && !(parsed_json["filters"][i].to_a.empty?)
 				@procedures = @procedures.where(filter => parsed_json["filters"][i])
 			end
 		end
