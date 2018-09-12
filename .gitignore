@@ -36,3 +36,7 @@ Gemfile.lock
 vendor/*
 
 coverage/*
+
+# Ignore VM files
+devenv/.vagrant
+devenv/*.log

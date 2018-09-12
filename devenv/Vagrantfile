@@ -11,6 +11,7 @@ Vagrant.configure('2') do |config|
   config.vm.hostname = "health-dashboard-devenv"
 
   # Forwarded ports
+  config.vm.network :forwarded_port, guest: 3000, host: 3000, auto_correct: true # rails
   config.vm.network :forwarded_port, guest: 8080, host: 8080, auto_correct: true # http
   config.vm.network :forwarded_port, guest: 8443, host: 8443, auto_correct: true # https
 
@@ -18,11 +19,11 @@ Vagrant.configure('2') do |config|
   config.vm.provision :shell, path: 'bootstrap.sh'
 
   # Shared folder
-  config.vm.synced_folder './', '/home/vagrant/shared', create: true
+  config.vm.synced_folder '../', '/home/vagrant/shared', create: true
 
   # VM settings
   config.vm.provider :virtualbox do |vb|
-    vb.name = 'gcd-devenv'
+    vb.name = 'health-dashboard-devenv'
     vb.customize ['modifyvm', :id, '--memory', '4096']
     vb.customize ['modifyvm', :id, '--cpus', '4']
     vb.customize ['modifyvm', :id, '--ioapic', 'on']
