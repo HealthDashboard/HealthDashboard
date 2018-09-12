@@ -240,4 +240,41 @@ describe ProcedureController, type: 'controller' do
 			expect(assigns(:procedures)).to eq(Procedure.where(:gestor_ide => 1))
 		end
 	end
+        describe 'Testing proceduresTotal method' do
+                before :each  do
+                        HealthCentre.create id: 1, cnes: 431, lat: -23.555885, long: -46.666458
+                        HealthCentre.create id: 2, cnes: 1, lat: -23.555885, long: -46.666458
+
+                        Specialty.create id: 1, name: "Specialty 1"
+                        Specialty.create id: 2, name: "Specialty 2"
+
+                        Procedure.create id: 1, cnes_id: 431, specialty_id: 1
+                        Procedure.create id: 2, cnes_id: 1, specialty_id: 1, age_code: "TP_0A4"
+                        Procedure.create id: 3, cnes_id: 1, specialty_id: 1, days: 50
+                        Procedure.create id: 4, cnes_id: 1, specialty_id: 1, cmpt: 201502
+                        Procedure.create id: 5, cnes_id: 1, specialty_id: 1, proce_re: 3030
+                        Procedure.create id: 6, cnes_id: 1, specialty_id: 2
+                        Procedure.create id: 7, cnes_id: 1, specialty_id: 1, treatment_type: 1
+                        Procedure.create id: 8, cnes_id: 1, specialty_id: 1, cid_primary: "A42"
+                        Procedure.create id: 9, cnes_id: 1, specialty_id: 1, cid_secondary: "B21"
+                        Procedure.create id: 10, cnes_id: 1, specialty_id: 1, cid_secondary2: "Z12"
+                        Procedure.create id: 11, cnes_id: 1, specialty_id: 1, cid_associated: "G92"
+                        Procedure.create id: 12, cnes_id: 1, specialty_id: 1, complexity: 3
+                        Procedure.create id: 13, cnes_id: 1, specialty_id: 1, finance: 6
+                        Procedure.create id: 14, cnes_id: 1, specialty_id: 1, race: 1
+                        Procedure.create id: 15, cnes_id: 1, specialty_id: 1, lv_instruction: 0
+                        Procedure.create id: 16, cnes_id: 1, specialty_id: 1, DA: "REPUBLICA"
+                        Procedure.create id: 17, cnes_id: 1, specialty_id: 1, PR: "SE"
+                        Procedure.create id: 18, cnes_id: 1, specialty_id: 1, STS: "SE"
+                        Procedure.create id: 19, cnes_id: 1, specialty_id: 1, CRS: "CENTRO"
+                        Procedure.create id: 20, cnes_id: 1, specialty_id: 1, gestor_ide: 1
+                end
+
+                it 'should return 20' do
+			data = {"send_all" => "True"}.to_json
+                        self.send(:get, 'proceduresTotal', params: {data: data},format: :json)
+                        expect(response.status).to eq(200)
+                        expect(response.body).to eq(Procedure.count.to_s)
+                end
+        end
 end
