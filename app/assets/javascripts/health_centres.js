@@ -309,8 +309,7 @@ function create_homepage_charts(id) {
       ).then(function(){
           dataSpecialty = add_total_to_data(dataTotal, dataSpecialty);
 
-          dataNormalized = dataSpecialty.slice(0);
-          console.log(dataNormalized)
+          let dataNormalized = $.extend(true, [], dataSpecialty);
           for (i = 0; i < dataNormalized.length; i++) {
             dataNormalized[i] = normalize_to_100(dataNormalized[i]);
           }
@@ -341,7 +340,7 @@ function create_homepage_charts(id) {
 
           dataSpecialty = add_total_to_data(dataTotal, dataSpecialty);
 
-          dataNormalized = $.extend( true, {}, dataSpecialty);
+          let dataNormalized = $.extend(true, [], dataSpecialty);
           for (i = 0; i < dataNormalized.length; i++) {
             dataNormalized[i] = normalize_to_100(dataNormalized[i]);
           }
@@ -361,12 +360,10 @@ function add_total_to_data (dataTotal, data) {
     data[n][i] = dataTotal[d];
     i++;
   }
-
   return data;
 }
 
 function normalize_to_100 (data) {
-  console.log("data")
   let is_num = n => isNaN(n) ? 0 : n
   var sum = data.reduce((a, b) =>
     is_num(a) + is_num(b))
@@ -374,9 +371,8 @@ function normalize_to_100 (data) {
   var i;
 
   for (i = 1; i <= 4; i++) {
-    data[i] = data[i] / ratio;
+    data[i] = parseFloat(data[i] / ratio).toFixed(2);
   }
-
   return data;
 }
 
@@ -419,7 +415,6 @@ function normalize_to_100 (data) {
 // }
 
 function create_chart(data, dataNormalized){
-  // console.log(data);
   option = {
       legend: {
         bottom: '5px',
@@ -430,14 +425,35 @@ function create_chart(data, dataNormalized){
         trigger: 'axis',
         axisPointer : {
           type : 'shadow'
-        }
+        },
+        formatter: function (params) {
+          var colorSpan = color => '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:' + color + '"></span>';
+          let rez = '<b>' + params[0].axisValue + '</b></br>';
+          rez += '<p>'
+          for (var j = 0; j < data.length; j++) {
+            if (data[j][0] === params[0].data[0]) {
+              break;
+            }
+          }
+          var i = 1;
+          var sum = 0;
+          params.forEach(item => {
+            var xx = colorSpan(item.color) + ' ' + item.seriesName + ': ' + data[j][i] + ' (' + item.data[i] + '%)' + '<br>'
+            rez += xx;
+            sum += data[j][i];
+            i++;
+          });
+          rez += 'Total: ' + sum + '</p>'
+
+          return rez;
+        },
       },
       toolbox: {
         show : true,
         feature : {
           mark : {show: true},
           dataView : {show: true, readOnly: true},
-          magicType: {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+          magicType: {show: true, type: ['stack', 'tiled']},
           restore : {show: true},
           saveAsImage : {show: true}
         }
@@ -451,10 +467,13 @@ function create_chart(data, dataNormalized){
       },
       dataset: {
         dimensions: ["Especialidade","< 1km", "> 1km e < 5km", "> 5km e < 10km", "> 10km", ""],
-        source: dataNormalized
+        source: dataNormalized,
+        sourceHeader: false
       },
       xAxis: {type: 'value',
-              max: 100},
+              max: 100,
+              axisLabel: {formatter: '{value}%'}
+             },
       yAxis: {type: 'category',
               axisLabel: {interval : 0},
               // name: 'Especialidades',
@@ -468,7 +487,8 @@ function create_chart(data, dataNormalized){
             label: {
               normal: {
                 show: true,
-                position: 'insideLeft'
+                position: 'insideLeft',
+                formatter: '{@1}%'
               }
             },
           },
@@ -478,7 +498,8 @@ function create_chart(data, dataNormalized){
             label: {
               normal: {
                 show: true,
-                position: 'insideLeft'
+                position: 'insideLeft',
+                formatter: '{@2}%'
               }
             },
           },
@@ -488,7 +509,8 @@ function create_chart(data, dataNormalized){
             label: {
               normal: {
                 show: true,
-                position: 'insideLeft'
+                position: 'insideLeft',
+                formatter: '{@3}%'
               }
             },
           },
@@ -498,7 +520,8 @@ function create_chart(data, dataNormalized){
             label: {
               normal: {
                 show: true,
-                position: 'insideLeft'
+                position: 'insideLeft',
+                formatter: '{@4}%'
               }
             },
           }
