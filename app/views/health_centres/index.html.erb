@@ -96,9 +96,9 @@ var myChart = echarts.init(document.getElementById('bar-graph'));
   document.onload = create_homepage_charts();
 
   $(window).on('resize', function(){
-        if(myChart != null && myChart != undefined){
-            myChart.resize();
-        }
-    });
+    if(myChart != null && myChart != undefined){
+      myChart.resize();
+    }
+  });
 
 </script>

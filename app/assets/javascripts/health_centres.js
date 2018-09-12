@@ -83,12 +83,12 @@ function hide_info() {
   if (!$("#hosp-info-text").hasClass("active")) {
     $("#hosp-info-text").addClass("active");
     document.getElementById("hide_btn").innerHTML = "Mostrar info";
-    myChart.resize();
+    setTimeout(function(){myChart.resize();}, 300);
   }
   else {
     $("#hosp-info-text").removeClass("active");
     document.getElementById("hide_btn").innerHTML = "Esconder info";
-    myChart.resize();
+    setTimeout(function(){myChart.resize();}, 300);
   }
 }
 
@@ -328,7 +328,6 @@ function create_homepage_charts(id) {
         }),
         $.getJSON(pathSpecialty, function(data) {
           dataSpecialty = data;
-          dataSpecialty = lower_case(dataSpecialty);
         })
       ).then(function(){
           for (i = 0; i < Object.keys(dataSpecialty).length; i++) {
@@ -339,13 +338,14 @@ function create_homepage_charts(id) {
           }
           dataSpecialty = Object.values(dataSpecialty);
 
+          dataSpecialty = lower_case(dataSpecialty);
+
           dataSpecialty = add_total_to_data(dataTotal, dataSpecialty);
 
           let dataNormalized = $.extend(true, [], dataSpecialty);
           for (i = 0; i < dataNormalized.length; i++) {
             dataNormalized[i] = normalize_to_100(dataNormalized[i]);
           }
-          console.log(dataNormalized)
 
           create_chart(dataSpecialty, dataNormalized);
       });
@@ -439,12 +439,12 @@ function create_chart(data, dataNormalized){
           var i = 1;
           var sum = 0;
           params.forEach(item => {
-            var xx = colorSpan(item.color) + ' ' + item.seriesName + ': ' + data[j][i] + ' (' + item.data[i] + '%)' + '<br>'
+            var xx = colorSpan(item.color) + ' ' + item.seriesName + ': ' + data[j][i].toLocaleString('pt-BR') + ' (' + item.data[i] + '%)' + '<br>'
             rez += xx;
             sum += data[j][i];
             i++;
           });
-          rez += 'Total: ' + sum + '</p>'
+          rez += 'Total: ' + sum.toLocaleString('pt-BR') + '</p>'
 
           return rez;
         },
@@ -453,12 +453,12 @@ function create_chart(data, dataNormalized){
         show : true,
         feature : {
           mark : {show: true},
-          dataView : {show: true, readOnly: true},
           magicType: {show: true, type: ['stack', 'tiled']},
           restore : {show: true},
           saveAsImage : {show: true}
         }
       },
+      // color: ["#B9D8C2", "#84C8C2", "#2066A9", "#19407F"],
       grid: {
         left: '0',
         right: '25px',
@@ -528,10 +528,8 @@ function create_chart(data, dataNormalized){
           }
       ]
   };
-
-    // use configuration item and data specified to show chart
-    myChart.setOption(option);
-  }
+  myChart.setOption(option);
+}
 
 
 function update_right_graph_text(data) {
