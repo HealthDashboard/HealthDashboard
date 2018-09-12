@@ -118,6 +118,41 @@ describe ProcedureController, type: 'controller' do
 		end
 	end
 
+	describe 'Testing proceduresSetorCensitario method' do
+		before :each do
+			HealthCentre.create id: 1, cnes: 1, lat: -23.555885, long: -46.666458
+			Specialty.create id: 1, name: "Specialty 1"
+
+			Procedure.create id: 1, cnes_id: 1, specialty_id: 1, lat: -23.555885, long: -46.666458
+			Procedure.create id: 2, cnes_id: 1, specialty_id: 1, lat: -23.555885, long: -46.666458
+			Procedure.create id: 3, cnes_id: 1, specialty_id: 1, lat: -23.555885, long: -46.666458
+		 	Procedure.create id: 4, cnes_id: 1, specialty_id: 1, lat: -1.5, long: -2.6
+		 	Procedure.create id: 5, cnes_id: 1, specialty_id: 1, lat: -1.5, long: -2.6
+		 	Procedure.create id: 6, cnes_id: 1, specialty_id: 1, lat: -1.5, long: -2.6
+		 	Procedure.create id: 7, cnes_id: 1, specialty_id: 1, lat: -1.5, long: -2.6
+		end
+
+		it 'should return bad request when a call has no params' do
+			self.send(:get, 'proceduresSetorCensitario', params: {data: {}.to_json}, as: :json)
+			expect(response.status).to eq(400)
+			expect(response.body).to eq("Bad request")
+		end
+
+		it 'should return empty json when a call has wrong parameters' do
+			data = {"filters" => [["3"]]}.to_json
+			self.send(:get, 'proceduresSetorCensitario', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("[]")
+		end
+
+		it 'should return a array of ids when a call has correct parameters' do
+			data = {"filters" => [["1"]]}.to_json
+			self.send(:get, 'proceduresSetorCensitario', params: {data: data, "lat" => -23.555885, "long" => -46.666458}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("[1,2,3]")
+		end
+	end
+
 	describe 'Testing getProcedures method' do
 		# Always use before :each, before :all saves the data leading to erros later on
 		before :each  do
