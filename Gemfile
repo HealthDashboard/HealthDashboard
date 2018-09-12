@@ -115,7 +115,5 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
-# Graph API
-#Se esse comentário passou no commit a Camila fez besteira, se isso quebrou alguma coisa, tira essa gem (vai quebrar Estabelecimentos)
-# gem 'echarts-rails', :path => "../echarts-rails"
+# Graphs
 gem 'echarts-rails', :git => 'https://github.com/NaomiKodaira/echarts-rails.git'
