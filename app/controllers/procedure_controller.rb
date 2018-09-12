@@ -1,20 +1,12 @@
 class ProcedureController < ApplicationController
-	before_action :updateSession, :getProcedures, only: [:proceduresDistanceGroup, :proceduresPerMonth,
-		:proceduresPerHealthCentre, :proceduresPerSpecialties, :proceduresDistance, :proceduresTotal, 
+	before_action :getProcedures, only: [:proceduresDistanceGroup, :proceduresPerMonth,
+		:proceduresPerHealthCentre, :proceduresPerSpecialties, :proceduresDistance, 
 		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario, :download]
-	after_action :procedureCleanUp, only: [:proceduresDistanceGroup, :proceduresPerMonth, :proceduresQuartiles,
-		:proceduresPerHealthCentre, :proceduresPerSpecialties, :proceduresDistance, :proceduresTotal, 
-		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario, :proceduresMaxValues, :download]
-	after_action :afterDownload, only: [:download]
 
 	def initialize
 		# Cons, AVOID USING NUMBERS, make a constant instead
 		@NUM_FILTERS = 19
 		@MAX_SLIDERS = [351,148,99,351,110786.71.ceil,52.4832033827607.ceil]
-
-		@procedures = nil
-		@downloadable = nil
-		@enumerator = nil
 
 		@procedure = ["Estabelecimento de ocorrência", "Competência (aaaamm)", "Grupo do procedimento autorizado", "Especialidade do leito", "Caráter do atendimento", 
 					  "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Complexidade", "Tipo de financiamento"]
@@ -76,7 +68,7 @@ class ProcedureController < ApplicationController
 	def proceduresDistanceGroup
 		render json: "Bad request", status: 400 and return unless @procedures != nil
 
-		result = {"<= 1 Km" => procedures.where("distance <= ?", 1).count, "> 1 Km e <= 5 Km" =>  procedures.where("distance > ? AND distance <= ?", 1, 5).count, "> 5 Km e <= 10 Km" => procedures.where("distance > ? AND distance <= ?", 5, 10).count, "> 10 Km" => procedures.where("distance > ?", 10).count}
+		result = {"<= 1 Km" => @procedures.where("distance <= ?", 1).count, "> 1 Km e <= 5 Km" =>  @procedures.where("distance > ? AND distance <= ?", 1, 5).count, "> 5 Km e <= 10 Km" => @procedures.where("distance > ? AND distance <= ?", 5, 10).count, "> 10 Km" => @procedures.where("distance > ?", 10).count}
 		render json: result, status: 200
 	end
 
@@ -107,7 +99,6 @@ class ProcedureController < ApplicationController
 				result[HealthCentre.find_by(cnes: p[0]).name.to_s] = p[1].to_i
 		end
 		render json: result, status: 200
-		result = nil
 	end
 
 	# GET /procedure/proceduresPerSpecialties{params}
@@ -122,7 +113,6 @@ class ProcedureController < ApplicationController
 			result[Specialty.find_by(id: specialty[0]).name] = specialty[1].to_i
 		end
 		render json: result, status: 200
-		perSpecialties = nil
 	end
 
 	# GET /procedure/proceduresDistance{params}
@@ -137,16 +127,13 @@ class ProcedureController < ApplicationController
 				 	result[Specialty.find_by(id: p[0]).name.to_s] = p[1].round(2).to_f
 		end
 		render json: result, status: 200
-		result = nil
 	end
 
-	# GET /procedure/proceduresTotal{params}
-	# Params: [filters values array]
+	# GET /procedure/proceduresTotal
+	# Params: none
 	# Return: Procedures counter
 	def proceduresTotal
-		render json: "Bad request", status: 400 and return unless @procedures != nil
-
-		render json: @procedures.count, status: 200
+		render json: Procedure.count, status: 200
 	end
 
 	# GET /procedure/proceduresLatLong/{params}
@@ -157,7 +144,6 @@ class ProcedureController < ApplicationController
 
 		latlong = @procedures.pluck(:lat, :long, :id);
 		render json: latlong, status: 200
-		latlong = nil
 	end
 
 	# GET /procedure/proceduresInfo/{params}
@@ -167,7 +153,6 @@ class ProcedureController < ApplicationController
 		info = Procedure.where(id: params[:id]).select(:cnes_id, :gender, :age_number, :cid_primary, :CRS, :date, :distance, :lat, :long).to_a
 
 		render json: info, status:  200
-		info = nil
 	end
 
 	# Handles clustering for large amount of data
@@ -180,7 +165,6 @@ class ProcedureController < ApplicationController
 		clusters = @procedures.group(:lat, :long).count.to_a.flatten.each_slice(3) #Convert hash {[lat, long] => count} to array [lat, long, count]
 
 		render json: clusters, status: 200
-		clusters = nil
 	end
 
 	# GET /procedure/proceduresSetorCensitario/{params}
@@ -191,7 +175,6 @@ class ProcedureController < ApplicationController
 
 		setor_cen = @procedures.where(:lat => params[:lat], :long => params[:long]).pluck(:id)
 		render json: setor_cen, status: 200
-		setor_cen = nil
 	end
 
 	# GET /procedure/proceduresMaxValues/{params}
@@ -215,7 +198,6 @@ class ProcedureController < ApplicationController
 			end
 		end
 		render json: max, status: 200
-		max = 0
 	end
 
 	# GET /procedure/proceduresQuartiles
@@ -258,14 +240,9 @@ class ProcedureController < ApplicationController
 		distance = nil
 
 		render json: quartiles, status: 200
-		quartiles = nil
 	end
 
 	# Download csv file
-	# Javascript is not allowed to download files, so this call is done with path_to rails method,
-	# Because of this we cannot pass data directly in its call.
-	# The workaround is first we use update_session to pass data to the controller then it's possible to
-	# call this method to download filtered procedures.
 	# GET /procedure/download.csv
 	# Params: [filters values array]
 	# Return: CSV file.
@@ -280,21 +257,6 @@ class ProcedureController < ApplicationController
 			'"STS" as "STS"', '"CRS" as "CRS"', 'replace(distance::text, \'.\', \',\') as "DISTANCIA_KM"')
 
 		@enumerator = @downloadable.copy_to_enumerator(:buffer_lines => 100, :delimiter => ";")
-		# Tell Rack to stream the content
-		headers.delete("Content-Length")
-
-		# Don't cache anything from this generated endpoint
-		headers["Cache-Control"] = "no-cache"
-
-		# Tell the browser this is a CSV file
-		headers["Content-Type"] = "text/csv"
-
-		# Make the file download with a specific filename
-		headers["Content-Disposition"] = "inline; filename=\"internacoes-hospitalares-#{Date.today}.csv\""
-
-		# Don't buffer when going through proxy servers
-		headers["X-Accel-Buffering"] = "no"
-
 		# Set an Enumerator as the body
 		self.response_body = @enumerator
 
@@ -310,8 +272,6 @@ class ProcedureController < ApplicationController
 		cnes = cnes.split(",")
 		health_centres = HealthCentre.where(cnes: cnes).pluck(:lat, :long)
 		render json: health_centres, status: 200
-		cnes = nil
-		health_centres = nil
 	end
 
 	# GET /procedure/proceduresByHealthCentre/{params}
@@ -320,121 +280,50 @@ class ProcedureController < ApplicationController
 	def proceduresByHealthCentre
 		procedures = Procedure.where(cnes_id: params[:cnes].to_s)
 		render json: procedures.to_a
-		procedures = nil
 	end
 
 private
 	# Params: [filters values array]
-	# Return: Session variable is updated
-	def updateSession
-		if params[:hasData] != nil
-			session[:hasData] = true
-		end
-
-		if params[:send_all] == "True"
-			session[:send_all] = "True"
-		else
-			session[:send_all] = "False"
-		end
-
-		if session[:filters] == nil || params[:filters] != nil
-			session[:filters] = Array.new(@NUM_FILTERS)
-		end
-
-		if params[:filters] != nil
-			params[:filters].each.with_index do |filter, i|
-					session[:filters][i] = filter.split(";") unless filter == ""
-			end
-		end
-
-		if session[:sliders] == nil || params[:sliders] != nil
-			session[:sliders] = Array.new(6)
-		end
-
-		if params[:sliders] != nil
-			params[:sliders].each_value.with_index do |slider, i|
-				session[:sliders][i] = [slider[0].to_i, slider[1].to_i]
-			end
-		end
-
-		if params[:genders] != nil
-			session[:genders] = params[:genders].to_s
-			session[:genders] = session[:genders].split(",")
-		end
-
-		if params[:start_date] != nil && params[:start_date].to_s != ""
-			session[:start_date] = params[:start_date]
-			session[:start_date] = Date.parse session[:start_date]
-		elsif params[:start_date].to_s == ""
-			session[:start_date] = nil
-		end
-
-		if params[:end_date] != nil && params[:end_date].to_s != ""
-			session[:end_date] = params[:end_date]
-			session[:end_date] = Date.parse session[:end_date]
-		elsif params[:end_date].to_s == ""
-			session[:end_date] = nil
-		end
-		return
-	end
-
-	# Params: [filters values array]
 	# Return: procedures based on the values passed in your last update_session
 	def getProcedures
-		@procedures = nil
+		params.require(:data)
+		parsed_json = JSON.parse params[:data]
+		@procedures = Procedure.where(nil)
 
-		if session[:send_all] == "True"
+		if parsed_json["send_all"] == "True"
 			@procedures = Procedure.all
+			return
 		end
 
-		if session[:genders] != nil
-			@procedures = session[:genders].length < 2 ? Procedure.where(gender: session[:genders]) : @procedures = Procedure.all
+		if parsed_json["genders"] != nil && parsed_json["genders"] != []
+			@procedures = Procedure.where(gender: parsed_json["genders"])
 		end
-
+		
 		@filters_name.each.with_index do |filter, i|
-			if session[:filters][i] == nil
-				next
-			end
-
-			if @procedures == nil
-				@procedures = Procedure.where(filter => session[:filters][i])
-			else
-				@procedures = @procedures.where(filter => session[:filters][i])
+			if !(parsed_json["filters"][i].to_a.empty?)
+				@procedures = @procedures.where(filter => parsed_json["filters"][i])
 			end
 		end
 
-		@sliders_name.each.with_index do |slider, i|
-			if session[:sliders][i] == nil
-				next
-			end
-
-			min =  session[:sliders][i][0]
-			max = session[:sliders][i][1]
-			if max == @MAX_SLIDERS[i]
+		if parsed_json["sliders"] != nil
+			@sliders_name.each.with_index do |slider, i|
+				min =  parsed_json["sliders"][i][0] unless parsed_json["sliders"] == nil
+				max = parsed_json["sliders"][i][1] unless parsed_json["sliders"] == nil
+				if max == @MAX_SLIDERS[i]
 					@procedures = @procedures.where(slider + ' >= ?', min) unless min == 0
-			else
-				@procedures = @procedures.where(slider + ' >= ? AND ' + slider + ' <= ?', min, max)
+				else
+					@procedures = @procedures.where(slider + ' >= ? AND ' + slider + ' <= ?', min, max)
+				end
 			end
 		end
 
-		if session[:start_date] != nil && session[:end_date] != nil
-			if @procedures != nil
-				@procedures = @procedures.where('date BETWEEN ? AND ?', session[:start_date], session[:end_date])
-			else
-				@procedures = Procedure.where('date BETWEEN ? AND ?', session[:start_date], session[:end_date])
-			end
-
+		if !(parsed_json["start_date"].to_s.empty?) || !(parsed_json["end_date"].to_s.empty?)
+			start_date = Date.parse parsed_json["start_date"]
+			end_date = Date.parse parsed_json["end_date"]
+			@procedures = @procedures.where('date BETWEEN ? AND ?', start_date, end_date)
 		end
-	end
 
-	# Tell garbage collector it can return the memory to the SO.
-	def procedureCleanUp
-		@procedures = nil
-	end
-
-	def afterDownload
-		@downloadable = nil
-		@enumerator = nil
+		@procedures = nil unless @procedures != Procedure.where(nil)
 	end
 
 	# Params: A hash of {value => counter}

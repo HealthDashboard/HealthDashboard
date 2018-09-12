@@ -120,7 +120,7 @@ function create_analise() {
     } else {
         var path = 'procedure/proceduresDistanceGroup'
     }
-    $.getJSON(path, function(result) {
+    $.getJSON(path, data,function(result) {
         draw_chart(header, result, chart, options, specialties_color);
     });
 }
