@@ -25,8 +25,6 @@ var heat, cluster, shape, clean_up_cluster, max;
 
 var id;
 
-// NUM_FILTERS = 19;
-
 //** Display name for printing **//
 var filters_print = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Grupo étnico", "Nível de instrução", "Competência",
       "Grupo do procedimento autorizado", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Total geral de diárias",
@@ -73,6 +71,19 @@ function initProcedureMap() {
     });
 
     L.control.scale({imperial: false, position: 'bottomright'}).addTo(map);
+}
+
+function download() {
+    $.ajax({
+        contentType: 'json',
+        url: "procedure/download.csv",
+        data: getData(),
+        dataType: 'text',
+        success: function(result) {
+            var uri = "data:text/csv;Content-Type:text/csv," + encodeURIComponent(result);
+            window.location.href = uri
+        }
+    });
 }
 
 //** Called when a visualization shape is selected, remove any previous selected shape and draws a new one **//
@@ -151,8 +162,8 @@ function getData() {
             aux_name.push([value.text]);
         });
 
-        filters_text.push(aux_name.join(", "));
-        filters.push(aux.join(";"));
+        filters_text.push(aux_name.join(","));
+        filters.push(aux);
     }
 
     start_date = $("#intervalStart").datepicker({ dateFormat: 'dd,MM,yyyy' }).val();
@@ -170,7 +181,8 @@ function getData() {
         sliders.push([values[0], values[1]]);
     }
 
-    data = {send_all: "False", data: 1, filters: filters, genders: genders.toString(), start_date: start_date.toString(), end_date: end_date.toString(), sliders: sliders};
+    data_aux = {send_all: "False", filters: filters, genders: genders, start_date: start_date.toString(), end_date: end_date.toString(), sliders: sliders};
+    data = {"data": JSON.stringify(data_aux)} // Fix hash to array problem on controller
     return data
 }
 
@@ -240,44 +252,56 @@ function handleLargeCluster(map, path, data, max_cluster, max_heatmap, heatmap_o
             if ((zoomValues[map.getZoom()] == undefined) || zoomValues[map.getZoom()] < max) {
                 zoomValues[map.getZoom()] = max; //if zoomValues[current Zoom] is empty, then store the value
             }
-            document.getElementById("legend-label-2").innerText = zoomValues[map.getZoom()];            
+            legendlabel2 = document.getElementById("legend-label-2")
+            if (legendlabel2 !== null)
+                legendlabel2.innerText = zoomValues[map.getZoom()];            
             return L.divIcon({ html: n, className: className, iconSize: L.point(size, size) });
         },
     });
 
-    $.getJSON(path, data, function(procedures) {
-        markerList = [];
-        heatmap_procedure = [];
-        Num_procedures = 0;
+    $.ajax({
+        type: "GET",
+        dataType: 'json',
+        contentType: 'application/json',
+        data: data,
+        url: path,
+        success: function(procedures) {
+            markerList = [];
+            heatmap_procedure = [];
+            Num_procedures = 0;
 
-        $.each(procedures, function(index, latlong){
-            icon = L.divIcon({ html: latlong[2], className: 'map-marker marker-single a-class', iconSize: L.point(30, 30) });
-            marker = L.marker(L.latLng(latlong[0], latlong[1]), {icon: icon})
-            marker.latlong = [latlong[0], latlong[1]];
-            marker.number = latlong[2];
-            marker.clusterOpen = false;
-            marker.cluster = null;
-            marker.on('click', function_maker);
-            markerList.push(marker);
-            Num_procedures += latlong[2]
-        });
-        cluster.addLayers(markerList);
-        map.addLayer(cluster);
+            $.each(procedures, function(index, latlong){
+                icon = L.divIcon({ html: latlong[2], className: 'map-marker marker-single a-class', iconSize: L.point(30, 30) });
+                marker = L.marker(L.latLng(latlong[0], latlong[1]), {icon: icon})
+                marker.latlong = [latlong[0], latlong[1]];
+                marker.number = latlong[2];
+                marker.clusterOpen = false;
+                marker.cluster = null;
+                marker.on('click', function_maker);
+                markerList.push(marker);
+                Num_procedures += latlong[2]
+            });
+            cluster.addLayers(markerList);
+            map.addLayer(cluster);
 
-        $.each(procedures, function(index, procedure) {
-            heatmap_procedure.push([procedure[0], procedure[1], (procedure[2] / Num_procedures) * 100]);
-        });
+            $.each(procedures, function(index, procedure) {
+                heatmap_procedure.push([procedure[0], procedure[1], (procedure[2] / Num_procedures) * 100]);
+            });
 
-        heat = L.heatLayer(heatmap_procedure, {maxZoom: 11, radius: max_heatmap, blur: 50, gradient: {.4:"#F8A5B2",.6:"#F97C85",.7:"#FB5459",.8:"#FC2C2D",1:"#FE0401"}}); // Add heatmap
+            heat = L.heatLayer(heatmap_procedure, {maxZoom: 11, radius: max_heatmap, blur: 50, gradient: {.4:"#F8A5B2",.6:"#F97C85",.7:"#FB5459",.8:"#FC2C2D",1:"#FE0401"}}); // Add heatmap
 
-        //inserting the first and last values
-        document.getElementById("legend-label-1").innerText = 0.0;
-        map.addLayer(heat);
+            //inserting the first and last values
+            legendlabel1 = document.getElementById("legend-label-1")
+            if (legendlabel1 !== null)
+                legendlabel1.innerText = 0.0;
 
-        X = document.getElementsByClassName("leaflet-heatmap-layer")
-        X[0].style["opacity"] = heatmap_opacity / 100;
-    
-        $('#loading_overlay').hide();
+            map.addLayer(heat);
+
+            X = document.getElementsByClassName("leaflet-heatmap-layer")
+            X[0].style["opacity"] = heatmap_opacity / 100;
+        
+            $('#loading_overlay').hide();
+        }
     });
 }
 
@@ -297,19 +321,28 @@ function CustomMarkerOnClick(e) {
         path = "procedure/proceduresSetorCensitario"
 
         list = []
-        $.getJSON(path, {lat: marker.latlong[0], long: marker.latlong[1]}, function(procedures){
-            $.each(procedures, function(index, id){
-                single_point_marker = L.marker(L.latLng(marker.latlong[0], marker.latlong[1]), {icon: dotIcon, id: id}).on('click', markerOnClick);
-                list.push(single_point_marker)
-            });
-            marker.cluster.addLayers(list);
-            marker.cluster.addTo(map);
-            clean_up_cluster.push(marker.cluster);
+        data = getData()
+        data["lat"] = marker.latlong[0]
+        data["long"] = marker.latlong[1]
+        console.log(data)
+        $.ajax({
+            contentType: 'json',
+            url: path,
+            data: data,
+            success: function(procedures) {
+                $.each(procedures, function(index, id){
+                    single_point_marker = L.marker(L.latLng(marker.latlong[0], marker.latlong[1]), {icon: dotIcon, id: id}).on('click', markerOnClick);
+                    list.push(single_point_marker)
+                });
+                marker.cluster.addLayers(list);
+                marker.cluster.addTo(map);
+                clean_up_cluster.push(marker.cluster);
 
-            $.each(marker.cluster.getLayers(), function(index, layer) {
-                layer.__parent.spiderfy();
-            });
-            marker.clusterOpen = true;
+                $.each(marker.cluster.getLayers(), function(index, layer) {
+                    layer.__parent.spiderfy();
+                });
+                marker.clusterOpen = true;
+            }
         });
     }
 
@@ -446,7 +479,7 @@ function clearMap() {
 //** Called when "Dados Gerais" button is clicked, open "Dados Gerais" page and passes filter values to it **//
 function graphs() {
     var w = window.open('dados-gerais');
-    w._data_filters = data;
+    w._data_filters = getData();
 }
 
 //** Called when "Imprimir" butotn is clicked, opens a print dialog **//
