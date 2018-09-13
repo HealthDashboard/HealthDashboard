@@ -325,43 +325,44 @@ describe ProcedureController, type: 'controller' do
 			expect(assigns(:procedures)).to eq(Procedure.where(:gestor_ide => 1))
 		end
 	end
-        describe 'Testing proceduresTotal method' do
-                before :each  do
-                        HealthCentre.create id: 1, cnes: 431, lat: -23.555885, long: -46.666458
-                        HealthCentre.create id: 2, cnes: 1, lat: -23.555885, long: -46.666458
 
-                        Specialty.create id: 1, name: "Specialty 1"
-                        Specialty.create id: 2, name: "Specialty 2"
+    describe 'Testing proceduresTotal method' do
+            before :each  do
+                    HealthCentre.create id: 1, cnes: 431, lat: -23.555885, long: -46.666458
+                    HealthCentre.create id: 2, cnes: 1, lat: -23.555885, long: -46.666458
 
-                        Procedure.create id: 1, cnes_id: 431, specialty_id: 1
-                        Procedure.create id: 2, cnes_id: 1, specialty_id: 1, age_code: "TP_0A4"
-                        Procedure.create id: 3, cnes_id: 1, specialty_id: 1, days: 50
-                        Procedure.create id: 4, cnes_id: 1, specialty_id: 1, cmpt: 201502
-                        Procedure.create id: 5, cnes_id: 1, specialty_id: 1, proce_re: 3030
-                        Procedure.create id: 6, cnes_id: 1, specialty_id: 2
-                        Procedure.create id: 7, cnes_id: 1, specialty_id: 1, treatment_type: 1
-                        Procedure.create id: 8, cnes_id: 1, specialty_id: 1, cid_primary: "A42"
-                        Procedure.create id: 9, cnes_id: 1, specialty_id: 1, cid_secondary: "B21"
-                        Procedure.create id: 10, cnes_id: 1, specialty_id: 1, cid_secondary2: "Z12"
-                        Procedure.create id: 11, cnes_id: 1, specialty_id: 1, cid_associated: "G92"
-                        Procedure.create id: 12, cnes_id: 1, specialty_id: 1, complexity: 3
-                        Procedure.create id: 13, cnes_id: 1, specialty_id: 1, finance: 6
-                        Procedure.create id: 14, cnes_id: 1, specialty_id: 1, race: 1
-                        Procedure.create id: 15, cnes_id: 1, specialty_id: 1, lv_instruction: 0
-                        Procedure.create id: 16, cnes_id: 1, specialty_id: 1, DA: "REPUBLICA"
-                        Procedure.create id: 17, cnes_id: 1, specialty_id: 1, PR: "SE"
-                        Procedure.create id: 18, cnes_id: 1, specialty_id: 1, STS: "SE"
-                        Procedure.create id: 19, cnes_id: 1, specialty_id: 1, CRS: "CENTRO"
-                        Procedure.create id: 20, cnes_id: 1, specialty_id: 1, gestor_ide: 1
-                end
+                    Specialty.create id: 1, name: "Specialty 1"
+                    Specialty.create id: 2, name: "Specialty 2"
 
-                it 'should return 20' do
-			data = {"send_all" => "True"}.to_json
-                        self.send(:get, 'proceduresTotal', params: {data: data},format: :json)
-                        expect(response.status).to eq(200)
-                        expect(response.body).to eq(Procedure.count.to_s)
-                end
-        end
+                    Procedure.create id: 1, cnes_id: 431, specialty_id: 1
+                    Procedure.create id: 2, cnes_id: 1, specialty_id: 1, age_code: "TP_0A4"
+                    Procedure.create id: 3, cnes_id: 1, specialty_id: 1, days: 50
+                    Procedure.create id: 4, cnes_id: 1, specialty_id: 1, cmpt: 201502
+                    Procedure.create id: 5, cnes_id: 1, specialty_id: 1, proce_re: 3030
+                    Procedure.create id: 6, cnes_id: 1, specialty_id: 2
+                    Procedure.create id: 7, cnes_id: 1, specialty_id: 1, treatment_type: 1
+                    Procedure.create id: 8, cnes_id: 1, specialty_id: 1, cid_primary: "A42"
+                    Procedure.create id: 9, cnes_id: 1, specialty_id: 1, cid_secondary: "B21"
+                    Procedure.create id: 10, cnes_id: 1, specialty_id: 1, cid_secondary2: "Z12"
+                    Procedure.create id: 11, cnes_id: 1, specialty_id: 1, cid_associated: "G92"
+                    Procedure.create id: 12, cnes_id: 1, specialty_id: 1, complexity: 3
+                    Procedure.create id: 13, cnes_id: 1, specialty_id: 1, finance: 6
+                    Procedure.create id: 14, cnes_id: 1, specialty_id: 1, race: 1
+                    Procedure.create id: 15, cnes_id: 1, specialty_id: 1, lv_instruction: 0
+                    Procedure.create id: 16, cnes_id: 1, specialty_id: 1, DA: "REPUBLICA"
+                    Procedure.create id: 17, cnes_id: 1, specialty_id: 1, PR: "SE"
+                    Procedure.create id: 18, cnes_id: 1, specialty_id: 1, STS: "SE"
+                    Procedure.create id: 19, cnes_id: 1, specialty_id: 1, CRS: "CENTRO"
+                    Procedure.create id: 20, cnes_id: 1, specialty_id: 1, gestor_ide: 1
+            end
+
+            it 'should return 20' do
+		data = {"send_all" => "True"}.to_json
+                    self.send(:get, 'proceduresTotal', params: {data: data},format: :json)
+                    expect(response.status).to eq(200)
+                    expect(response.body).to eq(Procedure.count.to_s)
+            end
+    end
 
 	describe 'Testing proceduresInfo method' do
 		before :each  do
@@ -388,5 +389,50 @@ describe ProcedureController, type: 'controller' do
 		it "should raise an error when id is null" do
 			expect{self.send(:get, 'proceduresInfo', params: {id: nil})}.to raise_error(ActionController::UrlGenerationError)
 		end
+	end
+
+	describe 'Testing proceduresMaxValues method' do
+		before :each do
+			HealthCentre.create id: 1, cnes: 431, lat: -23.555885, long: -46.666458
+			HealthCentre.create id: 2, cnes: 1, lat: -23.555885, long: -46.666458
+
+			Specialty.create id: 1, name: "Specialty 1"
+			Specialty.create id: 2, name: "Specialty 2"
+
+			Procedure.create id: 1, cnes_id: 431, specialty_id: 1, days_ui: 2, days: 11, days_total: 2, days_uti: 2, val_total: 2, distance: 4
+			Procedure.create id: 2, cnes_id: 431, specialty_id: 1, days_ui: 5, days: 5, days_total: 5, days_uti: 5, val_total: 5, distance: 4
+			Procedure.create id: 3, cnes_id: 1, specialty_id: 1, days_ui: 7, days: 7, days_total: 7, days_uti: 7, val_total: 7, distance: 4
+		end
+
+		it 'should return 400' do
+			data = {}.to_json
+			self.send(:get, 'proceduresMaxValues', params: {data: data}, as: :json)
+			expect(response.status).to eq(400)
+			expect(response.body).to eq("Bad request")
+		end
+
+		it 'should return a constant when send_all == true' do
+			data = {}.to_json
+			self.send(:get, 'proceduresMaxValues', params: {data: data, send_all: "True"}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("[351,148,99,351,110787,53]")
+		end
+
+		it 'should return the max filtered values' do
+			filters = [["431"]]
+			data = {"filters" => filters}.to_json
+			self.send(:get, 'proceduresMaxValues', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("[11,5,5,5,5,4]")
+		end
+
+		it "should return [0,0,0,0,0,0] if there's no matches for the selected filter" do
+			filters = [["2"]]
+			data = {"filters" => filters}.to_json
+			self.send(:get, 'proceduresMaxValues', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("[0,0,0,0,0,0]")
+		end
+
 	end
 end
