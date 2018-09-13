@@ -27,7 +27,7 @@ describe ProcedureController, type: 'controller' do
 			self.send(:get, 'proceduresQuartiles', params: {data: "True", send_all: "True"},format: :json)
 			expect(response.status).to eq(200)
 			expect(response.body).to_not be_nil
-			expect(JSON.parse(response.body)).to eq([[2, 3.0, 6], [0, 0.0, 0], [0, 0.0, 0], [2, 3.0, 6], 
+			expect(JSON.parse(response.body)).to eq([[2, 3.0, 6], [0, 0.0, 0], [0, 0.0, 0], [2, 3.0, 6],
 				[0.0, 0.0, 0.0], [2.34493573228911, 4.96823522661767, 10.4606915236337]])
 		end
 
@@ -123,7 +123,7 @@ describe ProcedureController, type: 'controller' do
 
 	describe 'Testing getProcedures method' do
 		# Always use before :each, before :all saves the data leading to erros later on
-		before :each  do 
+		before :each  do
 			HealthCentre.create id: 1, cnes: 431, lat: -23.555885, long: -46.666458
 			HealthCentre.create id: 2, cnes: 1, lat: -23.555885, long: -46.666458
 
@@ -149,7 +149,7 @@ describe ProcedureController, type: 'controller' do
 		 	Procedure.create id: 17, cnes_id: 1, specialty_id: 1, PR: "SE"
 		 	Procedure.create id: 18, cnes_id: 1, specialty_id: 1, STS: "SE"
 		 	Procedure.create id: 19, cnes_id: 1, specialty_id: 1, CRS: "CENTRO"
-		 	Procedure.create id: 20, cnes_id: 1, specialty_id: 1, gestor_ide: 1 
+		 	Procedure.create id: 20, cnes_id: 1, specialty_id: 1, gestor_ide: 1
 		end
 
 		it 'should raise an error for a call without parameters' do
@@ -362,4 +362,33 @@ describe ProcedureController, type: 'controller' do
                         expect(response.body).to eq(Procedure.count.to_s)
                 end
         end
+
+	describe 'Testing procedures info' do
+		before :each  do
+			HealthCentre.create id: 1, cnes: 431, lat: -23.555885, long: -46.666458
+			HealthCentre.create id: 2, cnes: 1, lat: -23.555885, long: -46.666458
+
+			Specialty.create id: 1, name: "Specialty 1"
+			Specialty.create id: 2, name: "Specialty 2"
+
+			Procedure.create id: 1, cnes_id: 431, gender: 'F', age_number: 20, cid_primary: 'B22', CRS: "CENTRO", date: 20150829, distance: 4.5, lat: -23.49, long: -46.641791
+			Procedure.create id: 2, cnes_id: 432, gender: 'F', age_number: 20, cid_primary: 'B22', CRS: "CENTRO", date: 20150829, distance: 4.5, lat: -23.49
+			Procedure.create id: 3, cnes_id: 433, gender: 'F', age_number: 20, cid_primary: 'B22', CRS: "CENTRO", date: 20150829, distance: 4.5, long: -46.641791
+			#Procedure.create id: 1, cnes_id: 431, gender: 'F', age_number: 20, cid_primary: 'B22', CRS: "CENTRO", date: 20150829, lat: -23.49, long: -46.641791
+			#Procedure.create id: 1, cnes_id: 431, gender: 'F', age_number: 20, cid_primary: 'B22', CRS: "CENTRO", distance: 4.5, lat: -23.49, long: -46.641791
+		end
+
+		it 'should send the correct info and return 200' do
+			#controller.params[:id] = 1
+			self.send(:get, 'proceduresInfo', params: {id: 1})
+			expect(response.status).to eq(200)
+			@expected = {
+        :flashcard  => @flashcard,
+        :lesson     => @lesson,
+        :success    => true
+			}.to_json
+			response.body.should == @expected
+			assort(response.body).to include([431, 'F', 20, 'B22', 'CENTRO', 20150829, 4.5, -23.49, -46.641791])
+		end
+	end
 end
