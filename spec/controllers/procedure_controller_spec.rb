@@ -363,32 +363,30 @@ describe ProcedureController, type: 'controller' do
                 end
         end
 
-	describe 'Testing procedures info' do
+	describe 'Testing proceduresInfo method' do
 		before :each  do
 			HealthCentre.create id: 1, cnes: 431, lat: -23.555885, long: -46.666458
-			HealthCentre.create id: 2, cnes: 1, lat: -23.555885, long: -46.666458
 
 			Specialty.create id: 1, name: "Specialty 1"
-			Specialty.create id: 2, name: "Specialty 2"
 
-			Procedure.create id: 1, cnes_id: 431, gender: 'F', age_number: 20, cid_primary: 'B22', CRS: "CENTRO", date: 20150829, distance: 4.5, lat: -23.49, long: -46.641791
-			Procedure.create id: 2, cnes_id: 432, gender: 'F', age_number: 20, cid_primary: 'B22', CRS: "CENTRO", date: 20150829, distance: 4.5, lat: -23.49
-			Procedure.create id: 3, cnes_id: 433, gender: 'F', age_number: 20, cid_primary: 'B22', CRS: "CENTRO", date: 20150829, distance: 4.5, long: -46.641791
-			#Procedure.create id: 1, cnes_id: 431, gender: 'F', age_number: 20, cid_primary: 'B22', CRS: "CENTRO", date: 20150829, lat: -23.49, long: -46.641791
-			#Procedure.create id: 1, cnes_id: 431, gender: 'F', age_number: 20, cid_primary: 'B22', CRS: "CENTRO", distance: 4.5, lat: -23.49, long: -46.641791
+			Procedure.create id: 1, cnes_id: 431, specialty_id: 1, gender: 'F', age_number: 20, cid_primary: 'B22', CRS: "CENTRO", date: 20150829, distance: 4.5, lat: -23.49, long: -46.641791
+			Procedure.create id: 2, cnes_id: 431, specialty_id: 1, gender: 'F', age_number: 20, cid_primary: 'B22', CRS: "CENTRO", date: 20150829, distance: 4.5, lat: -23.49
 		end
 
 		it 'should send the correct info and return 200' do
-			#controller.params[:id] = 1
 			self.send(:get, 'proceduresInfo', params: {id: 1})
 			expect(response.status).to eq(200)
-			@expected = {
-        :flashcard  => @flashcard,
-        :lesson     => @lesson,
-        :success    => true
-			}.to_json
-			response.body.should == @expected
-			assort(response.body).to include([431, 'F', 20, 'B22', 'CENTRO', 20150829, 4.5, -23.49, -46.641791])
+			expect(response.body).to eq(Procedure.where(id: 1).select(:cnes_id, :gender, :age_number, :cid_primary, :CRS, :date, :distance, :lat, :long).to_a.to_json)
+		end
+
+		it "sholud return [] when id don't exist" do
+			self.send(:get, 'proceduresInfo', params: {id: 0})
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("[]")
+		end
+
+		it "should raise an error when id is null" do
+			expect{self.send(:get, 'proceduresInfo', params: {id: nil})}.to raise_error(ActionController::UrlGenerationError)
 		end
 	end
 end
