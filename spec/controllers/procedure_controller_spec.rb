@@ -163,13 +163,13 @@ describe ProcedureController, type: 'controller' do
 			Specialty.create id: 2, name: "Specialty 2"
 
 			Procedure.create id: 1, cnes_id: 431, specialty_id: 1
-			Procedure.create id: 2, cnes_id: 1, specialty_id: 1, age_code: "TP_0A4"
-			Procedure.create id: 3, cnes_id: 1, specialty_id: 1, days: 50
-		 	Procedure.create id: 4, cnes_id: 1, specialty_id: 1, cmpt: 201502
-		 	Procedure.create id: 5, cnes_id: 1, specialty_id: 1, proce_re: 3030
-		 	Procedure.create id: 6, cnes_id: 1, specialty_id: 2
-		 	Procedure.create id: 7, cnes_id: 1, specialty_id: 1, treatment_type: 1
-		 	Procedure.create id: 8, cnes_id: 1, specialty_id: 1, cid_primary: "A42"
+			Procedure.create id: 2, cnes_id: 1, specialty_id: 1, age_code: "TP_0A4", gender: "M"
+			Procedure.create id: 3, cnes_id: 1, specialty_id: 1, days: 50, gender: "F"
+		 	Procedure.create id: 4, cnes_id: 1, specialty_id: 1, cmpt: 201502, gender: "M"
+		 	Procedure.create id: 5, cnes_id: 1, specialty_id: 1, proce_re: 3030, days: 5
+		 	Procedure.create id: 6, cnes_id: 1, specialty_id: 2, days: 1, date: Date.parse("20180909")
+		 	Procedure.create id: 7, cnes_id: 1, specialty_id: 1, treatment_type: 1, days: 22
+		 	Procedure.create id: 8, cnes_id: 1, specialty_id: 1, cid_primary: "A42", date: Date.parse("20180101")
 		 	Procedure.create id: 9, cnes_id: 1, specialty_id: 1, cid_secondary: "B21"
 		 	Procedure.create id: 10, cnes_id: 1, specialty_id: 1, cid_secondary2: "Z12"
 		 	Procedure.create id: 11, cnes_id: 1, specialty_id: 1, cid_associated: "G92"
@@ -205,6 +205,37 @@ describe ProcedureController, type: 'controller' do
 		end
 
 		# Testing to see if its filtering correctly
+		it 'should return the correct procedures for date' do
+			data = {"start_date" => "20180811", "end_date" => "20181010"}.to_json
+			controller.params[:data] = data
+			controller.send :getProcedures
+			expect(assigns(:procedures)).to eq(Procedure.where("date BETWEEN ? AND ?", Date.parse("20180811"), Date.parse("20181010")))
+		end
+
+		it 'should return the correct procedures for genders' do
+			genders = ["M"]
+			data = {"genders" => genders}.to_json
+			controller.params[:data] = data
+			controller.send :getProcedures
+			expect(assigns(:procedures)).to eq(Procedure.where(gender: genders))
+		end
+
+		it 'should return the correct procedures for slider days' do
+			sliders= [[0, 5]]
+			data = {"sliders" => sliders}.to_json
+			controller.params[:data] = data
+			controller.send :getProcedures
+			expect(assigns(:procedures)).to eq(Procedure.where("days >= 0 AND days <= 5"))
+		end
+
+		it 'should ignore the Slider_max delimiter value when it\'s equal to max' do
+			sliders= [[3, 351]]
+			data = {"sliders" => sliders}.to_json
+			controller.params[:data] = data
+			controller.send :getProcedures
+			expect(assigns(:procedures)).to eq(Procedure.where("days >= 3"))
+		end
+
 		it 'should return the correct procedure for cnes_id' do
 			filters = [["431"]]
 			data = {"filters" => filters}.to_json
