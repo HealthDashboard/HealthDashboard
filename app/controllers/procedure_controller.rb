@@ -207,27 +207,26 @@ class ProcedureController < ApplicationController
 		# 1 - days(Total Geral de Diárias)
 		days = @procedures.group(:days).order(:days).count
 		quartiles.append(quartiles_calc(days))
-		days = nil
+
 		# 2 - days_uti(Diárias UTI)
 		days_uti = @procedures.group(:days_uti).order(:days_uti).count
 		quartiles.append(quartiles_calc(days_uti))
-		days_uti = nil
+
 		# 3 - days_ui(Diárias UI)
 		days_ui = @procedures.group(:days_ui).order(:days_ui).count
 		quartiles.append(quartiles_calc(days_ui))
-		days_ui = nil
+
 		# 4 - days_total(Dias de permanência)
 		days_total = @procedures.group(:days_total).order(:days_total).count
 		quartiles.append(quartiles_calc(days_total))
-		days_total = nil
+
 		# 5 - val_total(Valor da Parcela)
 		val_total = @procedures.group(:val_total).order(:val_total).count
 		quartiles.append(quartiles_calc(val_total))
-		val_total = nil
+
 		# 6 - distance(Distância de Deslocamento)
 		distance = @procedures.group(:distance).order(:distance).count
 		quartiles.append(quartiles_calc(distance))
-		distance = nil
 
 		render json: quartiles, status: 200
 	end
@@ -289,8 +288,13 @@ private
 
 		if parsed_json["sliders"] != nil
 			@sliders_name.each.with_index do |slider, i|
-				min =  parsed_json["sliders"][i][0] unless parsed_json["sliders"] == nil
-				max = parsed_json["sliders"][i][1] unless parsed_json["sliders"] == nil
+				if parsed_json["sliders"] != nil && parsed_json["sliders"][i] != nil
+					min =  parsed_json["sliders"][i][0]
+					max = parsed_json["sliders"][i][1]
+				else
+					next
+				end
+
 				if max == @MAX_SLIDERS[i]
 					@procedures = @procedures.where(slider + ' >= ?', min) unless min == 0
 				else
