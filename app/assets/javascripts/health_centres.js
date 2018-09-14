@@ -428,8 +428,8 @@ function create_chart(data, dataNormalized){
         },
         formatter: function (params) {
           var colorSpan = color => '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:' + color + '"></span>';
-          let rez = '<b>' + params[0].axisValue + '</b></br>';
-          rez += '<p>'
+          let html = '<b>' + params[0].axisValue + '</b></br>';
+          html += '<p>'
           for (var j = 0; j < data.length; j++) {
             if (data[j][0] === params[0].data[0]) {
               break;
@@ -438,14 +438,14 @@ function create_chart(data, dataNormalized){
           var i = 1;
           var sum = 0;
           params.forEach(item => {
-            var xx = colorSpan(item.color) + ' ' + item.seriesName + ': ' + data[j][i].toLocaleString('pt-BR') + ' (' + item.data[i] + '%)' + '<br>'
-            rez += xx;
+            var str = colorSpan(item.color) + ' ' + item.seriesName + ': ' + data[j][i].toLocaleString('pt-BR') + ' (' + parseFloat(item.data[i]).toLocaleString('pt-BR') + '%)' + '<br>'
+            html += str;
             sum += data[j][i];
             i++;
           });
-          rez += 'Total: ' + sum.toLocaleString('pt-BR') + '</p>'
+          html += 'Total: ' + sum.toLocaleString('pt-BR') + '</p>'
 
-          return rez;
+          return html;
         },
       },
       toolbox: {
@@ -488,7 +488,10 @@ function create_chart(data, dataNormalized){
               normal: {
                 show: true,
                 position: 'insideLeft',
-                formatter: '{@1}%'
+                formatter: function (params) {
+                  var str = parseFloat(params.data[1]).toLocaleString('pt-BR') + '%'
+                  return str;
+                },
               }
             },
           },
@@ -499,7 +502,10 @@ function create_chart(data, dataNormalized){
               normal: {
                 show: true,
                 position: 'insideLeft',
-                formatter: '{@2}%'
+                formatter: function (params) {
+                  var str = parseFloat(params.data[2]).toLocaleString('pt-BR') + '%'
+                  return str;
+                },
               }
             },
           },
@@ -510,7 +516,10 @@ function create_chart(data, dataNormalized){
               normal: {
                 show: true,
                 position: 'insideLeft',
-                formatter: '{@3}%'
+                formatter: function (params) {
+                  var str = parseFloat(params.data[3]).toLocaleString('pt-BR') + '%'
+                  return str;
+                },
               }
             },
           },
@@ -521,13 +530,17 @@ function create_chart(data, dataNormalized){
               normal: {
                 show: true,
                 position: 'insideLeft',
-                formatter: '{@4}%'
+                formatter: function (params) {
+                  var str = parseFloat(params.data[4]).toLocaleString('pt-BR') + '%'
+                  return str;
+                },
               }
             },
           }
       ]
   };
   myChart.setOption(option);
+  
 }
 
 
