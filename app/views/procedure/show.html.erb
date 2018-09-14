@@ -11,23 +11,6 @@
     <div class="col-sm-9">
         <h1> </h1>
     </div>
-    <!--
-    <div class="heatmap-legend">
-        <div class="heat-legend">
-            <div class="legend-title">Mapa de Calor</div>
-            <div class="legend-scale">
-                <ul class='legend-labels'>
-                    <li class="legend-label"><span class="span-normal" style='background: linear-gradient(to right, #F8A5B2, #FE0401);'></span></li>
-                </ul>
-            </div>
-        </div>
-        <div class="legend-data">
-            <li class="legend-data-li" id="legend-label-1"><p class="legend-data"></p></li>
-            <li class="legend-data-li" id="legend-label-2"><p class="legend-data"></p></li>
-        </div>
-        <p id="legend-scale"></p>
-    </div>
-    -->
     <div class="map-config select translateX-0" id="div-adm">
         <div class="map-config-header select-header" onclick="show_menu('#div-adm')">
             <p>Configurações do mapa</p>
@@ -87,9 +70,9 @@
       </div>
     </div>
 
-    <div class="item-legend legenda">
+    <div class="item-legend legenda" id="heatmap-leg">
           <p class="text"></p>
-          <div class="heatmap-legend">
+          <div class="heatmap-legend" onclick="show_menu('#heatmap-leg')">
             <p class="legend-title">Número de procedimentos</p>
             <p id="legend-scale"></p>
             <div class="legend-bar">
@@ -102,7 +85,7 @@
           </div>
     </div>
 
-    <div class ="col-sm-3">
+    <div class ="col-sm-3 background-white">
         <div class="card card-block">
             <div class = "row">
                 <div class="col-sm-8">
@@ -233,7 +216,6 @@
                         <i class="fa fa-search" aria-hidden="true"></i> Buscar
                     </button>
                 </div>
-                <div class = "col-sm-12" style = "height: 430px; background-color: white;"></div>
             </div>
         </div>
     </div>

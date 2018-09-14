@@ -216,6 +216,9 @@ function buscar(data) {
     checked = $('input[name=optRadio]:checked', '#radio-list');
     $('input[name=optRadio][value=6]', '#radio-list').trigger('click');
     $(checked).attr('checked', true).trigger('click');
+
+    // Show heatmap legend
+    document.getElementById("heatmap-leg").style.right = "25%";
 }
 
 function handleLargeCluster(map, path, data, max_cluster, max_heatmap, heatmap_opacity, function_maker) {
@@ -479,6 +482,13 @@ function limpar() {
     }
     document.getElementById("legend-scale").innerText = "";
     $('input[name=optRadio][value=6]', '#radio-list').trigger('click');
+
+    /* Hide heatmap legend when map is cleaned*/
+    if ($("#heatmap-leg").hasClass("active")) {
+        $("#heatmap-leg").removeClass("active");
+    }
+    document.getElementById("heatmap-leg").style.right = "20%"; 
+    
     clearMap();
 }
 

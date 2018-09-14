@@ -250,8 +250,16 @@
   width: 70px; /* size of each interval */
 }
 
+.background-white {
+  height: calc(100vh - 50px);
+  background-color: white;
+}
+
 .heatmap-legend {
+  left: 0;
+  top: 0;
   position: fixed;
+  height: 146px;
   width: 290px;
   overflow: hidden;
   padding: 10px 0 10px 50px;
@@ -291,9 +299,10 @@
 
 .item-legend {
   width: 290px;
-  right: 23%;
+  right: 20%;
   bottom: 5%;
-  border-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-top-left-radius: 10px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -303,12 +312,13 @@
   padding: .25em .5em 0 .5em;
   text-align: center;
   margin-bottom: 5px;
-  transform: translateX(210px);
+  transform: translateX(244px);
   transition: transform 250ms ease-in-out;
+  cursor: pointer;
 }
 
-.item-legend:hover {
-  transform: translateX(-18px);
+.item-legend.active {
+  transform: translateX(0);
 }
 
 .text {
