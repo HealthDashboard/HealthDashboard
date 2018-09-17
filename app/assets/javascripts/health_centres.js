@@ -251,48 +251,41 @@ function markers_visible(visibility, id) {
     });
 }
 
-// function update_chart(id) {
-//     var specialty_path = ["/specialties/", id].join("");
-//     $.getJSON(specialty_path, function(specialties) {
-//         var values = [];
-//         var i = 0;
-//         $.each(specialties, function(name, number) {
-//             values.push([name, number, colors[i]]);
-//             i += 1;
-//         });
-//         var header = ["Elementos", "Número de Procedimentos", {role: "style"}];
-//
-//         values.unshift(header);
-//         var data = google.visualization.arrayToDataTable(values);
-//
-//         var view = new google.visualization.DataView(data);
-//         view.setColumns([0, 1, {calc: "stringify", sourceColumn: 1, type: "string", role: "annotation" }, 2]);
-//
-//         var options = {
-//             bar: {groupWidth: "70%"},
-//                 chartArea: {left: 100},
-//             legend: {position: "none"}
-//         };
-//
-//         var chart = new google.visualization.BarChart(document.getElementById("chart_div"));
-//         chart.draw(view, options);
-//     });
-// }
-//
-// function create_chart() {
-//     google.charts.setOnLoadCallback(create_homepage_charts);
-// }
 
-function lower_case(data) {
-  for (i = 0; i < data.length; i++) {
-    data[i][0] = data[i][0].toLowerCase();
-    data[i][0] = data[i][0].substring(0,1).toLocaleUpperCase() + data[i][0].substring(1);
-  }
-  return data;
+function update_chart(id) {
+    var specialty_path = ["/specialties/", id].join("");
+    $.getJSON(specialty_path, function(specialties) {
+        var values = [];
+        var i = 0;
+        $.each(specialties, function(name, number) {
+            values.push([name, number, colors[i]]);
+            i += 1;
+        });
+        var header = ["Elementos", "Número de Procedimentos", {role: "style"}];
+
+        values.unshift(header);
+        var data = google.visualization.arrayToDataTable(values);
+
+        var view = new google.visualization.DataView(data);
+        view.setColumns([0, 1, {calc: "stringify", sourceColumn: 1, type: "string", role: "annotation" }, 2]);
+
+        var options = {
+            bar: {groupWidth: "70%"},
+                chartArea: {left: 100},
+            legend: {position: "none"}
+        };
+
+        var chart = new google.visualization.BarChart(document.getElementById("chart_div"));
+        chart.draw(view, options);
+    });
 }
 
+function create_chart() {
+    google.charts.setOnLoadCallback(create_homepage_charts);
+}
+
+// Gets and formats the data to create the charts
 function create_homepage_charts(id) {
-    /*create_right_graph(id);*/
     var dataSpecialty, dataTotal, pathSpecialty, pathTotal, dataNormalized, n, i
 
     if (id == undefined) {
@@ -352,6 +345,15 @@ function create_homepage_charts(id) {
     }
 }
 
+function lower_case(data) {
+  for (i = 0; i < data.length; i++) {
+    data[i][0] = data[i][0].toLowerCase();
+    data[i][0] = data[i][0].substring(0,1).toLocaleUpperCase() + data[i][0].substring(1);
+  }
+  return data;
+}
+
+// Adds the row Total to the data
 function add_total_to_data (dataTotal, data) {
   n = data.length;
   data[n] = ["Total", 0, 0, 0, 0, ""];
@@ -364,6 +366,7 @@ function add_total_to_data (dataTotal, data) {
   return data;
 }
 
+// Returns the data in %
 function normalize_to_100 (data) {
   let is_num = n => isNaN(n) ? 0 : n
   var sum = data.reduce((a, b) =>
@@ -377,44 +380,7 @@ function normalize_to_100 (data) {
   return data;
 }
 
-// function create_bottom_graphs(id, data) {
-//     var chart = new google.visualization.BarChart(document.getElementById(id));
-//     var header = ['Genre', ' < 1 Km', '> 1 Km e < 5 Km',
-//                   '> 5 Km e  < 10 Km', '> 10 Km', {role: 'annotation' }];
-//     var options = {
-//         legend: 'bottom',
-//         isStacked: 'percent',
-//         chartArea: {  width: "80%", height: "90%", left:278 },
-//         vAxis: {minValue: 0,
-//                 ticks: [0, .2, .4, .6, .8, 1],
-//                 textStyle: {fontName: 'Arial',
-//                             fontSize: '18'
-//                            }
-//         },
-//         hAxis: {
-//               textStyle: {fontName: 'Arial',
-//                           fontSize: '18'
-//                          }
-//         },
-//         bar: {groupWidth: '35%'},
-//         series: {0:{color:'green'},
-//                  1:{color:'yellow'},
-//                  2:{color:'orange'},
-//                  3:{color:'red'}
-//                 }
-//     };
-//     draw_bottom_graph(header, data, chart, options);
-// }
-//
-// function draw_bottom_graph(header, data, chart, options) {
-//     var values = data;
-//
-//     values.unshift(header);
-//     var data_table = google.visualization.arrayToDataTable(values);
-//     var view = new google.visualization.DataView(data_table);
-//     chart.draw(view, options);
-// }
-
+// Sets the options for the chart
 function create_chart(data, dataNormalized){
   option = {
       legend: {
@@ -479,8 +445,6 @@ function create_chart(data, dataNormalized){
               axisLabel: {interval : 0},
               // name: 'Especialidades',
              },
-      // Declare several bar series, each will be mapped
-      // to a column of dataset.source by default.
       series: [
           {
             type: 'bar',
@@ -541,9 +505,7 @@ function create_chart(data, dataNormalized){
       ]
   };
   myChart.setOption(option);
-  
 }
-
 
 function update_right_graph_text(data) {
     var $graph_text1 = $('#labelOverlay .n_procedures');
