@@ -6,7 +6,7 @@ class ProcedureController < ApplicationController
 	def initialize
 		# Cons, AVOID USING NUMBERS, make a constant instead
 		@NUM_FILTERS = 19
-		@MAX_SLIDERS = [351,148,99,351,110786.71.ceil,52.4832033827607.ceil]
+		@MAX_SLIDERS = [351,148,99,351,110786.71.ceil, 84.5.ceil]
 
 		@procedure = ["Estabelecimento de ocorrência", "Competência (aaaamm)", "Grupo do procedimento autorizado", "Especialidade do leito", "Caráter do atendimento", 
 					  "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Complexidade", "Tipo de financiamento"]
@@ -182,7 +182,7 @@ class ProcedureController < ApplicationController
 	# Return: An array of [max for the filters values]
 	def proceduresMaxValues
 		if params[:send_all] == "True"
-			render json: [351,148,99,351,110786.71.ceil,52.4832033827607.ceil], status: 200 and return #default value for faster load time
+			render json: [351,148,99,351,110786.71.ceil,84.5.ceil], status: 200 and return #default value for faster load time
 		end
 
 		getProcedures()
@@ -204,10 +204,10 @@ class ProcedureController < ApplicationController
 	# Params: [filter values array]
 	# Return: An array of [q1, q2(median), q3 for the filter values]
 	def proceduresQuartiles
-		params.require(:send_all)
+		parsed_json = JSON.parse params[:data]
 
-		if params[:send_all] == "True"
-			render json: [[2, 3.0, 6], [0, 0.0, 0], [0, 0.0, 0], [2, 3.0, 6], [0.0, 0.0, 0.0], [2.34493573228911, 4.96823522661767, 10.4606915236337]], status: 200 and return # default value for faster load time
+		if parsed_json["send_all"] == "True"
+			render json: [[2, 3.0, 6], [0, 0.0, 0], [0, 0.0, 0], [2, 3.0, 6], [0.0, 0.0, 0.0], [3.6, 6.9, 13.9]], status: 200 and return # default value for faster load time
 		end
 
 		getProcedures()

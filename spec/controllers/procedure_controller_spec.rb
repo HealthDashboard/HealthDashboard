@@ -24,15 +24,12 @@ describe ProcedureController, type: 'controller' do
 
 	describe 'Testing procedures quartiles method' do
 		it 'should return default values when send all is set' do
-			self.send(:get, 'proceduresQuartiles', params: {data: "True", send_all: "True"},format: :json)
+			data = {"send_all" => "True"}.to_json
+			self.send(:get, 'proceduresQuartiles', params: {data: data}, format: :json)
 			expect(response.status).to eq(200)
 			expect(response.body).to_not be_nil
 			expect(JSON.parse(response.body)).to eq([[2, 3.0, 6], [0, 0.0, 0], [0, 0.0, 0], [2, 3.0, 6],
-				[0.0, 0.0, 0.0], [2.34493573228911, 4.96823522661767, 10.4606915236337]])
-		end
-
-		it 'requires send_all parameter to be set' do
-			expect{self.send(:get, 'proceduresQuartiles', params: {data: nil})}.to raise_error(ActionController::ParameterMissing)
+				[0.0, 0.0, 0.0], [3.6, 6.9, 13.9]])
 		end
 	end
 
@@ -415,7 +412,7 @@ describe ProcedureController, type: 'controller' do
 			data = {}.to_json
 			self.send(:get, 'proceduresMaxValues', params: {data: data, send_all: "True"}, as: :json)
 			expect(response.status).to eq(200)
-			expect(response.body).to eq("[351,148,99,351,110787,53]")
+			expect(response.body).to eq("[351,148,99,351,110787,85]")
 		end
 
 		it 'should return the max filtered values' do
