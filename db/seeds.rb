@@ -81,8 +81,7 @@ def create_procedures()
     date_out: row[7], proce_re: row[8], treatment_type: row[9], cid_primary: row[10], cid_secondary: row[11],
     cid_secondary2: row[12], gender: row[13], race: row[14], age_number: row[15], age_code: age_code, lv_instruction: row[16],
     gestor_ide: row[17], days: row[18], days_uti: row[19], days_ui: row[20], complexity: row[21], finance: row[22],
-    val_total: row[23], days_total: row[24], cnes_id: row[25], DA: row[32], PR: row[33], STS: row[34], CRS: row[35]
-    p.distance = p.calculate_distance
+    val_total: row[23], days_total: row[24], cnes_id: row[25], DA: row[32], PR: row[33], STS: row[34], CRS: row[35], distance: row[36]
     list << p
 
     counter += 1    

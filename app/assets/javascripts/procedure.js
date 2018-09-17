@@ -441,7 +441,7 @@ function setVisible(visibility) {
 function limpar() {
     cleaning = true;
     $("#slider_distance").slider('refresh');
-    filters_value({send_all: "True"});
+    filters_value({"data": JSON.stringify({send_all: "True"})});
     for (i = 0; i < 24; i++) {
         name = ".select-" + i;
         $(name).val('').trigger('change');
@@ -677,7 +677,7 @@ function dadosInput() {
 
     $("#slider_opacity").slider({min: 0, max: 100, step: 1, value: 40});
 
-    filters_value({send_all: "True"});
+    filters_value({"data": JSON.stringify({send_all: "True"})});
 
     for (i = 0; i < 24; i++) {
         name = "#" + i;
