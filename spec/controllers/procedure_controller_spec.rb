@@ -33,6 +33,59 @@ describe ProcedureController, type: 'controller' do
 		end
 	end
 
+	describe 'Testing procedure download method' do
+
+	    before :each  do
+            HealthCentre.create id: 1, cnes: 431, lat: -23.555885, long: -46.666458
+            HealthCentre.create id: 2, cnes: 1, lat: -23.555885, long: -46.666458
+
+            Specialty.create id: 1, name: "Specialty 1"
+            Specialty.create id: 2, name: "Specialty 2"
+
+            Procedure.create id: 1, cnes_id: 431, specialty_id: 1
+            Procedure.create id: 2, cnes_id: 1, specialty_id: 1, age_code: "TP_0A4"
+            Procedure.create id: 3, cnes_id: 1, specialty_id: 1, days: 50
+            Procedure.create id: 4, cnes_id: 1, specialty_id: 1, cmpt: 201502
+        end
+
+	    it 'download all entries' do
+	        data = {"send_all" => "True"}.to_json
+	        self.send(:get, 'download', params: {data: data}, as: :json)
+	        expect(response.status).to eq(200)
+	        expect(response.body).to eq("COD;LAT_SC;LONG_SC;P_SEXO;P_IDADE;P_RACA;LV_INSTRU;CNES;GESTOR_ID;CAR_INTEN;CMPT;DT_EMISSAO;DT_INTERNA;DT_SAIDA;COMPLEXIDA;PROC_RE;DIAG_PR;DIAG_SE1;DIAG_SE2;DIAG_SE3;DIARIAS;DIARIAS_UT;DIARIAS_UI;DIAS_PERM;FINANC;VAL_TOT;DA;SUB;STS;CRS;DISTANCIA_KM\n" +
+                                        "1;;;;;;;431;;;;;;;;;;;;;;;;;;;;;;;\n"    +
+                                        "2;;;;;;;1;;;;;;;;;;;;;;;;;;;;;;;\n"   +
+                                        "3;;;;;;;1;;;;;;;;;;;;;50;;;;;;;;;;\n" +
+                                        "4;;;;;;;1;;;201502;;;;;;;;;;;;;;;;;;;;\n")
+	    end
+
+        it 'download without parameters' do
+	        data = {}.to_json
+	        self.send(:get, 'download', params: {data: data}, as: :json)
+	        expect(response.status).to eq(400)
+	        expect(response.body).to eq("Bad request")
+	    end
+
+	    it 'download cns_id 431' do
+	        filters = [["431"]]
+            data = {"filters" => filters}.to_json
+            self.send(:get, 'download', params: {data: data}, as: :json)
+            expect(response.status).to eq(200)
+            expect(response.body).to eq("COD;LAT_SC;LONG_SC;P_SEXO;P_IDADE;P_RACA;LV_INSTRU;CNES;GESTOR_ID;CAR_INTEN;CMPT;DT_EMISSAO;DT_INTERNA;DT_SAIDA;COMPLEXIDA;PROC_RE;DIAG_PR;DIAG_SE1;DIAG_SE2;DIAG_SE3;DIARIAS;DIARIAS_UT;DIARIAS_UI;DIAS_PERM;FINANC;VAL_TOT;DA;SUB;STS;CRS;DISTANCIA_KM\n" +
+                                        "1;;;;;;;431;;;;;;;;;;;;;;;;;;;;;;;\n")
+        end
+
+        it 'download age_code TP_0A4' do
+	        filters = [[], [], [], [], [], [], [], [], [], [], [], ["TP_0A4"]]
+            data = {"filters" => filters}.to_json
+            self.send(:get, 'download', params: {data: data}, as: :json)
+            expect(response.status).to eq(200)
+            expect(response.body).to eq("COD;LAT_SC;LONG_SC;P_SEXO;P_IDADE;P_RACA;LV_INSTRU;CNES;GESTOR_ID;CAR_INTEN;CMPT;DT_EMISSAO;DT_INTERNA;DT_SAIDA;COMPLEXIDA;PROC_RE;DIAG_PR;DIAG_SE1;DIAG_SE2;DIAG_SE3;DIARIAS;DIARIAS_UT;DIARIAS_UI;DIAS_PERM;FINANC;VAL_TOT;DA;SUB;STS;CRS;DISTANCIA_KM\n" +
+                                        "2;;;;;;;1;;;;;;;;;;;;;;;;;;;;;;;\n")
+        end
+
+	end
+
 	describe 'Testing healthCentresCnes method' do
 		before :each do
 			HealthCentre.create id: 1, cnes: 1010, lat: -23.555885, long: -46.666458

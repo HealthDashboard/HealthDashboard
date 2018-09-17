@@ -236,6 +236,9 @@ class ProcedureController < ApplicationController
 	# Params: [filters values array]
 	# Return: CSV file.
 	def download
+
+	    render json: "Bad request", status: 400 and return unless @procedures != nil
+
 		@downloadable = @procedures.select('id as "COD"', 'replace(lat::text, \'.\', \',\') AS "LAT_SC"', 'replace(long::text, \'.\', \',\') as "LONG_SC"', 
 			'gender as "P_SEXO"', 'age_number as "P_IDADE"', 'race as "P_RACA"', 'lv_instruction as "LV_INSTRU"', 'cnes_id as "CNES"', 
 			'gestor_ide as "GESTOR_ID"', 'treatment_type as "CAR_INTEN"', 'cmpt as "CMPT"', 'date as "DT_EMISSAO"', 
