@@ -262,7 +262,7 @@
   height: 146px;
   width: 290px;
   overflow: hidden;
-  padding: 10px 0 10px 50px;
+  padding: 10px 0 10px 75px;
 }
 
 .legend-bar {
@@ -279,13 +279,12 @@
 
 .span-normal {
   background: linear-gradient(to right, #F8A5B2, #FE0401);
-  border-radius: 10px;
-  width: 130px;
-  margin-left: 5px;
+  width: 166px;
 }
 
 .legend-data {
-  width: 160px;
+  font-size: larger;
+  width: 164px;
   display: flex;
   justify-content: space-between;
 }
@@ -347,13 +346,13 @@
 }
 
 .legend-title {
-  font: 10pt sans-serif;
+  font-size: 90%;
   text-align: left;
   width: 190px;
 }
 
 #legend-scale{
-  font-size: 60%;
+  font-size: 72%;
   text-align: left;
   right: 0;
   position: relative;
