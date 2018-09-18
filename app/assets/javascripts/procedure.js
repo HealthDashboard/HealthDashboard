@@ -297,9 +297,14 @@ function handleLargeCluster(map, path, data, max_cluster, max_heatmap, heatmap_o
 
             map.addLayer(heat);
 
+            //changing heatmap opacity
             X = document.getElementsByClassName("leaflet-heatmap-layer")
             X[0].style["opacity"] = heatmap_opacity / 100;
-        
+
+            //changing legend opacity
+            X = document.getElementsByClassName("span-normal")
+            X[0].style["opacity"] = heatmap_opacity / 100;
+
             $('#loading_overlay').hide();
         }
     });
