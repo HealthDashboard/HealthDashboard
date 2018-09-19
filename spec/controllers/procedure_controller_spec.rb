@@ -656,8 +656,54 @@ describe ProcedureController, type: 'controller' do
             self.send(:get, 'proceduresDistanceGroup', params: {data: data}, as: :json)
             expect(response.status).to eq(200)
             expect(response.body).to eq("{\"\\u003c= 1 Km\":0,\"\\u003e 1 Km e \\u003c= 5 Km\":3,\"\\u003e 5 Km e \\u003c= 10 Km\":2,\"\\u003e 10 Km\":0}")
-        end        
-
+        end
     end
-    
+
+    describe 'Testing proceduresClusterPoints method' do
+    	before :each do
+            HealthCentre.create id: 1, cnes: 1, lat: -23.555885, long: -46.666458
+
+            Specialty.create id: 1, name: "Specialty 1"
+            Specialty.create id: 2, name: "Specialty 2"
+
+            Procedure.create id: 1, cnes_id: 1, specialty_id: 1, lat: -23.2, long: -46.1
+            Procedure.create id: 2, cnes_id: 1, specialty_id: 1, lat: -23.2, long: -46.1
+            Procedure.create id: 3, cnes_id: 1, specialty_id: 2, lat: -23.2, long: -46.1
+            Procedure.create id: 4, cnes_id: 1, specialty_id: 2, lat: -23.2, long: -46.1
+            Procedure.create id: 5, cnes_id: 1, specialty_id: 2, lat: -23.5, long: -46.1
+            Procedure.create id: 6, cnes_id: 1, specialty_id: 2, lat: -23.5, long: -46.1
+            Procedure.create id: 7, cnes_id: 1, specialty_id: 2, lat: -23.5, long: -46.1
+            Procedure.create id: 8, cnes_id: 1, specialty_id: 1, lat: -23.6, long: -46.1
+            Procedure.create id: 9, cnes_id: 1, specialty_id: 1, lat: -23.6, long: -46.1
+    	end
+
+    	it 'should return bad request when a call has no params' do
+    		self.send(:get, 'proceduresClusterPoints', params: {data: {}.to_json}, as: :json)
+    		expect(response.status).to eq(400)
+    		expect(response.body).to eq("Bad request")
+    	end
+
+    	it 'should return a empty json when search result is empty' do
+    		filters = [["2"]];
+    		data = {"filters" => filters}.to_json
+    		self.send(:get, 'proceduresClusterPoints', params: {data: data}, as: :json)
+    		expect(response.status).to eq(200)
+    		expect(response.body).to eq("[]")
+    	end
+
+    	it 'should return a array of [lat, long, count] when search result is not empty' do
+    		data = {"send_all" => "True"}.to_json
+    		self.send(:get, 'proceduresClusterPoints', params: {data: data}, as: :json)
+    		expect(response.status).to eq(200)
+    		expect(response.body).to eq("[[-23.2,-46.1,4],[-23.5,-46.1,3],[-23.6,-46.1,2]]")
+    	end
+
+    	it 'should return the values only for specialty_id == 2' do
+            filters = [[],[],[],["2"]]
+    		data = {"filters" => filters}.to_json
+    		self.send(:get, 'proceduresClusterPoints', params: {data: data}, as: :json)
+    		expect(response.status).to eq(200)
+    		expect(response.body).to eq("[[-23.5,-46.1,3],[-23.2,-46.1,2]]")
+    	end
+    end
 end
