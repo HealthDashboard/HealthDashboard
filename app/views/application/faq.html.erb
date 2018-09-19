@@ -136,90 +136,184 @@
   <div class="type-block">
     <h1 class="title">Perguntas Frequentes</h1>
     <div class="type-row">
-      <div class="type type-1 active">
-        <div class="overlay">
+      <div class="type type-1 active" id="type1" onclick="changeFAQ1()">
+        <div class="overlay" onclick="changeFAQ1()">
           <p>
             Início
           </p>
         </div>
       </div>
-      <div class="type type-2">
-        <div class="overlay">
+      <div class="type type-2" id="type2" onclick="changeFAQ2()">
+        <div class="overlay" onclick="changeFAQ2()">
           <p>
             Busca Avançada
           </p>
         </div>
       </div>
-      <div class="type type-3">
-        <div class="overlay">
+      <div class="type type-3" id="type3" onclick="changeFAQ3()">
+        <div class="overlay" onclick="changeFAQ3()">
           <p>
-            Estabelecimento
+            Estabel.
           </p>
         </div>
       </div>
     </div>
-    <div class="triangle"></div>
+    <div class="triangle" id="triangle"></div>
   </div>
-  <div class="question-block">
-    <div class="side-bar active">
-      <p class="category">
-        Filtros
-      </p>
-      <p class="category">
-        Cluster
-      </p>
-      <p class="category">
-        Mapa de calor
-      </p>
-      <p class="category">
-        Opções
-      </p>
+
+  <div class="viewer" id="viewer">
+  <div class="question-container" id="question-container">
+    <div class="question-block">
+      <div class="side-bar">
+        <p class="category">
+          Filtros
+        </p>
+        <p class="category">
+          Cluster
+        </p>
+        <p class="category">
+          Mapa de calor
+        </p>
+        <p class="category">
+          Opções
+        </p>
+      </div>
+      <div class="content">
+        <p class="question">
+          Como posso selecionar todas as opções de um filtro?
+        </p>
+        <p class="awnser">
+          Quando uma opção do filtro é selecionada, há a opção de removê-la ou adicionar mais, apenas clicando sobre o campo novamente.
+        </p>
+      </div>
     </div>
-    <div class="content active">
-      <p class="question">
-        Como posso selecionar todas as opções de um filtro?
-      </p>
-      <p class="awnser">
-        Quando uma opção do filtro é selecionada, há a opção de removê-la ou adicionar mais, apenas clicando sobre o campo novamente.
-      </p>
-      <p class="question">
-        Como desfazer as seleções efetuadas?
-      </p>
-      <p class="awnser">
-        No canto superior esquerdo do mapa presente na página de busca avançada, há um menu com as opções: Limpar, Imprimir, Dados Gerais e Download. A opção Limpar retira as seleções das opções.
-      </p>
-      <p class="question">
-        O que é a opção Cluster?
-      </p>
-      <p class="awnser">
-        Ao alterar o valor na opção Cluster e realizar a busca novamente por meio do botão Buscar, as internações hospitalares são reagrupadas (clusterizadas) de acordo com o novo valor de raio de convergência. Assim, com um menor valor de raio de convergência do cluster, as internações hospitalares tendem a ser mostradas de forma mais isolada, em um maior número de clusters.
-      </p>
-      <p class="question">
-        O que é a opção Mapa de Calor?
-      </p>
-      <p class="awnser">
-        Ao alterar o valor na opção Heatmap e realizar a busca novamente por meio do botão Buscar, as internações hospitalares são reagrupadas em uma nova mancha de calor seguindo o novo valor de raio de convergência. Assim, com um menor valor de raio de convergência do mapa de calor, as internações hospitalares tendem a aparecer em manchas que denotam uma menor quantidade de internações nesse raio.
-      </p>
-      <p class="question">
-        O que significam os números dentro dos círculos distribuídos pelo mapa?
-      </p>
-      <p class="awnser">
-        Os círculos (clusters) contêm um valor que representa a quantidade das internações hospitalares que foram agrupados naquele Cluster como resultado da pesquisa.
-      </p>
-      <p class="question">
-        O que será impresso quando eu clicar no botão Imprimir?
-      </p>
-      <p class="awnser">
-        Ao clicar no botão Imprimir, o resultado da pesquisa feita será organizado em uma folha do tipo A4 e será impresso.
-      </p>
-      <p class="question">
-        O que será baixado quando eu clicar no botão Download?
-      </p>
-      <p class="awnser">
-        Ao clicar no botão Download, será preparado um arquivo , no formato CSV, com os procedimento resultantes da busca. Os campos desse arquivo seguem os padrões da SMS-SP e são preenchidos com dados de cada procedimento.
-      </p>
+    <div class="question-block">
+      <div class="side-bar">
+        <p class="category">
+          Filtros
+        </p>
+        <p class="category">
+          Cluster
+        </p>
+        <p class="category">
+          Mapa de calor
+        </p>
+        <p class="category">
+          Opções
+        </p>
+      </div>
+      <div class="content">
+        <p class="question">
+          Como posso selecionar todas as opções de um filtro?
+        </p>
+        <p class="awnser">
+          Quando uma opção do filtro é selecionada, há a opção de removê-la ou adicionar mais, apenas clicando sobre o campo novamente.
+        </p>
+        <p class="question">
+          Como desfazer as seleções efetuadas?
+        </p>
+        <p class="awnser">
+          No canto superior esquerdo do mapa presente na página de busca avançada, há um menu com as opções: Limpar, Imprimir, Dados Gerais e Download. A opção Limpar retira as seleções das opções.
+        </p>
+        <p class="question">
+          O que é a opção Cluster?
+        </p>
+        <p class="awnser">
+          Ao alterar o valor na opção Cluster e realizar a busca novamente por meio do botão Buscar, as internações hospitalares são reagrupadas (clusterizadas) de acordo com o novo valor de raio de convergência. Assim, com um menor valor de raio de convergência do cluster, as internações hospitalares tendem a ser mostradas de forma mais isolada, em um maior número de clusters.
+        </p>
+        <p class="question">
+          O que é a opção Mapa de Calor?
+        </p>
+        <p class="awnser">
+          Ao alterar o valor na opção Heatmap e realizar a busca novamente por meio do botão Buscar, as internações hospitalares são reagrupadas em uma nova mancha de calor seguindo o novo valor de raio de convergência. Assim, com um menor valor de raio de convergência do mapa de calor, as internações hospitalares tendem a aparecer em manchas que denotam uma menor quantidade de internações nesse raio.
+        </p>
+        <p class="question">
+          O que significam os números dentro dos círculos distribuídos pelo mapa?
+        </p>
+        <p class="awnser">
+          Os círculos (clusters) contêm um valor que representa a quantidade das internações hospitalares que foram agrupados naquele Cluster como resultado da pesquisa.
+        </p>
+        <p class="question">
+          O que será impresso quando eu clicar no botão Imprimir?
+        </p>
+        <p class="awnser">
+          Ao clicar no botão Imprimir, o resultado da pesquisa feita será organizado em uma folha do tipo A4 e será impresso.
+        </p>
+        <p class="question">
+          O que será baixado quando eu clicar no botão Download?
+        </p>
+        <p class="awnser">
+          Ao clicar no botão Download, será preparado um arquivo , no formato CSV, com os procedimento resultantes da busca. Os campos desse arquivo seguem os padrões da SMS-SP e são preenchidos com dados de cada procedimento.
+        </p>
+      </div>
+    </div>
+    <div class="question-block">
+      <div class="side-bar">
+        <p class="category">
+          Filtros
+        </p>
+        <p class="category">
+          Cluster
+        </p>
+        <p class="category">
+          Mapa de calor
+        </p>
+        <p class="category">
+          Opções
+        </p>
+      </div>
+      <div class="content">
+        <p class="question">
+          Como posso obter as informações da unidade hospitalar de interesse?
+        </p>
+        <p class="awnser">
+          Na página de Estabelecimentos, ao selecionar um estabelecimento de saúde, obtém-se as informações referentes a ele no menu lateral à direita.
+        </p>
+        <p class="question">
+          O que significa o número de leitos?
+        </p>
+        <p class="awnser">
+          O número de leitos da página de Estabelecimentos representa a quantidade total de leitos do estabelecimento em questão.
+        </p>
+        <p class="question">
+          O que significam os raios dos ícones da unidade hospitalar?
+        </p>
+        <p class="awnser">
+          Os raios representam a região que delimita a quantidade de internações hospitalares , cujos pacientes residem em área próximas ao estabelecimento, presentes no quartil do determinado raio. Ao passar o mouse sobre as regiões coloridas é possível visualizar sua descrição.
+        </p>
+        <p class="question">
+          O que significam os números dentro dos círculos distribuídos pelo mapa?
+        </p>
+        <p class="awnser">
+          Os círculos (clusters) contêm um valor que representa a quantidade de internações hospitalares, realizados naquele determinado estabelecimento, que foram agrupados naquele Cluster.
+        </p>
+        <p class="question">
+          Por quê os círculos aparecem em diferentes cores?
+        </p>
+        <p class="awnser">
+          As cores são uma representação gráfica da quantidade de internações hospitalares representados naquele cluster.
+        </p>
+        <p class="question">
+          O que signifca a área delimitada em azul quando passo o cursor do mouse em cima dos círculos?
+        </p>
+        <p class="awnser">
+          A área azul delimita a região de todas as internações hospitalares contidas naquele cluster. Ao clicar no cluster é possível desfragmentá-lo em clusters menores.
+        </p>
+        <p class="question">
+          Como posso ocultar os detalhes da unidade hospitalar para fazer uma nova busca?
+        </p>
+        <p class="awnser">
+          No menu lateral à direita, há duas opções: Esconder Detalhes e Esconder Info.
+
+          <ul>
+            <li>Esconder Detalhes: fecha a busca do estabelecimento, o mesmo pode ser feito clicando no estabelecimento selecionado.</li>
+            <li>Esconder Info: esconde as informações do estabelecimento selecionado, mantendo apenas os gráficos de especialidades.</li>
+          </ul>
+        </p>
+      </div>
     </div>
   </div>
+</div>
 </div>
 
 
