@@ -68,7 +68,12 @@ class ProcedureController < ApplicationController
 	def proceduresDistanceGroup
 		render json: "Bad request", status: 400 and return unless @procedures != nil
 
-		result = {"<= 1 Km" => @procedures.where("distance <= ?", 1).count, "> 1 Km e <= 5 Km" =>  @procedures.where("distance > ? AND distance <= ?", 1, 5).count, "> 5 Km e <= 10 Km" => @procedures.where("distance > ? AND distance <= ?", 5, 10).count, "> 10 Km" => @procedures.where("distance > ?", 10).count}
+		result = {
+			"<= 1 Km" => @procedures.where("distance <= ?", 1).count, 
+			"> 1 Km e <= 5 Km" =>  @procedures.where("distance > ? AND distance <= ?", 1, 5).count, 
+			"> 5 Km e <= 10 Km" => @procedures.where("distance > ? AND distance <= ?", 5, 10).count, 
+			"> 10 Km" => @procedures.where("distance > ?", 10).count
+		}
 		render json: result, status: 200
 	end
 
