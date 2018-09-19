@@ -745,4 +745,44 @@ describe ProcedureController, type: 'controller' do
 			expect(response.body).to eq("{}")
 		end
 	end
+	
+	describe 'Testing proceduresPerSpecialties method' do
+		before :each do
+			HealthCentre.create id: 1, cnes: 1, lat: -23.555885, long: -46.666458
+
+			Specialty.create id: 1, name: "Specialty 1"
+			Specialty.create id: 2, name: "Specialty 2"
+
+			Procedure.create id: 1, cnes_id: 1, specialty_id: 1, distance: 0.5
+			Procedure.create id: 2, cnes_id: 1, specialty_id: 1, distance: 1
+			Procedure.create id: 3, cnes_id: 1, specialty_id: 2, distance: 1.5
+			Procedure.create id: 4, cnes_id: 1, specialty_id: 2, distance: 2
+			Procedure.create id: 5, cnes_id: 1, specialty_id: 2, distance: 5
+			Procedure.create id: 6, cnes_id: 1, specialty_id: 2, distance: 7.5
+			Procedure.create id: 7, cnes_id: 1, specialty_id: 2, distance: 10
+			Procedure.create id: 8, cnes_id: 1, specialty_id: 1, distance: 10.1
+			Procedure.create id: 9, cnes_id: 1, specialty_id: 1, distance: 100
+		end
+
+		it 'should return 400' do
+			data = {}.to_json
+			self.send(:get, 'proceduresPerSpecialties', params: {data: data}, as: :json)
+			expect(response.status).to eq(400)
+			expect(response.body).to eq("Bad request")
+		end
+		it 'should return 4' do
+			filters = [[],[],[],["1"]]
+			data = {"filters" => filters}.to_json
+			self.send(:get, 'proceduresPerSpecialties', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("{\"Specialty 1\":4}")
+		end
+		it 'should return nil' do
+			filters = [[],[],[],["10"]]
+			data = {"filters" => filters}.to_json
+			self.send(:get, 'proceduresPerSpecialties', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("{}")
+		end
+	end
 end
