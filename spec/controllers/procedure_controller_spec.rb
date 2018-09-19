@@ -34,56 +34,54 @@ describe ProcedureController, type: 'controller' do
 	end
 
 	describe 'Testing procedure download method' do
+		before :each  do
+			HealthCentre.create id: 1, cnes: 431, lat: -23.555885, long: -46.666458
+			HealthCentre.create id: 2, cnes: 1, lat: -23.555885, long: -46.666458
 
-	    before :each  do
-            HealthCentre.create id: 1, cnes: 431, lat: -23.555885, long: -46.666458
-            HealthCentre.create id: 2, cnes: 1, lat: -23.555885, long: -46.666458
+			Specialty.create id: 1, name: "Specialty 1"
+			Specialty.create id: 2, name: "Specialty 2"
 
-            Specialty.create id: 1, name: "Specialty 1"
-            Specialty.create id: 2, name: "Specialty 2"
+			Procedure.create id: 1, cnes_id: 431, specialty_id: 1
+			Procedure.create id: 2, cnes_id: 1, specialty_id: 1, age_code: "TP_0A4"
+			Procedure.create id: 3, cnes_id: 1, specialty_id: 1, days: 50
+			Procedure.create id: 4, cnes_id: 1, specialty_id: 1, cmpt: 201502
+		end
 
-            Procedure.create id: 1, cnes_id: 431, specialty_id: 1
-            Procedure.create id: 2, cnes_id: 1, specialty_id: 1, age_code: "TP_0A4"
-            Procedure.create id: 3, cnes_id: 1, specialty_id: 1, days: 50
-            Procedure.create id: 4, cnes_id: 1, specialty_id: 1, cmpt: 201502
-        end
+		it 'download all entries' do
+			data = {"send_all" => "True"}.to_json
+			self.send(:get, 'download', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("COD;LAT_SC;LONG_SC;P_SEXO;P_IDADE;P_RACA;LV_INSTRU;CNES;GESTOR_ID;CAR_INTEN;CMPT;DT_EMISSAO;DT_INTERNA;DT_SAIDA;COMPLEXIDA;PROC_RE;DIAG_PR;DIAG_SE1;DIAG_SE2;DIAG_SE3;DIARIAS;DIARIAS_UT;DIARIAS_UI;DIAS_PERM;FINANC;VAL_TOT;DA;SUB;STS;CRS;DISTANCIA_KM\n" +
+			"1;;;;;;;431;;;;;;;;;;;;;;;;;;;;;;;\n"	+
+			"2;;;;;;;1;;;;;;;;;;;;;;;;;;;;;;;\n"   +
+			"3;;;;;;;1;;;;;;;;;;;;;50;;;;;;;;;;\n" +
+			"4;;;;;;;1;;;201502;;;;;;;;;;;;;;;;;;;;\n")
+		end
 
-	    it 'download all entries' do
-	        data = {"send_all" => "True"}.to_json
-	        self.send(:get, 'download', params: {data: data}, as: :json)
-	        expect(response.status).to eq(200)
-	        expect(response.body).to eq("COD;LAT_SC;LONG_SC;P_SEXO;P_IDADE;P_RACA;LV_INSTRU;CNES;GESTOR_ID;CAR_INTEN;CMPT;DT_EMISSAO;DT_INTERNA;DT_SAIDA;COMPLEXIDA;PROC_RE;DIAG_PR;DIAG_SE1;DIAG_SE2;DIAG_SE3;DIARIAS;DIARIAS_UT;DIARIAS_UI;DIAS_PERM;FINANC;VAL_TOT;DA;SUB;STS;CRS;DISTANCIA_KM\n" +
-                                        "1;;;;;;;431;;;;;;;;;;;;;;;;;;;;;;;\n"    +
-                                        "2;;;;;;;1;;;;;;;;;;;;;;;;;;;;;;;\n"   +
-                                        "3;;;;;;;1;;;;;;;;;;;;;50;;;;;;;;;;\n" +
-                                        "4;;;;;;;1;;;201502;;;;;;;;;;;;;;;;;;;;\n")
-	    end
+		it 'download without parameters' do
+			data = {}.to_json
+			self.send(:get, 'download', params: {data: data}, as: :json)
+			expect(response.status).to eq(400)
+			expect(response.body).to eq("Bad request")
+		end
 
-        it 'download without parameters' do
-	        data = {}.to_json
-	        self.send(:get, 'download', params: {data: data}, as: :json)
-	        expect(response.status).to eq(400)
-	        expect(response.body).to eq("Bad request")
-	    end
+		it 'download cns_id 431' do
+			filters = [["431"]]
+			data = {"filters" => filters}.to_json
+			self.send(:get, 'download', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("COD;LAT_SC;LONG_SC;P_SEXO;P_IDADE;P_RACA;LV_INSTRU;CNES;GESTOR_ID;CAR_INTEN;CMPT;DT_EMISSAO;DT_INTERNA;DT_SAIDA;COMPLEXIDA;PROC_RE;DIAG_PR;DIAG_SE1;DIAG_SE2;DIAG_SE3;DIARIAS;DIARIAS_UT;DIARIAS_UI;DIAS_PERM;FINANC;VAL_TOT;DA;SUB;STS;CRS;DISTANCIA_KM\n" +
+			"1;;;;;;;431;;;;;;;;;;;;;;;;;;;;;;;\n")
+		end
 
-	    it 'download cns_id 431' do
-	        filters = [["431"]]
-            data = {"filters" => filters}.to_json
-            self.send(:get, 'download', params: {data: data}, as: :json)
-            expect(response.status).to eq(200)
-            expect(response.body).to eq("COD;LAT_SC;LONG_SC;P_SEXO;P_IDADE;P_RACA;LV_INSTRU;CNES;GESTOR_ID;CAR_INTEN;CMPT;DT_EMISSAO;DT_INTERNA;DT_SAIDA;COMPLEXIDA;PROC_RE;DIAG_PR;DIAG_SE1;DIAG_SE2;DIAG_SE3;DIARIAS;DIARIAS_UT;DIARIAS_UI;DIAS_PERM;FINANC;VAL_TOT;DA;SUB;STS;CRS;DISTANCIA_KM\n" +
-                                        "1;;;;;;;431;;;;;;;;;;;;;;;;;;;;;;;\n")
-        end
-
-        it 'download age_code TP_0A4' do
-	        filters = [[], [], [], [], [], [], [], [], [], [], [], ["TP_0A4"]]
-            data = {"filters" => filters}.to_json
-            self.send(:get, 'download', params: {data: data}, as: :json)
-            expect(response.status).to eq(200)
-            expect(response.body).to eq("COD;LAT_SC;LONG_SC;P_SEXO;P_IDADE;P_RACA;LV_INSTRU;CNES;GESTOR_ID;CAR_INTEN;CMPT;DT_EMISSAO;DT_INTERNA;DT_SAIDA;COMPLEXIDA;PROC_RE;DIAG_PR;DIAG_SE1;DIAG_SE2;DIAG_SE3;DIARIAS;DIARIAS_UT;DIARIAS_UI;DIAS_PERM;FINANC;VAL_TOT;DA;SUB;STS;CRS;DISTANCIA_KM\n" +
-                                        "2;;;;;;;1;;;;;;;;;;;;;;;;;;;;;;;\n")
-        end
-
+		it 'download age_code TP_0A4' do
+			filters = [[], [], [], [], [], [], [], [], [], [], [], ["TP_0A4"]]
+			data = {"filters" => filters}.to_json
+			self.send(:get, 'download', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("COD;LAT_SC;LONG_SC;P_SEXO;P_IDADE;P_RACA;LV_INSTRU;CNES;GESTOR_ID;CAR_INTEN;CMPT;DT_EMISSAO;DT_INTERNA;DT_SAIDA;COMPLEXIDA;PROC_RE;DIAG_PR;DIAG_SE1;DIAG_SE2;DIAG_SE3;DIARIAS;DIARIAS_UT;DIARIAS_UI;DIAS_PERM;FINANC;VAL_TOT;DA;SUB;STS;CRS;DISTANCIA_KM\n" +
+			"2;;;;;;;1;;;;;;;;;;;;;;;;;;;;;;;\n")
+		end
 	end
 
 	describe 'Testing healthCentresCnes method' do
@@ -441,44 +439,44 @@ describe ProcedureController, type: 'controller' do
 			expect(assigns(:procedures)).to eq(Procedure.where(:gestor_ide => 1))
 		end
 	end
+	
+	describe 'Testing proceduresTotal method' do
+		before :each  do
+			HealthCentre.create id: 1, cnes: 431, lat: -23.555885, long: -46.666458
+			HealthCentre.create id: 2, cnes: 1, lat: -23.555885, long: -46.666458
 
-    describe 'Testing proceduresTotal method' do
-            before :each  do
-                    HealthCentre.create id: 1, cnes: 431, lat: -23.555885, long: -46.666458
-                    HealthCentre.create id: 2, cnes: 1, lat: -23.555885, long: -46.666458
+			Specialty.create id: 1, name: "Specialty 1"
+			Specialty.create id: 2, name: "Specialty 2"
 
-                    Specialty.create id: 1, name: "Specialty 1"
-                    Specialty.create id: 2, name: "Specialty 2"
+			Procedure.create id: 1, cnes_id: 431, specialty_id: 1
+			Procedure.create id: 2, cnes_id: 1, specialty_id: 1, age_code: "TP_0A4"
+			Procedure.create id: 3, cnes_id: 1, specialty_id: 1, days: 50
+			Procedure.create id: 4, cnes_id: 1, specialty_id: 1, cmpt: 201502
+			Procedure.create id: 5, cnes_id: 1, specialty_id: 1, proce_re: 3030
+			Procedure.create id: 6, cnes_id: 1, specialty_id: 2
+			Procedure.create id: 7, cnes_id: 1, specialty_id: 1, treatment_type: 1
+			Procedure.create id: 8, cnes_id: 1, specialty_id: 1, cid_primary: "A42"
+			Procedure.create id: 9, cnes_id: 1, specialty_id: 1, cid_secondary: "B21"
+			Procedure.create id: 10, cnes_id: 1, specialty_id: 1, cid_secondary2: "Z12"
+			Procedure.create id: 11, cnes_id: 1, specialty_id: 1, cid_associated: "G92"
+			Procedure.create id: 12, cnes_id: 1, specialty_id: 1, complexity: 3
+			Procedure.create id: 13, cnes_id: 1, specialty_id: 1, finance: 6
+			Procedure.create id: 14, cnes_id: 1, specialty_id: 1, race: 1
+			Procedure.create id: 15, cnes_id: 1, specialty_id: 1, lv_instruction: 0
+			Procedure.create id: 16, cnes_id: 1, specialty_id: 1, DA: "REPUBLICA"
+			Procedure.create id: 17, cnes_id: 1, specialty_id: 1, PR: "SE"
+			Procedure.create id: 18, cnes_id: 1, specialty_id: 1, STS: "SE"
+			Procedure.create id: 19, cnes_id: 1, specialty_id: 1, CRS: "CENTRO"
+			Procedure.create id: 20, cnes_id: 1, specialty_id: 1, gestor_ide: 1
+		end
 
-                    Procedure.create id: 1, cnes_id: 431, specialty_id: 1
-                    Procedure.create id: 2, cnes_id: 1, specialty_id: 1, age_code: "TP_0A4"
-                    Procedure.create id: 3, cnes_id: 1, specialty_id: 1, days: 50
-                    Procedure.create id: 4, cnes_id: 1, specialty_id: 1, cmpt: 201502
-                    Procedure.create id: 5, cnes_id: 1, specialty_id: 1, proce_re: 3030
-                    Procedure.create id: 6, cnes_id: 1, specialty_id: 2
-                    Procedure.create id: 7, cnes_id: 1, specialty_id: 1, treatment_type: 1
-                    Procedure.create id: 8, cnes_id: 1, specialty_id: 1, cid_primary: "A42"
-                    Procedure.create id: 9, cnes_id: 1, specialty_id: 1, cid_secondary: "B21"
-                    Procedure.create id: 10, cnes_id: 1, specialty_id: 1, cid_secondary2: "Z12"
-                    Procedure.create id: 11, cnes_id: 1, specialty_id: 1, cid_associated: "G92"
-                    Procedure.create id: 12, cnes_id: 1, specialty_id: 1, complexity: 3
-                    Procedure.create id: 13, cnes_id: 1, specialty_id: 1, finance: 6
-                    Procedure.create id: 14, cnes_id: 1, specialty_id: 1, race: 1
-                    Procedure.create id: 15, cnes_id: 1, specialty_id: 1, lv_instruction: 0
-                    Procedure.create id: 16, cnes_id: 1, specialty_id: 1, DA: "REPUBLICA"
-                    Procedure.create id: 17, cnes_id: 1, specialty_id: 1, PR: "SE"
-                    Procedure.create id: 18, cnes_id: 1, specialty_id: 1, STS: "SE"
-                    Procedure.create id: 19, cnes_id: 1, specialty_id: 1, CRS: "CENTRO"
-                    Procedure.create id: 20, cnes_id: 1, specialty_id: 1, gestor_ide: 1
-            end
-
-            it 'should return 20' do
-		data = {"send_all" => "True"}.to_json
-                    self.send(:get, 'proceduresTotal', params: {data: data},format: :json)
-                    expect(response.status).to eq(200)
-                    expect(response.body).to eq(Procedure.count.to_s)
-            end
-    end
+		it 'should return 20' do
+			data = {"send_all" => "True"}.to_json
+			self.send(:get, 'proceduresTotal', params: {data: data},format: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq(Procedure.count.to_s)
+		end
+	end
 
 	describe 'Testing proceduresInfo method' do
 		before :each  do
@@ -552,158 +550,198 @@ describe ProcedureController, type: 'controller' do
 	end
 
 	describe 'Testing proceduresQuartiles method' do
-        before :each do
-            HealthCentre.create id: 1, cnes: 1, lat: -23.555885, long: -46.666458
+		before :each do
+			HealthCentre.create id: 1, cnes: 1, lat: -23.555885, long: -46.666458
 
-            Specialty.create id: 1, name: "Specialty 1"
-            Specialty.create id: 2, name: "Specialty 2"
+			Specialty.create id: 1, name: "Specialty 1"
+			Specialty.create id: 2, name: "Specialty 2"
 
-            Procedure.create id: 1, cnes_id: 1, specialty_id: 1, days_ui: 11, days: 1, days_total: 31, days_uti: 21, val_total: 51, distance: 91
-            Procedure.create id: 2, cnes_id: 1, specialty_id: 1, days_ui: 12, days: 2, days_total: 32, days_uti: 22, val_total: 52, distance: 92
-            Procedure.create id: 3, cnes_id: 1, specialty_id: 2, days_ui: 13, days: 3, days_total: 33, days_uti: 23, val_total: 53, distance: 93
-            Procedure.create id: 4, cnes_id: 1, specialty_id: 2, days_ui: 14, days: 4, days_total: 34, days_uti: 24, val_total: 54, distance: 94
-            Procedure.create id: 5, cnes_id: 1, specialty_id: 2, days_ui: 15, days: 5, days_total: 35, days_uti: 25, val_total: 55, distance: 95
-            Procedure.create id: 6, cnes_id: 1, specialty_id: 2, days_ui: 16, days: 6, days_total: 36, days_uti: 26, val_total: 56, distance: 96
-            Procedure.create id: 7, cnes_id: 1, specialty_id: 2, days_ui: 17, days: 7, days_total: 37, days_uti: 27, val_total: 57, distance: 97
-            Procedure.create id: 8, cnes_id: 1, specialty_id: 1, days_ui: 18, days: 8, days_total: 38, days_uti: 28, val_total: 58, distance: 98
-            Procedure.create id: 9, cnes_id: 1, specialty_id: 1, days_ui: 19, days: 9, days_total: 39, days_uti: 29, val_total: 59, distance: 99
-        end
+			Procedure.create id: 1, cnes_id: 1, specialty_id: 1, days_ui: 11, days: 1, days_total: 31, days_uti: 21, val_total: 51, distance: 91
+			Procedure.create id: 2, cnes_id: 1, specialty_id: 1, days_ui: 12, days: 2, days_total: 32, days_uti: 22, val_total: 52, distance: 92
+			Procedure.create id: 3, cnes_id: 1, specialty_id: 2, days_ui: 13, days: 3, days_total: 33, days_uti: 23, val_total: 53, distance: 93
+			Procedure.create id: 4, cnes_id: 1, specialty_id: 2, days_ui: 14, days: 4, days_total: 34, days_uti: 24, val_total: 54, distance: 94
+			Procedure.create id: 5, cnes_id: 1, specialty_id: 2, days_ui: 15, days: 5, days_total: 35, days_uti: 25, val_total: 55, distance: 95
+			Procedure.create id: 6, cnes_id: 1, specialty_id: 2, days_ui: 16, days: 6, days_total: 36, days_uti: 26, val_total: 56, distance: 96
+			Procedure.create id: 7, cnes_id: 1, specialty_id: 2, days_ui: 17, days: 7, days_total: 37, days_uti: 27, val_total: 57, distance: 97
+			Procedure.create id: 8, cnes_id: 1, specialty_id: 1, days_ui: 18, days: 8, days_total: 38, days_uti: 28, val_total: 58, distance: 98
+			Procedure.create id: 9, cnes_id: 1, specialty_id: 1, days_ui: 19, days: 9, days_total: 39, days_uti: 29, val_total: 59, distance: 99
+		end
 
-        it 'should return 400' do
-            data = {}.to_json
-            self.send(:get, 'proceduresQuartiles', params: {data: data}, as: :json)
-            expect(response.status).to eq(400)
-            expect(response.body).to eq("Bad request")
-        end
+		it 'should return 400' do
+			data = {}.to_json
+			self.send(:get, 'proceduresQuartiles', params: {data: data}, as: :json)
+			expect(response.status).to eq(400)
+			expect(response.body).to eq("Bad request")
+		end
 
-        it 'should return empty arrays for nonexistent data' do
-            filters = [["431"]]
-            data = {"filters" => filters}.to_json
-            self.send(:get, 'proceduresQuartiles', params: {data: data}, as: :json)
-            expect(response.status).to eq(200)
-            expect(response.body).to eq("[[],[],[],[],[],[]]")
-        end
+		it 'should return empty arrays for nonexistent data' do
+			filters = [["431"]]
+			data = {"filters" => filters}.to_json
+			self.send(:get, 'proceduresQuartiles', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("[[],[],[],[],[],[]]")
+		end
 
-        # it 'should return a constant when send_all == true' do        TODO: Fix the constant and adjust the test
-        #    data = {}.to_json
-        #    self.send(:get, 'proceduresQuartiles', params: {data: data, send_all: "True"}, as: :json)
-        #    expect(response.status).to eq(200)
-        #    expect(response.body).to eq("[[2,5,7],[22,25,27],[12,15,17],[32,35,37],[52.0,55.0,57.0],[92.0,95.0,97.0]]")
-        # end
+		# it 'should return a constant when send_all == true' do	TODO: Fix the constant and adjust the test
+		#	data = {}.to_json
+		#	self.send(:get, 'proceduresQuartiles', params: {data: data, send_all: "True"}, as: :json)
+		#	expect(response.status).to eq(200)
+		#	expect(response.body).to eq("[[2,5,7],[22,25,27],[12,15,17],[32,35,37],[52.0,55.0,57.0],[92.0,95.0,97.0]]")
+		# end
 
-        it 'should return quartiles for cnes id 1' do
-            filters = [["1"]]
-            data = {"filters" => filters}.to_json
-            self.send(:get, 'proceduresQuartiles', params: {data: data}, as: :json)
-            expect(response.status).to eq(200)
-            expect(response.body).to eq("[[2,5,7],[22,25,27],[12,15,17],[32,35,37],[52.0,55.0,57.0],[92.0,95.0,97.0]]")
-        end
+		it 'should return quartiles for cnes id 1' do
+			filters = [["1"]]
+			data = {"filters" => filters}.to_json
+			self.send(:get, 'proceduresQuartiles', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("[[2,5,7],[22,25,27],[12,15,17],[32,35,37],[52.0,55.0,57.0],[92.0,95.0,97.0]]")
+		end
 
-        it 'should return quartiles for specialty id 2' do
-            filters = [[],  [], [],  ["2"]]
-            data = {"filters" => filters}.to_json
-            self.send(:get, 'proceduresQuartiles', params: {data: data}, as: :json)
-            expect(response.status).to eq(200)
-            expect(response.body).to eq("[[3,5,6],[23,25,26],[13,15,16],[33,35,36],[53.0,55.0,56.0],[93.0,95.0,96.0]]")
-        end
-
-    end
+		it 'should return quartiles for specialty id 2' do
+			filters = [[],  [], [],  ["2"]]
+			data = {"filters" => filters}.to_json
+			self.send(:get, 'proceduresQuartiles', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("[[3,5,6],[23,25,26],[13,15,16],[33,35,36],[53.0,55.0,56.0],[93.0,95.0,96.0]]")
+		end
+	end
 
 	describe 'Testing proceduresDistanceGroup method' do
-        before :each do
-            HealthCentre.create id: 1, cnes: 1, lat: -23.555885, long: -46.666458
+		before :each do
+			HealthCentre.create id: 1, cnes: 1, lat: -23.555885, long: -46.666458
 
-            Specialty.create id: 1, name: "Specialty 1"
-            Specialty.create id: 2, name: "Specialty 2"
+			Specialty.create id: 1, name: "Specialty 1"
+			Specialty.create id: 2, name: "Specialty 2"
 
-            Procedure.create id: 1, cnes_id: 1, specialty_id: 1, distance: 0.5
-            Procedure.create id: 2, cnes_id: 1, specialty_id: 1, distance: 1
-            Procedure.create id: 3, cnes_id: 1, specialty_id: 2, distance: 1.5
-            Procedure.create id: 4, cnes_id: 1, specialty_id: 2, distance: 2
-            Procedure.create id: 5, cnes_id: 1, specialty_id: 2, distance: 5
-            Procedure.create id: 6, cnes_id: 1, specialty_id: 2, distance: 7.5
-            Procedure.create id: 7, cnes_id: 1, specialty_id: 2, distance: 10
-            Procedure.create id: 8, cnes_id: 1, specialty_id: 1, distance: 10.1
-            Procedure.create id: 9, cnes_id: 1, specialty_id: 1, distance: 100
-        end
+			Procedure.create id: 1, cnes_id: 1, specialty_id: 1, distance: 0.5
+			Procedure.create id: 2, cnes_id: 1, specialty_id: 1, distance: 1
+			Procedure.create id: 3, cnes_id: 1, specialty_id: 2, distance: 1.5
+			Procedure.create id: 4, cnes_id: 1, specialty_id: 2, distance: 2
+			Procedure.create id: 5, cnes_id: 1, specialty_id: 2, distance: 5
+			Procedure.create id: 6, cnes_id: 1, specialty_id: 2, distance: 7.5
+			Procedure.create id: 7, cnes_id: 1, specialty_id: 2, distance: 10
+			Procedure.create id: 8, cnes_id: 1, specialty_id: 1, distance: 10.1
+			Procedure.create id: 9, cnes_id: 1, specialty_id: 1, distance: 100
+		end
 
-        it 'should return 400' do
-            data = {}.to_json
-            self.send(:get, 'proceduresDistanceGroup', params: {data: data}, as: :json)
-            expect(response.status).to eq(400)
-            expect(response.body).to eq("Bad request")
-        end
+		it 'should return 400' do
+			data = {}.to_json
+			self.send(:get, 'proceduresDistanceGroup', params: {data: data}, as: :json)
+			expect(response.status).to eq(400)
+			expect(response.body).to eq("Bad request")
+		end
 
-        it 'should return JSON with zeros for nonexistent data' do
-            filters = [["431"]]
-            data = {"filters" => filters}.to_json
-            self.send(:get, 'proceduresDistanceGroup', params: {data: data}, as: :json)
-            expect(response.status).to eq(200)
-            expect(response.body).to eq("{\"\\u003c= 1 Km\":0,\"\\u003e 1 Km e \\u003c= 5 Km\":0,\"\\u003e 5 Km e \\u003c= 10 Km\":0,\"\\u003e 10 Km\":0}")
-        end
+		it 'should return JSON with zeros for nonexistent data' do
+			filters = [["431"]]
+			data = {"filters" => filters}.to_json
+			self.send(:get, 'proceduresDistanceGroup', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("{\"\\u003c= 1 Km\":0,\"\\u003e 1 Km e \\u003c= 5 Km\":0,\"\\u003e 5 Km e \\u003c= 10 Km\":0,\"\\u003e 10 Km\":0}")
+		end
 
-        it 'should return valid quantities for every group for cnes_id=1' do
-            filters = [["1"]]
-            data = {"filters" => filters}.to_json
-            self.send(:get, 'proceduresDistanceGroup', params: {data: data}, as: :json)
-            expect(response.status).to eq(200)
-            expect(response.body).to eq("{\"\\u003c= 1 Km\":2,\"\\u003e 1 Km e \\u003c= 5 Km\":3,\"\\u003e 5 Km e \\u003c= 10 Km\":2,\"\\u003e 10 Km\":2}")
-        end
+		it 'should return valid quantities for every group for cnes_id=1' do
+			filters = [["1"]]
+			data = {"filters" => filters}.to_json
+			self.send(:get, 'proceduresDistanceGroup', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("{\"\\u003c= 1 Km\":2,\"\\u003e 1 Km e \\u003c= 5 Km\":3,\"\\u003e 5 Km e \\u003c= 10 Km\":2,\"\\u003e 10 Km\":2}")
+		end
 
 		it 'should return valid quantities for every group for specialty_id=2' do
-            filters = [[],[],[],["2"]]
-            data = {"filters" => filters}.to_json
-            self.send(:get, 'proceduresDistanceGroup', params: {data: data}, as: :json)
-            expect(response.status).to eq(200)
-            expect(response.body).to eq("{\"\\u003c= 1 Km\":0,\"\\u003e 1 Km e \\u003c= 5 Km\":3,\"\\u003e 5 Km e \\u003c= 10 Km\":2,\"\\u003e 10 Km\":0}")
-        end
-    end
+			filters = [[],[],[],["2"]]
+			data = {"filters" => filters}.to_json
+			self.send(:get, 'proceduresDistanceGroup', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("{\"\\u003c= 1 Km\":0,\"\\u003e 1 Km e \\u003c= 5 Km\":3,\"\\u003e 5 Km e \\u003c= 10 Km\":2,\"\\u003e 10 Km\":0}")
+		end
+	end
 
-    describe 'Testing proceduresClusterPoints method' do
-    	before :each do
-            HealthCentre.create id: 1, cnes: 1, lat: -23.555885, long: -46.666458
+	describe 'Testing proceduresClusterPoints method' do
+		before :each do
+			HealthCentre.create id: 1, cnes: 1, lat: -23.555885, long: -46.666458
 
-            Specialty.create id: 1, name: "Specialty 1"
-            Specialty.create id: 2, name: "Specialty 2"
+			Specialty.create id: 1, name: "Specialty 1"
+			Specialty.create id: 2, name: "Specialty 2"
 
-            Procedure.create id: 1, cnes_id: 1, specialty_id: 1, lat: -23.2, long: -46.1
-            Procedure.create id: 2, cnes_id: 1, specialty_id: 1, lat: -23.2, long: -46.1
-            Procedure.create id: 3, cnes_id: 1, specialty_id: 2, lat: -23.2, long: -46.1
-            Procedure.create id: 4, cnes_id: 1, specialty_id: 2, lat: -23.2, long: -46.1
-            Procedure.create id: 5, cnes_id: 1, specialty_id: 2, lat: -23.5, long: -46.1
-            Procedure.create id: 6, cnes_id: 1, specialty_id: 2, lat: -23.5, long: -46.1
-            Procedure.create id: 7, cnes_id: 1, specialty_id: 2, lat: -23.5, long: -46.1
-            Procedure.create id: 8, cnes_id: 1, specialty_id: 1, lat: -23.6, long: -46.1
-            Procedure.create id: 9, cnes_id: 1, specialty_id: 1, lat: -23.6, long: -46.1
-    	end
+			Procedure.create id: 1, cnes_id: 1, specialty_id: 1, lat: -23.2, long: -46.1
+			Procedure.create id: 2, cnes_id: 1, specialty_id: 1, lat: -23.2, long: -46.1
+			Procedure.create id: 3, cnes_id: 1, specialty_id: 2, lat: -23.2, long: -46.1
+			Procedure.create id: 4, cnes_id: 1, specialty_id: 2, lat: -23.2, long: -46.1
+			Procedure.create id: 5, cnes_id: 1, specialty_id: 2, lat: -23.5, long: -46.1
+			Procedure.create id: 6, cnes_id: 1, specialty_id: 2, lat: -23.5, long: -46.1
+			Procedure.create id: 7, cnes_id: 1, specialty_id: 2, lat: -23.5, long: -46.1
+			Procedure.create id: 8, cnes_id: 1, specialty_id: 1, lat: -23.6, long: -46.1
+			Procedure.create id: 9, cnes_id: 1, specialty_id: 1, lat: -23.6, long: -46.1
+		end
 
-    	it 'should return bad request when a call has no params' do
-    		self.send(:get, 'proceduresClusterPoints', params: {data: {}.to_json}, as: :json)
-    		expect(response.status).to eq(400)
-    		expect(response.body).to eq("Bad request")
-    	end
+		it 'should return bad request when a call has no params' do
+			self.send(:get, 'proceduresClusterPoints', params: {data: {}.to_json}, as: :json)
+			expect(response.status).to eq(400)
+			expect(response.body).to eq("Bad request")
+		end
 
-    	it 'should return a empty json when search result is empty' do
-    		filters = [["2"]];
-    		data = {"filters" => filters}.to_json
-    		self.send(:get, 'proceduresClusterPoints', params: {data: data}, as: :json)
-    		expect(response.status).to eq(200)
-    		expect(response.body).to eq("[]")
-    	end
+		it 'should return a empty json when search result is empty' do
+			filters = [["2"]];
+			data = {"filters" => filters}.to_json
+			self.send(:get, 'proceduresClusterPoints', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("[]")
+		end
 
-    	it 'should return a array of [lat, long, count] when search result is not empty' do
-    		data = {"send_all" => "True"}.to_json
-    		self.send(:get, 'proceduresClusterPoints', params: {data: data}, as: :json)
-    		expect(response.status).to eq(200)
-    		expect(response.body).to eq("[[-23.2,-46.1,4],[-23.5,-46.1,3],[-23.6,-46.1,2]]")
-    	end
+		it 'should return a array of [lat, long, count] when search result is not empty' do
+			data = {"send_all" => "True"}.to_json
+			self.send(:get, 'proceduresClusterPoints', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("[[-23.2,-46.1,4],[-23.5,-46.1,3],[-23.6,-46.1,2]]")
+		end
 
-    	it 'should return the values only for specialty_id == 2' do
-            filters = [[],[],[],["2"]]
-    		data = {"filters" => filters}.to_json
-    		self.send(:get, 'proceduresClusterPoints', params: {data: data}, as: :json)
-    		expect(response.status).to eq(200)
-    		expect(response.body).to eq("[[-23.5,-46.1,3],[-23.2,-46.1,2]]")
-    	end
-    end
+		it 'should return the values only for specialty_id == 2' do
+			filters = [[],[],[],["2"]]
+			data = {"filters" => filters}.to_json
+			self.send(:get, 'proceduresClusterPoints', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("[[-23.5,-46.1,3],[-23.2,-46.1,2]]")
+		end
+	end
+
+	describe 'Testing proceduresDistance method' do
+		before :each do
+			HealthCentre.create id: 1, cnes: 1, lat: -23.555885, long: -46.666458
+
+			Specialty.create id: 1, name: "Specialty 1"
+			Specialty.create id: 2, name: "Specialty 2"
+			Specialty.create id: 3, name: "Specialty 3"
+
+			Procedure.create id: 1, cnes_id: 1, specialty_id: 1, distance: 0.5
+			Procedure.create id: 2, cnes_id: 1, specialty_id: 1, distance: 1
+			Procedure.create id: 3, cnes_id: 1, specialty_id: 2, distance: 1.5
+			Procedure.create id: 4, cnes_id: 1, specialty_id: 2, distance: 2
+			Procedure.create id: 5, cnes_id: 1, specialty_id: 2, distance: 5
+			Procedure.create id: 6, cnes_id: 1, specialty_id: 2, distance: 7.5
+			Procedure.create id: 7, cnes_id: 1, specialty_id: 2, distance: 10
+			Procedure.create id: 8, cnes_id: 1, specialty_id: 1, distance: 10.1
+			Procedure.create id: 9, cnes_id: 1, specialty_id: 1, distance: 100
+		end
+
+		it 'should return 400' do
+			data = {}.to_json
+			self.send(:get, 'proceduresDistance', params: {data: data}, as: :json)
+			expect(response.status).to eq(400)
+			expect(response.body).to eq("Bad request")
+		end
+		it 'should return 27.9' do
+			filters = [[],[],[],["1"]]
+			data = {"filters" => filters}.to_json
+			self.send(:get, 'proceduresDistance', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("{\"Specialty 1\":27.9}")
+		end
+		it 'should return nil' do
+			filters = [[],[],[],["10"]]
+			data = {"filters" => filters}.to_json
+			self.send(:get, 'proceduresDistance', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("{}")
+		end
+	end
 end
