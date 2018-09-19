@@ -2,91 +2,47 @@
   margin: 0;
   padding: 0;
 }
-  
-.main {
-  width: 100%;
-  display: table;
+
+body {
+  margin-top: 50px;
 }
 
-.container {
-  display: table-row
+.type-block {
+  background-color: #b0b0b0;
+  width: calc(100vw - (100vw - 100%));
+  padding: .5em .5em 2em .5em;
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 
-.question-container {
-  padding-top: 50px;
-  width: 60vw;
-  background-color: white;
-  height: 100vh;
-  overflow-x: auto;
-  padding-left: 2px;
-  float: left;
-  display: table-cell;
-}
-
-.form-container {
-  padding-top: 50px;
-  padding-left: 10px;
-  float: left;
-  width: 38vw;
-  background-color: white;
-  height: 100vh;
-  padding-right: 2px;
-  display: table-cell;
-  float: left;
-  border-left: 1px #6e6e6e solid;
-}
-
-.collapsible-header {
-  background-color: #ffffff;
-  color: #225da1;
-  cursor: pointer;
-  padding: 20px;
-  width: 60vw;
-  border: none;
-  text-align: left;
-  outline: none;
-  font-size: 14px;
-  transition: 1.0s;
-}
-
-.active, .collapsible-header:hover {
-  background-color: #c4c4c450;
-}
-
-.collapsible-header:after {
-  content: "\002B";
-  color: rgb(0, 0, 0);
-  font-weight: bold;
-  float: right;
-  margin-left: 7px;
-}
-
-.active:after {
-  content: "\2212";
-}
-
-.collapsible-content {
-  padding: 0 5px;
-  background-color: #f1f1f1ef;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.5s ease-out;
-  padding-left: 40px;
-}
-
-h2 {
+.title {
+  text-align: center;
   font-family: 'Raleway', sans-serif;
+  margin-bottom: 1em;
 }
 
-h4 {
-  background-color: #d1d1d1;
-  color: #000000;
-  line-height: 5vh;
-  font-size: 20px;
-  border-top: 1.4px black solid;
-  border-bottom: 1.4px black solid;
+.type-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
 }
 
-.line {
-  border-bottom: 1px solid black;
+.type {
+  height: 20vw;
+  width: 20vw;
+  border-radius: 50%;
+}
+
+.type-1 {
+  background-color: #aaa;
+}
+
+.type-2 {
+  background-color: #bbb;
+}
+
+.type-3 {
+  background-color: #ccc;
 }
