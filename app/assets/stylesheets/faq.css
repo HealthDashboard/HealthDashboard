@@ -7,14 +7,19 @@ body {
   margin-top: 50px;
 }
 
+.box {
+  display: flex;
+  flex-direction: column;
+}
+
 .type-block {
-  background-color: #b0b0b0;
+  background-color: #ddd;
   width: calc(100vw - (100vw - 100%));
   padding: .5em .5em 2em .5em;
-  height: 70vh;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  position: relative;
 }
 
 .title {
@@ -26,23 +31,127 @@ body {
 .type-row {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: center;
 }
 
 .type {
-  height: 20vw;
-  width: 20vw;
+  height: 15vw;
+  width: 15vw;
+  max-height: 150px;
+  max-width: 150px;
   border-radius: 50%;
+  margin: 0 20px;
+  position: relative;
+}
+
+/* .type.active::before {
+  content: '';
+  background-color: blue;
+  display: block;
+  top: 0;
+  right: 0;
+  position: relative;
+  height: 19vw;
+  width: 19vw;
+  border-radius: 50%;
+} */
+
+.type::after {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  position: absolute;
+  font-size: 6vw;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .type-1 {
   background-color: #aaa;
 }
 
+.type-1::after {
+  content: '\f0e7';
+}
+
 .type-2 {
   background-color: #bbb;
 }
 
+.type-2::after {
+  content: '\f002';
+}
+
 .type-3 {
   background-color: #ccc;
+}
+
+.type-3::after {
+  content: '\f0f8';
+}
+
+.overlay {
+  height: 15vw;
+  width: 15vw;
+  max-height: 150px;
+  max-width: 150px;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  background-color: #2f2f2f;
+  color: #fff;
+  opacity: 0;
+  z-index: 1;
+  transition: opacity 250ms ease-in-out,
+              transform 250ms ease-in-out;
+}
+
+.type:hover .overlay {
+  opacity: 1;
+  transform: translate(-45%, -47%);
+}
+
+.overlay p {
+  text-align: center;
+  width: 13vw;
+  max-width: 150px;
+  font-family: 'Raleway', sans-serif;
+  top: 50%;
+  transform: translateY(-50%);
+  position: relative;
+  font-size: 1.8vw;
+}
+
+.triangle {
+  position: absolute;
+  bottom: -19px;
+  width: 0;
+  height: 0;
+  left: 50%;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+  border-top: 20px solid #ddd;
+  transform: translateX(15vw);
+}
+
+.question-block {
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+}
+
+.side-bar {
+  height: 100%;
+  border-right: solid 1px #acacac;
+}
+
+.content {
+  padding-left: 2em;
+}
+
+.question {
+  font-weight: bold;
+  margin-top: 10px;
 }
