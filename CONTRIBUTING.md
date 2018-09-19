@@ -6,7 +6,10 @@ este projeto.
 ## Como montar o ambiente de execução do projeto
 
 Para executar o projeto de health-dashboard, é necessário ter uma máquina com
-Rails e PostgreSQL instalado.
+Rails e PostgreSQL instalado. As versões necessárias são:
+
+* PostgreSQL >= 9.5.12
+* Rails >= 5.0.1
 
 Existem duas abordagens para instalar este ambiente:
  * Utilizar uma máquina virtual pré-configurada por scripts;
@@ -82,7 +85,7 @@ $ sudo apt-get install -y nodejs && sudo ln -sf /usr/bin/nodejs /usr/local/bin/n
 O primeiro passo necessário é instalar todas as gemas que o projeto requer.
 Para isto, digite o seguinte comando na pasta raiz do projeto:
 
-```
+```bash
 $ bundle install
 ```
 
@@ -90,13 +93,13 @@ Uma vez instalado as gemas, crie um usuário no PostgreSQL para a aplicação
 acessar o banco de dados com o mesmo nome do usuário atual e com permissões
 de super usuário.
 
-```
+```bash
 $ sudo -u postgres createuser --interactive
 ```
 
 Em seguida execute os comandos para criar o banco de dados e as tabelas:
 
-```
+```bash
 $ rake db:create
 $ rake db:migrate
 ```
@@ -104,13 +107,26 @@ $ rake db:migrate
 Uma vez completados estes passos, deverá ser possível iniciar o projeto com
 o comando:
 
-```
+```bash
 $ rails s
 ```
+
+Para acessar o projeto basta acessar em seu navegador a URL
+[http://localhost:3000/](http://localhost:3000/).
 
 Inicialmente o projeto não terá uma base de dados populada. Para carregar uma
 base de dados, utilize o seguinte comando:
 
-```
+```bash
 $ rake db:seed
 ```
+
+Obs. É necessário carregar na pasta [db/csv](./db/csv) o arquivo procedures.csv
+do repositório [Internacoes-Hospitalares](https://gitlab.com/interscity/health-dashboard/Internacoes-Hospitalares).
+
+
+## Executando testes
+
+Após modificações no código é necessário verificar se os testes estão passando,
+além de adicionar testes para toda funcionalidade adicionada. Informações de 
+como proceder quanto aos testes podem ser encontradas [aqui](./TESTING.md).
