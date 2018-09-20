@@ -17,3 +17,7 @@ function show_email(e) {
     }
   }
 }
+
+function about() {
+  location.href = "/about";
+}

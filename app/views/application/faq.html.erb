@@ -34,16 +34,22 @@
     <div class="question-block">
       <div class="side-bar" id="side-bar1">
         <p class="category">
-          Filtros
+          Início
         </p>
       </div>
       <div class="content">
-        <p class="question">
-          Como posso fazer pesquisas?
-        </p>
-        <p class="awnser">
-          Dunno
-        </p>
+        <div class="question-section">
+          <p class="question-header" id="estabel">
+            Início
+          </p>
+          <p class="question">
+            Como posso fazer pesquisas?
+          </p>
+          <p class="awnser">
+            Na página inicial, na seção de serviços clique ou em Busca Avançada ou em Estabelecimentos.
+            Em qualquer outra página na barra de navegação no topo da página clique na seção adequada. (Por favor alguém complete essa resposta)
+          </p>
+        </div>
       </div>
     </div>
     <div class="question-block">
@@ -51,7 +57,7 @@
         <p class="category" onclick="jump('filtros')">
           Filtros
         </p>
-        <p class="category" onclick="jump('mapa')">
+        <p class="category" onclick="jump('mapa-busca')">
           Mapa
         </p>
         <p class="category" onclick="jump('opcoes')">
@@ -77,7 +83,7 @@
           </p>
         </div>
         <div class="question-section">
-          <p class="question-header" id="mapa">
+          <p class="question-header" id="mapa-busca">
             Mapa
           </p>
           <p class="question">
@@ -120,67 +126,71 @@
     </div>
     <div class="question-block">
       <div class="side-bar" id="side-bar3">
-        <p class="category">
-          Filtros
+        <p class="category" onclick="jump('estabel')">
+          Estabelecimentos
         </p>
-        <p class="category">
-          Cluster
-        </p>
-        <p class="category">
-          Mapa de calor
-        </p>
-        <p class="category">
-          Opções
+        <p class="category" onclick="jump('mapa-UH')">
+          Mapa
         </p>
       </div>
       <div class="content">
-        <p class="question">
-          Como posso obter as informações da unidade hospitalar de interesse?
-        </p>
-        <p class="awnser">
-          Na página de Estabelecimentos, ao selecionar um estabelecimento de saúde, obtém-se as informações referentes a ele no menu lateral à direita.
-        </p>
-        <p class="question">
-          O que significa o número de leitos?
-        </p>
-        <p class="awnser">
-          O número de leitos da página de Estabelecimentos representa a quantidade total de leitos do estabelecimento em questão.
-        </p>
-        <p class="question">
-          O que significam os raios dos ícones da unidade hospitalar?
-        </p>
-        <p class="awnser">
-          Os raios representam a região que delimita a quantidade de internações hospitalares , cujos pacientes residem em área próximas ao estabelecimento, presentes no quartil do determinado raio. Ao passar o mouse sobre as regiões coloridas é possível visualizar sua descrição.
-        </p>
-        <p class="question">
-          O que significam os números dentro dos círculos distribuídos pelo mapa?
-        </p>
-        <p class="awnser">
-          Os círculos (clusters) contêm um valor que representa a quantidade de internações hospitalares, realizados naquele determinado estabelecimento, que foram agrupados naquele Cluster.
-        </p>
-        <p class="question">
-          Por quê os círculos aparecem em diferentes cores?
-        </p>
-        <p class="awnser">
-          As cores são uma representação gráfica da quantidade de internações hospitalares representados naquele cluster.
-        </p>
-        <p class="question">
-          O que signifca a área delimitada em azul quando passo o cursor do mouse em cima dos círculos?
-        </p>
-        <p class="awnser">
-          A área azul delimita a região de todas as internações hospitalares contidas naquele cluster. Ao clicar no cluster é possível desfragmentá-lo em clusters menores.
-        </p>
-        <p class="question">
-          Como posso ocultar os detalhes da unidade hospitalar para fazer uma nova busca?
-        </p>
-        <p class="awnser">
-          No menu lateral à direita, há duas opções: Esconder Detalhes e Esconder Info.
+        <div class="question-section">
+          <p class="question-header" id="estabel">
+            Estabelecimentos
+          </p>
+          <p class="question">
+            Como posso obter as informações da unidade hospitalar de interesse?
+          </p>
+          <p class="awnser">
+            Na página de Estabelecimentos, ao selecionar um estabelecimento de saúde, obtém-se as informações referentes a ele no menu lateral à direita.
+          </p>
+          <p class="question">
+            O que significa o número de leitos?
+          </p>
+          <p class="awnser">
+            O número de leitos da página de Estabelecimentos representa a quantidade total de leitos do estabelecimento em questão.
+          </p>
+        </div>
+        <div class="question-section">
+          <p class="question-header" id="mapa-UH">
+            Mapa
+          </p>
+          <p class="question">
+            O que significam os raios dos ícones da unidade hospitalar?
+          </p>
+          <p class="awnser">
+            Os raios representam a região que delimita a quantidade de internações hospitalares , cujos pacientes residem em área próximas ao estabelecimento, presentes no quartil do determinado raio. Ao passar o mouse sobre as regiões coloridas é possível visualizar sua descrição.
+          </p>
+          <p class="question">
+            O que significam os números dentro dos círculos distribuídos pelo mapa?
+          </p>
+          <p class="awnser">
+            Os círculos (clusters) contêm um valor que representa a quantidade de internações hospitalares, realizados naquele determinado estabelecimento, que foram agrupados naquele Cluster.
+          </p>
+          <p class="question">
+            Por quê os círculos aparecem em diferentes cores?
+          </p>
+          <p class="awnser">
+            As cores são uma representação gráfica da quantidade de internações hospitalares representados naquele cluster.
+          </p>
+          <p class="question">
+            O que signifca a área delimitada em azul quando passo o cursor do mouse em cima dos círculos?
+          </p>
+          <p class="awnser">
+            A área azul delimita a região de todas as internações hospitalares contidas naquele cluster. Ao clicar no cluster é possível desfragmentá-lo em clusters menores.
+          </p>
+          <p class="question">
+            Como posso ocultar os detalhes da unidade hospitalar para fazer uma nova busca?
+          </p>
+          <p class="awnser">
+            No menu lateral à direita, há duas opções: Esconder Detalhes e Esconder Info.
 
-          <ul>
-            <li>Esconder Detalhes: fecha a busca do estabelecimento, o mesmo pode ser feito clicando no estabelecimento selecionado.</li>
-            <li>Esconder Info: esconde as informações do estabelecimento selecionado, mantendo apenas os gráficos de especialidades.</li>
-          </ul>
-        </p>
+            <ul>
+              <li>Esconder Detalhes: fecha a busca do estabelecimento, o mesmo pode ser feito clicando no estabelecimento selecionado.</li>
+              <li>Esconder Info: esconde as informações do estabelecimento selecionado, mantendo apenas os gráficos de especialidades.</li>
+            </ul>
+          </p>
+        </div>
       </div>
     </div>
   </div>
