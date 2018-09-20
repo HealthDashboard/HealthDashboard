@@ -517,25 +517,3 @@ function update_right_graph_text(data) {
     $graph_text1.html("<br><br><br> " + sum);
     $graph_text2.html("Procedimentos");
 }
-
-function about() {
-    window.open("about");
-}
-
-function show_menu(id) {
-  if (!$(id).hasClass("active")) {
-    $(id).addClass("active");
-  }
-  else {
-    $(id).removeClass("active");
-  }
-}
-
-function show_config2() {
-    if (document.getElementById("div-adm").style.transform === "translateY(240px)") {
-      document.getElementById("div-adm").style.transform = "translateY(0)";
-    }
-    else {
-      document.getElementById("div-adm").style.transform = "translateY(240px)";
-    }
-  }

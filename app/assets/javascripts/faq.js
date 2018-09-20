@@ -35,3 +35,7 @@ function jump(h){
     window.scrollTo(window.scrollX, window.scrollY - 50);
     history.replaceState(null,null,url);   //Don't like hashes. Changing it back.
 }
+
+function faq() {
+  location.href = "/faq";
+}
