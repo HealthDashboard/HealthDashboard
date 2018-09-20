@@ -134,9 +134,7 @@ body {
   border-left: 30px solid transparent;
   border-right: 30px solid transparent;
   border-top: 20px solid #ddd;
-  transform: translate(calc(50vw - 37px));
   transition: transform 300ms ease-in-out;
-  /* débito técnico ^ */
 }
 
 .viewer {
@@ -166,6 +164,11 @@ body {
   padding: 0 1em;
 }
 
+.sticky {
+  position: fixed;
+  top: 50px;
+}
+
 .category {
   margin: 5px 0;
   padding: 4px 7px;
@@ -180,12 +183,29 @@ body {
 
 .content {
   padding: 0 2em;
-  flex-grow: 1;
+  flex: 1 1 auto;
+  display: flex;
+}
+
+.question-header {
+  font-weight: bold;
+  margin-top: 10px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.5em;
 }
 
 .question {
   font-weight: bold;
   margin-top: 10px;
+}
+
+.question-section {
+  margin-bottom: 30px;
+  flex: 0 0 auto;
+}
+
+.content:last-child {
+  flex: 1 1 auto;
 }
 
 @media screen and (min-width: 1000px) {
