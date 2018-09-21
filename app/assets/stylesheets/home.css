@@ -1,8 +1,12 @@
 body {
   position: relative;
+<<<<<<< HEAD
   /* padding-top: 10px; */
   padding-bottom: 110px;
   min-height: 100vh;
+=======
+  padding-top: 10px;
+>>>>>>> a3a855b... Made a mixture of the old and new layout
 }
 
 a {
@@ -12,21 +16,21 @@ a:hover {
   text-decoration: none;
 }
 
-/*.barra-inst {
+.barra-inst {
   position: absolute;
   top: 0;
   height: 20px;
   width: calc(100vw - (100vw - 100%));
   background-color: #333;
   color: #fff;
-}*/
+}
 
 .container {
   max-width: 1170px;
   margin: 20px auto;
 }
 
-/*.header {
+.header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -44,6 +48,7 @@ a:hover {
   text-align: center;
 }
 
+/*
 .slider {
   width: calc(100vw - (100vw - 100%));
   position: relative;
@@ -109,20 +114,20 @@ a:hover {
 .main {
   background: #fff;
   position: relative;
-  top: 600px;
+  z-index: 1;
 }
 
-.header-paralax {
+/* .header-paralax {
   background-image: url('healthmap.png');
   background-size: cover;
   background-position:right center;
   width: 100%;
-  position: fixed;
   height: 600px;
+  position: fixed;
   box-shadow: inset 0px 0px 5px 4px rgba(0,0,0,0.2);
 }
 
-/* .header-paralax::after {
+.header-paralax::after {
   content: '';
   position: absolute;
   display: block;
@@ -133,7 +138,7 @@ a:hover {
   background-color: rgba(0, 0, 0, 0);
 } */
 
-.opacity-overlay {
+/*.opacity-overlay {
   position: absolute;
   display: block;
   top: 0;
@@ -168,6 +173,22 @@ a:hover {
 }
 
 .slogan {
+}*/
+
+.parallax-container {
+  position: relative;
+  height: 400px;
+}
+
+.parallax {
+  background-image: url('healthmap.png');
+  background-size: cover;
+  background-position:right center;
+  width: 100%;
+  height: 200%;
+  z-index: -1;
+  position: absolute;
+  pointer-events: none;
 }
 
 .data-row {
@@ -284,10 +305,7 @@ a:hover {
   bottom: 0;
   width: calc(100vw - (100vw - 100%));
   background-color: #333;
-<<<<<<< HEAD
-=======
   height: auto;
->>>>>>> b0c746b... Changed color of header in home page
   z-index: 2;
 }
 

@@ -54,17 +54,11 @@ function showDivs() {
   timeout = setTimeout(function() { plusDivs(-1) }, 5000);
 }
 
-function scrollBanner() {
-  var scrollPos;
-  var headerText = document.querySelector('.header-text');
-  var headerDiv = document.querySelector('.header-paralax');
-  var opacityOver = document.querySelector('.opacity-overlay');
-  scrollPos = window.scrollY;
-
-  if (scrollPos <= 600) {
-      headerText.style.transform =  "translateY(" + (-scrollPos/3) +"px" + ")";
-      headerDiv.style.transform =  "translateY(" + (-scrollPos/6) +"px" + ")";
-      opacityOver.style.opacity =  scrollPos/550;
-      headerText.style.opacity = 1 - (scrollPos/550);
-  }
-}
+// function scrollBanner() {
+//   var scrollPos;
+//   var headerDiv = document.querySelector('.header-paralax');
+//   scrollPos = window.scrollY;
+//   if (scrollPos <= 400) {
+//       headerDiv.style.transform =  "translateY(" + (-scrollPos/6) +"px" + ")";
+//   }
+// }
