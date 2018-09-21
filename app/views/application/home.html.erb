@@ -1,13 +1,15 @@
 <%= stylesheet_link_tag "home.css" %>
 
-<!-- <div class="barra-inst"></div> -->
-<!-- <div class="container">
+<div class="barra-inst"></div>
+<div class="main">
+<div class="container">
   <header class="header">
     <%= image_tag("sms.jpg", :class => "logo-img") %>
     <h1 class="title">Health Dashboard</h1>
   </header>
 </div>
-<div class="intro">
+</div>
+<!--<div class="intro">
   <div class="slider" id="slideshow">
     <i class="fas fa-2x fa-chevron-left slider-btn left" onclick="plusDivs(1)"></i>
     <!- O slider nao funciona com menos de 4 imagens ->
@@ -18,8 +20,8 @@
     <i class="fas fa-2x fa-chevron-right slider-btn right" onclick="plusDivs(-1)"></i>
   </div> -->
 
-    <header class="header-paralax">
-      <div class="opacity-overlay"></div>
+    <!--<header class="header-paralax">
+       <div class="opacity-overlay"></div>
         <div class="header-text">
           <%= image_tag("sms.png", :class => "logo-img") %>
           <div>
@@ -27,9 +29,11 @@
             <p class="slogan">Lorem ipsum dolor sit amet</p>
           </div>
         </div>
-    </header>
+    </header>-->
 
-
+<section class="parallax-container">
+  <div class="parallax"></div>
+</section>
 
   <div class="main">
     <div class="data-row">
@@ -119,5 +123,20 @@
 <script>
   // $(document).ready(showDivs);
   $(document).ready(getDataHomePage);
-  $(document).ready(window.addEventListener('scroll', scrollBanner));
+  // $(document).ready(window.addEventListener('scroll', scrollBanner));
+
+  var parallaxElements = $('.parallax'),
+      parallaxQuantity = parallaxElements.length;
+  $(window).on('scroll', function () {
+    window.requestAnimationFrame(function () {
+      for (var i = 0; i < parallaxQuantity; i++) {
+        var currentElement = parallaxElements.eq(i);
+        var scrolled = $(window).scrollTop();
+        currentElement.css({
+          'transform': 'translate3d(0,' + scrolled * -0.5 + 'px, 0)'
+        });
+      }
+    });
+  });
+
 </script>
