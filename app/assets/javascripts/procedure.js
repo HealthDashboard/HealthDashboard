@@ -203,8 +203,8 @@ function buscar(data) {
     // Show Data
     $('#loading_overlay').show();
 
-    var metres_bounds_cluster = $("#slider_cluster").slider("getValue");
-    var metres_bounds_heatmap = $("#slider_heatmap").slider("getValue");
+    var metres_bounds_cluster = 1000*$("#slider_cluster").slider("getValue");
+    var metres_bounds_heatmap = 1000*$("#slider_heatmap").slider("getValue");
 
     var heatmap_opacity = $("#slider_opacity").slider("getValue");
 
@@ -222,7 +222,8 @@ function buscar(data) {
 }
 
 function metresToPixels(metres) {
-    return metres;
+    var metresPerPixel = 40075016.686*Math.abs(Math.cos((-23.557296000000001)*Math.PI/180))/Math.pow(2, map.getZoom()+8);
+    return metres / metresPerPixel;
 }
 
 function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_metres, heatmap_opacity, function_maker) {
@@ -232,14 +233,12 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
     var maxValuesSmallClusters = 0; //variable to store the max value of small(black) clusters
     var zoomValues = new Array(map.getMaxZoom() + 1); //creating a array to max values of each zoom level
     var metresValues = new Array(map.getMaxZoom() + 1); //creating a array to metres PER PIXELS of each zoom level
-    //the formula is: metresPerPixel = C*cos(latitude)/2^(zoomLevel + 8) where C = 40075016.686
     map.on('zoom', function() {
         max = 0; // reset max values because zoom level changed
         max_cluster = metresToPixels(max_cluster_metres);
-        max_heatmap = metresToPixels(max_heatmap_metres);
         if(zoomValues[map.getZoom()] != undefined){
             document.getElementById("legend-label-2").innerText = zoomValues[map.getZoom()];
-            document.getElementById("legend-scale").innerText = ("Internações num raio de " + Number(((metresValues[map.getZoom()]*max_cluster/1000)).toFixed(2)) + " Km");
+            document.getElementById("legend-scale").innerText = ("Internações num raio de " + Number(((metresValues[map.getZoom()]*max_heatmap/1000)).toFixed(2)) + " Km");
         }
     });   
     cluster = L.markerClusterGroup({
@@ -271,18 +270,18 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
                 else{
                     zoomValues[map.getZoom()] = max; //if zoomValues[current Zoom] is empty, then store the value
                 }
-                const metresPerPixel = 40075016.686*Math.abs(Math.cos((-23.557296000000001)*180/Math.PI))/Math.pow(2, map.getZoom()+8); //formula given by leaflet
+                //the formula is: metresPerPixel = C*cos(latitude)/2^(zoomLevel + 8) where C = 40075016.686
+                const metresPerPixel = 40075016.686*Math.abs(Math.cos((-23.557296000000001)*Math.PI/180))/Math.pow(2, map.getZoom()+8); //formula given by leaflet
                 metresValues[map.getZoom()] = metresPerPixel;
-                //console.log(metresPerPixel*100);
-                //console.log(metresPerPixel*500);
             }
 
             legendlabel2 = document.getElementById("legend-label-2")
             if (legendlabel2 !== null)
                 legendlabel2.innerText = zoomValues[map.getZoom()]; 
             legendscale = document.getElementById("legend-scale")
-            if (legendscale !== null)
-                legendscale.innerText = ("Internações num raio de " + Number(((metresValues[map.getZoom()]*max_cluster/1000)).toFixed(2)) + " Km");
+            if (legendscale !== null) {
+                legendscale.innerText = ("Internações num raio de " + Number(((metresValues[map.getZoom()]*max_heatmap/1000)).toFixed(2)) + " Km");               
+            }
             return L.divIcon({ html: n, className: className, iconSize: L.point(size, size) });
         },
     });
@@ -318,7 +317,7 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
             $.each(procedures, function(index, procedure) {
                 heatmap_procedure.push([procedure[0], procedure[1], (procedure[2] / Num_procedures) * 100]);
             });
-
+            
             heat = L.heatLayer(heatmap_procedure, {maxZoom: 11, radius: max_heatmap, blur: 50, gradient: {.4:"#F8A5B2",.6:"#F97C85",.7:"#FB5459",.8:"#FC2C2D",1:"#FE0401"}}); // Add heatmap
 
             //inserting the first and last values
@@ -715,9 +714,9 @@ function dadosInput() {
         container:'#datepicker',
     });
 
-    $("#slider_cluster").slider({min: 0, max: 500, step: 1, value: 80});
+    $("#slider_cluster").slider({min: 0, max: 15, step: 0.01, value: 5.5});
 
-    $("#slider_heatmap").slider({min: 0, max: 100, step: 1, value: 25});
+    $("#slider_heatmap").slider({min: 0, max: 4, step: 0.01, value: 2});
 
     $("#slider_opacity").slider({min: 0, max: 100, step: 1, value: 40});
 
