@@ -156,7 +156,11 @@ class ProcedureController < ApplicationController
 	def proceduresClusterPoints
 		render json: "Bad request", status: 400 and return unless @procedures != nil
 
-		clusters = @procedures.group(:lat, :long).count.to_a.flatten.each_slice(3) #Convert hash {[lat, long] => count} to array [lat, long, count]
+		clusters = @procedures.group(:lat, :long, :id).count.to_a.flatten.each_slice(4) #Convert hash {[lat, long] => count} to array [lat, long, count]
+		puts "-----------------------------------"
+		#puts json: clusters
+		#puts "***************************************"
+		puts @procedures.group(:lat, :long, :id).count.to_a.flatten.each_slice(4).count
 
 		render json: clusters, status: 200
 	end

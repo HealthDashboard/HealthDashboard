@@ -270,6 +270,7 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
         chunkedLoading: true,
         iconCreateFunction: function(cluster) {
             var markers = cluster.getAllChildMarkers();
+            console.log(markers);
             var n = 0;
             for (var i = 0; i < markers.length; i++) {
                 n += markers[i].number;
@@ -323,17 +324,18 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
             Num_procedures = 0;
 
             $.each(procedures, function(index, latlong){
-                icon = L.divIcon({ html: latlong[2], className: 'map-marker marker-single a-class', iconSize: L.point(30, 30) });
+                icon = L.divIcon({ html: latlong[3], className: 'map-marker marker-single a-class', iconSize: L.point(30, 30) });
                 marker = L.marker(L.latLng(latlong[0], latlong[1]), {icon: icon})
                 marker.latlong = [latlong[0], latlong[1]];
-                marker.number = latlong[2];
+                marker.number = latlong[3];
                 marker.clusterOpen = false;
                 marker.cluster = null;
+                marker.id = latlong[2];
                 marker.on('click', function_maker);
                 markerList.push(marker);
-                Num_procedures += latlong[2]
-                if(maxValuesSmallClusters < latlong[2]){
-                    maxValuesSmallClusters = latlong[2];
+                Num_procedures += latlong[3]
+                if(maxValuesSmallClusters < latlong[3]){
+                    maxValuesSmallClusters = latlong[3];
                 }
             });
             cluster.addLayers(markerList);
