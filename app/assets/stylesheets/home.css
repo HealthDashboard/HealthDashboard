@@ -1,12 +1,9 @@
 body {
   position: relative;
-<<<<<<< HEAD
   /* padding-top: 10px; */
-  padding-bottom: 110px;
-  min-height: 100vh;
-=======
+  /* padding-bottom: 110px;
+  min-height: 100vh;*/
   padding-top: 10px;
->>>>>>> a3a855b... Made a mixture of the old and new layout
 }
 
 a {
@@ -28,6 +25,11 @@ a:hover {
 .container {
   max-width: 1170px;
   margin: 20px auto;
+}
+
+.no-bottom-margin {
+  margin-bottom: 0;
+  padding-bottom: 20px;
 }
 
 .header {
@@ -178,6 +180,7 @@ a:hover {
 .parallax-container {
   position: relative;
   height: 400px;
+  box-shadow: inset 0px 0px 5px 4px rgba(36, 36, 36, 0.2);
 }
 
 .parallax {
