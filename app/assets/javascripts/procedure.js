@@ -92,18 +92,20 @@ function setShape(name, popup) {
         "color": "#444444",
         "opacity": 0.9,
         "stroke": true,
-        "fill": false,
+        "fill": true,
+        "fillOpacity": 0.1,
     };
 
     if(name === 'Shape_ESF.geojson'){
         myStyle = {
             "color": "#444444",
+            "opacity": 0.9,
             "stroke": true,
             "lineCap": "butt",
+            "fill": true,
             "fillColor": "#4e4e4e",
             "fillRule": "nonzero",
-            "fill": false,
-            "opacity": 0.4,
+            "fillOpacity": 0.1,
         };
     }
 
