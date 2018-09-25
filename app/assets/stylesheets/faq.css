@@ -45,18 +45,6 @@ body {
   cursor: pointer;
 }
 
-/* .type.active::before {
-  content: '';
-  background-color: blue;
-  display: block;
-  top: 0;
-  right: 0;
-  position: relative;
-  height: 19vw;
-  width: 19vw;
-  border-radius: 50%;
-} */
-
 .type::after {
   font-family: "Font Awesome 5 Free";
   font-weight: 900;
