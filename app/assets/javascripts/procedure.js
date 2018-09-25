@@ -243,13 +243,21 @@ function metresToPixels(metres) {
     return metres / metresPerPixel;
 }
 
-function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_metres, heatmap_opacity, function_maker) {
+function download_cluster(){
+    // TODO
+}
+
+function handleLargeCluster(map, path, data, max_cluster, max_heatmap, heatmap_opacity, function_maker) {
     var max = 0;
     var max_cluster = metresToPixels(max_cluster_metres); // convert 'max_cluster' value from metres to pixels
     var max_heatmap = metresToPixels(max_heatmap_metres);
     var maxValuesSmallClusters = 0; //variable to store the max value of small(black) clusters
     var zoomValues = new Array(map.getMaxZoom() + 1); //creating a array to max values of each zoom level
     var metresValues = new Array(map.getMaxZoom() + 1); //creating a array to metres PER PIXELS of each zoom level
+    //the formula is: metresPerPixel = C*cos(latitude)/2^(zoomLevel + 8) where C = 40075016.686
+    var text_popup_cluster = "<button type='button' id='clear_popup' class='btn btn-dark btn-sm' onclick='download_cluster()'> download </button><br>";
+    var popup_cluster = L.popup().setContent(text_popup_cluster);
+
     map.on('zoom', function() {
         max = 0; // reset max values because zoom level changed
         max_cluster = metresToPixels(max_cluster_metres);
@@ -305,9 +313,17 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
             if (legendlabel2 !== null)
                 legendlabel2.innerText = zoomValues[map.getZoom()]; 
             legendscale = document.getElementById("legend-scale")
-            if (legendscale !== null) {
-                legendscale.innerText = ("Internações num raio de " + Number(((metresValues[map.getZoom()]*max_heatmap/1000)).toFixed(2)) + " Km");               
-            }            
+            if (legendscale !== null)
+                legendscale.innerText = ("Internações num raio de " + Number(((metresValues[map.getZoom()]*max_cluster/1000)).toFixed(2)) + " Km");
+            
+            //Falta tratar o caso de ser um ponto e não um cluster
+            cluster.on('contextmenu',function(e){
+                $.each(markers, function(index, m){
+                    console.log(m);
+                })
+                popup_cluster.setLatLng(e.latlng)
+                map.openPopup(popup_cluster);
+            });
             return L.divIcon({ html: n, className: className, iconSize: L.point(size, size) });
         },
     });
