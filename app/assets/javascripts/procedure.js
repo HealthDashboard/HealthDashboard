@@ -106,6 +106,7 @@ function setShape(name, popup) {
             "fillColor": "#4e4e4e",
             "fillRule": "nonzero",
             "fillOpacity": 0.1,
+            "dashArray": "4",
         };
     }
 
