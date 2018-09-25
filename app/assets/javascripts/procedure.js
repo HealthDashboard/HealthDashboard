@@ -205,7 +205,7 @@ function buscar(data) {
 
     var metres_bounds_cluster = 1000*$("#slider_cluster").slider("getValue");
     var metres_bounds_heatmap = 1000*$("#slider_heatmap").slider("getValue");
-
+    
     var heatmap_opacity = $("#slider_opacity").slider("getValue");
 
     // handling all cluster now
@@ -239,7 +239,9 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
         if(zoomValues[map.getZoom()] != undefined){
             document.getElementById("legend-label-2").innerText = zoomValues[map.getZoom()];
             document.getElementById("legend-scale").innerText = ("Internações num raio de " + Number(((metresValues[map.getZoom()]*max_heatmap/1000)).toFixed(2)) + " Km");
+            $("#slider_heatmap").slider("setValue", Number(((metresValues[map.getZoom()]*max_heatmap/1000)).toFixed(2)));
         }
+        
     });   
     cluster = L.markerClusterGroup({
         maxClusterRadius: max_cluster,
@@ -274,6 +276,7 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
                 const metresPerPixel = 40075016.686*Math.abs(Math.cos((-23.557296000000001)*Math.PI/180))/Math.pow(2, map.getZoom()+8); //formula given by leaflet
                 metresValues[map.getZoom()] = metresPerPixel;
             }
+            $("#slider_heatmap").slider("setValue", Number(((metresValues[map.getZoom()]*max_heatmap/1000)).toFixed(2)));
 
             legendlabel2 = document.getElementById("legend-label-2")
             if (legendlabel2 !== null)
@@ -281,7 +284,7 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
             legendscale = document.getElementById("legend-scale")
             if (legendscale !== null) {
                 legendscale.innerText = ("Internações num raio de " + Number(((metresValues[map.getZoom()]*max_heatmap/1000)).toFixed(2)) + " Km");               
-            }
+            }            
             return L.divIcon({ html: n, className: className, iconSize: L.point(size, size) });
         },
     });
@@ -714,9 +717,9 @@ function dadosInput() {
         container:'#datepicker',
     });
 
-    $("#slider_cluster").slider({min: 0, max: 15, step: 0.01, value: 5.5});
-
-    $("#slider_heatmap").slider({min: 0, max: 4, step: 0.01, value: 2});
+    $("#slider_cluster").slider({min: 0, max: 16, step: 0.01, value: 5.5});
+    
+    $("#slider_heatmap").slider({min: 0, max: 8, step: 0.01, value: 2});
 
     $("#slider_opacity").slider({min: 0, max: 100, step: 1, value: 40});
 
