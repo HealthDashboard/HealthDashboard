@@ -205,6 +205,7 @@ function buscar(data) {
 
     var metres_bounds_cluster = 1000*$("#slider_cluster").slider("getValue");
     var metres_bounds_heatmap = 1000*$("#slider_heatmap").slider("getValue");
+    console.log(metres_bounds_cluster)
     
     var heatmap_opacity = $("#slider_opacity").slider("getValue");
 
@@ -237,8 +238,13 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
         max = 0; // reset max values because zoom level changed
         max_cluster = metresToPixels(max_cluster_metres);
         if(zoomValues[map.getZoom()] != undefined){
-            document.getElementById("legend-label-2").innerText = zoomValues[map.getZoom()];
-            document.getElementById("legend-scale").innerText = ("Internações num raio de " + Number(((metresValues[map.getZoom()]*max_heatmap/1000)).toFixed(2)) + " Km");
+           legendlabel2 = document.getElementById("legend-label-2")
+            if (legendlabel2 !== null)
+                legendlabel2.innerText = zoomValues[map.getZoom()]; 
+            legendscale = document.getElementById("legend-scale")
+            if (legendscale !== null) {
+                legendscale.innerText = ("Internações num raio de " + Number(((metresValues[map.getZoom()]*max_heatmap/1000)).toFixed(2)) + " Km");               
+            }   
             $("#slider_heatmap").slider("setValue", Number(((metresValues[map.getZoom()]*max_heatmap/1000)).toFixed(2)));
         }
         
