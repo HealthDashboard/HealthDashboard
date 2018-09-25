@@ -218,7 +218,7 @@ function buscar(data) {
 
     // Divida tecnica
     checked = $('input[name=optRadio]:checked', '#radio-list');
-    $('input[name=optRadio][value=6]', '#radio-list').trigger('click');
+    $('input[name=optRadio][value=7]', '#radio-list').trigger('click');
     $(checked).attr('checked', true).trigger('click');
 
     // Show heatmap legend
@@ -502,7 +502,7 @@ function limpar() {
         document.getElementById("legend-label-" + i).innerText = "";
     }
     document.getElementById("legend-scale").innerText = "";
-    $('input[name=optRadio][value=6]', '#radio-list').trigger('click');
+    $('input[name=optRadio][value=7]', '#radio-list').trigger('click');
 
     /* Hide heatmap legend when map is cleaned*/
     if ($("#heatmap-leg").hasClass("active")) {
