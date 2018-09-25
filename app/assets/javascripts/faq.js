@@ -30,10 +30,9 @@ function changeFAQ3 () {
 }
 
 function jump(h){
-    var url = location.href;               //Save down the URL without hash.
+    var url = location.href;
     location.href = "#"+h;
-    window.scrollTo(window.scrollX, window.scrollY - 50);
-    history.replaceState(null,null,url);   //Don't like hashes. Changing it back.
+    history.replaceState(null,null,url);
 }
 
 function faq() {
