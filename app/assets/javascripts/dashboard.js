@@ -133,6 +133,8 @@ function populate_procedures_by_date() {
     }
 
     var options = {
+        width: '100%',
+        height:'100%',
         title: 'Número de internações por mês',
         series: {
          0: {axis: 'Número de internações'}
@@ -142,14 +144,15 @@ function populate_procedures_by_date() {
            Temps: {label: 'Número de internações'}
          }
         },
-        legend: {position: 'none'}
+        legend: {position: 'none'},
+        backgroundColor: { fill:'transparent'}
     };
 
     $.getJSON(path, data, function(result) {
         var values = [];
         $.each(result, function(k,v) {
-          values.push([new Date(v[0],v[1]), v[2]]);
-        })
+          values.push([new Date(v[0] + "T00:00:00"), v[1]]); // Fix timezone problem
+        });
         create_line_chart(values, options);
     });
 }

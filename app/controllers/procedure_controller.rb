@@ -1,6 +1,6 @@
 class ProcedureController < ApplicationController
 	before_action :getProcedures, only: [:proceduresDistanceGroup, :proceduresPerMonth,
-		:proceduresPerHealthCentre, :proceduresPerSpecialties, :proceduresDistance, 
+		:proceduresPerHealthCentre, :proceduresPerSpecialties, :proceduresDistance,
 		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario, :download]
 
 	def initialize
@@ -8,7 +8,7 @@ class ProcedureController < ApplicationController
 		@NUM_FILTERS = 19
 		@MAX_SLIDERS = [351,148,99,351,110786.71.ceil, 84.5.ceil]
 
-		@procedure = ["Estabelecimento de ocorrência", "Competência (aaaamm)", "Grupo do procedimento autorizado", "Especialidade do leito", "Caráter do atendimento", 
+		@procedure = ["Estabelecimento de ocorrência", "Competência (aaaamm)", "Grupo do procedimento autorizado", "Especialidade do leito", "Caráter do atendimento",
 					  "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Complexidade", "Tipo de financiamento"]
 		@patient_info = ["Faixa etária", "Raça/Cor", "Nível de instrução"]
 		@establishment = ["Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Gestão"]
@@ -57,7 +57,7 @@ class ProcedureController < ApplicationController
 
 		@filters_name = ["cnes_id", "cmpt", "proce_re", "specialty_id", "treatment_type", "cid_primary", "cid_secondary", "cid_secondary2",
 			"cid_associated", "complexity", "finance", "age_code", "race", "lv_instruction", "DA", "PR", "STS", "CRS", "gestor_ide"]
-		
+
 		@sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
 		super
 	end
@@ -69,9 +69,9 @@ class ProcedureController < ApplicationController
 		render json: "Bad request", status: 400 and return unless @procedures != nil
 
 		result = {
-			"<= 1 Km" => @procedures.where("distance <= ?", 1).count, 
-			"> 1 Km e <= 5 Km" =>  @procedures.where("distance > ? AND distance <= ?", 1, 5).count, 
-			"> 5 Km e <= 10 Km" => @procedures.where("distance > ? AND distance <= ?", 5, 10).count, 
+			"<= 1 Km" => @procedures.where("distance <= ?", 1).count,
+			"> 1 Km e <= 5 Km" =>  @procedures.where("distance > ? AND distance <= ?", 1, 5).count,
+			"> 5 Km e <= 10 Km" => @procedures.where("distance > ? AND distance <= ?", 5, 10).count,
 			"> 10 Km" => @procedures.where("distance > ?", 10).count
 		}
 		render json: result, status: 200
@@ -83,11 +83,10 @@ class ProcedureController < ApplicationController
 	def proceduresPerMonth
 		render json: "Bad request", status: 400 and return unless @procedures != nil
 
-		result = Array.new(12)
-		year = 2015
+		result = []
 		@procedures.where("date >= ? AND date <= ?", "2015-01-01", "2015-12-31")
-		.group_by_month(:date).count.each.with_index do |d, i|
-			result[i] = [year, i+1, d[1]]
+		.group_by_month(:date).count.each.with_index do |date, _index|
+			result.append([date[0], date[1]])
 		end
 		render json: result, status: 200
 	end
@@ -143,7 +142,7 @@ class ProcedureController < ApplicationController
 
 	# GET /procedure/proceduresInfo/{params}
 	# Params: id
-	# Return: Info about the procedure with the given id 
+	# Return: Info about the procedure with the given id
 	def proceduresInfo
 		info = Procedure.where(id: params[:id]).select(:cnes_id, :gender, :age_number, :cid_primary, :CRS, :date, :distance, :lat, :long).to_a
 
@@ -176,7 +175,9 @@ class ProcedureController < ApplicationController
 	# Params: [filters values array]
 	# Return: An array of [max for the filters values]
 	def proceduresMaxValues
-		if params[:send_all] == "True"
+		parsed_json = JSON.parse params[:data]
+
+		if parsed_json["send_all"] == "True"
 			render json: [351,148,99,351,110786.71.ceil,84.5.ceil], status: 200 and return #default value for faster load time
 		end
 
@@ -244,13 +245,13 @@ class ProcedureController < ApplicationController
 
 	    render json: "Bad request", status: 400 and return unless @procedures != nil
 
-		@downloadable = @procedures.select('id as "COD"', 'replace(lat::text, \'.\', \',\') AS "LAT_SC"', 'replace(long::text, \'.\', \',\') as "LONG_SC"', 
-			'gender as "P_SEXO"', 'age_number as "P_IDADE"', 'race as "P_RACA"', 'lv_instruction as "LV_INSTRU"', 'cnes_id as "CNES"', 
-			'gestor_ide as "GESTOR_ID"', 'treatment_type as "CAR_INTEN"', 'cmpt as "CMPT"', 'date as "DT_EMISSAO"', 
-			'date_in as "DT_INTERNA"', 'date_out as "DT_SAIDA"', 'complexity as "COMPLEXIDA"', 'proce_re as "PROC_RE"', 
-			'cid_primary as "DIAG_PR"', 'cid_secondary as "DIAG_SE1"', 'cid_secondary2 as "DIAG_SE2"', 
-			'cid_associated as "DIAG_SE3"', 'days as "DIARIAS"', 'days_uti as "DIARIAS_UT"', 'days_ui as "DIARIAS_UI"', 
-			'days_total as "DIAS_PERM"', 'finance as "FINANC"', 'replace(val_total::text, \'.\', \',\') as "VAL_TOT"', '"DA" as "DA"', '"PR" as "SUB"', 
+		@downloadable = @procedures.select('id as "COD"', 'replace(lat::text, \'.\', \',\') AS "LAT_SC"', 'replace(long::text, \'.\', \',\') as "LONG_SC"',
+			'gender as "P_SEXO"', 'age_number as "P_IDADE"', 'race as "P_RACA"', 'lv_instruction as "LV_INSTRU"', 'cnes_id as "CNES"',
+			'gestor_ide as "GESTOR_ID"', 'treatment_type as "CAR_INTEN"', 'cmpt as "CMPT"', 'date as "DT_EMISSAO"',
+			'date_in as "DT_INTERNA"', 'date_out as "DT_SAIDA"', 'complexity as "COMPLEXIDA"', 'proce_re as "PROC_RE"',
+			'cid_primary as "DIAG_PR"', 'cid_secondary as "DIAG_SE1"', 'cid_secondary2 as "DIAG_SE2"',
+			'cid_associated as "DIAG_SE3"', 'days as "DIARIAS"', 'days_uti as "DIARIAS_UT"', 'days_ui as "DIARIAS_UI"',
+			'days_total as "DIAS_PERM"', 'finance as "FINANC"', 'replace(val_total::text, \'.\', \',\') as "VAL_TOT"', '"DA" as "DA"', '"PR" as "SUB"',
 			'"STS" as "STS"', '"CRS" as "CRS"', 'replace(distance::text, \'.\', \',\') as "DISTANCIA_KM"')
 
 		@enumerator = @downloadable.copy_to_enumerator(:buffer_lines => 100, :delimiter => ";")
@@ -287,7 +288,7 @@ private
 		if parsed_json["genders"] != nil && parsed_json["genders"] != []
 			@procedures = Procedure.where(gender: parsed_json["genders"])
 		end
-		
+
 		@filters_name.each.with_index do |filter, i|
 			if parsed_json["filters"] != nil && !(parsed_json["filters"][i].to_a.empty?)
 				@procedures = @procedures.where(filter => parsed_json["filters"][i])
@@ -324,7 +325,7 @@ private
 	# Return: The median value for the hash table
 	def quartiles_calc(groups)
 		total = 0
-		groups.each do |group| 
+		groups.each do |group|
 			total += group[1]  # To avoid calling .count on procedure, may be a little slower but uses less memory
 		end
 		quartiles = []
@@ -349,8 +350,8 @@ private
 				quartiles.append(group[0])
 				break
 			end
-		end		
-		groups.each do |group|			
+		end
+		groups.each do |group|
 			if q3_value > 0
 				q3_value = q3_value - group[1]
 			end

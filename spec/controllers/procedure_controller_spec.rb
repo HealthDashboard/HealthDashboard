@@ -526,8 +526,8 @@ describe ProcedureController, type: 'controller' do
 		end
 
 		it 'should return a constant when send_all == true' do
-			data = {}.to_json
-			self.send(:get, 'proceduresMaxValues', params: {data: data, send_all: "True"}, as: :json)
+			data = {send_all: "True"}.to_json
+			self.send(:get, 'proceduresMaxValues', params: {data: data}, as: :json)
 			expect(response.status).to eq(200)
 			expect(response.body).to eq("[351,148,99,351,110787,85]")
 		end
@@ -783,6 +783,48 @@ describe ProcedureController, type: 'controller' do
 			self.send(:get, 'proceduresPerSpecialties', params: {data: data}, as: :json)
 			expect(response.status).to eq(200)
 			expect(response.body).to eq("{}")
+		end
+	end
+
+	describe 'Testing proceduresPerMonth method' do
+		before :each do
+			HealthCentre.create id: 1, cnes: 1, lat: -23.555885, long: -46.666458
+
+			Specialty.create id: 1, name: "Specialty 1"
+			Specialty.create id: 2, name: "Specialty 2"
+
+			Procedure.create id: 1, cnes_id: 1, specialty_id: 1, date: Date.parse("20150909")
+			Procedure.create id: 2, cnes_id: 1, specialty_id: 1, date: Date.parse("20150809")
+			Procedure.create id: 3, cnes_id: 1, specialty_id: 2, date: Date.parse("20150909")
+			Procedure.create id: 4, cnes_id: 1, specialty_id: 2, date: Date.parse("20151009")
+			Procedure.create id: 5, cnes_id: 1, specialty_id: 2, date: Date.parse("20151109")
+			Procedure.create id: 6, cnes_id: 1, specialty_id: 2, date: Date.parse("20151209")
+			Procedure.create id: 7, cnes_id: 1, specialty_id: 2, date: Date.parse("20150809")
+			Procedure.create id: 8, cnes_id: 1, specialty_id: 1, date: Date.parse("20150909")
+			Procedure.create id: 9, cnes_id: 1, specialty_id: 1, date: Date.parse("20160909")
+		end
+
+		it 'should return Bad request when a call has no params' do
+			data = {}.to_json
+			self.send(:get, 'proceduresPerMonth', params: {data: data}, as: :json)
+			expect(response.status).to eq(400)
+			expect(response.body).to eq("Bad request")
+		end
+
+		it 'should return an empty json when search result is null' do
+			filters = [["2"]];
+			data = {"filters" => filters}.to_json
+			self.send(:get, 'proceduresPerMonth', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("[]")
+		end
+
+		it 'should return an array of [year, month, count] values' do
+			filters = [["1"]];
+			data = {"filters" => filters}.to_json
+			self.send(:get, 'proceduresPerMonth', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(JSON.parse(response.body)).to eq([["2015-08-01", 2], ["2015-09-01", 3], ["2015-10-01", 1], ["2015-11-01", 1], ["2015-12-01", 1]])
 		end
 	end
 end
