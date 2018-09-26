@@ -244,11 +244,16 @@ function metresToPixels(metres) {
 
 function downloadCluster(params){
     var paramJSON = Object.assign({}, params);
-    console.log(paramJSON);
-    console.log({"data": JSON.stringify(paramJSON)});
     const path = "procedure/downloadCluster/";
-    $.getJSON(path, {"data": JSON.stringify(paramJSON)}, function(result){
-        console.log(result);
+    $.ajax({
+        contentType: 'json',
+        url: path,
+        data: {"data": JSON.stringify(paramJSON)},
+        dataType: 'text',
+        success: function(result) {
+            var uri = "data:text/csv;Content-Type:text/csv," + encodeURIComponent(result);
+            window.location.href = uri
+        }
     });
 }
 
