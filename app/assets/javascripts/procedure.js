@@ -247,21 +247,9 @@ function downloadCluster(params){
     console.log(paramJSON);
     console.log({"data": JSON.stringify(paramJSON)});
     const path = "procedure/downloadCluster/";
-    $.ajax({
-        url: path,
-        type: "GET",
-        dataType: 'json',
-        data: {"data": JSON.stringify(paramJSON)},
-        success: function(){
-            alert('Saved Successfully');
-        },
-        error:function(){
-            alert('Error');
-        }
-      });
-    /*$.getJSON("procedure/exportCluster", {"data": JSON.stringify(paramJSON)}, function(result){
+    $.getJSON(path, {"data": JSON.stringify(paramJSON)}, function(result){
         console.log(result);
-    });*/
+    });
 }
 
 function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_metres, heatmap_opacity, function_maker) {
