@@ -222,7 +222,6 @@ function buscar(data) {
 
     var metres_bounds_cluster = 1000*$("#slider_cluster").slider("getValue");
     var metres_bounds_heatmap = 1000*$("#slider_heatmap").slider("getValue");
-    console.log(metres_bounds_cluster)
     
     var heatmap_opacity = $("#slider_opacity").slider("getValue");
 
@@ -243,11 +242,29 @@ function metresToPixels(metres) {
     return metres / metresPerPixel;
 }
 
-function download_cluster(){
-    // TODO
+function downloadCluster(params){
+    var paramJSON = Object.assign({}, params);
+    console.log(paramJSON);
+    console.log({"data": JSON.stringify(paramJSON)});
+    const path = "procedure/downloadCluster/";
+    $.ajax({
+        url: path,
+        type: "GET",
+        dataType: 'json',
+        data: {"data": JSON.stringify(paramJSON)},
+        success: function(){
+            alert('Saved Successfully');
+        },
+        error:function(){
+            alert('Error');
+        }
+      });
+    /*$.getJSON("procedure/exportCluster", {"data": JSON.stringify(paramJSON)}, function(result){
+        console.log(result);
+    });*/
 }
 
-function handleLargeCluster(map, path, data, max_cluster, max_heatmap, heatmap_opacity, function_maker) {
+function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_metres, heatmap_opacity, function_maker) {
     var max = 0;
     var max_cluster = metresToPixels(max_cluster_metres); // convert 'max_cluster' value from metres to pixels
     var max_heatmap = metresToPixels(max_heatmap_metres);
@@ -255,8 +272,6 @@ function handleLargeCluster(map, path, data, max_cluster, max_heatmap, heatmap_o
     var zoomValues = new Array(map.getMaxZoom() + 1); //creating a array to max values of each zoom level
     var metresValues = new Array(map.getMaxZoom() + 1); //creating a array to metres PER PIXELS of each zoom level
     //the formula is: metresPerPixel = C*cos(latitude)/2^(zoomLevel + 8) where C = 40075016.686
-    var text_popup_cluster = "<button type='button' id='clear_popup' class='btn btn-dark btn-sm' onclick='download_cluster()'> download </button><br>";
-    var popup_cluster = L.popup().setContent(text_popup_cluster);
 
     map.on('zoom', function() {
         max = 0; // reset max values because zoom level changed
@@ -278,7 +293,6 @@ function handleLargeCluster(map, path, data, max_cluster, max_heatmap, heatmap_o
         chunkedLoading: true,
         iconCreateFunction: function(cluster) {
             var markers = cluster.getAllChildMarkers();
-            console.log(markers);
             var n = 0;
             for (var i = 0; i < markers.length; i++) {
                 n += markers[i].number;
@@ -318,16 +332,25 @@ function handleLargeCluster(map, path, data, max_cluster, max_heatmap, heatmap_o
             
             //Falta tratar o caso de ser um ponto e não um cluster
             cluster.on('contextmenu',function(e){
+                var button = document.createElement('button');
+                button.type = "button"
+                button.id = markers.id;
+                button.className = 'btn btn-dark btn-sm';
+                button.innerText = 'Download';
+                var paramsId = [];
                 $.each(markers, function(index, m){
-                    console.log(m);
+                    paramsId.push(m.id);
                 })
+                button.addEventListener('click', function(){
+                    downloadCluster(paramsId);
+                });
+                var popup_cluster = L.popup().setContent(button);
                 popup_cluster.setLatLng(e.latlng)
                 map.openPopup(popup_cluster);
             });
             return L.divIcon({ html: n, className: className, iconSize: L.point(size, size) });
         },
     });
-
     $.ajax({
         type: "GET",
         dataType: 'json',
@@ -402,7 +425,6 @@ function CustomMarkerOnClick(e) {
         data = getData()
         data["lat"] = marker.latlong[0]
         data["long"] = marker.latlong[1]
-        console.log(data)
         $.ajax({
             contentType: 'json',
             url: path,

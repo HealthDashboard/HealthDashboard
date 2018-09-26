@@ -1,7 +1,7 @@
 class ProcedureController < ApplicationController
 	before_action :getProcedures, only: [:proceduresDistanceGroup, :proceduresPerMonth,
-		:proceduresPerHealthCentre, :proceduresPerSpecialties, :proceduresDistance,
-		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario, :download]
+		:proceduresPerHealthCentre, :proceduresPerSpecialties, :proceduresDistance, 
+		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario, :download, :downloadCluster]
 
 	def initialize
 		# Cons, AVOID USING NUMBERS, make a constant instead
@@ -151,16 +151,12 @@ class ProcedureController < ApplicationController
 
 	# Handles clustering for large amount of data
 	# GET /procedure/proceduresClusterPoints/{params}
-	# Params: [filters values array]
+	# Params: [filters values array]render json: "Bad request", status: 400 and return unless @procedures != nil
 	# Return: An array of [lat, long, number_of_pacients]
 	def proceduresClusterPoints
 		render json: "Bad request", status: 400 and return unless @procedures != nil
 
-		clusters = @procedures.group(:lat, :long, :id).count.to_a.flatten.each_slice(4) #Convert hash {[lat, long] => count} to array [lat, long, count]
-		puts "-----------------------------------"
-		#puts json: clusters
-		#puts "***************************************"
-		puts @procedures.group(:lat, :long, :id).count.to_a.flatten.each_slice(4).count
+		clusters = @procedures.group(:lat, :long, :id).count.to_a.flatten.each_slice(4) #Convert hash {[lat, long, id] => count} to array [lat, long, id, count]"
 
 		render json: clusters, status: 200
 	end
@@ -365,5 +361,12 @@ private
 			end
 		end
 		return quartiles
+	end
+
+	def downloadCluster
+		render json: "Bad request", status: 400 and return unless @procedures != nil
+		puts "-------------------------------------"
+		puts params
+		render json: params, status: 200
 	end
 end
