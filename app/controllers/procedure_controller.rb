@@ -272,6 +272,12 @@ class ProcedureController < ApplicationController
 		render json: health_centres, status: 200
 	end
 
+	def downloadCluster
+		puts "-------------------------------------"
+		puts params
+		render json: params, status: 200
+	end
+
 private
 	# Params: [filters values array]
 	# Return: procedures based on the values passed in your last update_session
@@ -363,10 +369,4 @@ private
 		return quartiles
 	end
 
-	def downloadCluster
-		render json: "Bad request", status: 400 and return unless @procedures != nil
-		puts "-------------------------------------"
-		puts params
-		render json: params, status: 200
-	end
 end
