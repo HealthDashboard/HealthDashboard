@@ -14,6 +14,9 @@ gem 'geocoder'
 # Geokit
 gem 'geokit-rails'
 
+# group date, sql helper for dates
+gem 'groupdate'
+
 # Statistics gem
 gem 'descriptive-statistics'
 
