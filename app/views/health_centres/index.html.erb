@@ -92,11 +92,14 @@
 
 <script>
 
-    // based on prepared DOM, initialize echarts instance
+// based on prepared DOM, initialize echarts instance
 var myChart = echarts.init(document.getElementById('bar-graph'));
+
   $(document).ready(initialize)
   document.onload = load_all_points();
   document.onload = create_homepage_charts();
+  setTimeout(function(){myChart.resize();}, 1000);
+  //^Dívida técnica
 
   $(window).on('resize', function(){
     if(myChart != null && myChart != undefined){

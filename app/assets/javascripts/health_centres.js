@@ -101,8 +101,9 @@ function show_clusters(id, lat, long) {
             document.getElementById("search-name").innerHTML = hospital.name;
         });
 
-        myChart.resize();
         create_homepage_charts(id);
+        setTimeout(function(){myChart.resize();}, 250);
+        //^Dívida técnica
     } else {
         teardown_cluster(id);
         myChart.resize();
@@ -110,7 +111,6 @@ function show_clusters(id, lat, long) {
     }
 }
 
-//
 function setup_cluster(id, lat, long) {
     $('#loading_overlay').show();
     markers_visible(false, id);

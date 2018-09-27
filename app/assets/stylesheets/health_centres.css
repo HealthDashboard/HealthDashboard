@@ -5,7 +5,7 @@
 
 hr {
   margin-top: 0;
-  padding-top: 20px;
+  padding-top: 1.25em;
   background-color: #fff;
   border-top: 0;
   border-bottom: 1px solid #8e8e8e;
@@ -195,6 +195,7 @@ input[type="radio"] {
 
 #search-name {
   font-family: 'Raleway', sans-serif;
+  font-size: 2em;
 }
 
 .hosp-info-text {
@@ -261,7 +262,23 @@ input[type="radio"] {
   font-size: 22px;
 }
 
+@media screen and (min-width: 1001px) and (max-width: 1400px) {
+  * {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  * {
+    font-size: 12px;
+  }
+}
+
 @media (orientation: portrait){
+  * {
+    font-size: 16px;
+  }
+
   .page {
     flex-direction: column;
   }
@@ -295,5 +312,9 @@ input[type="radio"] {
 
   .map-config {
     position: absolute !important;
+  }
+
+  .info {
+    margin-top: 0;
   }
 }
