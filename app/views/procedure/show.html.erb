@@ -104,7 +104,7 @@
                 <% j = 0 %>
                 <div class="wrap">
                     <div class="content">
-                        <% @procedure.each_with_index do |f, i| %>
+                        <% @procedure.each.with_index do |f, i| %>
                             <div class="col-sm-12">
                                 <label for="<%= i %>" title="<%= @titles_procedure_filters[i] %>"><b>
                                 <%= f %>
@@ -123,7 +123,7 @@
                 <button class="collapsible patient_info"><h4><b>Informações do Paciente</b></h4></button>
                 <div class="wrap">
                     <div class="content">
-                        <% @patient_info.each_with_index do |f, i| %>
+                        <% @patient_info.each.with_index do |f, i| %>
                             <div class="col-sm-12">
                                 <label for="<%= i %>" title="<%= @titles_patient_info_filters[i] %>"><b>
                                     <%= f %>
@@ -159,7 +159,7 @@
                 <button class="collapsible location"><h4><b>Estabelecimento</b></h4></button>
                 <div class="wrap">
                     <div class="content">
-                        <% @establishment.each_with_index do |f, i| %>
+                        <% @establishment.each.with_index do |f, i| %>
                             <div class="col-sm-12">
                                 <label for="<%= i %>" title="<%= @titles_establishment_filters[i] %>"><b>
                                     <%= f %>
@@ -178,7 +178,7 @@
                 <button class="collapsible values_search"><h4><b>Valores de Busca</b></h4></button>
                 <div class="wrap">
                   <div class="content">
-                      <% @sliders.each_with_index do |slid, index| %>
+                      <% @sliders.each.with_index do |slid, index| %>
                           <div class="col-sm-12">
                               <label id="label_slider_<%= index %>" for="<%= index %>" title="<%= @titles_sliders[index] %>">
                                   <%= slid %><b>
