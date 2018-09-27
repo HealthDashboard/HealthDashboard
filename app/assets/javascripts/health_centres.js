@@ -260,7 +260,7 @@ function update_chart(id) {
             values.push([name, number, colors[i]]);
             i += 1;
         });
-        var header = ["Elementos", "Número de Procedimentos", {role: "style"}];
+        var header = ["Elementos", "Número de Internações", {role: "style"}];
 
         values.unshift(header);
         var data = google.visualization.arrayToDataTable(values);
@@ -515,5 +515,5 @@ function update_right_graph_text(data) {
     });
     sum = sum.toLocaleString('pt-BR'); //command to change the number format
     $graph_text1.html("<br><br><br> " + sum);
-    $graph_text2.html("Procedimentos");
+    $graph_text2.html("Internações");
 }
