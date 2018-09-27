@@ -119,6 +119,6 @@
   align-content: center;
 }
 
-input[type="radio"] {
+input[type="checkbox"] {
   margin-right: .25em;
 }
