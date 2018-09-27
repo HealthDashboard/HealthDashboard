@@ -11,6 +11,8 @@ var colors_circle = ['#FF4444', '#44FF44', '#4444FF']
 var hc_id = 0;
 var clean_up_cluster;
 
+var shapes;
+
 function initialize() {
     markers_visible(true, -1);
     circles = [];
@@ -21,6 +23,15 @@ function initialize() {
     clean_up_cluster = [];
     health_centre_markers = [];
     id = "HealthCentre"
+    shapes = {
+        'Shape_SP.geojson': null,
+        'Shape_CRS.geojson': null,
+        'Shape_STS.geojson': null,
+        'Shape_PR.geojson': null,
+        'Shape_DA.geojson': null,
+        'Shape_UBS.geojson': null,
+        'Shape_ESF.geojson': null
+    };
 
     var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,

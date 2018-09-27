@@ -21,7 +21,7 @@ var health_centre_markers;
 var filters_text, filters, genders, start_date, end_date, dist_min, dist_max;
 
 //** Open Street view vars **//
-var heat, cluster, shape, clean_up_cluster, max;
+var heat, cluster, shapes, shape, clean_up_cluster, max;
 
 var id;
 
@@ -45,9 +45,17 @@ function initProcedureMap() {
     dist_max = null;
     cluster = null;
     heat = null;
-    shape = null;
     clean_up_cluster = [];
     id = "Procedure"
+    shapes = {
+        'Shape_SP.geojson': null,
+        'Shape_CRS.geojson': null,
+        'Shape_STS.geojson': null,
+        'Shape_PR.geojson': null,
+        'Shape_DA.geojson': null,
+        'Shape_UBS.geojson': null,
+        'Shape_ESF.geojson': null
+    };
 
     $('#loading_overlay').hide();
     var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -86,14 +94,14 @@ function download() {
     });
 }
 
-//** Called when a visualization shape is selected, remove any previous selected shape and draws a new one **//
+//** Called when a visualization shape is selected, remove the selected shape if its already selected or draws a new one **//
 function setShape(name, popup) {
     var myStyle = {
         "color": "#444444",
-        "opacity": 0.9,
+        "opacity": 0.6,
         "stroke": true,
         "fill": true,
-        "fillOpacity": 0.1,
+        "fillOpacity": 0.05,
     };
 
     if(name === 'Shape_ESF.geojson'){
@@ -105,28 +113,34 @@ function setShape(name, popup) {
             "fill": true,
             "fillColor": "#4e4e4e",
             "fillRule": "nonzero",
-            "fillOpacity": 0.1,
+            "fillOpacity": 0.05,
             "dashArray": "4",
         };
     }
+ 
+    if (shapes[name] != null) {
+        map.removeLayer(shapes[name]);
+        shapes[name] = null;
+    }
+    else {
+        $.ajax({
+            dataType: "json",
+            url: name,
+            success: function(data) {
+                shape = new L.geoJson(data,
+                    {onEachFeature: function(feature, layer) {
+                        if (feature.properties && feature.properties.Name) {
+                            layer.bindTooltip(feature.properties.Name, {closeButton: false});
+                        }
+                    }}).addTo(map);
+                shape.setStyle(myStyle);
+                if (popup != null)
+                    shape.bindPopup(popup);
+                shapes[name] = shape;
+            }
+        });
+    }
 
-    if (shape != null)
-        map.removeLayer(shape);
-
-    $.ajax({
-        dataType: "json",
-        url: name,
-        success: function(data) {
-            shape = new L.geoJson(data,
-                {onEachFeature: function(feature, layer) {
-                    if (feature.properties && feature.properties.Name) {
-                        layer.bindTooltip(feature.properties.Name, {closeButton: false});
-                    }
-                }}).addTo(map);
-            shape.setStyle(myStyle);
-            if (popup != null)
-                shape.bindPopup(popup);
-    }});
 }
 
 //** Called when automatic search checkbox is changed, update auto var accordingly **//
@@ -217,8 +231,7 @@ function buscar(data) {
     handleLargeCluster(map, "procedure/proceduresClusterPoints", data, metres_bounds_cluster, metres_bounds_heatmap, heatmap_opacity, CustomMarkerOnClick);
 
     // Divida tecnica
-    checked = $('input[name=optRadio]:checked', '#radio-list');
-    $('input[name=optRadio][value=7]', '#radio-list').trigger('click');
+    checked = $('input[name=optCheckbok]:checked', '#checkbox-list');    
     $(checked).attr('checked', true).trigger('click');
 
     // Show heatmap legend
@@ -502,7 +515,8 @@ function limpar() {
         document.getElementById("legend-label-" + i).innerText = "";
     }
     document.getElementById("legend-scale").innerText = "";
-    $('input[name=optRadio][value=7]', '#radio-list').trigger('click');
+    checked = $('input[name=optCheckbok]:checked', '#checkbox-list');    
+    $(checked).attr('checked', true).trigger('click');
 
     /* Hide heatmap legend when map is cleaned*/
     if ($("#heatmap-leg").hasClass("active")) {
