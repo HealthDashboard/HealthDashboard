@@ -161,14 +161,13 @@ class HealthCentresController < ApplicationController
     # Params: None
     # Return: Return TOP10 health centres by number of procedures 
     def rank_health_centres
-      health_centres = HealthCentre.all.to_a
-      health_centres.sort! { |first, second|  first.procedure_count <=> second.procedure_count }
       result = {}
 
-      health_centres.reverse.each_with_index do |health_centre, index|
-        break if index == 10
-        result[health_centre.name] = health_centre.procedure_count
+      procedure = Procedure.group(:cnes_id).order("count_id DESC").limit(10)
+                  .count(:id).each.with_index do |p, i|
+                result[HealthCentre.find_by(cnes: p[0]).name.to_s] = p[1].to_i
       end
+
       render json: result
     end
 
