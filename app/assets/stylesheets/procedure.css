@@ -258,7 +258,7 @@
 .heatmap-legend {
   left: 0;
   top: 0;
-  position: fixed;
+  position: absolute;
   height: 146px;
   width: 290px;
   overflow: hidden;
