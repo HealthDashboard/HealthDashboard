@@ -242,17 +242,29 @@ function metresToPixels(metres) {
     return metres / metresPerPixel;
 }
 
-function downloadCluster(params){
-    var paramJSON = Object.assign({}, params);
+function downloadCluster(paramLat, paramLong){
+    var paramLatJSON = Object.assign({}, paramLat);
+    var paramLongJSON = Object.assign({}, paramLong);
+    console.log(paramLatJSON)
+    console.log(paramLongJSON)
     const path = "procedure/downloadCluster/";
     $.ajax({
-        contentType: 'json',
+        type: "GET",
+        dataType: 'json',
+        contentType: 'application/json',
+        data: getData(),
         url: path,
-        data: {"data": JSON.stringify(paramJSON)},
-        dataType: 'text',
-        success: function(result) {
-            var uri = "data:text/csv;Content-Type:text/csv," + encodeURIComponent(result);
-            window.location.href = uri
+        success: function(procedures) {
+            $.ajax({
+                contentType: 'json',
+                url: path,
+                data: {lat: paramLatJSON, long: paramLongJSON},
+                dataType: 'text',
+                success: function(result) {
+                    var uri = "data:text/csv;Content-Type:text/csv," + encodeURIComponent(result);
+                    window.location.href = uri;
+                }
+            });
         }
     });
 }
@@ -330,12 +342,14 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
                 button.id = markers.id;
                 button.className = 'btn btn-dark btn-sm';
                 button.innerText = 'Download';
-                var paramsId = [];
+                var paramLat = [];
+                var paramLong = [];
                 $.each(markers, function(index, m){
-                    paramsId.push(m.id);
+                    paramLat.push(m.latlong[0]);
+                    paramLong.push(m.latlong[1]);
                 })
                 button.addEventListener('click', function(){
-                    downloadCluster(paramsId);
+                    downloadCluster(paramLat, paramLong);
                 });
                 var popup_cluster = L.popup().setContent(button);
                 popup_cluster.setLatLng(e.latlng)
@@ -356,18 +370,18 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
             Num_procedures = 0;
 
             $.each(procedures, function(index, latlong){
-                icon = L.divIcon({ html: latlong[3], className: 'map-marker marker-single a-class', iconSize: L.point(30, 30) });
+                icon = L.divIcon({ html: latlong[2], className: 'map-marker marker-single a-class', iconSize: L.point(30, 30) });
                 marker = L.marker(L.latLng(latlong[0], latlong[1]), {icon: icon})
                 marker.latlong = [latlong[0], latlong[1]];
-                marker.number = latlong[3];
+                marker.number = latlong[2];
                 marker.clusterOpen = false;
                 marker.cluster = null;
                 marker.id = latlong[2];
                 marker.on('click', function_maker);
                 markerList.push(marker);
-                Num_procedures += latlong[3]
-                if(maxValuesSmallClusters < latlong[3]){
-                    maxValuesSmallClusters = latlong[3];
+                Num_procedures += latlong[2]
+                if(maxValuesSmallClusters < latlong[2]){
+                    maxValuesSmallClusters = latlong[2];
                 }
             });
             cluster.addLayers(markerList);

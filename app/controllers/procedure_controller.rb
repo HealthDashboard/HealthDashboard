@@ -1,7 +1,7 @@
 class ProcedureController < ApplicationController
 	before_action :getProcedures, only: [:proceduresDistanceGroup, :proceduresPerMonth,
 		:proceduresPerHealthCentre, :proceduresPerSpecialties, :proceduresDistance, 
-		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario, :download, :downloadCluster]
+		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario, :download]
 
 	def initialize
 		# Cons, AVOID USING NUMBERS, make a constant instead
@@ -156,10 +156,12 @@ class ProcedureController < ApplicationController
 	def proceduresClusterPoints
 		render json: "Bad request", status: 400 and return unless @procedures != nil
 
-		clusters = @procedures.group(:lat, :long, :id).count.to_a.flatten.each_slice(4) #Convert hash {[lat, long, id] => count} to array [lat, long, id, count]"
+		clusters = @procedures.group(:lat, :long).count.to_a.flatten.each_slice(3) #Convert hash {[lat, long] => count} to array [lat, long,count]"
 
 		render json: clusters, status: 200
 	end
+
+
 
 	# GET /procedure/proceduresSetorCensitario/{params}
 	# Params: [filters values array]
@@ -273,11 +275,18 @@ class ProcedureController < ApplicationController
 	end
 
 	def downloadCluster
-		ids = Array.new()
-		parsed_json = JSON.parse params["data"]
-		parsed_json.each do |id|
-			ids.push(parsed_json[id.to_s])
+		latSet = Array.new()
+		longSet = Array.new()
+		parsed_json = params
+		puts "--------------------------------"
+		puts params[:lat]
+		puts "--------------------------------"
+		puts params[:long]
+		parsed_json[].each do |latLong|
+			latSet.push(parsed_json[:lat])
+			longSet.push(parsed_json[:long])
 		end
+		@procedures = @procedures.where(:lat => params[:lat], :long => params[:long])
 		@downloadable = Procedure.where(id: ids).select('id as "COD"', 'replace(lat::text, \'.\', \',\') AS "LAT_SC"', 'replace(long::text, \'.\', \',\') as "LONG_SC"', 
 			'gender as "P_SEXO"', 'age_number as "P_IDADE"', 'race as "P_RACA"', 'lv_instruction as "LV_INSTRU"', 'cnes_id as "CNES"', 
 			'gestor_ide as "GESTOR_ID"', 'treatment_type as "CAR_INTEN"', 'cmpt as "CMPT"', 'date as "DT_EMISSAO"', 
@@ -293,7 +302,6 @@ class ProcedureController < ApplicationController
 
 private
 	# Params: [filters values array]
-	# Return: procedures based on the values passed in your last update_session
 	def getProcedures
 		params.require(:data)
 		parsed_json = JSON.parse params[:data]
