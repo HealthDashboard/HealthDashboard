@@ -184,7 +184,7 @@ a:hover {
 }
 
 .parallax {
-  background-image: url('healthmap.png');
+  background-image: url(<%= asset_path 'healthmap.png' %>);
   background-size: cover;
   background-position:right center;
   width: 100%;
@@ -339,12 +339,14 @@ ul.footer-item li {
   .container {
     max-width: 700px;
   }
+}
 
 @media (max-width:1000px) {
   .grid {
     grid-template-columns: 1fr;
     grid-gap: 30px;
   }
+}
 
   .container {
     max-width: 800px;
