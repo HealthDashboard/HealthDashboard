@@ -1,6 +1,6 @@
 <%= stylesheet_link_tag "procedure.css" %>
 <div class="container">
-<div class = "row">
+<div class = "main row">
     <%= javascript_tag do %>
       window.MAX_SLIDERS = '<%= @MAX_SLIDERS.inspect.html_safe %>';
       window.NUM_FILTERS = '<%= @NUM_FILTERS.inspect.html_safe %>';
@@ -84,7 +84,7 @@
           </div>
     </div>
 
-    <div class ="col-sm-3 background-white">
+    <div class ="col-sm-3 background-white" id="filters">
         <div class="card card-block">
             <div class = "row">
                 <div class="col-sm-8">
@@ -233,6 +233,8 @@
 </div>
 </div>
 
+<div class="fab" onclick="toggleFilters()" id="fab"></div>
+
 <div id="loading_overlay"class="loading">Loading&#8230;</div> <!-- Loading Overlay -->
 
 <script>
@@ -247,7 +249,7 @@
             var content = this.nextElementSibling.children;
             if($(wrap).css("max-height") === "none"){
               $(wrap).css("max-height", $(content).height());
-              console.log($(wrap).css("max-height")); //Se tirar esse comentario a animação da volta não funciona
+              $(wrap).css("max-height"); //Se tirar essa linha, a animação da volta não funciona
               $(wrap).css("max-height", 0);
             }
             else {

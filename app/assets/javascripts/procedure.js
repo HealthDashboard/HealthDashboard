@@ -138,7 +138,7 @@ function setShape(name, popup) {
             "dashArray": "4",
         };
     }
- 
+
     if (shapes[name] != null) {
         map.removeLayer(shapes[name]);
         shapes[name] = null;
@@ -243,7 +243,7 @@ function buscar(data) {
 
     var metres_bounds_cluster = 1000*$("#slider_cluster").slider("getValue");
     var metres_bounds_heatmap = 1000*$("#slider_heatmap").slider("getValue");
-    
+
     var heatmap_opacity = $("#slider_opacity").slider("getValue");
 
     // handling all cluster now
@@ -251,11 +251,12 @@ function buscar(data) {
     handleLargeCluster(map, "procedure/proceduresClusterPoints", data, metres_bounds_cluster, metres_bounds_heatmap, heatmap_opacity, CustomMarkerOnClick);
 
     // Divida tecnica
-    checked = $('input[name=optCheckbok]:checked', '#checkbox-list');    
+    checked = $('input[name=optCheckbok]:checked', '#checkbox-list');
     $(checked).attr('checked', true).trigger('click');
 
     // Show heatmap legend
-    document.getElementById("heatmap-leg").style.right = "25%";
+    document.getElementById("heatmap-leg").style.right = "25%"
+    toggleFilters();
 }
 
 function metresToPixels(metres) {
@@ -278,15 +279,15 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
         if(zoomValues[map.getZoom()] != undefined){
            legendlabel2 = document.getElementById("legend-label-2")
             if (legendlabel2 !== null)
-                legendlabel2.innerText = zoomValues[map.getZoom()]; 
+                legendlabel2.innerText = zoomValues[map.getZoom()];
             legendscale = document.getElementById("legend-scale")
             if (legendscale !== null) {
-                legendscale.innerText = ("Internações num raio de " + Number(((metresValues[map.getZoom()]*max_heatmap/1000)).toFixed(2)) + " Km");               
-            }   
+                legendscale.innerText = ("Internações num raio de " + Number(((metresValues[map.getZoom()]*max_heatmap/1000)).toFixed(2)) + " Km");
+            }
             $("#slider_heatmap").slider("setValue", Number(((metresValues[map.getZoom()]*max_heatmap/1000)).toFixed(2)));
         }
-        
-    });   
+
+    });
     cluster = L.markerClusterGroup({
         maxClusterRadius: max_cluster,
         chunkedLoading: true,
@@ -324,11 +325,11 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
 
             legendlabel2 = document.getElementById("legend-label-2")
             if (legendlabel2 !== null)
-                legendlabel2.innerText = zoomValues[map.getZoom()]; 
+                legendlabel2.innerText = zoomValues[map.getZoom()];
             legendscale = document.getElementById("legend-scale")
             if (legendscale !== null)
                 legendscale.innerText = ("Internações num raio de " + Number(((metresValues[map.getZoom()]*max_cluster/1000)).toFixed(2)) + " Km");
-            
+
             //Falta tratar o caso de ser um ponto e não um cluster
             cluster.on('contextmenu',function(e){
                 var button = document.createElement('button');
@@ -403,7 +404,7 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
             $.each(procedures, function(index, procedure) {
                 heatmap_procedure.push([procedure[0], procedure[1], (procedure[2] / Num_procedures) * 100]);
             });
-            
+
             heat = L.heatLayer(heatmap_procedure, {maxZoom: 11, radius: max_heatmap, blur: 50, gradient: {.4:"#F8A5B2",.6:"#F97C85",.7:"#FB5459",.8:"#FC2C2D",1:"#FE0401"}}); // Add heatmap
 
             //inserting the first and last values
@@ -479,7 +480,7 @@ function CustomMarkerOnClick(e) {
     }
 }
 
-//** Called when a procedure marker is clicked, fetch the specific proprieties of the selected procedure 
+//** Called when a procedure marker is clicked, fetch the specific proprieties of the selected procedure
 //   such as health centre, cid, distance and more. Also draws on map the associated health centre **//
 function markerOnClick(e) {
     id = e.target.options.id
@@ -495,10 +496,10 @@ function markerOnClick(e) {
         $.getJSON(proceduresInfo_path, function(procedure) {
             cnes = procedure[0].cnes_id;
             $.getJSON("procedure/healthCentresCnes", {cnes: cnes.toString()}, function(hc_latlong) {
-                path_distance_real = "http:\/\/router.project-osrm.org\/route\/v1\/driving\/" 
-                + hc_latlong[0][1] + "," + hc_latlong[0][0] + ";" + procedure[0].long + "," 
+                path_distance_real = "http:\/\/router.project-osrm.org\/route\/v1\/driving\/"
+                + hc_latlong[0][1] + "," + hc_latlong[0][0] + ";" + procedure[0].long + ","
                 + procedure[0].lat + "?overview=false";
-                
+
                 $.getJSON(path_distance_real, function(distance) { //get Real distance usign router.project-osrm.org
                     v_distance = parseFloat(distance.routes[0].distance);
                     v_distance = v_distance / 1000; // m -> km
@@ -575,15 +576,15 @@ function limpar() {
         document.getElementById("legend-label-" + i).innerText = "";
     }
     document.getElementById("legend-scale").innerText = "";
-    checked = $('input[name=optCheckbok]:checked', '#checkbox-list');    
+    checked = $('input[name=optCheckbok]:checked', '#checkbox-list');
     $(checked).attr('checked', true).trigger('click');
 
     /* Hide heatmap legend when map is cleaned*/
     if ($("#heatmap-leg").hasClass("active")) {
         $("#heatmap-leg").removeClass("active");
     }
-    document.getElementById("heatmap-leg").style.right = "20%"; 
-    
+    document.getElementById("heatmap-leg").style.right = "20%";
+
     clearMap();
 }
 
@@ -770,7 +771,7 @@ function filters_value(data) {
             $("#slider_3").slider({
                 formatter: function(value) {
                     return 'Mediana: ' + quartiles[3][1];
-                
+
                 },
             });
             $("#slider_4").slider({
@@ -801,7 +802,7 @@ function dadosInput() {
     });
 
     $("#slider_cluster").slider({min: 0, max: 16, step: 0.01, value: 5.5});
-    
+
     $("#slider_heatmap").slider({min: 0, max: 8, step: 0.01, value: 2});
 
     $("#slider_opacity").slider({min: 0, max: 100, step: 1, value: 40});
@@ -864,4 +865,9 @@ function inputSlider(){
             $("#slider_" + i.toString()).slider("setValue", [maxValue, minValue]);
         }
     }
+}
+
+function toggleFilters() {
+  $("#filters").toggleClass("active");
+  $("#fab").toggleClass("active");
 }
