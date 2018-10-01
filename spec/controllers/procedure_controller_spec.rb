@@ -693,7 +693,7 @@ describe ProcedureController, type: 'controller' do
 			data = {"send_all" => "True"}.to_json
 			self.send(:get, 'proceduresClusterPoints', params: {data: data}, as: :json)
 			expect(response.status).to eq(200)
-			expect(response.body).to eq("[[-23.2,-46.1,4],[-23.5,-46.1,3],[-23.6,-46.1,2]]")
+			expect(JSON.parse(response.body)).to eq(Procedure.group(:lat, :long).count.to_a.flatten.each_slice(3).to_a)
 		end
 
 		it 'should return the values only for specialty_id == 2' do
