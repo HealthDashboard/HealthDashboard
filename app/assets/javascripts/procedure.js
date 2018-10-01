@@ -334,13 +334,13 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
                 button.id = markers.id;
                 button.className = 'btn btn-dark btn-sm';
                 button.innerText = 'Download';
-                var paramLat = [];
-                var paramLong = [];
-                $.each(markers, function(index, m){
-                    paramLat.push(m.latlong[0]);
-                    paramLong.push(m.latlong[1]);
-                })
                 button.addEventListener('click', function(){
+                    var paramLat = [];
+                    var paramLong = [];
+                    $.each(markers, function(index, m){
+                        paramLat.push(m.latlong[0]);
+                        paramLong.push(m.latlong[1]);
+                    })
                     downloadCluster(paramLat, paramLong);
                 });
                 var popup_cluster = L.popup().setContent(button);
@@ -375,6 +375,24 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
                 if(maxValuesSmallClusters < latlong[2]){
                     maxValuesSmallClusters = latlong[2];
                 }
+                marker.on('contextmenu',function(e){
+                    var button = document.createElement('button');
+                    button.type = "button"
+                    button.id = marker.id;
+                    button.className = 'btn btn-dark btn-sm';
+                    button.innerText = 'Download';
+                    button.lat = marker.latlong[0];
+                    button.long = marker.latlong[1];
+                    button.addEventListener('click', function(){
+                        var paramLat = [];
+                        var paramLong = [];
+                        paramLat.push(marker.latlong[0]);
+                        paramLong.push(marker.latlong[1]);
+                    });
+                    var popup_cluster = L.popup().setContent(button);
+                    popup_cluster.setLatLng(e.latlng)
+                    map.openPopup(popup_cluster);
+                });
             });
             cluster.addLayers(markerList);
             map.addLayer(cluster);
