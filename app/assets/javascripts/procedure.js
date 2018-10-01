@@ -245,26 +245,18 @@ function metresToPixels(metres) {
 function downloadCluster(paramLat, paramLong){
     var paramLatJSON = Object.assign({}, paramLat);
     var paramLongJSON = Object.assign({}, paramLong);
-    console.log(paramLatJSON)
-    console.log(paramLongJSON)
+    var allData = getData();
+    allData["lat"] = paramLatJSON
+    allData["long"] = paramLongJSON
     const path = "procedure/downloadCluster/";
     $.ajax({
-        type: "GET",
-        dataType: 'json',
-        contentType: 'application/json',
-        data: getData(),
+        contentType: 'json',
         url: path,
-        success: function(procedures) {
-            $.ajax({
-                contentType: 'json',
-                url: path,
-                data: {lat: paramLatJSON, long: paramLongJSON},
-                dataType: 'text',
-                success: function(result) {
-                    var uri = "data:text/csv;Content-Type:text/csv," + encodeURIComponent(result);
-                    window.location.href = uri;
-                }
-            });
+        data: allData,
+        dataType: 'text',
+        success: function(result) {
+        var uri = "data:text/csv;Content-Type:text/csv," + encodeURIComponent(result);
+             window.location.href = uri;
         }
     });
 }
