@@ -386,8 +386,9 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
                     button.addEventListener('click', function(){
                         var paramLat = [];
                         var paramLong = [];
-                        paramLat.push(marker.latlong[0]);
-                        paramLong.push(marker.latlong[1]);
+                        paramLat.push(button.lat);
+                        paramLong.push(button.long);
+                        downloadCluster(paramLat, paramLong);
                     });
                     var popup_cluster = L.popup().setContent(button);
                     popup_cluster.setLatLng(e.latlng)
