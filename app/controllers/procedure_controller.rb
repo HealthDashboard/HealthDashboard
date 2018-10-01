@@ -1,7 +1,7 @@
 class ProcedureController < ApplicationController
 	before_action :getProcedures, only: [:proceduresDistanceGroup, :proceduresPerMonth,
 		:proceduresPerHealthCentre, :proceduresPerSpecialties, :proceduresDistance, 
-		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario, :download]
+		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario, :download, :downloadCluster]
 
 	def initialize
 		# Cons, AVOID USING NUMBERS, make a constant instead
@@ -278,16 +278,13 @@ class ProcedureController < ApplicationController
 		latSet = Array.new()
 		longSet = Array.new()
 		parsed_json = params
-		puts "--------------------------------"
-		puts params[:lat]
-		puts "--------------------------------"
-		puts params[:long]
-		parsed_json[].each do |latLong|
-			latSet.push(parsed_json[:lat])
-			longSet.push(parsed_json[:long])
+		parsed_json["lat"].each do |index, value|
+			latSet.push(value.to_f)
 		end
-		@procedures = @procedures.where(:lat => params[:lat], :long => params[:long])
-		@downloadable = Procedure.where(id: ids).select('id as "COD"', 'replace(lat::text, \'.\', \',\') AS "LAT_SC"', 'replace(long::text, \'.\', \',\') as "LONG_SC"', 
+		parsed_json["long"].each do |index, value|
+			longSet.push(value.to_f)
+		end
+		@downloadable = @procedures.where(:lat => latSet, :long => longSet).select('id as "COD"', 'replace(lat::text, \'.\', \',\') AS "LAT_SC"', 'replace(long::text, \'.\', \',\') as "LONG_SC"', 
 			'gender as "P_SEXO"', 'age_number as "P_IDADE"', 'race as "P_RACA"', 'lv_instruction as "LV_INSTRU"', 'cnes_id as "CNES"', 
 			'gestor_ide as "GESTOR_ID"', 'treatment_type as "CAR_INTEN"', 'cmpt as "CMPT"', 'date as "DT_EMISSAO"', 
 			'date_in as "DT_INTERNA"', 'date_out as "DT_SAIDA"', 'complexity as "COMPLEXIDA"', 'proce_re as "PROC_RE"', 
