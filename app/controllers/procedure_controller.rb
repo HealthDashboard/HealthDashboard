@@ -9,13 +9,13 @@ class ProcedureController < ApplicationController
 		@MAX_SLIDERS = [351,148,99,351,110786.71.ceil, 84.5.ceil]
 
 		@procedure = ["Estabelecimento de ocorrência", "Competência (aaaamm)", "Grupo do procedimento autorizado", "Especialidade do leito", "Caráter do atendimento",
-					  "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Complexidade", "Tipo de financiamento"]
+					  "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Complexidade", "Tipo de financiamento"]
 		@patient_info = ["Faixa etária", "Raça/Cor", "Nível de instrução"]
 		@establishment = ["Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Gestão"]
 
 		#'Hints' to display on each label
 		@titles_procedure_filters = ["Estabelecimento do atendimento prestado.", "Ano/mês de processamento da AIH. Ex: 201506(junho de 2015).", "Grupo do procedimento autorizado ao paciente.", "Especialidade do leito de internação.", "Caráter da internação.",
-									 "Motivo da internação.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.", "Nível de atenção para realização do procedimento.", "Tipo de financiamento da internação."]
+									 "Motivo da internação.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.", "Nível de atenção para realização do procedimento.", "Tipo de financiamento da internação."]
 
 		@titles_patient_info_filters = ["Faixa etária do paciente.", "Raça/Cor do paciente.", "Grau de instrução do paciente."]
 
@@ -51,12 +51,12 @@ class ProcedureController < ApplicationController
 		@gestor = [{"id" => "00", "text" => "ESTADUAL"},
 				  {"id" => "01", "text" => "MUNICIPAL"}];
 
-		@options_procedure = [@health_centres, @cmpt, @proce_re, @specialties, @treatments, @cid, @cid, @cid, @cid, @complexity, @finance]
+		@options_procedure = [@health_centres, @cmpt, @proce_re, @specialties, @treatments, @cid, @cid, @cid, @complexity, @finance]
 		@options_patient_info = [@age_group, @race, @lv_instruction]
 		@options_establishment = [@da, @pr, @sts, @crs, @gestor]
 
 		@filters_name = ["cnes_id", "cmpt", "proce_re", "specialty_id", "treatment_type", "cid_primary", "cid_secondary", "cid_secondary2",
-			"cid_associated", "complexity", "finance", "age_code", "race", "lv_instruction", "DA", "PR", "STS", "CRS", "gestor_ide"]
+			"complexity", "finance", "age_code", "race", "lv_instruction", "DA", "PR", "STS", "CRS", "gestor_ide"]
 
 		@sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
 	
@@ -277,7 +277,7 @@ class ProcedureController < ApplicationController
 			'gestor_ide as "GESTOR_ID"', 'treatment_type as "CAR_INTEN"', 'cmpt as "CMPT"', 'date as "DT_EMISSAO"',
 			'date_in as "DT_INTERNA"', 'date_out as "DT_SAIDA"', 'complexity as "COMPLEXIDA"', 'proce_re as "PROC_RE"',
 			'cid_primary as "DIAG_PR"', 'cid_secondary as "DIAG_SE1"', 'cid_secondary2 as "DIAG_SE2"',
-			'cid_associated as "DIAG_SE3"', 'days as "DIARIAS"', 'days_uti as "DIARIAS_UT"', 'days_ui as "DIARIAS_UI"',
+			'days as "DIARIAS"', 'days_uti as "DIARIAS_UT"', 'days_ui as "DIARIAS_UI"',
 			'days_total as "DIAS_PERM"', 'finance as "FINANC"', 'replace(val_total::text, \'.\', \',\') as "VAL_TOT"', '"DA" as "DA"', '"PR" as "SUB"',
 			'"STS" as "STS"', '"CRS" as "CRS"', 'replace(distance::text, \'.\', \',\') as "DISTANCIA_KM"')
 
