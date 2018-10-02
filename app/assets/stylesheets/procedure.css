@@ -358,3 +358,7 @@
   position: relative;
   margin-bottom: 5px;
 }
+
+.label-subtitle {
+  font-size: smaller;
+}
