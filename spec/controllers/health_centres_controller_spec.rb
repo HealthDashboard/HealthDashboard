@@ -12,8 +12,7 @@ describe HealthCentresController, type: 'controller' do
 		it 'should return two HealthCentres' do
 			self.send(:get, 'points', format: :json)
 			expect(response.status).to eq(200)
-			expect(JSON.parse(response.body)).to eq([{"CRS"=>nil, "DA"=>nil, "PR"=>nil, "STS"=>nil, "adm"=>nil, "beds"=>nil, "cnes"=>1, "created_at"=>"2018-10-01T17:18:05.054Z", "id"=>1, "lat"=>-23.555885, "long"=>-46.666458, "name"=>nil, "name_r"=>nil, "phone"=>nil, "updated_at"=>"2018-10-01T17:18:05.054Z"},
-													 {"CRS"=>nil, "DA"=>nil, "PR"=>nil, "STS"=>nil, "adm"=>nil, "beds"=>nil, "cnes"=>2, "created_at"=>"2018-10-01T17:18:05.054Z", "id"=>2, "lat"=>-23.555885, "long"=>-46.666458, "name"=>nil, "name_r"=>nil, "phone"=>nil, "updated_at"=>"2018-10-01T17:18:05.054Z"}])
+			expect(response.body).to eq(HealthCentre.all.to_json)
 		end
 
 		it 'should return a counter of health centres' do
@@ -86,6 +85,20 @@ describe HealthCentresController, type: 'controller' do
 			self.send(:get, 'procedures_setor_healthcentre', params: params, format: :json)
 			expect(response.status).to eq(200)
 			expect(JSON.parse response.body).to eq(HealthCentre.find_by(id: 1).procedures.where(lat: params[:lat], long: params[:long]).pluck(:id))
+		end
+
+		it 'should return Bad request when there\'s no match for the id' do
+			id = 10
+			self.send(:get, 'specialties', params: {id: id}, format: :json)
+			expect(response.status).to eq(400)
+			expect(response.body).to eq("Bad request")
+		end
+
+		it 'Should return nil when no coordinates are given' do
+			params = {id: 1, lat: nil, long: nil}
+			self.send(:get, 'specialties', params: params, format: :json)
+			expect(response.status).to eq(200)
+			expect(JSON.parse response.body).to eq({"Specialty 1" => 3})
 		end
 	end
 end

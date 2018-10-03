@@ -70,13 +70,16 @@ class HealthCentresController < ApplicationController
     # Return: number of procedures group by specialties from a health centre(id)
     def specialties
         health_centre = HealthCentre.find_by(id: params[:id])
+        if health_centre == nil
+            render json: "Bad request", status: 400 and return
+        end
         procedures = health_centre.procedures.group(:specialty).count
         result = {}
 
         procedures.each do |key, value|
             result[key.name] = value
         end
-        render json: result
+        render json: result, status: 200 and return
     end
 
     # GET /specialty_distance/:id
