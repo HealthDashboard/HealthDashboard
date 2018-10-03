@@ -50,5 +50,6 @@ Rails.application.routes.draw do
     get :proceduresMaxValues, on: :collection
     get :proceduresClusterPoints, on: :collection
     get :proceduresSetorCensitario, on: :collection 
+    get :proceduresAge, on: :collection
   end
 end

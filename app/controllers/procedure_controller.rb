@@ -1,7 +1,7 @@
 class ProcedureController < ApplicationController
 	before_action :getProcedures, only: [:proceduresDistanceGroup, :proceduresPerMonth,
-		:proceduresPerHealthCentre, :proceduresPerSpecialties, :proceduresDistance, 
-		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario, :download, :downloadCluster]
+		:proceduresPerHealthCentre, :proceduresPerSpecialties, :proceduresDistance,
+		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario, :download, :downloadCluster, :proceduresCompetence]
 
 	def initialize
 		# Cons, AVOID USING NUMBERS, make a constant instead
@@ -305,6 +305,12 @@ class ProcedureController < ApplicationController
 		cnes = cnes.split(",")
 		health_centres = HealthCentre.where(cnes: cnes).pluck(:lat, :long)
 		render json: health_centres, status: 200
+	end
+
+	def proceduresCompetence
+		competence = @procedures.group(:age_number).count
+		puts competence
+		render json: competence, status: 200
 	end
 
 private
