@@ -32,7 +32,6 @@ var genders = null;
 function init_dashboard_chart() {
     dynamic = false;
     dashboard_legend_clicked = false;
-
     if (window._data_filters != null && window._data_filters != []) {
         dynamic = true;
         data = window._data_filters;
@@ -93,6 +92,7 @@ function create_dashboard_charts() {
     populate_procedures_by_date();
     create_specialties_total();
     update_rank();
+    create_competence();
 }
 
 function animate_legend() {
@@ -299,4 +299,17 @@ function create_table_rank(result) {
     });
     rows += " <th scope=\"row\">#</th><td> TOTAL </td> <td>" + Total.toLocaleString('pt-BR') + "</td></tr>"
     rank_table.html(rows);
+}
+
+function create_competence(){
+    $.ajax({
+        contentType: 'json',
+        url: "procedure/proceduresCompetence",
+        data: data,
+        dataType: 'text',
+        success: function(result) {
+            console.log(result);
+        }
+    });
+    
 }
