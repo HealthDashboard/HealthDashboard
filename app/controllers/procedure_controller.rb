@@ -308,9 +308,8 @@ class ProcedureController < ApplicationController
 	end
 
 	def proceduresAge
-		ageGroup = @procedures.group(:age_number).count
-		puts ageGroup
-		render json: ageGroup status: 200
+		competence = @procedures.group(:age_number).count
+		render json: competence, status: 200
 	end
 
 private

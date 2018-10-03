@@ -92,7 +92,7 @@ function create_dashboard_charts() {
     populate_procedures_by_date();
     create_specialties_total();
     update_rank();
-    create_competence();
+    create_age();
 }
 
 function animate_legend() {
@@ -301,10 +301,10 @@ function create_table_rank(result) {
     rank_table.html(rows);
 }
 
-function create_competence(){
+function create_age(){
     $.ajax({
         contentType: 'json',
-        url: "procedure/proceduresCompetence",
+        url: "procedure/proceduresAge",
         data: data,
         dataType: 'text',
         success: function(result) {
