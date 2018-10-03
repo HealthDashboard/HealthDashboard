@@ -246,8 +246,8 @@ function downloadCluster(paramLat, paramLong){
     var paramLatJSON = Object.assign({}, paramLat);
     var paramLongJSON = Object.assign({}, paramLong);
     var allData = getData();
-    allData["lat"] = paramLatJSON
-    allData["long"] = paramLongJSON
+    allData["lat"] = paramLatJSON;
+    allData["long"] = paramLongJSON;
     const path = "procedure/downloadCluster/";
     $.ajax({
         contentType: 'json',
@@ -370,19 +370,14 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
                 marker.cluster = null;
                 marker.id = latlong[2];
                 marker.on('click', function_maker);
-                markerList.push(marker);
-                Num_procedures += latlong[2]
-                if(maxValuesSmallClusters < latlong[2]){
-                    maxValuesSmallClusters = latlong[2];
-                }
                 marker.on('contextmenu',function(e){
                     var button = document.createElement('button');
                     button.type = "button"
                     button.id = marker.id;
                     button.className = 'btn btn-dark btn-sm';
                     button.innerText = 'Download';
-                    button.lat = marker.latlong[0];
-                    button.long = marker.latlong[1];
+                    button.lat = e.latlng.lat;
+                    button.long = e.latlng.lng;
                     button.addEventListener('click', function(){
                         var paramLat = [];
                         var paramLong = [];
@@ -394,6 +389,11 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
                     popup_cluster.setLatLng(e.latlng)
                     map.openPopup(popup_cluster);
                 });
+                markerList.push(marker);
+                Num_procedures += latlong[2];
+                if(maxValuesSmallClusters < latlong[2]){
+                    maxValuesSmallClusters = latlong[2];
+                }
             });
             cluster.addLayers(markerList);
             map.addLayer(cluster);
