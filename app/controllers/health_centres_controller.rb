@@ -11,29 +11,32 @@ class HealthCentresController < ApplicationController
     # Return: Return all helth centres
     def points
         health_centres_points = HealthCentre.all
-        render json: health_centres_points
+        render json: health_centres_points, status: 200 and return
     end
 
     # GET /health_centre_count
     # Params: None
     # Return: Return the number of health centres
     def health_centre_count
-        render json: HealthCentre.count
+        render json: HealthCentre.count, status: 200 and return
     end
 
     # GET /total_distance_average
     # Params: None
     # Return: the average distance between pacients and health centre
     def total_distance_average
-        render json: Procedure.average(:distance).to_f.round(1)
+        render json: Procedure.average(:distance).to_f.round(1), status: 200 and return
     end
 
     # GET /hospital/:id
     # Params: id
     # Return: health centre details given a id
     def hospital
-      health_centre = HealthCentre.find_by(id: params[:id])
-      render json: health_centre
+        health_centre = HealthCentre.find_by(id: params[:id])
+        if health_centre == nil
+            render json: "Bad request", status: 400 and return
+        end
+        render json: health_centre, status: 200 and return
     end
 
     # GET /procedures/:id
@@ -41,14 +44,21 @@ class HealthCentresController < ApplicationController
     # Return: [lat, long] for all procedures from a health centre(id)
     def procedures
         health_centre = HealthCentre.find_by(id: params[:id])
+
+        if health_centre == nil
+            render json: "Bad request", status: 400 and return
+        end
         procedures = health_centre.procedures
         procedures = procedures.group(:lat, :long).count.to_a.flatten.each_slice(3)
-        render json: procedures
+        render json: procedures, status: 200 and return
     end
 
     # GET /procedures_setor_healthcentre/:id
     def procedures_setor_healthcentre
         health_centre = HealthCentre.find_by(id: params[:id])
+        if health_centre == nil
+            render json: "Bad request", status: 400 and return
+        end
         procedures = health_centre.procedures
         procedures = procedures.where(:lat => params[:lat], :long => params[:long]).pluck(:id)
         render json: procedures
