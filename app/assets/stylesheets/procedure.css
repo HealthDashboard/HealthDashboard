@@ -359,10 +359,15 @@
   margin-bottom: 5px;
 }
 
-.label-subtitle:before {
+/*.label-subtitle:before {
   content: "\f05a";
   font-family: "Font Awesome 5 Free";
   font-weight: bold;
+}*/
+
+.label-subtitle {
+  color: gray;
+  font-size: smaller;
 }
 
 .filter-label {

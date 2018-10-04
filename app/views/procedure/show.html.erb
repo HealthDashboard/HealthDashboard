@@ -110,7 +110,7 @@
                                     <label for="<%= i %>" title="<%= @titles_procedure_filters[i] %>"><b>
                                         <%= f %>
                                     </b></label>
-                                    <p class="label-subtitle" title="<%= @filters_completeness[j] %>% dos dados possuem essa informação"></p>
+                                    <p class="label-subtitle" title="<%= @filters_completeness[j] %>% dos dados possuem essa informação"><%= @filters_completeness[j].round(0) %>%</p>
                                 </div>
                                 <select class="select-<%= i %> form-control" id="<%= j %>" multiple="multiple" onchange='change()'>
                                     <%= @options_procedure[i].each do |v| %>
@@ -132,7 +132,7 @@
                                     <label for="<%= i %>" title="<%= @titles_procedure_filters[i] %>"><b>
                                         <%= f %>
                                     </b></label>
-                                    <p class="label-subtitle" title="<%= @filters_completeness[j] %>% dos dados possuem essa informação"></p>
+                                    <p class="label-subtitle" title="<%= @filters_completeness[j] %>% dos dados possuem essa informação"><%= @filters_completeness[j].round(0) %>%</p>
                                 </div>
                                 <select class="select-<%= i %> form-control" id="<%= j %>" multiple="multiple" onchange='change()'>
                                     <%= @options_patient_info[i].each do |v| %>
@@ -171,7 +171,7 @@
                                     <label for="<%= i %>" title="<%= @titles_procedure_filters[i] %>"><b>
                                         <%= f %>
                                     </b></label>
-                                    <p class="label-subtitle" title="<%= @filters_completeness[j] %>% dos dados possuem essa informação"></p>
+                                    <p class="label-subtitle" title="<%= @filters_completeness[j] %>% dos dados possuem essa informação"><%= @filters_completeness[j].round(0) %>%</p>
                                 </div>
                                 <select class="select-<%= i %> form-control" id="<%= j %>" multiple="multiple" onchange='change()'>
                                     <%= @options_establishment[i].each do |v| %>
@@ -193,7 +193,7 @@
                                     <label id="label_slider_<%= index %>" for="<%= index %>" title="<%= @titles_sliders[index] %>">
                                         <%= slid %><b>
                                     </b></label>
-                                    <p class="label-subtitle" title="<%= @sliders_completeness[index] %>% dos dados possuem essa informação"></p>
+                                    <p class="label-subtitle" title="<%= @sliders_completeness[index] %>% dos dados possuem essa informação"><%= @sliders_completeness[index].round(0) %>%</p>
                                 </div>                             
                               <div class="row slider-div">
                                   <div class="col-sm-1 text-right left">
