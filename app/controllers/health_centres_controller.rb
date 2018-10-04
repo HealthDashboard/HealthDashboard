@@ -98,13 +98,13 @@ class HealthCentresController < ApplicationController
 
       specialties_distance = {}
 
-      distance_metric.each do |distance_group|
+      distance_metric.each.with_index do |distance_group, index|
         distance_group.each do |specialty, count|
             if specialties_distance[specialty] == nil
-                specialties_distance[specialty] = {}
+                specialties_distance[specialty] = {0=>"", 1=>"", 2=>"", 3=>"", 4=>"", 5=>""}
                 specialties_distance[specialty][0] = specialty
             end
-            specialties_distance[specialty][specialties_distance[specialty].count] = count
+            specialties_distance[specialty][index + 1] = count.to_s
         end
       end
       result = {}
