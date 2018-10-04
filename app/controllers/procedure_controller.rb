@@ -59,30 +59,11 @@ class ProcedureController < ApplicationController
 			"complexity", "finance", "age_code", "race", "lv_instruction", "DA", "PR", "STS", "CRS", "gestor_ide"]
 
 		@sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
-	
-		@filters_completeness = []
-		@sliders_completeness = []
+		
+		completeness = JSON.parse(File.read(Rails.root.join('public/completeness.json')))
+		@filters_completeness = completeness['filters']
+		@sliders_completeness = completeness['sliders']
 
-		# Values for completeness at each filter
-		@filters_name.each.with_index do |name, i|
-			if name == "race"
-				freq = Procedure.where(name.to_sym => '99').count.to_f
-				# puts freq.round(3) 
-			elsif name != "gestor_ide" and name != "lv_instruction"
-				freq = Procedure.where(name.to_sym => [nil, '0']).count.to_f
-			else
-				freq = Procedure.where(name.to_sym => nil).count.to_f
-			end
-			@filters_completeness[i] = ((1 - (freq / Procedure.all.count)) * 100).round(2)
-		end
-
-		# Values for completeness at each slider
-		@sliders_name.each.with_index do |name, i|
-			freq = Procedure.where(name.to_sym => '0').count.to_f
-			@sliders_completeness[i] = ((1 - (freq / Procedure.all.count)) * 100).round(2)
-		end
-		# p @filters_name
-		# p @sliders_name
 		super
 	end
 
