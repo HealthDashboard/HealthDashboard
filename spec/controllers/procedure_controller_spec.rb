@@ -51,11 +51,11 @@ describe ProcedureController, type: 'controller' do
 			data = {"send_all" => "True"}.to_json
 			self.send(:get, 'download', params: {data: data}, as: :json)
 			expect(response.status).to eq(200)
-			expect(response.body).to eq("COD;LAT_SC;LONG_SC;P_SEXO;P_IDADE;P_RACA;LV_INSTRU;CNES;GESTOR_ID;CAR_INTEN;CMPT;DT_EMISSAO;DT_INTERNA;DT_SAIDA;COMPLEXIDA;PROC_RE;DIAG_PR;DIAG_SE1;DIAG_SE2;DIAG_SE3;DIARIAS;DIARIAS_UT;DIARIAS_UI;DIAS_PERM;FINANC;VAL_TOT;DA;SUB;STS;CRS;DISTANCIA_KM\n" +
-			"1;;;;;;;431;;;;;;;;;;;;;;;;;;;;;;;\n"	+
-			"2;;;;;;;1;;;;;;;;;;;;;;;;;;;;;;;\n"   +
-			"3;;;;;;;1;;;;;;;;;;;;;50;;;;;;;;;;\n" +
-			"4;;;;;;;1;;;201502;;;;;;;;;;;;;;;;;;;;\n")
+			expect(response.body).to eq("COD;LAT_SC;LONG_SC;P_SEXO;P_IDADE;P_RACA;LV_INSTRU;CNES;GESTOR_ID;CAR_INTEN;CMPT;DT_EMISSAO;DT_INTERNA;DT_SAIDA;COMPLEXIDA;PROC_RE;DIAG_PR;DIAG_SE1;DIAG_SE2;DIARIAS;DIARIAS_UT;DIARIAS_UI;DIAS_PERM;FINANC;VAL_TOT;DA;SUB;STS;CRS;DISTANCIA_KM\n" +
+			"1;;;;;;;431;;;;;;;;;;;;;;;;;;;;;;\n"	+
+			"2;;;;;;;1;;;;;;;;;;;;;;;;;;;;;;\n"   +
+			"3;;;;;;;1;;;;;;;;;;;;50;;;;;;;;;;\n" +
+			"4;;;;;;;1;;;201502;;;;;;;;;;;;;;;;;;;\n")
 		end
 
 		it 'download without parameters' do
@@ -70,17 +70,17 @@ describe ProcedureController, type: 'controller' do
 			data = {"filters" => filters}.to_json
 			self.send(:get, 'download', params: {data: data}, as: :json)
 			expect(response.status).to eq(200)
-			expect(response.body).to eq("COD;LAT_SC;LONG_SC;P_SEXO;P_IDADE;P_RACA;LV_INSTRU;CNES;GESTOR_ID;CAR_INTEN;CMPT;DT_EMISSAO;DT_INTERNA;DT_SAIDA;COMPLEXIDA;PROC_RE;DIAG_PR;DIAG_SE1;DIAG_SE2;DIAG_SE3;DIARIAS;DIARIAS_UT;DIARIAS_UI;DIAS_PERM;FINANC;VAL_TOT;DA;SUB;STS;CRS;DISTANCIA_KM\n" +
-			"1;;;;;;;431;;;;;;;;;;;;;;;;;;;;;;;\n")
+			expect(response.body).to eq("COD;LAT_SC;LONG_SC;P_SEXO;P_IDADE;P_RACA;LV_INSTRU;CNES;GESTOR_ID;CAR_INTEN;CMPT;DT_EMISSAO;DT_INTERNA;DT_SAIDA;COMPLEXIDA;PROC_RE;DIAG_PR;DIAG_SE1;DIAG_SE2;DIARIAS;DIARIAS_UT;DIARIAS_UI;DIAS_PERM;FINANC;VAL_TOT;DA;SUB;STS;CRS;DISTANCIA_KM\n" +
+			"1;;;;;;;431;;;;;;;;;;;;;;;;;;;;;;\n")
 		end
 
 		it 'download age_code TP_0A4' do
-			filters = [[], [], [], [], [], [], [], [], [], [], [], ["TP_0A4"]]
+			filters = [[], [], [], [], [], [], [], [], [], [], ["TP_0A4"]]
 			data = {"filters" => filters}.to_json
 			self.send(:get, 'download', params: {data: data}, as: :json)
 			expect(response.status).to eq(200)
-			expect(response.body).to eq("COD;LAT_SC;LONG_SC;P_SEXO;P_IDADE;P_RACA;LV_INSTRU;CNES;GESTOR_ID;CAR_INTEN;CMPT;DT_EMISSAO;DT_INTERNA;DT_SAIDA;COMPLEXIDA;PROC_RE;DIAG_PR;DIAG_SE1;DIAG_SE2;DIAG_SE3;DIARIAS;DIARIAS_UT;DIARIAS_UI;DIAS_PERM;FINANC;VAL_TOT;DA;SUB;STS;CRS;DISTANCIA_KM\n" +
-			"2;;;;;;;1;;;;;;;;;;;;;;;;;;;;;;;\n")
+			expect(response.body).to eq("COD;LAT_SC;LONG_SC;P_SEXO;P_IDADE;P_RACA;LV_INSTRU;CNES;GESTOR_ID;CAR_INTEN;CMPT;DT_EMISSAO;DT_INTERNA;DT_SAIDA;COMPLEXIDA;PROC_RE;DIAG_PR;DIAG_SE1;DIAG_SE2;DIARIAS;DIARIAS_UT;DIARIAS_UI;DIAS_PERM;FINANC;VAL_TOT;DA;SUB;STS;CRS;DISTANCIA_KM\n" +
+			"2;;;;;;;1;;;;;;;;;;;;;;;;;;;;;;\n")
 		end
 	end
 
@@ -223,7 +223,7 @@ describe ProcedureController, type: 'controller' do
 		 	Procedure.create id: 8, cnes_id: 1, specialty_id: 1, cid_primary: "A42", date: Date.parse("20180101")
 		 	Procedure.create id: 9, cnes_id: 1, specialty_id: 1, cid_secondary: "B21"
 		 	Procedure.create id: 10, cnes_id: 1, specialty_id: 1, cid_secondary2: "Z12"
-		 	Procedure.create id: 11, cnes_id: 1, specialty_id: 1, cid_associated: "G92"
+		 	Procedure.create id: 11, cnes_id: 1, specialty_id: 1
 		 	Procedure.create id: 12, cnes_id: 1, specialty_id: 1, complexity: 3
 		 	Procedure.create id: 13, cnes_id: 1, specialty_id: 1, finance: 6
 		 	Procedure.create id: 14, cnes_id: 1, specialty_id: 1, race: 1
@@ -351,16 +351,8 @@ describe ProcedureController, type: 'controller' do
 			expect(assigns(:procedures)).to eq(Procedure.where(:cid_secondary2 => "Z12"))
 		end
 
-		it 'shoud return the correct procedure for cid_associated' do
-			filters = [[], [], [], [], [], [], [], [], ["G92"]]
-			data = {"filters" => filters}.to_json
-			controller.params[:data] = data
-			controller.send :getProcedures
-			expect(assigns(:procedures)).to eq(Procedure.where(:cid_associated => "G92"))
-		end
-
 		it 'shoud return the correct procedure for complexity' do
-			filters = [[], [], [], [], [], [], [], [], [], ["3"]]
+			filters = [[], [], [], [], [], [], [], [], ["3"]]
 			data = {"filters" => filters}.to_json
 			controller.params[:data] = data
 			controller.send :getProcedures
@@ -368,7 +360,7 @@ describe ProcedureController, type: 'controller' do
 		end
 
 		it 'shoud return the correct procedure for finance' do
-			filters = [[], [], [], [], [], [], [], [], [], [], ["6"]]
+			filters = [[], [], [], [], [], [], [], [], [], ["6"]]
 			data = {"filters" => filters}.to_json
 			controller.params[:data] = data
 			controller.send :getProcedures
@@ -376,7 +368,7 @@ describe ProcedureController, type: 'controller' do
 		end
 
 		it 'should return the correct procedure for age_code' do
-			filters = [[], [], [], [], [], [], [], [], [], [], [], ["TP_0A4"]]
+			filters = [[], [], [], [], [], [], [], [], [], [], ["TP_0A4"]]
 			data = {"filters" => filters}.to_json
 			controller.params[:data] = data
 			controller.send :getProcedures
@@ -384,7 +376,7 @@ describe ProcedureController, type: 'controller' do
 		end
 
 		it 'shoud return the correct procedure for race' do
-			filters = [[], [], [], [], [], [], [], [], [], [], [],[], ["1"]]
+			filters = [[], [], [], [], [], [], [], [], [], [], [], ["1"]]
 			data = {"filters" => filters}.to_json
 			controller.params[:data] = data
 			controller.send :getProcedures
@@ -392,7 +384,7 @@ describe ProcedureController, type: 'controller' do
 		end
 
 		it 'shoud return the correct procedure for lv_instruction' do
-			filters = [[], [], [], [], [], [], [], [], [], [], [],[], [], ["0"]]
+			filters = [[], [], [], [], [], [], [], [], [], [], [],[], ["0"]]
 			data = {"filters" => filters}.to_json
 			controller.params[:data] = data
 			controller.send :getProcedures
@@ -400,7 +392,7 @@ describe ProcedureController, type: 'controller' do
 		end
 
 		it 'shoud return the correct procedure for DA' do
-			filters = [[], [], [], [], [], [], [], [], [], [], [],[], [], [], ["REPUBLICA"]]
+			filters = [[], [], [], [], [], [], [], [], [], [], [],[], [], ["REPUBLICA"]]
 			data = {"filters" => filters}.to_json
 			controller.params[:data] = data
 			controller.send :getProcedures
@@ -408,7 +400,7 @@ describe ProcedureController, type: 'controller' do
 		end
 
 		it 'shoud return the correct procedure for PR' do
-			filters = [[], [], [], [], [], [], [], [], [], [], [],[], [], [], [], ["SE"]]
+			filters = [[], [], [], [], [], [], [], [], [], [], [],[], [], [], ["SE"]]
 			data = {"filters" => filters}.to_json
 			controller.params[:data] = data
 			controller.send :getProcedures
@@ -416,7 +408,7 @@ describe ProcedureController, type: 'controller' do
 		end
 
 		it 'shoud return the correct procedure for STS' do
-			filters = [[], [], [], [], [], [], [], [], [], [], [],[], [], [], [], [], ["SE"]]
+			filters = [[], [], [], [], [], [], [], [], [], [], [],[], [], [], [], ["SE"]]
 			data = {"filters" => filters}.to_json
 			controller.params[:data] = data
 			controller.send :getProcedures
@@ -424,7 +416,7 @@ describe ProcedureController, type: 'controller' do
 		end
 
 		it 'shoud return the correct procedure for CRS' do
-			filters = [[], [], [], [], [], [], [], [], [], [], [],[], [], [], [], [], [], ["CENTRO"]]
+			filters = [[], [], [], [], [], [], [], [], [], [], [],[], [], [], [], [], ["CENTRO"]]
 			data = {"filters" => filters}.to_json
 			controller.params[:data] = data
 			controller.send :getProcedures
@@ -432,7 +424,7 @@ describe ProcedureController, type: 'controller' do
 		end
 
 		it 'shoud return the correct procedure for gestor_ide' do
-			filters = [[], [], [], [], [], [], [], [], [], [], [],[], [], [], [], [], [], [], ["1"]]
+			filters = [[], [], [], [], [], [], [], [], [], [], [],[], [], [], [], [], [], ["1"]]
 			data = {"filters" => filters}.to_json
 			controller.params[:data] = data
 			controller.send :getProcedures
