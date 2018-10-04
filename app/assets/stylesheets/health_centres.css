@@ -4,11 +4,12 @@
 }
 
 hr {
-  margin-top: 0;
-  padding-top: 1.25em;
   background-color: #fff;
+  margin-bottom: .5em;
   border-top: 0;
   border-bottom: 1px solid #8e8e8e;
+  margin-top: 0;
+  padding-top: 1.25em;
 }
 
 .page {
@@ -195,7 +196,7 @@ input[type="radio"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1vh;
+  margin-top: 1.25em;
   background-color: #fff;
   z-index: 2;
 }
@@ -203,6 +204,26 @@ input[type="radio"] {
 #search-name {
   font-family: 'Raleway', sans-serif;
   font-size: 2em;
+}
+
+#labelOverlay {
+  text-align: center;
+  cursor: default;
+}
+
+#labelOverlay p.n_procedures {
+  font-size: 1.8em;
+  color: #8e8e8e;
+  width: 100%;
+  line-height: 0.5;
+}
+
+#labelOverlay p.atendimentos {
+  line-height: 0.5;
+  font-size: 1em;
+  color: #cdcdcd;
+  width: 100%;
+  margin-bottom: 0;
 }
 
 .hosp-info-text {
@@ -269,23 +290,7 @@ input[type="radio"] {
   font-size: 22px;
 }
 
-@media screen and (min-width: 1001px) and (max-width: 1400px) {
-  * {
-    font-size: 14px;
-  }
-}
-
-@media screen and (max-width: 1000px) {
-  * {
-    font-size: 12px;
-  }
-}
-
 @media (orientation: portrait){
-  * {
-    font-size: 16px;
-  }
-
   .page {
     flex-direction: column;
   }
@@ -296,16 +301,16 @@ input[type="radio"] {
   }
 
   .map {
-    height: calc(50vh + 50px);
+    height: calc(40vh + 50px);
   }
 
   .mapa {
-    height: 50vh;
+    height: 40vh;
   }
 
   .info {
     width:  calc(100vw - (100vw - 100%));
-    height: calc(50vh - 50px);
+    height: calc(60vh - 50px);
     padding: 0 1vw 0 1vw;
   }
 

@@ -17,38 +17,38 @@
           <p>MUNICIPAL</p>
         </div>
       </div>
-      <div class="heatmap-legend">
-          <div class="heat-legend">
-              <div class="legend-title">Mapa de Calor</div>
-              <div class="legend-scale">
-                  <ul class='legend-labels'>
-                      <li class="legend-label"><span class = "span-normal" style='background: linear-gradient(to right, #F8A5B2, #FE0401);'></span></li>
-                  </ul>
-              </div>
-          </div>
-          <div class="legend-data">
-              <li class="legend-data-li" id="legend-label-1"><p class="legend-data"></p></li>
-              <li class="legend-data-li" id="legend-label-2"><p class="legend-data"></p></li>
-          </div>
+    </div>
+    <div class="map-config select health_centre translateX-legendsize" id="div-adm">
+      <div class="map-config-header select-header" onclick="show_menu('#div-adm')">
+        <p>Limites Administrativos</p>
+      </div>
+      <div class="select-body health_centre">
+        <form>
+          <ul id="checkbox-list">
+            <li><input type="checkbox" name="optCheckbok" value="0" onchange="setShape('Shape_SP.geojson', null)"> Município de São Paulo</li>
+            <li><input type="checkbox" name="optCheckbok" value="1" onchange="setShape('Shape_CRS.geojson', null)"> Coordenadoria Regional de Saúde</li>
+            <li><input type="checkbox" name="optCheckbok" value="2" onchange="setShape('Shape_STS.geojson', null)"> Supervisão Técnica de Saúde</li>
+            <li><input type="checkbox" name="optCheckbok" value="3" onchange="setShape('Shape_PR.geojson', null)"> Prefeitura Regional</li>
+            <li><input type="checkbox" name="optCheckbok" value="4" onchange="setShape('Shape_DA.geojson', null)"> Distritos Administrativos</li>
+            <li><input type="checkbox" name="optCheckbok" value="5" onchange="setShape('Shape_UBS.geojson', null)"> Áreas de Abrangência de UBS</li>
+            <li><input type="checkbox" name="optCheckbok" value="6" onchange="setShape('Shape_ESF.geojson', null)"> Áreas de Cobertura da Estratégia Saúde da Família</li>
+          </ul>
+        </form>
       </div>
     </div>
-  </div>
-  <div class="map-config select health_centre translateX-legendsize" id="div-adm">
-    <div class="map-config-header select-header" onclick="show_menu('#div-adm')">
-      <p>Limites Administrativos</p>
-    </div>
-    <div class="select-body health_centre">
-      <form>
-        <ul id="checkbox-list">
-          <li><input type="checkbox" name="optCheckbok" value="0" onchange="setShape('Shape_SP.geojson', null)"> Município de São Paulo</li>
-          <li><input type="checkbox" name="optCheckbok" value="1" onchange="setShape('Shape_CRS.geojson', null)"> Coordenadoria Regional de Saúde</li>
-          <li><input type="checkbox" name="optCheckbok" value="2" onchange="setShape('Shape_STS.geojson', null)"> Supervisão Técnica de Saúde</li>
-          <li><input type="checkbox" name="optCheckbok" value="3" onchange="setShape('Shape_PR.geojson', null)"> Prefeitura Regional</li>
-          <li><input type="checkbox" name="optCheckbok" value="4" onchange="setShape('Shape_DA.geojson', null)"> Distritos Administrativos</li>
-          <li><input type="checkbox" name="optCheckbok" value="5" onchange="setShape('Shape_UBS.geojson', null)"> Áreas de Abrangência de UBS</li>
-          <li><input type="checkbox" name="optCheckbok" value="6" onchange="setShape('Shape_ESF.geojson', null)"> Áreas de Cobertura da Estratégia Saúde da Família</li>
-        </ul>
-      </form>
+    <div class="heatmap-legend">
+        <div class="heat-legend">
+            <div class="legend-title">Mapa de Calor</div>
+            <div class="legend-scale">
+                <ul class='legend-labels'>
+                    <li class="legend-label"><span class = "span-normal" style='background: linear-gradient(to right, #F8A5B2, #FE0401);'></span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="legend-data">
+            <li class="legend-data-li" id="legend-label-1"><p class="legend-data"></p></li>
+            <li class="legend-data-li" id="legend-label-2"><p class="legend-data"></p></li>
+        </div>
     </div>
   </div>
 
@@ -63,7 +63,7 @@
       </div>
       <div id="hosp-info"></div>
     </div>
-    <hr>
+    <hr class="divider">
     <!-- <div class="grafico barras" id='bt-graph2'></div> -->
     <div id="bar-graph" class="grafico"></div>
 

@@ -48,7 +48,7 @@
           </p>
           <p class="awnser">
             Na página inicial, na seção de serviços clique em Busca Avançada ou em Estabelecimentos.
-            Em qualquer outra página na barra de navegação no topo da página clique na seção adequada. 
+            Em qualquer outra página na barra de navegação no topo da página clique na seção adequada.
             <!-- (Por favor alguém complete essa resposta) -->
           </p>
         </div>
@@ -207,20 +207,6 @@
 
 
 <script>
-    var acc = document.getElementsByClassName("collapsible-header");
-    var i;
-    for (i = 0; i < acc.length; i++) {
-    acc[i].addEventListener("click", function() {
-        this.classList.toggle("active");
-        var panel = this.nextElementSibling;
-        if (panel.style.maxHeight){
-        panel.style.maxHeight = null;
-        } else {
-        panel.style.maxHeight = panel.scrollHeight + "px";
-        } 
-    });
-    }
-
     $(document).ready(inicialize);
     $(window).on('resize', function(){
       if (currentPos === 1) {
