@@ -108,22 +108,6 @@ a.nav-link.glyphicon
 .navbar-inverse .navbar-nav > li > a
     color: white
 
-#labelOverlay
-    text-align: center
-    cursor: default
-
-#labelOverlay p.n_procedures
-    line-height: 0.5
-    font-size: 1.8em
-    color: #8e8e8e
-    width: 100%
-
-#labelOverlay p.atendimentos
-    line-height: 0.5
-    font-size: 14pt
-    color: #cdcdcd
-    width: 100%
-
 #metric-board
     width: 100%
     height: 35%
@@ -262,6 +246,14 @@ li.list-group-item:hover
         -ms-transform: rotate(360deg)
         -o-transform: rotate(360deg)
         transform: rotate(360deg)
+
+@media screen and (min-width: 1001px) and (max-width: 1400px)
+    *
+        font-size: 15px
+
+@media screen and (max-width: 1000px)
+    *
+        font-size: 14px
 
 @media (max-width: 1000px)
     .navbar-header

@@ -525,6 +525,6 @@ function update_right_graph_text(data) {
         sum += parseInt(value, 10);
     });
     sum = sum.toLocaleString('pt-BR'); //command to change the number format
-    $graph_text1.html("<br><br><br> " + sum);
+    $graph_text1.html(sum);
     $graph_text2.html("Internações");
 }

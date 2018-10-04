@@ -27,7 +27,7 @@
   padding: .25em .5em 0 .5em;
   text-align: center;
   margin-bottom: 5px;
-  transform: translateX(123px);
+  transform: translateX(6.7em);
   cursor: pointer;
   transition: transform 250ms ease-in-out;
 }
@@ -265,6 +265,14 @@
   padding: 10px 0 10px 75px;
 }
 
+#heatmap-leg {
+  right: 25%;
+}
+
+#heatmap-leg.hide {
+  right: 20%;
+}
+
 .legend-bar {
   overflow: hidden;
   margin-top: 10px;
@@ -353,15 +361,6 @@
 }
 
 .fab {
-  width: 50px;
-  height: 50px;
-  background-color: #eee;
-  border-radius: 50%;
-  bottom: 55px;
-  right: 55px;
-  position: absolute;
-  text-align: center;
-  z-index: 4;
   display: none;
 }
 
@@ -395,6 +394,7 @@
 
   .btn-column {
     right: 0;
+    top: 140px;
   }
 
   #map-affix {
@@ -416,6 +416,14 @@
     transform: translateY(-20px);
   }
 
+  .heatmap-legend {
+    right: 25%;
+  }
+
+  #heatmap-leg {
+    right: 0;
+  }
+
   .main {
     height: calc(100vh - 50px);
   }
@@ -425,7 +433,39 @@
   }
 
   .fab {
+    display : flex;
+    width: 4em;
+    height: 4em;
+    background-color: #fff;
+    border-radius: 50%;
+    top: 50px;
+    right: 0px;
+    position: absolute;
+    z-index: 4;
+    margin: .7em;
+    justify-content: center;
+    align-items : center;
+    cursor: pointer;
+  }
+
+  .fab:active {
+    background-color: #eee;
+  }
+
+  .fab .fa-times {
+    display: none;
+  }
+
+  .fab .fa-search {
     display: block;
+  }
+
+  .fab.active .fa-times {
+    display: block;
+  }
+
+  .fab.active .fa-search {
+    display: none;
   }
 
   .fab.active {

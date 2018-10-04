@@ -69,7 +69,7 @@
       </div>
     </div>
 
-    <div class="item-legend legenda" id="heatmap-leg">
+    <div class="item-legend legenda hide" id="heatmap-leg">
           <p class="text"></p>
           <div class="heatmap-legend" onclick="show_menu('#heatmap-leg')">
             <p class="legend-title">Número de Internações Hospitalares</p>
@@ -233,7 +233,10 @@
 </div>
 </div>
 
-<div class="fab" onclick="toggleFilters()" id="fab"></div>
+<div class="fab" onclick="toggleFilters()" id="fab">
+  <i class="fas fa-search fa-2x icon"></i>
+  <i class="fas fa-times fa-2x icon"></i>
+</div>
 
 <div id="loading_overlay"class="loading">Loading&#8230;</div> <!-- Loading Overlay -->
 
