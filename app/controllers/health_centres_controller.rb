@@ -90,27 +90,30 @@ class HealthCentresController < ApplicationController
       procedures = health_centre.procedures
 
 
-      distance_metric = {0 => trata_specialty_distance(procedures.order(:specialty_id).group('distance >= 0 AND distance < 1', :specialty_id).count(:specialty_id)),
-                         1 => trata_specialty_distance(procedures.order(:specialty_id).group('distance >= 1 AND distance < 5', :specialty_id).count(:specialty_id)),
-                         2 => trata_specialty_distance(procedures.order(:specialty_id).group('distance >= 5 AND distance < 10', :specialty_id).count(:specialty_id)),
-                         3 => trata_specialty_distance(procedures.order(:specialty_id).group('distance >= 10', :specialty_id).count(:specialty_id))}
+      distance_metric = [trata_specialty_distance(procedures.order(:specialty_id).group('distance >= 0 AND distance < 1', :specialty_id).count(:specialty_id)),
+                         trata_specialty_distance(procedures.order(:specialty_id).group('distance >= 1 AND distance < 5', :specialty_id).count(:specialty_id)),
+                         trata_specialty_distance(procedures.order(:specialty_id).group('distance >= 5 AND distance < 10', :specialty_id).count(:specialty_id)),
+                         trata_specialty_distance(procedures.order(:specialty_id).group('distance >= 10', :specialty_id).count(:specialty_id))]
 
-      result = {}
-      j = 0
-      distance_metric[0].each do |dc|
-        result[j] = {0 => dc[0], 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => ""}
-        j+= 1
-      end
 
-      result.each do |r|
-        i = 1
-        while i < 5 do
-          r[1][i] = distance_metric[i - 1][r[1][0]].to_s
-          i += 1
+      specialties_distance = {}
+
+      distance_metric.each do |distance_group|
+        distance_group.each do |specialty, count|
+            if specialties_distance[specialty] == nil
+                specialties_distance[specialty] = {}
+                specialties_distance[specialty][0] = specialty
+            end
+            specialties_distance[specialty][specialties_distance[specialty].count] = count
         end
       end
-
-      render json: result
+      result = {}
+      i = 0
+      specialties_distance.each do |_index, value|
+        result[i] = value
+        i += 1
+      end
+      render json: result.to_json
     end
 
     # No route
