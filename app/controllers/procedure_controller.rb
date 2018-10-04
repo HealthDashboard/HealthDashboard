@@ -67,7 +67,7 @@ class ProcedureController < ApplicationController
 		@filters_name.each.with_index do |name, i|
 			if name == "race"
 				freq = Procedure.where(name.to_sym => '99').count.to_f
-				puts freq.round(3) 
+				# puts freq.round(3) 
 			elsif name != "gestor_ide" and name != "lv_instruction"
 				freq = Procedure.where(name.to_sym => [nil, '0']).count.to_f
 			else
@@ -81,6 +81,8 @@ class ProcedureController < ApplicationController
 			freq = Procedure.where(name.to_sym => '0').count.to_f
 			@sliders_completeness[i] = ((1 - (freq / Procedure.all.count)) * 100).round(2)
 		end
+		# p @filters_name
+		# p @sliders_name
 		super
 	end
 
