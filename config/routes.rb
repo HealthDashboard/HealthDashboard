@@ -38,7 +38,6 @@ Rails.application.routes.draw do
 
   resources :procedure do
     get :healthCentresCnes, on: :collection
-    get :downloadCluster, on: :collection
     get :proceduresPerMonth, on: :collection
     get :proceduresPerHealthCentre, on: :collection
     get :proceduresPerSpecialties, on: :collection

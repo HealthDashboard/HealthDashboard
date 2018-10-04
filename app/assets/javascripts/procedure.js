@@ -81,17 +81,38 @@ function initProcedureMap() {
     L.control.scale({imperial: false, position: 'bottomright'}).addTo(map);
 }
 
-function download() {
+function download(dataFilters) {
     $.ajax({
         contentType: 'json',
-        url: "procedure/download.csv",
-        data: getData(),
+        url: 'procedure/download.csv',
+        data: dataFilters,
         dataType: 'text',
         success: function(result) {
-            var uri = "data:text/csv;Content-Type:text/csv," + encodeURIComponent(result);
-            window.location.href = uri
+            var uri = "data:text/csv;Content-Type:text/csv"
+            var today = new Date().toLocaleString("pt-BR", {day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric"})
+            download_file("data:text/html," + encodeURIComponent(result), "SIH_resultado_busca_" + today + ".csv");
         }
     });
+}
+
+function download_file(dataurl, filename) {
+    var a = document.createElement("a");
+    a.href = dataurl;
+    a.setAttribute("download", filename);
+    var b = document.createEvent("MouseEvents");
+    b.initEvent("click", false, true);
+    a.dispatchEvent(b);
+    return false;
+}
+
+function downloadCluster(paramLat, paramLong){
+    var paramLatJSON = Object.assign({}, paramLat);
+    var paramLongJSON = Object.assign({}, paramLong);
+    var allData = getData();
+    allData["lat"] = paramLatJSON;
+    allData["long"] = paramLongJSON;
+    allData["ClusterDownload"] = "True"
+    download(allData);
 }
 
 //** Called when a visualization shape is selected, remove the selected shape if its already selected or draws a new one **//
@@ -240,25 +261,6 @@ function buscar(data) {
 function metresToPixels(metres) {
     var metresPerPixel = 40075016.686*Math.abs(Math.cos((-23.557296000000001)*Math.PI/180))/Math.pow(2, map.getZoom()+8);
     return metres / metresPerPixel;
-}
-
-function downloadCluster(paramLat, paramLong){
-    var paramLatJSON = Object.assign({}, paramLat);
-    var paramLongJSON = Object.assign({}, paramLong);
-    var allData = getData();
-    allData["lat"] = paramLatJSON;
-    allData["long"] = paramLongJSON;
-    const path = "procedure/downloadCluster/";
-    $.ajax({
-        contentType: 'json',
-        url: path,
-        data: allData,
-        dataType: 'text',
-        success: function(result) {
-        var uri = "data:text/csv;Content-Type:text/csv," + encodeURIComponent(result);
-             window.location.href = uri;
-        }
-    });
 }
 
 function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_metres, heatmap_opacity, function_maker) {
