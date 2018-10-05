@@ -408,21 +408,22 @@ function create_chart(data, dataNormalized){
           var colorSpan = color => '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:' + color + '"></span>';
           let html = '<b>' + params[0].axisValue + '</b></br>';
           html += '<p>'
-          for (var j = 0; j < data.length; j++) {
-            if (data[j][0] === params[0].data[0]) {
-              break;
-            }
-          }
-          var i = 1;
           var sum = 0;
+          var sumPercent = 0.0;
+          var i = 0
           params.forEach(item => {
-            var str = colorSpan(item.color) + ' ' + item.seriesName + ': ' + data[j][i].toLocaleString('pt-BR') + ' (' + parseFloat(item.data[i]).toLocaleString('pt-BR') + '%)' + '<br>'
+            var str = colorSpan(item.color) + ' ' + item.seriesName + ': ' + data[item.dataIndex][item.seriesIndex + 1].toLocaleString('pt-BR') + ' (' + parseFloat(item.data[item.seriesIndex + 1]).toLocaleString('pt-BR') + '%)' + '<br>'
             html += str;
-            sum += data[j][i];
+            sum += data[item.dataIndex][item.seriesIndex + 1];
+            sumPercent += parseFloat(item.data[item.seriesIndex + 1]);
             i++;
           });
-          html += 'Total: ' + sum.toLocaleString('pt-BR') + '</p>'
-
+          if (i === 4) {
+            html += 'Total: ' + sum.toLocaleString('pt-BR') + '</p>'
+          }
+          else {
+            html += 'Total: ' + sum.toLocaleString('pt-BR') + ' (' + parseFloat(sumPercent).toLocaleString('pt-BR') +'%)</p>'
+          }
           return html;
         },
       },
