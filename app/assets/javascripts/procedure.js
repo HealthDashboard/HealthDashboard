@@ -255,7 +255,9 @@ function buscar(data) {
     $(checked).attr('checked', true).trigger('click');
 
     // Show heatmap legend
-    $("#heatmap-leg").toggleClass("hide");
+    if ($("#heatmap-leg").hasClass("hide")) {
+      $("#heatmap-leg").toggleClass("hide");
+    }
     toggleFilters();
 }
 
@@ -583,6 +585,7 @@ function limpar() {
     if ($("#heatmap-leg").hasClass("active")) {
         $("#heatmap-leg").removeClass("active");
     }
+
     $("#heatmap-leg").toggleClass("hide");
 
     clearMap();
