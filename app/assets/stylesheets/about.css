@@ -41,8 +41,12 @@ p a:hover, p a:focus {
   background-color: #ddd;
 }
 
-.section-membros {
+.section-4 {
   background-color: #eee;
+}
+
+.section-membros {
+  background-color: #fff;
 }
 
 .content {
@@ -84,6 +88,10 @@ p a:hover, p a:focus {
 
 .header-3::before {
   content: "\f1c0";
+}
+
+.header-4::before {
+  content: "\f108";
 }
 
 .header-membros::before {
