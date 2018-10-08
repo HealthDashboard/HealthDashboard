@@ -1,4 +1,6 @@
-<%= stylesheet_link_tag "procedure.css" %>
+<%= stylesheet_link_tag "procedure.css", "map_menu.css", "cluster.css" %>
+<%= javascript_include_tag "map_menu.js" %>
+
 <div class="container">
 <div class = "main row">
     <%= javascript_tag do %>
@@ -194,7 +196,7 @@
                                         <%= slid %><b>
                                     </b></label>
                                     <p class="label-subtitle" title="<%= @sliders_completeness[index] %>% dos dados possuem essa informação"><%= @sliders_completeness[index].round(0) %>%</p>
-                                </div>                             
+                                </div>
                               <div class="row slider-div">
                                   <div class="col-sm-1 text-right left">
                                       <span id="slider_<%= index %>_min"><input id="input_slider_<%= index %>_min" class="min-number" type="number" name="minSlider" value="0" onchange="inputSlider()" min="0"></span>

@@ -24,23 +24,21 @@ a:hover {
 
 .container {
   max-width: 1170px;
-  margin: 20px auto;
-}
-
-.no-bottom-margin {
-  margin-bottom: 0;
-  padding-bottom: 20px;
+  margin: 20px auto 0 auto;
 }
 
 .header {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
+  padding-bottom: 20px;
 }
 
 .logo-img {
   flex-grow: 0;
+  height: 130px;
+  margin: 10px 0;
 }
 
 .title {
@@ -48,6 +46,7 @@ a:hover {
   font-size: 3em;
   flex-grow: 3;
   text-align: center;
+  font-weight: bold;
 }
 
 /*
@@ -119,68 +118,10 @@ a:hover {
   z-index: 1;
 }
 
-/* .header-paralax {
-  background-image: url('healthmap.png');
-  background-size: cover;
-  background-position:right center;
-  width: 100%;
-  height: 600px;
-  position: fixed;
-  box-shadow: inset 0px 0px 5px 4px rgba(0,0,0,0.2);
-}
-
-.header-paralax::after {
-  content: '';
-  position: absolute;
-  display: block;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0);
-} */
-
-/*.opacity-overlay {
-  position: absolute;
-  display: block;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: #eee;
-  opacity: .05;
-}
-
-.header-text {
-  position: absolute;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  margin: 250px 0 0 2em;
-  z-index: 1;
-  text-shadow: 0px 0px 2px rgba(91, 91, 91, 0.3);
-  color: #000;
-}
-
-.logo-img {
-  margin-right: 1em;
-  max-height: 200px;
-}
-
-.title {
-  font-family: 'Raleway', sans-serif;
-  font-size: 3em;
-  font-weight: bold;
-}
-
-.slogan {
-}*/
-
 .parallax-container {
   position: relative;
   height: 400px;
-  box-shadow: inset 0px 0px 5px 4px rgba(36, 36, 36, 0.2);
+  /* box-shadow: inset 0px 0px 5px 4px rgba(36, 36, 36, 0.2); */
 }
 
 .parallax {
@@ -199,6 +140,7 @@ a:hover {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  padding: .75em 0;
 }
 
 .data {
@@ -260,7 +202,8 @@ a:hover {
 .item-title {
   position: absolute;
   top: 2em;
-  left: 1em;
+  /* left: 1em; */
+  left: 2em;
   font-size: 1.75em;
   font-weight: bold;
   font-family: 'Raleway', sans-serif;
@@ -291,7 +234,7 @@ a:hover {
   color: #fff;
   position: absolute;
   top: 50%;
-  padding: 0 1em 0 1.75em;
+  padding: 0 3.5em 0 3.5em;
   transition: transform 250ms ease-in-out,
               opacity 250ms ease-in-out;
   opacity: 0;
@@ -317,13 +260,18 @@ a:hover {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  padding: 1em 15px;
   max-width: 1170px;
   margin: auto;
+  margin-top: 20px
 }
 
 ul.footer-item {
-  margin: auto;
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 ul.footer-item li {
@@ -332,7 +280,8 @@ ul.footer-item li {
 
 .footer-img {
   flex-grow: 0;
-  margin: 24px 24px;
+  /* height: 100px;
+  padding: 25px 0; */
 }
 
 @media (max-width:1000px) {
@@ -343,7 +292,6 @@ ul.footer-item li {
 
   .container {
     max-width: 800px;
-    margin: 20px auto;
   }
 
   .data {
