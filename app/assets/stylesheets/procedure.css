@@ -191,49 +191,6 @@
   opacity: .4;
 }
 
-.map-marker{
-  text-align: center;
-  position: absolute;
-  overflow: hidden;
-  background-repeat: no-repeat;
-  background-position: center;
-  color: #fff;
-  border-radius: 50%;
-
-  filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5));
-}
-
-.map-marker.marker-single {
-  background: black;
-  width: 28px;
-  height: 28px;
-  line-height: 22pt;
-  font-size: 16px;
-}
-
-.map-marker.marker-5k {
-  background: rgb(100, 100, 100);
-  width: 40px;
-  height: 40px;
-  line-height: 30pt;
-  font-size: 18px;
-}
-.map-marker.marker-10k {
-  background: rgb(180, 180, 180);
-  width: 60px;
-  height: 60px;
-  line-height: 45pt;
-  font-size: 20px;
-}
-
-.map-marker.marker-100k {
-  background: rgb(210, 210, 210);
-  width: 80px;
-  height: 80px;
-  line-height: 60pt;
-  font-size: 22px
-}
-
 /* Changes the height of the map menu */
 .select-body {
   height: 450px;
