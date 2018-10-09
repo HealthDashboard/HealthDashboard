@@ -92,7 +92,7 @@ function create_dashboard_charts() {
     populate_procedures_by_date();
     create_specialties_total();
     update_rank();
-    create_age();
+    create_variable_graph();
 }
 
 function animate_legend() {
@@ -301,15 +301,59 @@ function create_table_rank(result) {
     rank_table.html(rows);
 }
 
-function create_age(){
-    $.ajax({
-        contentType: 'json',
-        url: "procedure/proceduresAge",
-        data: data,
-        dataType: 'text',
-        success: function(result) {
-            console.log(result);
-        }
-    });
-    
+function create_variable_graph(){
+    $.getJSON("procedure/proceduresVariables", data, function(result) {
+        console.log(result);
+        console.log(result["cmpt"]);
+        create_one_variable_graph(result["cmpt"]);
+        /*var keys = [];
+        var values = [];
+        for(var i=0; i<result.length; i++){
+            keys[i] = result[i][0];
+            values[i] = result[i][1];
+        }*/
+    });    
+}
+
+function create_one_variable_graph(data){
+    var formatData = [];
+    formatData.push(['score', 'amount', 'variable']);
+    var max = data[0][1];
+    for(var i=0; i<data.length; i++){
+        formatData.push([data[i][1], data[i][1], data[i][0].toString()]);
+        max = Math.max(max, data[i][1]);
+    }
+    console.log(formatData);
+    var option = {
+        dataset: {
+            source: formatData,
+        },
+        grid: {containLabel: true},
+        xAxis: {name: 'Procedimentos'},
+        yAxis: {type: 'category'},
+        visualMap: {
+            orient: 'horizontal',
+            left: 'center',
+            min: 0,
+            max: max,
+            text: ['Máximo', 'Mínimo'],
+            // Map the score column to color
+            dimension: 0,
+            inRange: {
+                color: ['#D7DA8B', '#E15457']
+            }
+        },
+        series: [
+            {
+                type: 'bar',
+                encode: {
+                    // Map the "amount" column to X axis.
+                    x: 'amount',
+                    // Map the "product" column to Y axis
+                    y: 'variable',
+                }
+            }
+        ]
+    };
+    myChart.setOption(option);
 }
