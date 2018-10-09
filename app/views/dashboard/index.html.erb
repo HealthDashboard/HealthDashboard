@@ -1,3 +1,6 @@
+<%= stylesheet_link_tag "dashboard.css" %>
+<%= stylesheet_link_tag "health_centres.css", "map_menu.css" %>
+<%= javascript_include_tag "map_menu.js" %>
 <link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
 
 <div class="container">
@@ -137,15 +140,26 @@
         <div class="w3-container">
             <div class='row'>
                 <div class='col-md-12'>
-                    <div id="chart_competencia" style="width: 600px; height: 600px;"></div>
+                  <div id="bar-graph" style="width: 600px;height:400px;></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<div id="bar-graph" class="grafico"></div>
 </div>
 
 <script>
+  var myChart = echarts.init(document.getElementById('bar-graph'));
+
   $(document).ready(init_dashboard_chart);
   $(document).ready(init_specialties_chart);
+  //setTimeout(function(){myChart.resize();}, 10000);
+  //^Dívida técnica
+
+  /*$(window).on('resize', function(){
+    if(myChart != null && myChart != undefined){
+      myChart.resize();
+    }
+  });*/
 </script>
