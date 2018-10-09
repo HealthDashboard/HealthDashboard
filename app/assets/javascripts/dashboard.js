@@ -86,13 +86,17 @@ function filters_show(){
 }
 
 function create_dashboard_charts() {
+    $.getJSON("procedure/proceduresVariables", data, function(loaded) {
+        console.log(loaded);
+        result = loaded;
+        create_one_variable_graph(result["cmpt"]);
+    });
     create_proceduresPerSpecialties();
     create_specialties_distance_between_patients_hospital();
     create_analise();
     populate_procedures_by_date();
     create_specialties_total();
     update_rank();
-    create_variable_graph();
 }
 
 function animate_legend() {
@@ -301,20 +305,6 @@ function create_table_rank(result) {
     rank_table.html(rows);
 }
 
-function create_variable_graph(){
-    $.getJSON("procedure/proceduresVariables", data, function(result) {
-        console.log(result);
-        console.log(result["cmpt"]);
-        create_one_variable_graph(result["cmpt"]);
-        /*var keys = [];
-        var values = [];
-        for(var i=0; i<result.length; i++){
-            keys[i] = result[i][0];
-            values[i] = result[i][1];
-        }*/
-    });    
-}
-
 function create_one_variable_graph(data){
     var formatData = [];
     formatData.push(['score', 'amount', 'variable']);
@@ -356,4 +346,9 @@ function create_one_variable_graph(data){
         ]
     };
     myChart.setOption(option);
+}
+
+function changeChart(){
+    const field = document.getElementById("select-chart").value;
+    create_one_variable_graph(result[field]);
 }
