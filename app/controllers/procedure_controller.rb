@@ -1,7 +1,7 @@
 class ProcedureController < ApplicationController
 	before_action :getProcedures, only: [:proceduresDistanceGroup, :proceduresPerMonth,
 		:proceduresPerHealthCentre, :proceduresPerSpecialties, :proceduresDistance,
-		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario, :download, :downloadCluster, :proceduresCompetence]
+		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario, :download, :downloadCluster, :proceduresVariables]
 
 	def initialize
 		# Cons, AVOID USING NUMBERS, make a constant instead
@@ -307,9 +307,24 @@ class ProcedureController < ApplicationController
 		render json: health_centres, status: 200
 	end
 
-	def proceduresAge
-		competence = @procedures.group(:age_number).count
-		render json: competence, status: 200
+	# GET /procedure/proceduresVariables{params}
+	# Params: [filter values array]
+	# Return: A hash with infos about each variable
+	def proceduresVariables
+		result = Hash.new
+		variables = [:cmpt, :proce_re, :specialty_id, :treatment_type, :cid_primary, :cid_secondary, 
+			:cid_secondary2, :complexity, :finance, :age_number, :race, :lv_instruction,
+			:gender, :DA, :PR, :STS, :CRS, :gestor_ide, :days, :days_uti, :days_ui, :days_total, :val_total, :distance];
+		
+		data = []
+		variables.each do |var|
+			data = []
+			@procedures.group(var).count.each.with_index do |key, _index|
+				data.append([key[0], key[1]])
+			end
+			result[var.to_s] = data
+		end
+		render json: result, status: 200
 	end
 
 private
