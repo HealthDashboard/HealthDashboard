@@ -140,7 +140,11 @@
         <div class="w3-container">
             <div class='row'>
                 <div class='col-md-12'>
-                  <div id="bar-graph" style="width: 600px;height:400px;></div>
+                  <select id="select-chart" onchange="changeChart()">
+                    <option value="cmpt">Competência</option>
+                    <option value="age_number">idade</option>
+                  </select>
+                  <div id="bar-graph" style="width: 1000px;height:600px;"></div>
                 </div>
             </div>
         </div>
