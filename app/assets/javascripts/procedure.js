@@ -21,7 +21,9 @@ var health_centre_markers;
 var filters_text, filters, genders, start_date, end_date, dist_min, dist_max;
 
 //** Open Street view vars **//
-var heat, cluster, shapes, shape, clean_up_cluster, max;
+var heat, cluster, shapes, shape, clean_up_cluster, max, shapes_setor;
+
+var myStyle;
 
 var id, pixels_cluster, pixels_heatmap;
 
@@ -59,6 +61,7 @@ function initProcedureMap() {
         'Shape_UBS.geojson': null,
         'Shape_ESF.geojson': null
     };
+    shapes_setor = [];
 
     $('#loading_overlay').hide();
     var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -151,14 +154,13 @@ function downloadCluster(paramLat, paramLong){
 
 //** Called when a visualization shape is selected, remove the selected shape if its already selected or draws a new one **//
 function setShape(name, popup) {
-    var myStyle = {
+    myStyle = {
         "color": "#444444",
         "opacity": 0.6,
         "stroke": true,
         "fill": true,
         "fillOpacity": 0.05,
     };
-
     if(name === 'Shape_ESF.geojson'){
         myStyle = {
             "color": "#444444",
@@ -176,6 +178,13 @@ function setShape(name, popup) {
     if (shapes[name] != null) {
         map.removeLayer(shapes[name]);
         shapes[name] = null;
+
+        if (name === 'Shape_DA.geojson') {
+            shapes_setor.map(function(setor) {
+                map.removeLayer(setor);
+            });
+            shapes_setor = [];
+        }
     }
     else {
         $.ajax({
@@ -187,6 +196,11 @@ function setShape(name, popup) {
                         if (feature.properties && feature.properties.Name) {
                             layer.bindTooltip(feature.properties.Name, {closeButton: false});
                         }
+                        if (name === 'Shape_DA.geojson') {
+                            layer.bindTooltip(feature.properties.NM_DISTRIT, {closeButton: false});
+                            layer.name_sc = feature.properties.NM_DISTRIT
+                            layer.on('click', setor_censitario)
+                        }
                     }}).addTo(map);
                 shape.setStyle(myStyle);
                 if (popup != null)
@@ -195,7 +209,21 @@ function setShape(name, popup) {
             }
         });
     }
+}
 
+function setor_censitario(e) {
+    $.ajax({
+        dataType: "json",
+        url: `SetorCensitario/Setor_with_pop-${e.target.name_sc}.json`,
+        success: function(data) {
+            shape = new L.geoJson(data, 
+                {onEachFeature: function(feature, layer) {
+                    layer.bindTooltip(`População: ${feature.properties.POPULACAO}`, {closeButton: false});
+                }}).addTo(map);
+            shape.setStyle(myStyle);
+            shapes_setor.push(shape);
+        }
+    })
 }
 
 //** Called when automatic search checkbox is changed, update auto var accordingly **//
