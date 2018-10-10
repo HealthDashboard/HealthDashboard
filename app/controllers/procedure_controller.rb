@@ -60,10 +60,11 @@ class ProcedureController < ApplicationController
 
 		@sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
 		
+		# Variables for completeness
 		completeness = JSON.parse(File.read(Rails.root.join('public/completeness.json')))
 		@filters_completeness = completeness['filters']
 		@sliders_completeness = completeness['sliders']
-
+		
 		super
 	end
 
@@ -313,9 +314,8 @@ class ProcedureController < ApplicationController
 	def proceduresVariables
 		result = Hash.new
 		variables = [:cmpt, :proce_re, :specialty_id, :treatment_type, :cid_primary, :cid_secondary, 
-			:cid_secondary2, :complexity, :finance, :age_number, :race, :lv_instruction,
+			:cid_secondary2, :complexity, :finance, :age_code, :race, :lv_instruction,
 			:gender, :DA, :PR, :STS, :CRS, :gestor_ide, :days, :days_uti, :days_ui, :days_total, :val_total, :distance];
-		
 		data = []
 		variables.each do |var|
 			data = []
@@ -324,6 +324,69 @@ class ProcedureController < ApplicationController
 			end
 			result[var.to_s] = data
 		end
+
+		# Replace the values - TREATMENT_TYPE
+		treatment_type = @treatments.map{|x| x["id"]}
+		result["treatment_type"].each.with_index do |key, index|
+			indexAux = treatment_type.find_index(key[0].to_s)
+			result["treatment_type"][index][0] = @treatments[indexAux]["text"]
+		end
+
+		# Replace the values - COMPLEXITY
+		complexity = @complexity.map{|x| x["id"].to_s}
+		result["complexity"].each.with_index do |key, index|
+			key[0] = "0"+key[0].to_s
+			indexAux = complexity.find_index(key[0].to_s)
+			result["complexity"][index][0] = @complexity[indexAux]["text"]
+		end
+
+		# Replace the values - FINANCE
+		finance = @finance.map{|x| x["id"].to_s}
+		result["finance"].each.with_index do |key, index|
+			key[0] = "0"+key[0].to_s
+			indexAux = finance.find_index(key[0].to_s)
+			result["finance"][index][0] = @finance[indexAux]["text"]
+		end
+
+		# Replace the values - AGE_CODE
+		age_code = @age_group.map{|x| x["id"].to_s}
+		result["age_code"].each.with_index do |key, index|
+			indexAux = age_code.find_index(key[0].to_s)
+			result["age_code"][index][0] = @age_group[indexAux]["text"]
+		end
+
+		# Replace the values - RACE
+		race = @race.map{|x| x["id"].to_s}
+		result["race"].each.with_index do |key, index|
+			if (key[0].to_s).length < 2
+				key[0] = "0"+key[0].to_s
+			end
+			indexAux = race.find_index(key[0].to_s)
+			result["race"][index][0] = @race[indexAux]["text"]
+		end
+
+		# Replace the values - LV_INSTRUCTION
+		lv_instruction = @lv_instruction.map{|x| x["id"].to_s}
+		result["lv_instruction"].each.with_index do |key, index|
+			indexAux = lv_instruction.find_index(key[0].to_s)
+			result["lv_instruction"][index][0] = @lv_instruction[indexAux]["text"]
+		end
+
+		# Replace the values - GESTOR
+		gestor = @gestor.map{|x| x["id"].to_s}
+		result["gestor_ide"].each.with_index do |key, index|
+			key[0] = "0"+key[0].to_s
+			indexAux = gestor.find_index(key[0].to_s)
+			result["gestor_ide"][index][0] = @gestor[indexAux]["text"]
+		end
+
+		# Replace the values - CID
+		#cid_primary = @cid.map{|x| x["id"]}
+		#result["cid_primary"].each.with_index do |key, index|
+		#	indexAux = cid_primary.find_index(key[0].to_s)
+		#	result["cid_primary"][index][0] = @cid[indexAux]["text"]
+		#end
+
 		render json: result, status: 200
 	end
 
