@@ -301,13 +301,13 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
             }
             if (n < 5000) {
                 className = 'map-marker marker-5k a-class';
-                size = 40;
+                size = 44;
             } else if (n < 100000) {
                 className = 'map-marker marker-10k a-class';
-                size = 60;
+                size = 64;
             } else if (n >= 100000) {
                 className = 'map-marker marker-100k a-class';
-                size = 80;
+                size = 84;
             }
             if (n > max) {
                 max = n;
