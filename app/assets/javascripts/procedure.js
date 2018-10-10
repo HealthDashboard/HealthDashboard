@@ -407,7 +407,7 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
                 heatmap_procedure.push([procedure[0], procedure[1], (procedure[2] / Num_procedures) * 100]);
             });
 
-            heat = L.heatLayer(heatmap_procedure, {maxZoom: 11, radius: max_heatmap, blur: 50, gradient: {.4:"#F8A5B2",.6:"#F97C85",.7:"#FB5459",.8:"#FC2C2D",1:"#FE0401"}}); // Add heatmap
+            heat = L.heatLayer(heatmap_procedure, {maxZoom: 11, radius: max_heatmap, blur: 50, gradient: {.4:"#D3C9F8",.6:"#A792F2",.7:"#7B5CEB",.8:"#4E25E4",1:"#3816B3"}}); // Add heatmap
 
             //inserting the first and last values
             legendlabel1 = document.getElementById("legend-label-1")
