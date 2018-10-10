@@ -9,31 +9,24 @@
 
 .map-marker.marker-single {
   background: black;
-  width: 28px;
-  height: 28px;
-  line-height: 22pt;
+  line-height: 30px;
   font-size: 16px;
 }
 
 .map-marker.marker-5k {
   background: rgb(100, 100, 100);
-  width: 40px;
-  height: 40px;
-  line-height: 30pt;
-  font-size: 18px;
+  line-height: 44px;
+  font-size: 17px;
 }
+
 .map-marker.marker-10k {
   background: rgb(180, 180, 180);
-  width: 60px;
-  height: 60px;
-  line-height: 45pt;
-  font-size: 20px;
+  line-height: 64px;
+  font-size: 18px;
 }
 
 .map-marker.marker-100k {
   background: rgb(210, 210, 210);
-  width: 80px;
-  height: 80px;
-  line-height: 60pt;
-  font-size: 22px
+  line-height: 84px;
+  font-size: 19px
 }
