@@ -127,7 +127,7 @@ a:hover {
 .parallax {
   background-image: url(<%= asset_path 'healthmap.png' %>);
   background-size: cover;
-  background-position:right center;
+  background-position: 70% center;
   width: 100%;
   height: 200%;
   z-index: -1;
@@ -157,8 +157,13 @@ a:hover {
   font-family: 'Raleway', sans-serif;
 }
 
+.margin {
+  margin: 4em auto;
+}
+
 .section {
   font-family: 'Raleway', sans-serif;
+  margin-bottom: 1em;
 }
 
 .section::after {
@@ -264,19 +269,19 @@ a:hover {
   justify-content: space-between;
   align-items: flex-start;
   width: 100%;
-  padding: 1em 15px;
+  padding: 1.5em 15px;
   max-width: 1170px;
   margin: auto;
-  margin-top: 20px
+  margin-top: 20px;
 }
 
 ul.footer-item {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0 1em;
 }
 
-ul.footer-item li {
+ul.footer-item .email {
   word-break: break-all;
 }
 
@@ -287,6 +292,10 @@ ul.footer-item li {
 }
 
 @media (max-width:1000px) {
+  .item {
+    font-size: 16px;
+  }
+
   .grid {
     grid-template-columns: 1fr;
     grid-gap: 30px;
@@ -294,22 +303,5 @@ ul.footer-item li {
 
   .container {
     max-width: 800px;
-  }
-
-  .data {
-    font-size: smaller;
-  }
-
-  .data-num {
-    font-size: 2em;
-  }
-}
-
-@media (min-width:1001px) and (max-width:1400px) {
-  body {
-    zoom: 0.8;
-    /* Other non-webkit browsers */
-    zoom: 80%;
-    /* Webkit browsers */
   }
 }
