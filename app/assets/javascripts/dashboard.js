@@ -307,16 +307,25 @@ function create_table_rank(result) {
 
 function create_one_variable_graph(data){
     var formatData = [];
+    console.log(data);
     formatData.push(['score', 'amount', 'variable']);
-    var max = data[0][1];
+    var max = 0;
     for(var i=0; i<data.length; i++){
-        formatData.push([data[i][1], data[i][1], data[i][0].toString()]);
-        max = Math.max(max, data[i][1]);
+        if(data[i][1] != null && data[i][0] != null){
+            formatData.push([data[i][1], data[i][1], data[i][0].toString()]);
+            max = Math.max(max, data[i][1]);
+        }
     }
-    console.log(formatData);
     var option = {
         dataset: {
             source: formatData,
+        },
+        //title: 'Title',
+        tooltip : {
+            trigger: 'axis',
+            axisPointer : {            
+                type : 'shadow'      
+            }
         },
         grid: {containLabel: true},
         xAxis: {name: 'Procedimentos'},
