@@ -1,6 +1,17 @@
 <%= stylesheet_link_tag "home.css" %>
-
-<div class="barra-inst"></div>
+<div class="barra-inst-full">
+    <div class="barra-inst">
+        <div class="barra-inst-block">
+            <a href="http://www.capital.sp.gov.br/" class="barra-inst-link"><strong>PREFEITURA DE SÃO PAULO</strong></a>
+        </div>
+        <div class="barra-inst-block text-center">
+            <a href="http://transparencia.prefeitura.sp.gov.br/acesso-a-informacao/Paginas/default.aspx" class="barra-inst-link"><strong>Acesso a Informação</strong> <%= image_tag("capital_acesso-informacao.png", :class => "capital-acesso-informacao", :alt => "Acesso a Informação") %></a>
+        </div>
+        <div class="barra-inst-block text-right">
+            <a href="http://transparencia.prefeitura.sp.gov.br/Paginas/home.aspx" class="barra-inst-link">TRANSPARÊNCIA SÃO PAULO</a>
+        </div>
+    </div>
+</div>
 <div class="main">
 <div class="container">
   <header class="header">
