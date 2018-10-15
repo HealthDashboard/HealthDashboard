@@ -23,7 +23,7 @@ var filters_text, filters, genders, start_date, end_date, dist_min, dist_max;
 //** Open Street view vars **//
 var heat, cluster, shapes, shape, clean_up_cluster, max;
 
-var id;
+var id, pixels;
 
 //** Display name for printing **//
 var filters_print = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Grupo étnico", "Nível de instrução", "Competência",
@@ -77,6 +77,8 @@ function initProcedureMap() {
         popup.setLatLng(e.latlng)
         map.openPopup(popup);
     });
+
+    pixels = metresToPixels(5500)
 
     L.control.scale({imperial: false, position: 'bottomright'}).addTo(map);
 }
@@ -278,6 +280,9 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
     map.on('zoom', function() {
         max = 0; // reset max values because zoom level changed
         max_cluster = metresToPixels(max_cluster_metres);
+        max_show = (pixels * (max_cluster_metres/1000)) /  max_cluster
+
+        $("#slider_cluster").slider("setValue", max_show.toFixed(2));
         if(zoomValues[map.getZoom()] != undefined){
            legendlabel2 = document.getElementById("legend-label-2")
             if (legendlabel2 !== null)
@@ -290,6 +295,7 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
         }
 
     });
+
     cluster = L.markerClusterGroup({
         maxClusterRadius: max_cluster,
         chunkedLoading: true,
