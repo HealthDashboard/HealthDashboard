@@ -422,7 +422,7 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
               // radius should be small ONLY if scaleRadius is true (or small radius is intended)
               // if scaleRadius is false it will be the constant radius used in pixels
               "radius": max_heatmap_pixels,
-              // if activated: uses the data maximum within the current map boundaries 
+              // if activated: uses the data maximum within the current map boundaries
               //   (there will always be a red spot with useLocalExtremas true)
               "useLocalExtrema": true,
               // which field name in your data represents the latitude - default "lat"

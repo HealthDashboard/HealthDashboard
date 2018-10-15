@@ -346,6 +346,10 @@
   justify-content: space-between;
 }
 
+.print-only {
+  display:none;
+}
+
 @media (orientation: portrait) {
   .container {
     overflow: hidden;
@@ -436,5 +440,34 @@
   .col-sm-3 {
     right: 0 !important;
     float: right !important;
+}
+
+@media print {
+  nav, .fab, .col-sm-3, .map-config {
+    display: none;
+  }
+
+  @page {
+    margin: 0.5cm;
+  }
+
+  .wrap {
+    width: 100%;
+    margin: 0;
+    float: none !important;
+  }
+
+  .print-only {
+    display: block;
+  }
+
+  body {
+    font: 12pt Georgia, "Times New Roman", Times, serif;
+    color: #000;
+  }
+
+  p {
+    widows: 3;
+    orphans: 3;
   }
 }
