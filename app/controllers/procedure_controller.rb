@@ -325,6 +325,13 @@ class ProcedureController < ApplicationController
 			result[var.to_s] = data
 		end
 
+		# Replace the values - CMPT
+		cmpt = @cmpt.map{|x| x["id"]}
+		result["cmpt"].each.with_index do |key, index|
+			indexAux = cmpt.find_index(key[0].to_s)
+			result["cmpt"][index][0] = @cmpt[indexAux]["text"]
+		end
+
 		# Replace the values - TREATMENT_TYPE
 		treatment_type = @treatments.map{|x| x["id"]}
 		result["treatment_type"].each.with_index do |key, index|
@@ -380,12 +387,25 @@ class ProcedureController < ApplicationController
 			result["gestor_ide"][index][0] = @gestor[indexAux]["text"]
 		end
 
-		# Replace the values - CID
-		#cid_primary = @cid.map{|x| x["id"]}
-		#result["cid_primary"].each.with_index do |key, index|
-		#	indexAux = cid_primary.find_index(key[0].to_s)
-		#	result["cid_primary"][index][0] = @cid[indexAux]["text"]
-		#end
+		# Replace the values - SPECIALTIES
+		specialties = @specialties.map{|x| x["id"].to_s}
+		result["specialty_id"].each.with_index do |key, index|
+			key[0] = key[0].to_s
+			indexAux = specialties.find_index(key[0].to_s)
+			result["specialty_id"][index][0] = @specialties[indexAux]["text"]
+		end
+
+		# Replace the values - DISTANCE
+		result["distance"].each.with_index do |key, index|
+			key[0] = '%.2f' % key[0].to_f
+			result["distance"][index][0] = (key[0].to_s).gsub('.', ',')
+		end
+
+		# Replace the values - DISTANCE
+		result["val_total"].each.with_index do |key, index|
+			key[0] = '%.2f' % key[0].to_f
+			result["val_total"][index][0] = (key[0].to_s).gsub('.', ',')
+		end
 
 		render json: result, status: 200
 	end
