@@ -53,6 +53,11 @@ p a:hover, p a:focus {
   width: 60vw;
 }
 
+.content-presentation {
+  width: 70vw;
+  height: 40vw;
+}
+
 .header {
   text-align: center;
   font-size: 2em;
