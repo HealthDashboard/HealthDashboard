@@ -81,11 +81,11 @@
 }
 
 .select.translateX-0 {
-  transform: translateY(230px);
+  transform: translateY(60vh);
 }
 
 .select.translateX-legendsize {
-  transform: translateY(230px) translateX(12em);
+  transform: translateY(60vh) translateX(12em);
 }
 
 .select.active.translateX-0 {
@@ -102,7 +102,7 @@
 
 .select-body {
   padding: .5em 1em .5em 1em;
-  height: 230px;
+  height: 60vh;
   overflow: auto;
 }
 
@@ -117,6 +117,10 @@
 .select-body li {
   display: inline-flex;
   align-content: center;
+}
+
+.no-wrap {
+  white-space: nowrap;
 }
 
 input[type="checkbox"] {
