@@ -23,7 +23,9 @@ var filters_text, filters, genders, start_date, end_date, dist_min, dist_max;
 //** Open Street view vars **//
 var heat, cluster, shapes, shape, clean_up_cluster, max;
 
-var id, pixels;
+var id, pixels_cluster, pixels_heatmap;
+
+var zoomValues, metresValues;
 
 //** Display name for printing **//
 var filters_print = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Grupo étnico", "Nível de instrução", "Competência",
@@ -47,6 +49,7 @@ function initProcedureMap() {
     heat = null;
     clean_up_cluster = [];
     id = "Procedure"
+
     shapes = {
         'Shape_SP.geojson': null,
         'Shape_CRS.geojson': null,
@@ -78,9 +81,38 @@ function initProcedureMap() {
         map.openPopup(popup);
     });
 
-    pixels = metresToPixels(5500)
+    pixels_cluster = metresToPixels(5500);
+    pixels_heatmap = metresToPixels(2000);
 
     L.control.scale({imperial: false, position: 'bottomright'}).addTo(map);
+    zoomValues = new Array(map.getMaxZoom() + 1);
+    metresValues = new Array(map.getMaxZoom() + 1);
+    map.on('zoom', change_sliders);
+}
+
+function change_sliders() {
+    max = 0; // reset max values because zoom level changed
+    var max_cluster_metres = $("#slider_cluster").slider("getValue")
+    var max_heatmap_metres = $("#slider_heatmap").slider("getValue") 
+    max_cluster = metresToPixels(max_cluster_metres * 1000);
+    max_heatmap = metresToPixels(max_heatmap_metres * 1000);
+
+    max_cluster_km = (pixels_cluster * (max_cluster_metres)) /  max_cluster
+    max_heatmap_km = (pixels_heatmap * (max_heatmap_metres)) / max_heatmap
+
+    $("#slider_cluster").slider("setValue", max_cluster_km.toFixed(2));
+    $("#slider_heatmap").slider("setValue", max_heatmap_km.toFixed(2));
+
+    if(zoomValues[map.getZoom()] != undefined){
+       legendlabel2 = document.getElementById("legend-label-2")
+        if (legendlabel2 !== null)
+            legendlabel2.innerText = zoomValues[map.getZoom()];
+        legendscale = document.getElementById("legend-scale")
+        if (legendscale !== null) {
+            legendscale.innerText = ("Internações num raio de " + Number(((metresValues[map.getZoom()]*max_heatmap/1000)).toFixed(2)) + " Km");
+        }
+    }
+
 }
 
 function download(dataFilters) {
@@ -273,28 +305,7 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
     var max_cluster = metresToPixels(max_cluster_metres); // convert 'max_cluster' value from metres to pixels
     var max_heatmap = metresToPixels(max_heatmap_metres);
     var maxValuesSmallClusters = 0; //variable to store the max value of small(black) clusters
-    var zoomValues = new Array(map.getMaxZoom() + 1); //creating a array to max values of each zoom level
-    var metresValues = new Array(map.getMaxZoom() + 1); //creating a array to metres PER PIXELS of each zoom level
     //the formula is: metresPerPixel = C*cos(latitude)/2^(zoomLevel + 8) where C = 40075016.686
-
-    map.on('zoom', function() {
-        max = 0; // reset max values because zoom level changed
-        max_cluster = metresToPixels(max_cluster_metres);
-        max_show = (pixels * (max_cluster_metres/1000)) /  max_cluster
-
-        $("#slider_cluster").slider("setValue", max_show.toFixed(2));
-        if(zoomValues[map.getZoom()] != undefined){
-           legendlabel2 = document.getElementById("legend-label-2")
-            if (legendlabel2 !== null)
-                legendlabel2.innerText = zoomValues[map.getZoom()];
-            legendscale = document.getElementById("legend-scale")
-            if (legendscale !== null) {
-                legendscale.innerText = ("Internações num raio de " + Number(((metresValues[map.getZoom()]*max_heatmap/1000)).toFixed(2)) + " Km");
-            }
-            $("#slider_heatmap").slider("setValue", Number(((metresValues[map.getZoom()]*max_heatmap/1000)).toFixed(2)));
-        }
-
-    });
 
     cluster = L.markerClusterGroup({
         maxClusterRadius: max_cluster,
@@ -329,7 +340,7 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
                 const metresPerPixel = 40075016.686*Math.abs(Math.cos((-23.557296000000001)*Math.PI/180))/Math.pow(2, map.getZoom()+8); //formula given by leaflet
                 metresValues[map.getZoom()] = metresPerPixel;
             }
-            $("#slider_heatmap").slider("setValue", Number(((metresValues[map.getZoom()]*max_heatmap/1000)).toFixed(2)));
+            // $("#slider_heatmap").slider("setValue", Number(((metresValues[map.getZoom()]*max_heatmap/1000)).toFixed(2)));
 
             legendlabel2 = document.getElementById("legend-label-2")
             if (legendlabel2 !== null)
@@ -755,11 +766,11 @@ function filters_value(data) {
                         tooltip: 'show',
                     });
                 }
-                $("#slider_" + i.toString()).on("slide", function(slideEvt) {
+                $("#slider_" + i.toString()).on("change", function(slideEvt) {
                     slider_min  = "input_" + slideEvt.currentTarget.id + "_min";
                     slider_max  = "input_" + slideEvt.currentTarget.id + "_max";
-                    document.getElementById(slider_min).value = slideEvt.value[0];
-                    document.getElementById(slider_max).value = slideEvt.value[1];
+                    document.getElementById(slider_min).value = slideEvt.value.newValue[0];
+                    document.getElementById(slider_max).value = slideEvt.value.newValue[1];
                 });
             }
             $("#slider_0").slider({
@@ -810,9 +821,18 @@ function dadosInput() {
         container:'#datepicker',
     });
 
-    $("#slider_cluster").slider({min: 0, max: 16, step: 0.01, value: 5.5});
+    $("#slider_cluster").slider({min: 0, max: 22, step: 0.01, value: 5.5});
+    
+    $("#slider_cluster").on("change", function(slideEvt) {
+        pixels_cluster = metresToPixels(slideEvt.value.newValue * 1000);
+    });
 
-    $("#slider_heatmap").slider({min: 0, max: 8, step: 0.01, value: 2});
+
+    $("#slider_heatmap").slider({min: 0, max: 9, step: 0.01, value: 2});
+
+    $("#slider_heatmap").on("change", function(slideEvt) {
+        pixels_heatmap  = metresToPixels(slideEvt.value.newValue * 1000);
+    });
 
     $("#slider_opacity").slider({min: 0, max: 100, step: 1, value: 40});
 
