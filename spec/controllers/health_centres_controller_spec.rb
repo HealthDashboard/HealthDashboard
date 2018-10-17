@@ -118,11 +118,15 @@ describe HealthCentresController, type: 'controller' do
 			expect(response.body).to eq('{"Specialty 1":7.0,"Specialty 2":3.0}')
 		end
 
-		it '' do 
-			id = 2
-			self.send(:get, 'specialty_distance', params: {id: id}, format: :json)
-			expect(response.status).to eq(200)
-			expect(response.body).to eq('{"0":{"0":"Specialty 2","1":"1","2":"","3":"1","4":"","5":""}}')
+        it 'should return status 200 and specialty distances' do
+            id = 1
+            self.send(:get, 'specialty_distance', params: {id: id}, format: :json)
+            expect(response.status).to eq(200)
+            expect(response.body).to eq('{"0":{"0":"Specialty 1","1":"","2":"","3":"3","4":"","5":""}}')
+            id = 2
+            self.send(:get, 'specialty_distance', params: {id: id}, format: :json)
+            expect(response.status).to eq(200)
+            expect(response.body).to eq('{"0":{"0":"Specialty 2","1":"1","2":"","3":"1","4":"","5":""}}')
 		end
 	end
 
@@ -157,10 +161,8 @@ describe HealthCentresController, type: 'controller' do
 
         describe 'Testing distances method' do
                 before :each do
-                        HealthCentre.create id: 1, cnes: 1, lat: -23.555885, long: -46.666458, created_at: "2018-10-01T17:18:05.054Z", updated_at: "2018-10-01T17:18:05.
-054Z"
-                        HealthCentre.create id: 2, cnes: 2, lat: -23.555885, long: -46.666458, created_at: "2018-10-01T17:18:05.054Z", updated_at: "2018-10-01T17:18:05.
-054Z"
+                        HealthCentre.create id: 1, cnes: 1, lat: -23.555885, long: -46.666458, created_at: "2018-10-01T17:18:05.054Z", updated_at: "2018-10-01T17:18:05.054Z"
+                        HealthCentre.create id: 2, cnes: 2, lat: -23.555885, long: -46.666458, created_at: "2018-10-01T17:18:05.054Z", updated_at: "2018-10-01T17:18:05.054Z"
                         Specialty.create id: 1, name: "Specialty 1"
                         Specialty.create id: 2, name: "Specialty 2"
 
@@ -196,4 +198,35 @@ describe HealthCentresController, type: 'controller' do
 			expect(response.body).to eq("Not found")
                 end
         end
+    describe 'Testing distance_quartis method' do
+        before :each do
+            HealthCentre.create id: 1, cnes: 1, lat: -23.555885, long: -46.666458, created_at: "2018-10-01T17:18:05.054Z", updated_at: "2018-10-01T17:18:05.054Z"
+            HealthCentre.create id: 2, cnes: 2, lat: -23.555885, long: -46.666458, created_at: "2018-10-01T17:18:05.054Z", updated_at: "2018-10-01T17:18:05.054Z"
+            Specialty.create id: 1, name: "Specialty 1"
+            Specialty.create id: 2, name: "Specialty 2"
+
+            Procedure.create id: 2, cnes_id: 1, specialty_id: 1, age_code: "TP_0A4", distance: 6.0, lat: -12.9, long: -35.0
+            Procedure.create id: 3, cnes_id: 1, specialty_id: 1, days: 50, distance: 7.0, lat: -12.9, long: -35.0
+            Procedure.create id: 4, cnes_id: 1, specialty_id: 1, cmpt: 201502, distance: 2.0, lat: 3.3, long: 1.2
+            Procedure.create id: 5, cnes_id: 2, specialty_id: 2, age_code: "TP_0A4", distance: 0.5, lat: -12.9, long: -35.0
+            Procedure.create id: 6, cnes_id: 2, specialty_id: 2, age_code: "TP_0A4", distance: 16.0, lat: -12.9, long: -35.0
+
+            Procedure.create id: 7, cnes_id: 1, specialty_id: 1, age_code: "TP_0A4", distance: 1.0, lat: -12.9, long: -35.0
+            Procedure.create id: 8, cnes_id: 1, specialty_id: 1, days: 50, distance: 5.0, lat: -12.9, long: -35.0
+            Procedure.create id: 9, cnes_id: 1, specialty_id: 1, cmpt: 201502, distance: 10.0, lat: 3.3, long: 1.2
+            Procedure.create id: 10, cnes_id: 2, specialty_id: 2, age_code: "TP_0A4", distance: 500, lat: -12.9, long: -35.0
+            Procedure.create id: 11, cnes_id: 2, specialty_id: 2, age_code: "TP_0A4", distance: 160.0, lat: -12.9, long: -35.0
+        end
+
+        it 'distance_quartis for health centre 1' do
+            self.send(:get, 'distance_quartis', params: {id: 1}, format: :json)
+            expect(response.status).to eq(200)
+            expect(JSON.parse(response.body)).to eq(["10.0", "6.0", "5.0"])
+        end
+        it 'distance_quartis for health centre 2' do
+            self.send(:get, 'distance_quartis', params: {id: 2}, format: :json)
+            expect(response.status).to eq(200)
+            expect(JSON.parse(response.body)).to eq(["500.0", "160.0", "16.0"])
+        end
+    end
 end
