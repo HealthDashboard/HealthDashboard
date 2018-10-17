@@ -187,19 +187,13 @@ class HealthCentresController < ApplicationController
       render json: result
     end
 
-    # GET /procedures_specialties/:id
-    # Params: id
-    # Return: all procedures for a specialty 
-    def procedures_specialties
-        procedures = Procedure.where(specialty_id: params[:id])
-        render json: procedures
-    end
-
     # GET /distances/:id
     # Params: id
     # Return: Number of procedures group by distance intervals for a health centre
     def distances
+        render json: "Bad request", status: 400 and return unless params[:id] != nil
         health_centre = HealthCentre.find_by(id: params[:id])
+        render json: "Not found", status: 404 and return unless health_centre != nil
         procedures = health_centre.procedures
 
         distance_metric = {'< 1 km': procedures.where("distance <= ?", 1).count,
