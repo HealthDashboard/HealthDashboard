@@ -160,7 +160,7 @@ class HealthCentresController < ApplicationController
 
     # GET /distance_quartis/:id
     # Params: id
-    # Return: Quartis distance for a helath centre
+    # Return: Quartis distance for a health centre
     def distance_quartis
         health_centre = HealthCentre.find_by(id: params[:id])
         procedures = health_centre.procedures.pluck(:distance);
