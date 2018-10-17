@@ -113,7 +113,6 @@ function change_sliders() {
         legendscale = document.getElementById("legend-scale")
         if (legendscale !== null) {
             legendscale.innerText = ("Internações num raio de " + Number(((metresValues[map.getZoom()]*max_cluster/1000)).toFixed(2)) + " Km");
-            console.log("Function 1")
         }
     }
 
@@ -384,7 +383,6 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
             legendscale = document.getElementById("legend-scale")
             if (legendscale !== null)
                 legendscale.innerText = ("Internações num raio de " + Number(((metresValues[map.getZoom()]*max_cluster/1000)).toFixed(2)) + " Km");
-                console.log("Function 2")
 
             //Falta tratar o caso de ser um ponto e não um cluster
             cluster.on('contextmenu',function(e){
@@ -410,7 +408,6 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
         },
     });
 
-    console.log("max = " + max)
     $.ajax({
         type: "GET",
         dataType: 'json',
@@ -462,9 +459,7 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
             $.each(procedures, function(index, procedure) {
                 heatmap_procedure.push([procedure[0], procedure[1], (procedure[2] / Num_procedures) * 100]);
             });
-            console.log(heatmap_procedure)
             heat = L.heatLayer(heatmap_procedure, {maxZoom: 11, radius: max_heatmap, blur: 50, gradient: {.4:"#D3C9F8",.6:"#A792F2",.7:"#7B5CEB",.8:"#4E25E4",1:"#3816B3"}}); // Add heatmap
-            console.log(heat)
             //inserting the first and last values
             legendlabel1 = document.getElementById("legend-label-1")
             if (legendlabel1 !== null)
