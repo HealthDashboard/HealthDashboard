@@ -216,7 +216,7 @@
   left: 0;
   top: 0;
   position: absolute;
-  height: 146px;
+  height: 8.8em;
   width: 290px;
   overflow: hidden;
   padding: 10px 0 10px 75px;
@@ -224,6 +224,7 @@
 
 #heatmap-leg {
   right: 25%;
+  height: 8.8em;
 }
 
 #heatmap-leg.hide {
@@ -239,7 +240,7 @@
   display: block;
   float: left;
   text-align: left;
-  height: 25px;
+  height: 1.6em;
 }
 
 .span-normal {
