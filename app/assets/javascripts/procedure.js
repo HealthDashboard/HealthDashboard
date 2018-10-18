@@ -27,8 +27,6 @@ var myStyle;
 
 var id, pixels_cluster, pixels_heatmap;
 
-var zoomValues, metresValues;
-
 //** Display name for printing **//
 var filters_print = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Grupo étnico", "Nível de instrução", "Competência",
       "Grupo do procedimento autorizado", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Total geral de diárias",
@@ -88,13 +86,10 @@ function initProcedureMap() {
     pixels_heatmap = metresToPixels(2000);
 
     L.control.scale({imperial: false, position: 'bottomright'}).addTo(map);
-    zoomValues = new Array(map.getMaxZoom() + 1);
-    metresValues = new Array(map.getMaxZoom() + 1);
     map.on('zoom', change_sliders);
 }
 
 function change_sliders() {
-    max = 0; // reset max values because zoom level changed
     var max_cluster_metres = $("#slider_cluster").slider("getValue")
     var max_heatmap_metres = $("#slider_heatmap").slider("getValue")
     max_cluster = metresToPixels(max_cluster_metres * 1000);
@@ -106,16 +101,10 @@ function change_sliders() {
     $("#slider_cluster").slider("setValue", max_cluster_km.toFixed(2));
     $("#slider_heatmap").slider("setValue", max_heatmap_km.toFixed(2));
 
-    if(zoomValues[map.getZoom()] != undefined){
-       legendlabel2 = document.getElementById("legend-label-2")
-        if (legendlabel2 !== null)
-            legendlabel2.innerText = zoomValues[map.getZoom()];
-        legendscale = document.getElementById("legend-scale")
-        if (legendscale !== null) {
-            legendscale.innerText = ("Internações num raio de " + Number(((metresValues[map.getZoom()]*max_cluster/1000)).toFixed(2)) + " Km");
-        }
+    legendscale = document.getElementById("legend-scale")
+    if (legendscale !== null) {
+        legendscale.innerText = ("Internações num raio de " + max_heatmap_km.toFixed(2) + "Km")
     }
-
 }
 
 function download(dataFilters) {
@@ -329,15 +318,10 @@ function metresToPixels(metres) {
 }
 
 function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_metres, heatmap_opacity, function_maker) {
-    var max = 0;
     var max_cluster = metresToPixels(max_cluster_metres); // convert 'max_cluster' value from metres to pixels
     var max_heatmap = metresToPixels(max_heatmap_metres);
     var maxValuesSmallClusters = 0; //variable to store the max value of small(black) clusters
     //the formula is: metresPerPixel = C*cos(latitude)/2^(zoomLevel + 8) where C = 40075016.686
-
-    map.on('zoom', function() {
-       max = 0; // reset max values because zoom level changed
-    });
 
     cluster = L.markerClusterGroup({
         maxClusterRadius: max_cluster,
@@ -360,29 +344,8 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
                 size = 84;
             }
 
-            if (n > max) {
-                max = n;
-            }
-
-            if ((zoomValues[map.getZoom()] == undefined) || zoomValues[map.getZoom()] < max || zoomValues[map.getZoom()] < maxValuesSmallClusters) {
-                if(max < maxValuesSmallClusters){
-                    zoomValues[map.getZoom()] = maxValuesSmallClusters; //if zoomValues[current Zoom] is empty, then store the value
-                }
-                else{
-                    zoomValues[map.getZoom()] = max; //if zoomValues[current Zoom] is empty, then store the value
-                }
-                //the formula is: metresPerPixel = C*cos(latitude)/2^(zoomLevel + 8) where C = 40075016.686
-                const metresPerPixel = 40075016.686*Math.abs(Math.cos((-23.557296000000001)*Math.PI/180))/Math.pow(2, map.getZoom()+8); //formula given by leaflet
-                metresValues[map.getZoom()] = metresPerPixel;
-            }
-            // $("#slider_heatmap").slider("setValue", Number(((metresValues[map.getZoom()]*max_heatmap/1000)).toFixed(2)));
-
-            legendlabel2 = document.getElementById("legend-label-2")
-            if (legendlabel2 !== null)
-                legendlabel2.innerText = zoomValues[map.getZoom()];
-            legendscale = document.getElementById("legend-scale")
-            if (legendscale !== null)
-                legendscale.innerText = ("Internações num raio de " + Number(((metresValues[map.getZoom()]*max_cluster/1000)).toFixed(2)) + " Km");
+            //Changes values in legend
+            change_sliders();
 
             //Falta tratar o caso de ser um ponto e não um cluster
             cluster.on('contextmenu',function(e){
@@ -456,20 +419,42 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
             cluster.addLayers(markerList);
             map.addLayer(cluster);
 
+            var max_value_heatmap = 0;
             $.each(procedures, function(index, procedure) {
-                heatmap_procedure.push([procedure[0], procedure[1], (procedure[2] / Num_procedures) * 100]);
+                heatmap_procedure.push({lat: procedure[0], lng: procedure[1], count: procedure[2]})
+                if (procedure[2] > max_value_heatmap)
+                    max_value_heatmap = procedure[2]
+
             });
-            heat = L.heatLayer(heatmap_procedure, {maxZoom: 11, radius: max_heatmap, blur: 50, gradient: {.4:"#D3C9F8",.6:"#A792F2",.7:"#7B5CEB",.8:"#4E25E4",1:"#3816B3"}}); // Add heatmap
+
+            var cfg = {
+              // radius should be small ONLY if scaleRadius is true (or small radius is intended)
+              // if scaleRadius is false it will be the constant radius used in pixels
+              "radius": max_heatmap,
+              // if activated: uses the data maximum within the current map boundaries 
+              //   (there will always be a red spot with useLocalExtremas true)
+              "useLocalExtrema": true,
+              // which field name in your data represents the latitude - default "lat"
+              latField: 'lat',
+              // which field name in your data represents the longitude - default "lng"
+              lngField: 'lng',
+              // which field name in your data represents the data value - default "value"
+              valueField: 'count',
+              gradient: { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"},
+              opacity: heatmap_opacity / 100,
+              onExtremaChange: makeLegend
+            };
+
+            heatdata = {max: max_value_heatmap, data: heatmap_procedure}
+            heat = new HeatmapOverlay(cfg);
+            heat.setData(heatdata);
+
             //inserting the first and last values
             legendlabel1 = document.getElementById("legend-label-1")
             if (legendlabel1 !== null)
                 legendlabel1.innerText = 0.0;
 
             map.addLayer(heat);
-
-            //changing heatmap opacity
-            X = document.getElementsByClassName("leaflet-heatmap-layer")
-            X[0].style["opacity"] = heatmap_opacity / 100;
 
             //changing legend opacity
             X = document.getElementsByClassName("span-normal")
@@ -478,6 +463,11 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
             $('#loading_overlay').hide();
         }
     });
+}
+
+function makeLegend(e) {
+    legendlabel2 = document.getElementById("legend-label-2")
+    legendlabel2.innerText = e.max
 }
 
 function CustomMarkerOnClick(e) {

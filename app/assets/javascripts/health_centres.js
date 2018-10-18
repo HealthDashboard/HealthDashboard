@@ -130,7 +130,7 @@ function setup_cluster(id, lat, long) {
     hc_id = id;
 
     $.getJSON(procedure_path, function(procedures) {
-        handleLargeCluster(map, procedure_path, null, 5500, 2000, 80, clickOnMarkersHealthCentre);
+        handleLargeCluster(map, procedure_path, null, 5500, 2000, 60, clickOnMarkersHealthCentre);
         create_circles(id, lat, long);
     });
 
