@@ -240,6 +240,19 @@ input[type="radio"] {
   visibility: hidden;
 }
 
+.select-body {
+  height: 300px !important;
+  z-index: 2;
+}
+
+.select.translateX-legendsize {
+  transform: translateY(300px) translateX(12em) !important;
+}
+
+.select.active.translateX-legendsize {
+  transform: translateY(0) translateX(12em) !important;
+}
+
 @media (orientation: portrait){
   .page {
     flex-direction: column;
