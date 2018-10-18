@@ -345,6 +345,7 @@
   display: flex;
   justify-content: space-between;
 }
+
 @media (orientation: portrait) {
   .container {
     overflow: hidden;
@@ -364,6 +365,7 @@
     z-index: 3;
     transition: transform 250ms ease-in-out;
     overflow: auto;
+    width: calc(100vw - (100vw - 100%)) !important;
   }
 
   .col-sm-3:last-child {
@@ -428,4 +430,10 @@
 
   .fab.active {
   }
+}
+
+@media (max-width: 1000px) and (orientation: landscape) {
+  .col-sm-3 {
+    right: 0 !important;
+    float: right !important;
 }
