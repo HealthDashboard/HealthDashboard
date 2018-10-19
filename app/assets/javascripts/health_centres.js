@@ -22,7 +22,7 @@ function initialize() {
     vars = [];
     clean_up_cluster = [];
     health_centre_markers = [];
-    id = "HealthCentre"
+    shapes_setor = []
     shapes = {
         'Shape_SP.geojson': null,
         'Shape_CRS.geojson': null,

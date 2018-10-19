@@ -16,10 +16,9 @@ var specialties_color = {
 
 var filters_print = ["Estabelecimento de ocorrência", "Competência (aaaamm)", "Especialidade do leito", 
 "Caráter do atendimento", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", 
-"Diagnóstico secundário 2 (CID-10)",  "Complexidade", "Faixa etária", "Raça/Cor", "Nível de instrução",
-"Tipo de financiamento", "Grupo étnico", "Distrito Administrativo", "Subprefeitura", 
-"Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Gestão", "Total geral de diárias",
-      "Diárias UTI", "Diárias UI", "Dias de permanência", "Valor da parcela"];
+"Diagnóstico secundário 2 (CID-10)",  "Complexidade", "Tipo de Financiamento", "Faixa etária", "Raça/Cor", "Nível de instrução", 
+"Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", 
+"Gestão", "Total geral de diárias", "Diárias UTI", "Diárias UI", "Dias de permanência", "Valor da parcela"];
 
 
 var dynamic = false;
