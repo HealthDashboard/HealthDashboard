@@ -22,6 +22,10 @@ var filters_print = ["Estabelecimento de ocorrência", "Faixa etária", "Especia
 var dynamic = false;
 var data = null;
 var dashboard_legend_clicked = false;
+var filters_text = null;
+var start_date = null;
+var end_date = null;
+var genders = null;
 
 function init_dashboard_chart() {
     dynamic = false;
@@ -29,9 +33,17 @@ function init_dashboard_chart() {
 
     if (window._data_filters != null && window._data_filters != []) {
         dynamic = true;
-        data = window._data_filters
+        data = window._data_filters;
+        filters_text = window._filters_text;
+        start_date = window._start_date;
+        end_date = window._end_date;
+        genders = window._genders;
         var element = document.getElementById("avarage_distance_div").style.visibility = "hidden";
         window._data_filters = null;
+        window._filters_text = null;
+        window._start_date = null;
+        window._end_date = null;
+        window._genders = null;
 
         // var filters_div_text = '<div style="position: relative">';
         // $.each(filters_print, function(index, value){
@@ -64,11 +76,37 @@ function init_dashboard_chart() {
 
     } else {
         dynamic = false;
-        document.getElementById("filters-div").style.display = "none";
+        document.getElementById("filters-text").style.display = "none";
     }
     google.charts.setOnLoadCallback(create_dashboard_charts);
     dashboard_legend();
     animate_legend();
+    filters_show();
+}
+
+function filters_show(){
+    var filters_div_text = "";
+    $.each(filters_print, function(index, value){
+      if (filters_text[index] != null && filters_text[index] != "")
+        filters_div_text = filters_div_text.concat("<br /><strong>" + value + ": </strong>" + filters_text[index]);
+      });
+  
+      if (genders[0] != null)
+        filters_div_text = filters_div_text.concat("<br /><strong>Sexo:</strong> " + genders.join(", "));
+  
+      if (start_date != null && start_date != "")
+        filters_div_text = filters_div_text.concat("<br /><strong>Data mínima:</strong> " + start_date);
+  
+      if (end_date != null && end_date != "")
+        filters_div_text = filters_div_text.concat("<br /><strong>Data máxima:</strong> " + end_date);
+  
+      if (dist_min != null)
+        filters_div_text = filters_div_text.concat("<br /><strong>Distância mínima:</strong> " + dist_min);
+  
+      if (dist_max != null)
+        filters_div_text = filters_div_text.concat("<br /><strong>Distância máxima:</strong> " + dist_max);
+    document.getElementById("filters-text").innerHTML = filters_div_text;
+    console.log(filters_div_text);
 }
 
 function create_dashboard_charts() {
