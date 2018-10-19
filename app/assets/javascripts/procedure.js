@@ -209,7 +209,7 @@ function setor_censitario(e) {
         dataType: "json",
         url: `SetorCensitario/Setor_with_pop-${e.target.name_sc}.json`,
         success: function(data) {
-            shape = new L.geoJson(data, 
+            shape = new L.geoJson(data,
                 {onEachFeature: function(feature, layer) {
                     layer.bindTooltip(`População: ${feature.properties.POPULACAO}`, {closeButton: false});
                 }}).addTo(map);
@@ -381,7 +381,7 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
             heatmap_procedure = [];
 
             $.each(procedures, function(index, latlong){
-                icon = L.divIcon({ html: latlong[2], className: 'map-marker marker-single a-class', iconSize: L.point(30, 30) });
+                icon = L.divIcon({ html: latlong[2], className: 'map-marker marker-single a-class', iconSize: L.point(34, 34) });
                 marker = L.marker(L.latLng(latlong[0], latlong[1]), {icon: icon})
                 marker.latlong = [latlong[0], latlong[1]];
                 marker.number = latlong[2];
