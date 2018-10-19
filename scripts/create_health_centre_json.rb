@@ -2,9 +2,6 @@
 
 require 'json'
 
-APP_PATH = File.expand_path('../../config/application',  __FILE__)
-require File.expand_path('../../config/boot',  __FILE__)
-require APP_PATH
 ## set Rails.env here if desired
 Rails.application.require_environment!
 
@@ -14,7 +11,7 @@ def create_list
 	health_centres.each do |hc|
 		hash_aux = {}
 		hash_aux["id"] = hc.cnes.to_s
-		hash_aux["text"] = hc.name
+		hash_aux["text"] = hc.name.titlecase
 		list.push(hash_aux)
 	end
 
