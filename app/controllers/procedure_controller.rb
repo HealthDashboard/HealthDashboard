@@ -431,6 +431,41 @@ class ProcedureController < ApplicationController
 			end
 		end
 
+		# Replace the values - CID_PRIMARY
+		#"cid_primary", "cid_secondary", "cid_secondary2"
+		cid_primary = @cid.map{|x| x["id"].to_s}
+		result["cid_primary"].each.with_index do |key, index|
+			unless key.nil?
+				key[0] = key[0].to_s
+				unless cid_primary.find_index(key[0].to_s).nil?
+					indexAux = cid_primary.find_index(key[0].to_s)
+					result["cid_primary"][index][0] = @cid[indexAux]["text"]
+				end
+			end
+		end
+
+		cid_secondary = @cid.map{|x| x["id"].to_s}
+		result["cid_secondary"].each.with_index do |key, index|
+			unless key.nil?
+				key[0] = key[0].to_s
+				unless cid_secondary.find_index(key[0].to_s).nil?
+					indexAux = cid_secondary.find_index(key[0].to_s)
+					result["cid_secondary"][index][0] = @cid[indexAux]["text"]
+				end
+			end
+		end
+
+		cid_secondary2 = @cid.map{|x| x["id"].to_s}
+		result["cid_secondary2"].each.with_index do |key, index|
+			unless key.nil?
+				key[0] = key[0].to_s
+				unless cid_secondary2.find_index(key[0].to_s).nil?
+					indexAux = cid_secondary2.find_index(key[0].to_s)
+					result["cid_secondary2"][index][0] = @cid[indexAux]["text"]
+				end
+			end
+		end
+
 		render json: result, status: 200
 	end
 
