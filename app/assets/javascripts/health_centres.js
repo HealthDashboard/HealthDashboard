@@ -130,7 +130,7 @@ function setup_cluster(id, lat, long) {
     hc_id = id;
 
     $.getJSON(procedure_path, function(procedures) {
-        handleLargeCluster(map, procedure_path, null, 5500, 2000, 60, clickOnMarkersHealthCentre);
+        handleLargeCluster(map, procedure_path, null, 80, 30, 60, clickOnMarkersHealthCentre);
         create_circles(id, lat, long);
     });
 
@@ -336,7 +336,10 @@ function create_homepage_charts(id) {
       ).then(function(){
           for (i = 0; i < Object.keys(dataSpecialty).length; i++) {
             for (j = 1; j < 5; j++) {
-              dataSpecialty[i][j] = parseInt(dataSpecialty[i][j]);
+              if (dataSpecialty[i][j] !== "")
+                dataSpecialty[i][j] = parseInt(dataSpecialty[i][j]);
+              else
+                dataSpecialty[i][j] = 0;
             }
             dataSpecialty[i] = Object.values(dataSpecialty[i]);
           }

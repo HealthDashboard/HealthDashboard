@@ -19,13 +19,14 @@ var health_centre_markers;
 
 //** Print vars **//
 var filters_text, filters, genders, start_date, end_date, dist_min, dist_max;
+var printPlugin;
 
 //** Open Street view vars **//
 var heat, cluster, shapes, shape, clean_up_cluster, max, shapes_setor;
 
 var myStyle;
 
-var id, pixels_cluster, pixels_heatmap;
+var pixels_cluster, pixels_heatmap;
 
 //** Display name for printing **//
 var filters_print = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Grupo étnico", "Nível de instrução", "Competência",
@@ -48,7 +49,6 @@ function initProcedureMap() {
     cluster = null;
     heat = null;
     clean_up_cluster = [];
-    id = "Procedure"
 
     shapes = {
         'Shape_SP.geojson': null,
@@ -87,6 +87,10 @@ function initProcedureMap() {
 
     L.control.scale({imperial: false, position: 'bottomright'}).addTo(map);
     map.on('zoom', change_sliders);
+
+    printPlugin = L.easyPrint({
+        hidden: true
+    }).addTo(map);
 }
 
 function change_sliders() {
@@ -299,7 +303,7 @@ function buscar(data) {
 
     // handling all cluster now
     health_centres_makers(health_centres);
-    handleLargeCluster(map, "procedure/proceduresClusterPoints", data, metres_bounds_cluster, metres_bounds_heatmap, heatmap_opacity, CustomMarkerOnClick);
+    handleLargeCluster(map, "procedure/proceduresClusterPoints", data, metresToPixels(metres_bounds_cluster), metresToPixels(metres_bounds_heatmap), heatmap_opacity, CustomMarkerOnClick);
 
     // Divida tecnica
     checked = $('input[name=optCheckbok]:checked', '#checkbox-list');
@@ -317,14 +321,9 @@ function metresToPixels(metres) {
     return metres / metresPerPixel;
 }
 
-function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_metres, heatmap_opacity, function_maker) {
-    var max_cluster = metresToPixels(max_cluster_metres); // convert 'max_cluster' value from metres to pixels
-    var max_heatmap = metresToPixels(max_heatmap_metres);
-    var maxValuesSmallClusters = 0; //variable to store the max value of small(black) clusters
-    //the formula is: metresPerPixel = C*cos(latitude)/2^(zoomLevel + 8) where C = 40075016.686
-
+function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pixels, heatmap_opacity, function_maker) {
     cluster = L.markerClusterGroup({
-        maxClusterRadius: max_cluster,
+        maxClusterRadius: max_cluster_pixels,
         chunkedLoading: true,
         iconCreateFunction: function(cluster) {
             var markers = cluster.getAllChildMarkers();
@@ -380,7 +379,6 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
         success: function(procedures) {
             markerList = [];
             heatmap_procedure = [];
-            Num_procedures = 0;
 
             $.each(procedures, function(index, latlong){
                 icon = L.divIcon({ html: latlong[2], className: 'map-marker marker-single a-class', iconSize: L.point(30, 30) });
@@ -411,10 +409,6 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
                     map.openPopup(popup_cluster);
                 });
                 markerList.push(marker);
-                Num_procedures += latlong[2];
-                if(maxValuesSmallClusters < latlong[2]){
-                    maxValuesSmallClusters = latlong[2];
-                }
             });
             cluster.addLayers(markerList);
             map.addLayer(cluster);
@@ -430,7 +424,7 @@ function handleLargeCluster(map, path, data, max_cluster_metres, max_heatmap_met
             var cfg = {
               // radius should be small ONLY if scaleRadius is true (or small radius is intended)
               // if scaleRadius is false it will be the constant radius used in pixels
-              "radius": max_heatmap,
+              "radius": max_heatmap_pixels,
               // if activated: uses the data maximum within the current map boundaries 
               //   (there will always be a red spot with useLocalExtremas true)
               "useLocalExtrema": true,
@@ -658,69 +652,7 @@ function graphs() {
 
 //** Called when "Imprimir" butotn is clicked, opens a print dialog **//
 function print_maps() {
-    const $body = $('body');
-    const $mapContainer = $('.map-wrapper');
-    const $mapContainerParent = $mapContainer.parent();
-    const $printContainer = $('<div style="position:relative;">');
-    mapSize = $mapContainer.height();
-    const $info = $('<div style="position: relative"><h4>Autorizações de Internação Hospitalar, AIH - tipo 1 (Normal),' +
-                    ' mapeadas pelo endereço de residência do paciente deslocadas para o centróide do setor censitário ' +
-                    'correspondente.</h4></div>');
-    const $space_map = $('<div style="height: ' + (mapSize + 150) + 'px;"></div>');
-
-    var filters_div_text = '<div style="position: relative">';
-    $.each(filters_print, function(index, value){
-      if (filters_text[index] != null && filters_text[index] != "")
-          filters_div_text = filters_div_text.concat("<br />" + value + ": " + filters_text[index]);
-    });
-
-    if (genders[0] != null)
-      filters_div_text = filters_div_text.concat("<br />Sexo: " + genders.join(", "));
-
-    if (start_date != null && start_date != "")
-      filters_div_text = filters_div_text.concat("<br />Data mínima: " + start_date);
-
-    if (end_date != null && end_date != "")
-      filters_div_text = filters_div_text.concat("<br />Data máxima: " + end_date);
-
-    if (dist_min != null)
-      filters_div_text = filters_div_text.concat("<br />Distância mínima: " + dist_min);
-
-    if (dist_max != null)
-      filters_div_text = filters_div_text.concat("<br />Distância máxima: " + dist_max);
-
-    filters_div_text = filters_div_text.concat("</div>");
-    const $filters_div = $(filters_div_text);
-
-    $printContainer
-      .height(mapSize + 100)
-      .append($mapContainer)
-      .append($space_map)
-      .append($info)
-      .append($filters_div)
-      .prependTo($body);
-
-    const $content = $bodyslider_cluster
-      .children()
-      .not($printContainer)
-      .not('script')
-      .detach();
-
-    /**
-     * Needed for those who use Bootstrap 3.x, because some of
-     * its @media print styles ain't play nicely when printing.
-     */
-    const $patchedStyle = $('<style media="print">')
-      .text('img { max-width: none !important; } a[href]:after { content: ""; }')
-      .appendTo('head');
-
-    window.print();
-
-    $body.prepend($content);
-    $mapContainerParent.prepend($mapContainer);
-
-    $printContainer.remove();
-    $patchedStyle.remove();
+    printPlugin.printMap('CurrentSize', 'map');
 }
 
 function filters_value(data) {
