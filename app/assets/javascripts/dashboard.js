@@ -14,9 +14,12 @@ var specialties_color = {
  "PSIQUIATRIA EM HOSPITAL-DIA": "#F1573F"
 }
 
-var filters_print = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Grupo étnico", "Nível de instrução", "Competência",
-      "Grupo do procedimento autorizado", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Total geral de diárias",
-      "Diárias UTI", "Diárias UI", "Dias de permanência", "Tipo de financiamento", "Valor Total", "Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Complexidade", "Gestão"];
+var filters_print = ["Estabelecimento de ocorrência", "Competência (aaaamm)", "Especialidade do leito", 
+"Caráter do atendimento", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", 
+"Diagnóstico secundário 2 (CID-10)",  "Complexidade", "Faixa etária", "Raça/Cor", "Nível de instrução",
+"Tipo de financiamento", "Grupo étnico", "Distrito Administrativo", "Subprefeitura", 
+"Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Gestão", "Total geral de diárias",
+      "Diárias UTI", "Diárias UI", "Dias de permanência", "Valor da parcela"];
 
 
 var dynamic = false;
@@ -38,50 +41,23 @@ function init_dashboard_chart() {
         start_date = window._start_date;
         end_date = window._end_date;
         genders = window._genders;
-        var element = document.getElementById("avarage_distance_div").style.visibility = "hidden";
+        var element = document.getElementById("avarage_distance_div").style.display = "none";
         window._data_filters = null;
         window._filters_text = null;
         window._start_date = null;
         window._end_date = null;
         window._genders = null;
 
-        // var filters_div_text = '<div style="position: relative">';
-        // $.each(filters_print, function(index, value){
-        //   console.log(index)
-        //   console.log(data[index])
-        //   console.log(data)
-        //   console.log(filters_print[index])
-        //   if (data[index] != null && data[index] != "")
-        //       filters_div_text = filters_div_text.concat("<br />" + value + ": " + data[index]);
-        // });
-        //
-        // if (genders[0] != null)
-        //   filters_div_text = filters_div_text.concat("<br />Sexo: " + genders.join(", "));
-        //
-        // if (start_date != null && start_date != "")
-        //   filters_div_text = filters_div_text.concat("<br />Data mínima: " + start_date);
-        //
-        // if (end_date != null && end_date != "")
-        //   filters_div_text = filters_div_text.concat("<br />Data máxima: " + end_date);
-        //
-        // if (dist_min != null)
-        //   filters_div_text = filters_div_text.concat("<br />Distância mínima: " + dist_min);
-        //
-        // if (dist_max != null)
-        //   filters_div_text = filters_div_text.concat("<br />Distância máxima: " + dist_max);
-        //
-        // filters_div_text = filters_div_text.concat("</div>");
-        // console.log(filters_div_text)
-        // document.getElementById("filters-text").innerHTML = filters_div_text;
+        filters_show();
 
     } else {
         dynamic = false;
-        document.getElementById("filters-text").style.display = "none";
+        document.getElementById("filters-div").style.display = "none";
+
     }
     google.charts.setOnLoadCallback(create_dashboard_charts);
     dashboard_legend();
     animate_legend();
-    filters_show();
 }
 
 function filters_show(){
@@ -105,6 +81,7 @@ function filters_show(){
   
       if (dist_max != null)
         filters_div_text = filters_div_text.concat("<br /><strong>Distância máxima:</strong> " + dist_max);
+    filters_div_text = filters_div_text.concat("<br/><br/>");
     document.getElementById("filters-text").innerHTML = filters_div_text;
     console.log(filters_div_text);
 }
