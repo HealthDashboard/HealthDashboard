@@ -436,7 +436,7 @@ function create_chart(data, dataNormalized){
           saveAsImage : {show: true}
         }
       },
-      // color: ["#B9D8C2", "#84C8C2", "#2066A9", "#19407F"],
+      color: ["#B9D8C2", "#84C8C2", "#2066A9", "#19407F"],
       grid: {
         left: '0',
         right: '25px',
