@@ -241,9 +241,9 @@ function change() {
 function getData() {
     var sexo_masculino = document.getElementById('sexo_masculino');
     var sexo_feminino = document.getElementById('sexo_feminino');
-    var genders = [];
-    var filters = [];
-    var filters_text = [];
+    genders = [];
+    filters = [];
+    filters_text = [];
 
     for (i = 0; i < NUM_FILTERS; i++) {
         var aux = [];
@@ -648,6 +648,10 @@ function clearMap() {
 function graphs() {
     var w = window.open('dados-gerais');
     w._data_filters = getData();
+    w._filters_text = filters_text;
+    w._genders = genders;
+    w._start_date = start_date;
+    w._end_date = end_date;
 }
 
 //** Called when "Imprimir" butotn is clicked, opens a print dialog **//
