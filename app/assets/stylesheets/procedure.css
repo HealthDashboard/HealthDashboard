@@ -27,7 +27,7 @@
   padding: .25em .5em 0 .5em;
   text-align: center;
   margin-bottom: 5px;
-  transform: translateX(6.7em);
+  transform: translateX(9.3em);
   cursor: pointer;
   transition: transform 250ms ease-in-out;
 }

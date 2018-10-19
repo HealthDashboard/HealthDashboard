@@ -5,7 +5,7 @@ var markerCluster;
 var hcMarkers;
 
 var radius = [10000, 5000, 1000]
-var colors = ['#003300', '#15ff00', '#ff0000', "#f5b979" , "#13f1e8" ,  "#615ac7", "#8e3a06", "#b769ab", "#df10eb"];
+var colors = ['#587C7C', '#013F5E', '#007C84', "#BBE0CE", "#9EA615", "#E8D666", "#FEDCC1", "#F7A08C", "#F1573F"];
 var colors_circle = ['#FF4444', '#44FF44', '#4444FF']
 
 var hc_id = 0;

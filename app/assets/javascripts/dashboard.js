@@ -3,16 +3,21 @@ $(document).ready(function() {
 });
 
 var specialties_color = {
- "CIRURGIA":'#003300',
- "OBSTETRÍCIA":'#15FF00',
- "CLINICA MÉDICA":'#FF0000',
- "CUIDADOS PROLONGADOS":"#F5B979",
- "PSIQUIATRIA":"#13F1E8",
- "TISIOLOGIA":"#615AC7",
- "PEDIATRIA":"#8E3A06",
- "REABILITAÇÃO":"#B769AB",
- "PSIQUIATRIA EM HOSPITAL-DIA": "#DF10EB"
+ "CIRURGIA":'#587C7C',
+ "OBSTETRÍCIA":'#013F5E',
+ "CLINICA MÉDICA":'#007C84',
+ "CUIDADOS PROLONGADOS":"#BBE0CE",
+ "PSIQUIATRIA":"#9EA615",
+ "TISIOLOGIA":"#E8D666",
+ "PEDIATRIA":"#FEDCC1",
+ "REABILITAÇÃO":"#F7A08C",
+ "PSIQUIATRIA EM HOSPITAL-DIA": "#F1573F"
 }
+
+var filters_print = ["Estabelecimento de ocorrência", "Faixa etária", "Especialidade do leito", "Caráter do atendimento", "Grupo étnico", "Nível de instrução", "Competência",
+      "Grupo do procedimento autorizado", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Diagnóstico secundário 3 (CID-10)", "Total geral de diárias",
+      "Diárias UTI", "Diárias UI", "Dias de permanência", "Tipo de financiamento", "Valor Total", "Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Complexidade", "Gestão"];
+
 
 var dynamic = false;
 var data = null;
@@ -27,8 +32,39 @@ function init_dashboard_chart() {
         data = window._data_filters
         var element = document.getElementById("avarage_distance_div").style.visibility = "hidden";
         window._data_filters = null;
+
+        // var filters_div_text = '<div style="position: relative">';
+        // $.each(filters_print, function(index, value){
+        //   console.log(index)
+        //   console.log(data[index])
+        //   console.log(data)
+        //   console.log(filters_print[index])
+        //   if (data[index] != null && data[index] != "")
+        //       filters_div_text = filters_div_text.concat("<br />" + value + ": " + data[index]);
+        // });
+        //
+        // if (genders[0] != null)
+        //   filters_div_text = filters_div_text.concat("<br />Sexo: " + genders.join(", "));
+        //
+        // if (start_date != null && start_date != "")
+        //   filters_div_text = filters_div_text.concat("<br />Data mínima: " + start_date);
+        //
+        // if (end_date != null && end_date != "")
+        //   filters_div_text = filters_div_text.concat("<br />Data máxima: " + end_date);
+        //
+        // if (dist_min != null)
+        //   filters_div_text = filters_div_text.concat("<br />Distância mínima: " + dist_min);
+        //
+        // if (dist_max != null)
+        //   filters_div_text = filters_div_text.concat("<br />Distância máxima: " + dist_max);
+        //
+        // filters_div_text = filters_div_text.concat("</div>");
+        // console.log(filters_div_text)
+        // document.getElementById("filters-text").innerHTML = filters_div_text;
+
     } else {
         dynamic = false;
+        document.getElementById("filters-div").style.display = "none";
     }
     google.charts.setOnLoadCallback(create_dashboard_charts);
     dashboard_legend();
@@ -113,7 +149,7 @@ function create_analise() {
         // title:'Porcentagem de Internações por distância percorrida',
         width: 550,
         height: 550,
-        slices: get_color_slice()
+        colors: ["#B9D8C2", "#84C8C2", "#2066A9", "#19407F"],
     };
     if (dynamic == false) {
         var path = '/distance_metric.json'
