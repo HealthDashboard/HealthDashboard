@@ -377,7 +377,7 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
 
             $.each(procedures, function(index, latlong){
                 icon = L.divIcon({ html: latlong[2], className: 'map-marker marker-single a-class', iconSize: L.point(34, 34) });
-                marker = L.marker(L.latLng(latlong[0], latlong[1]), {icon: icon})
+                marker = L.marker(L.latLng(latlong[0], latlong[1]), {icon: icon, title: latlong[2] + ' internações no mesmo setor censitário'})
                 marker.latlong = [latlong[0], latlong[1]];
                 marker.number = latlong[2];
                 marker.clusterOpen = false;

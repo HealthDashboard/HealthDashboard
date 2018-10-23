@@ -8,13 +8,9 @@
 }
 
 .map-marker.marker-single {
-  background: black;
+  background: rgb(220, 168, 133);
   line-height: 34px;
   font-size: 16px;
-}
-
-.map-marker.marker-single:hover {
-  background: rgb(100, 100, 100);
 }
 
 .map-marker.marker-5k {
