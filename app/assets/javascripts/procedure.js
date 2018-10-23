@@ -528,27 +528,17 @@ function markerOnClick(e) {
         $.getJSON(proceduresInfo_path, function(procedure) {
             cnes = procedure[0].cnes_id;
             $.getJSON("procedure/healthCentresCnes", {cnes: cnes.toString()}, function(hc_latlong) {
-                path_distance_real = "http:\/\/router.project-osrm.org\/route\/v1\/driving\/"
-                + hc_latlong[0][1] + "," + hc_latlong[0][0] + ";" + procedure[0].long + ","
-                + procedure[0].lat + "?overview=false";
+                text =  "<strong>Estabelecimento: </strong>" + health_centres_array[parseInt(cnes)] + "<br>";
+                text += "<strong>Sexo: </strong>" + sexp_var[procedure[0].gender] + "<br>";
+                text +=  "<strong>Idade: </strong>" + procedure[0].age_number + "<br>";
+                text += "<strong>CID: </strong>" + cid_array[procedure[0].cid_primary] + "<br>";
+                text += "<strong>CRS: </strong>" + procedure[0].CRS + "<br>";
+                text += "<strong>Data: </strong>" + procedure[0].date + "<br>";
+                text += "<strong>Distância: </strong>" + parseFloat(procedure[0].distance).toFixed(1).replace(".", ",") + " Km <br>";
 
-                $.getJSON(path_distance_real, function(distance) { //get Real distance usign router.project-osrm.org
-                    v_distance = parseFloat(distance.routes[0].distance);
-                    v_distance = v_distance / 1000; // m -> km
-
-                    text =  "<strong>Estabelecimento: </strong>" + health_centres_array[parseInt(cnes)] + "<br>";
-                    text += "<strong>Sexo: </strong>" + sexp_var[procedure[0].gender] + "<br>";
-                    text +=  "<strong>Idade: </strong>" + procedure[0].age_number + "<br>";
-                    text += "<strong>CID: </strong>" + cid_array[procedure[0].cid_primary] + "<br>";
-                    text += "<strong>CRS: </strong>" + procedure[0].CRS + "<br>";
-                    text += "<strong>Data: </strong>" + procedure[0].date + "<br>";
-                    text += "<strong>Distância: </strong>" + parseFloat(procedure[0].distance).toFixed(1).replace(".", ",") + " Km <br>";
-                    text += "<strong>Distância viária: </strong>" + v_distance.toFixed(1).replace(".", ",") + " Km <br>";
-
-                    e.target.bindPopup(text, {direction:'top', cnes: cnes});
-                    e.target.openPopup();
-                    health_centres_makers(cnes);
-                });
+                e.target.bindPopup(text, {direction:'top', cnes: cnes});
+                e.target.openPopup();
+                health_centres_makers(cnes);
             });
         });
     } else {
