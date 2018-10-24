@@ -1,5 +1,8 @@
 development:
   adapter: postgresql
+  host: <%= ENV["POSTGRES_HOST"] %>
+  username: <%= ENV["POSTGRES_USER"] %>
+  password: <%= ENV["POSTGRES_PASSWORD"] %>
   database: my_database_development
   pool: 5
   timeout: 5000

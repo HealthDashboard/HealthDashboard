@@ -1,0 +1,28 @@
+version: '3'
+services:
+  health-dashboard:
+    container_name: health-dashboard
+    image: health-dashboard:latest
+    build:
+      dockerfile: Dockerfile
+      context: .
+    environment:
+    - POSTGRES_HOST=postgresql
+    - POSTGRES_USER=root
+    - POSTGRES_PASSWORD=root
+    links:
+    - postgresql
+    ports:
+    - "3000:3000"
+  postgresql:
+    container_name: postgresql
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+    - POSTGRES_USER=root
+    - POSTGRES_DB=root
+    - POSTGRES_PASSWORD=root
+    #    volumes:
+    #  - ./tmp/db:/var/lib/postgresql/data
