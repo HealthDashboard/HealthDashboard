@@ -1,11 +1,4 @@
 class HealthCentresController < ApplicationController
-    # GET /
-    # Params: None
-    # Return: "Estabeleciementos" Page
-    def index
-        health_centres = HealthCentre.all
-    end
-
     # GET /points
     # Params: None
     # Return: Return all helth centres
@@ -171,20 +164,6 @@ class HealthCentresController < ApplicationController
         distance_quartis = [q3, q2, q1]
         distances = nil
         render json: distance_quartis
-    end
-
-    # GET /rank_health_centres
-    # Params: None
-    # Return: Return TOP10 health centres by number of procedures 
-    def rank_health_centres
-      result = {}
-
-      procedure = Procedure.group(:cnes_id).order("count_id DESC").limit(10)
-                  .count(:id).each.with_index do |p, i|
-                result[HealthCentre.find_by(cnes: p[0]).name.to_s] = p[1].to_i
-      end
-
-      render json: result
     end
 
     # GET /distances/:id
