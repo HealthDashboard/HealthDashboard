@@ -1,8 +1,9 @@
-<%= stylesheet_link_tag "procedure.css", "map_menu.css", "cluster.css" %>
+<%= stylesheet_link_tag "procedure.css", "map_menu.css", "cluster.css", media: "screen" %>
+<%= stylesheet_link_tag "procedure_print.css", "cluster.css", media: "print"  %>
 <%= javascript_include_tag "map_menu.js" %>
 
 <div class="container">
-<div class = "main row">
+<div class = "main row no-print">
     <%= javascript_tag do %>
       window.MAX_SLIDERS = '<%= @MAX_SLIDERS.inspect.html_safe %>';
       window.NUM_FILTERS = '<%= @NUM_FILTERS.inspect.html_safe %>';
@@ -246,6 +247,18 @@
 </div>
 
 <div id="loading_overlay"class="loading">Loading&#8230;</div> <!-- Loading Overlay -->
+
+<div class="print-only">
+  <h1>Internações Hospitalares em Estabelecimentos Públicos e Conveniados SUS</h1>
+  <div class="map">
+    This is a map, but not really
+  </div>
+  <div class="info-column">
+    Hello
+  </div>
+  <div class="active-filters" id="active-filters">
+  </div>
+</div>
 
 <script>
     $(document).ready(initProcedureMap);

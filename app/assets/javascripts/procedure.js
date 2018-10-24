@@ -645,7 +645,33 @@ function graphs() {
 
 //** Called when "Imprimir" butotn is clicked, opens a print dialog **//
 function print_maps() {
-    printPlugin.printMap('CurrentSize', 'map');
+    // printPlugin.printMap('CurrentSize', 'map');
+    var filters_div_text = '<div>';
+     $.each(filters_print, function(index, value){
+       if (filters_text[index] != null && filters_text[index] != "")
+           filters_div_text = filters_div_text.concat("<br />" + value + ": " + filters_text[index]);
+     });
+
+     if (genders[0] != null)
+       filters_div_text = filters_div_text.concat("<br />Sexo: " + genders.join(", "));
+
+     if (start_date != null && start_date != "")
+       filters_div_text = filters_div_text.concat("<br />Data mínima: " + start_date);
+
+     if (end_date != null && end_date != "")
+       filters_div_text = filters_div_text.concat("<br />Data máxima: " + end_date);
+
+     if (dist_min != null)
+       filters_div_text = filters_div_text.concat("<br />Distância mínima: " + dist_min);
+
+     if (dist_max != null)
+       filters_div_text = filters_div_text.concat("<br />Distância máxima: " + dist_max);
+
+     filters_div_text = filters_div_text.concat("</div>");
+
+     $("#active-filters").html("filters_div_text");
+
+    window.print();
 }
 
 function filters_value(data) {
