@@ -84,6 +84,49 @@ describe ProcedureController, type: 'controller' do
 		end
 	end
 
+	describe 'Testing clusterDownload method' do
+		before :each do
+			HealthCentre.create id: 1, cnes: 431, lat: -23.555885, long: -46.666458
+			HealthCentre.create id: 2, cnes: 1, lat: -23.555885, long: -46.666458
+
+			Specialty.create id: 1, name: "Specialty 1"
+			Specialty.create id: 2, name: "Specialty 2"
+
+			Procedure.create id: 1, cnes_id: 431, specialty_id: 1, lat: -23.01, long: -46.01
+			Procedure.create id: 2, cnes_id: 1, specialty_id: 1, lat: -23.01, long: -46.01
+			Procedure.create id: 3, cnes_id: 1, specialty_id: 1, days: 50, lat: -23.02, long: -46.01
+			Procedure.create id: 4, cnes_id: 1, specialty_id: 1, cmpt: 201501, lat: -23.01, long: -46.02
+			Procedure.create id: 5, cnes_id: 1, specialty_id: 2, cmpt: 201502, lat: -23.01, long: -46.01
+			Procedure.create id: 6, cnes_id: 2, specialty_id: 2, cmpt: 201502, lat: -23.02, long: -46.02
+		end
+
+		it 'should return Bad requesst when there\'re no parameters' do
+			data = {}.to_json
+			self.send(:get, 'download', params: {"ClusterDownload" => "True", data: data}, as: :json)
+			expect(response.status).to eq(400)
+			expect(response.body).to eq("Bad request")
+		end
+
+		it 'should return Bad request when no cluster is passed' do
+			filters = [["1"]]
+			data = {"filters" => filters}.to_json
+			self.send(:get, 'download', params: {"ClusterDownload" => "True", data: data}, as: :json)
+			expect(response.status).to eq(400)
+			expect(response.body).to eq("Bad request")
+		end
+
+		it 'should return the cluster procedures when data is passed correctly' do
+			filters = [["1"]]
+			data = {"filters" => filters}.to_json
+			self.send(:get, 'download', params: {"lat" => {"0": "-23.01"}, "long" => {"1": "-46.01"}, "ClusterDownload" => "True", data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("COD;LAT_SC;LONG_SC;P_SEXO;P_IDADE;P_RACA;LV_INSTRU;CNES;GESTOR_ID;CAR_INTEN;CMPT;DT_EMISSAO;DT_INTERNA;DT_SAIDA;COMPLEXIDA;PROC_RE;DIAG_PR;DIAG_SE1;DIAG_SE2;DIARIAS;DIARIAS_UT;DIARIAS_UI;DIAS_PERM;FINANC;VAL_TOT;DA;SUB;STS;CRS;DISTANCIA_KM\n" +
+			"2;-23,01;-46,01;;;;;1;;;;;;;;;;;;;;;;;;;;;;\n"	+
+			"5;-23,01;-46,01;;;;;1;;;201502;;;;;;;;;;;;;;;;;;;\n")
+		end
+
+	end
+
 	describe 'Testing healthCentresCnes method' do
 		before :each do
 			HealthCentre.create id: 1, cnes: 1010, lat: -23.555885, long: -46.666458

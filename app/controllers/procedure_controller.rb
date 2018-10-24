@@ -249,11 +249,11 @@ class ProcedureController < ApplicationController
 	# Params: [filters values array]
 	# Return: CSV file.
 	def download
-	    render json: "Bad request", status: 400 and return unless @procedures != nil
-
 	    if params[:ClusterDownload] == "True"
 	    	downloadCluster()
 	    end
+
+	    render json: "Bad request", status: 400 and return unless @procedures != nil
 
 		@downloadable = @procedures.select('id as "COD"', 'replace(lat::text, \'.\', \',\') AS "LAT_SC"', 'replace(long::text, \'.\', \',\') as "LONG_SC"',
 			'gender as "P_SEXO"', 'age_number as "P_IDADE"', 'race as "P_RACA"', 'lv_instruction as "LV_INSTRU"', 'cnes_id as "CNES"',
@@ -303,12 +303,21 @@ private
 		latSet = Array.new()
 		longSet = Array.new()
 		parsed_json = params
+
+
+		if @procedures == nil || parsed_json["lat"] == nil || parsed_json["long"] == nil
+			@procedures = nil
+			return
+		end
+		
 		parsed_json["lat"].each do |_index, value|
 			latSet.push(value.to_f)
 		end
+		
 		parsed_json["long"].each do |_index, value|
 			longSet.push(value.to_f)
 		end
+
 		@procedures = @procedures.where(:lat => latSet, :long => longSet)
 	end
 
