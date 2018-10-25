@@ -30,3 +30,15 @@
   line-height: 84px;
   font-size: 19px
 }
+
+.marker-dot {
+  width: 9px !important;
+  height: 9px !important;
+  background-color: #ef6165;
+  border:1px solid black;  
+  border-radius: 70%;
+}
+
+.marker-dot:hover {
+  background-color: #873433;
+}

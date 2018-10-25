@@ -470,8 +470,10 @@ function CustomMarkerOnClick(e) {
                 return L.divIcon({ html: "", className: "Invisible Cluster", iconSize: L.point(0, 0) });
             }
         });
-        var dotIcon = L.icon({
-            iconUrl: "https://storage.googleapis.com/support-kms-prod/SNP_2752125_en_v0", iconAnchor: [5, 0]
+        var dotIcon = L.divIcon({
+            iconAnchor: [5, 0],
+            className: "marker-dot",
+            bgPos: L.point(-5, -5)
         });
 
         path = "procedure/proceduresSetorCensitario"
