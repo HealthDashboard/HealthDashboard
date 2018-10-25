@@ -8,8 +8,8 @@
       window.MAX_SLIDERS = '<%= @MAX_SLIDERS.inspect.html_safe %>';
       window.NUM_FILTERS = '<%= @NUM_FILTERS.inspect.html_safe %>';
     <% end %>
-    <div id="map-affix" class = "affix">
-        <div class = "map-wrapper" id = "procedure_map"> </div>
+    <div id="map-affix" class = "affix printable">
+        <div class = "map-wrapper" id="procedure_map"> </div>
     </div>
     <div class="col-md-9">
         <h1> </h1>
@@ -250,11 +250,20 @@
 
 <div class="print-only">
   <h1>Internações Hospitalares em Estabelecimentos Públicos e Conveniados SUS</h1>
-  <div class="map">
-    This is a map, but not really
-  </div>
-  <div class="info-column">
-    Hello
+  <div class="map-section">
+    <div class="map">
+      Map
+    </div>
+    <div class="info-column">
+      <div class="mini-map">
+        Minimap
+      </div>
+      <div class="legend">
+      </div>
+      <div class="source">
+        <p>Fonte:</p>
+      </div>
+    </div>
   </div>
   <div class="active-filters" id="active-filters">
   </div>

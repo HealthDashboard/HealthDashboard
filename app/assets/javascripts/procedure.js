@@ -669,7 +669,7 @@ function print_maps() {
 
      filters_div_text = filters_div_text.concat("</div>");
 
-     $("#active-filters").html("filters_div_text");
+     $("#active-filters").html(filters_div_text);
 
     window.print();
 }
