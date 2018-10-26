@@ -9,17 +9,16 @@ class ProcedureController < ApplicationController
 		@MAX_SLIDERS = [351,148,99,351,110786.71.ceil, 84.5.ceil]
 
 		@establishment = ["Estabelecimento de ocorrência", "Gestão", "Especialidade do leito"]
-		@procedure = ["Competência (aaaamm)", "Caráter do atendimento", "Diagnóstico principal (CID-10)", 
+		@procedure = ["Competência (aaaamm)", "Caráter do atendimento", "Diagnóstico principal (CID-10)",
 			"Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Complexidade", "Tipo de financiamento"]
-		@patient_info = ["Faixa etária", "Raça/Cor", "Nível de instrução", "Distrito Administrativo", "Subprefeitura", 
+		@patient_info = ["Faixa etária", "Raça/Cor", "Nível de instrução", "Distrito Administrativo", "Subprefeitura",
 			"Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde"]
-
 		#'Hints' to display on each label
 
 		@titles_establishment_filters = ["Estabelecimento do atendimento prestado.", "Secretaria responsável.", "Especialidade do leito de internação."]
 
 		@titles_procedure_filters = ["Ano/mês de processamento da AIH. Ex: 201506(junho de 2015).", "Caráter da internação.",
-									 "Motivo da internação.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.", "Nível de atenção para realização do procedimento.", 
+									 "Motivo da internação.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.", "Nível de atenção para realização do procedimento.",
 									 "Tipo de financiamento da internação."]
 
 		@titles_patient_info_filters = ["Faixa etária do paciente.", "Raça/Cor do paciente.", "Grau de instrução do paciente.", "Distrito administrativo da internação.", "Subprefeitura do estabelecimento.", "Supervisão técnica de saúde.", "Coordenadoria regional de saúde."]
@@ -62,6 +61,10 @@ class ProcedureController < ApplicationController
 			"complexity", "finance", "age_code", "race", "lv_instruction", "DA", "PR", "STS", "CRS"]
 
 		@sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
+
+		@filters_sources = ["OSRM", "OSRM", "OSRM", "OSRM", "OSRM", "OSRM", "OSRM",
+			"OSRM", "OSRM", "OSRM", "OSRM", "OSRM", "OSRM", "OSRM", "OSRM", "OSRM", "OSRM"]
+		@sliders_sources = ["OSRM", "OSRM", "OSRM", "OSRM", "OSRM", "OSRM"]
 
 		super
 	end
