@@ -5,7 +5,7 @@ class ProcedureController < ApplicationController
 
 	def initialize
 		# Cons, AVOID USING NUMBERS, make a constant instead
-		@NUM_FILTERS = 17
+		$NUM_FILTERS = 17
 		@MAX_SLIDERS = [351,148,99,351,110786.71.ceil, 84.5.ceil]
 
 		@procedure = ["Estabelecimento de ocorrência", "Competência (aaaamm)", "Especialidade do leito", "Caráter do atendimento",
