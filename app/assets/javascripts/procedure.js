@@ -266,6 +266,7 @@ function getData() {
     filters_text = [];
 
     for (i = 0; i < NUM_FILTERS; i++) {
+        console.log(NUM_FILTERS);
         var aux = [];
         var aux_name = [];
         var select_name = $('#' + i + ' option:selected');

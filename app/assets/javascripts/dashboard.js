@@ -82,12 +82,10 @@ function filters_show(){
     }
     filters_div_text = filters_div_text.concat("<br/><br/>");
     document.getElementById("filters-text").innerHTML = filters_div_text;
-    console.log(filters_div_text);
 }
 
 function create_dashboard_charts() {
     $.getJSON("procedure/proceduresVariables", data, function(loaded) {
-        console.log(loaded);
         result = loaded;
         create_one_variable_graph(result["cmpt"]);
     });
@@ -307,7 +305,6 @@ function create_table_rank(result) {
 
 function create_one_variable_graph(data){
     var formatData = [];
-    console.log(data);
     formatData.push(['score', 'amount', 'variable']);
     var max = 0;
     for(var i=0; i<data.length; i++){
