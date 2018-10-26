@@ -5,7 +5,7 @@ class ProcedureController < ApplicationController
 
 	def initialize
 		# Cons, AVOID USING NUMBERS, make a constant instead
-		$NUM_FILTERS = 17
+		@NUM_FILTERS = 17
 		@MAX_SLIDERS = [351,148,99,351,110786.71.ceil, 84.5.ceil]
 
 		@procedure = ["Estabelecimento de ocorrência", "Competência (aaaamm)", "Especialidade do leito", "Caráter do atendimento",
@@ -313,7 +313,7 @@ class ProcedureController < ApplicationController
 	# Return: A hash with infos about each variable
 	def proceduresVariables
 		result = Hash.new
-		variables = [:cmpt, :proce_re, :specialty_id, :treatment_type, :cid_primary, :cid_secondary, 
+		variables = [:cnes_id, :cmpt, :proce_re, :specialty_id, :treatment_type, :cid_primary, :cid_secondary, 
 			:cid_secondary2, :complexity, :finance, :age_code, :race, :lv_instruction,
 			:gender, :DA, :PR, :STS, :CRS, :gestor_ide, :days, :days_uti, :days_ui, :days_total, :val_total, :distance];
 		data = []
@@ -323,6 +323,15 @@ class ProcedureController < ApplicationController
 				data.append([key[0], key[1]])
 			end
 			result[var.to_s] = data
+		end
+
+		# Replace the values - HEALTH_CENTRES
+		health_centres = @health_centres.map{|x| x["id"]}
+		result["cnes_id"].each.with_index do |key, index|
+			unless key.nil?
+				indexAux = health_centres.find_index(key[0].to_s)
+				result["cnes_id"][index][0] = @health_centres[indexAux]["text"]
+			end
 		end
 
 		# Replace the values - CMPT
