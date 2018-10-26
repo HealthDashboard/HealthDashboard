@@ -2,6 +2,12 @@
 
 cd /health-dashboard
 
-rake db:migrate 2>/dev/null || (rake db:create && rake db:migrate)
+rake db:migrate
+rake db:seed
 
-rails s
+if [ -n "${1}" ]; then
+    ${1}
+else
+    rails s
+fi
+

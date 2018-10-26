@@ -12,7 +12,7 @@ RUN bundle install
 
 ADD . /health-dashboard/
 
+# TODO: O primeiro bundle install não está fazendo download de tudo.
 RUN bundle install
 
-CMD ./run.sh
-
+ENTRYPOINT ["./run.sh"]

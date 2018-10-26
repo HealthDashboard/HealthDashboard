@@ -8,21 +8,22 @@ services:
       context: .
     environment:
     - POSTGRES_HOST=postgresql
-    - POSTGRES_USER=root
-    - POSTGRES_PASSWORD=root
+    - POSTGRES_DB=health-dashboard
+    - POSTGRES_USER=health-user
+    - POSTGRES_PASSWORD=health-password
     links:
     - postgresql
     ports:
     - "3000:3000"
   postgresql:
     container_name: postgresql
-    image: postgres:latest
+    image: postgres:10
     ports:
       - "5432:5432"
     restart: always
     environment:
-    - POSTGRES_USER=root
-    - POSTGRES_DB=root
-    - POSTGRES_PASSWORD=root
-    #    volumes:
-    #  - ./tmp/db:/var/lib/postgresql/data
+    - POSTGRES_DB=health-dashboard
+    - POSTGRES_USER=health-user
+    - POSTGRES_PASSWORD=health-password
+    volumes:
+    - ./tmp/postgresql:/var/lib/postgresql

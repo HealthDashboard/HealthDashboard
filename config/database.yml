@@ -3,9 +3,10 @@ development:
   host: <%= ENV["POSTGRES_HOST"] %>
   username: <%= ENV["POSTGRES_USER"] %>
   password: <%= ENV["POSTGRES_PASSWORD"] %>
-  database: my_database_development
+  database: <%= ENV["POSTGRES_DB"] %>
   pool: 5
   timeout: 5000
+
 test:
   adapter: postgresql
   database: my_database_test
