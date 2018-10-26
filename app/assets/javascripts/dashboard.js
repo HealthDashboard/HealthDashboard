@@ -14,10 +14,10 @@ var specialties_color = {
  "PSIQUIATRIA EM HOSPITAL-DIA": "#F1573F"
 }
 
-var filters_print = ["Estabelecimento de ocorrência", "Competência (aaaamm)", "Especialidade do leito", 
-"Caráter do atendimento", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", 
-"Diagnóstico secundário 2 (CID-10)",  "Complexidade", "Tipo de Financiamento", "Faixa etária", "Raça/Cor", "Nível de instrução", 
-"Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", 
+var filters_print = ["Estabelecimento de ocorrência", "Competência (aaaamm)", "Especialidade do leito",
+"Caráter do atendimento", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)",
+"Diagnóstico secundário 2 (CID-10)",  "Complexidade", "Tipo de Financiamento", "Faixa etária", "Raça/Cor", "Nível de instrução",
+"Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde",
 "Gestão", "Total geral de diárias", "Diárias UTI", "Diárias UI", "Dias de permanência", "Valor da parcela"];
 
 
@@ -60,6 +60,7 @@ function init_dashboard_chart() {
 
 function filters_show(){
     var filters_div_text = "";
+
     $.each(filters_print, function(index, value) {
         if (filters_text[index] != null && filters_text[index] != "") {
             filters_div_text = filters_div_text.concat("<br /><strong>" + value + ": </strong>" + filters_text[index]);
@@ -80,6 +81,7 @@ function filters_show(){
     if (dist_max != null) {
         filters_div_text = filters_div_text.concat("<br /><strong>Distância máxima:</strong> " + dist_max);
     }
+
     filters_div_text = filters_div_text.concat("<br/><br/>");
     document.getElementById("filters-text").innerHTML = filters_div_text;
 }
@@ -320,8 +322,8 @@ function create_one_variable_graph(data){
         //title: 'Title',
         tooltip : {
             trigger: 'axis',
-            axisPointer : {            
-                type : 'shadow'      
+            axisPointer : {
+                type : 'shadow'
             }
         },
         grid: {containLabel: true},
@@ -337,7 +339,9 @@ function create_one_variable_graph(data){
             dimension: 0,
             inRange: {
                 color: ['#D7DA8B', '#E15457']
-            }
+            },
+            calculable: true,
+            realtime: true,
         },
         series: [
             {
