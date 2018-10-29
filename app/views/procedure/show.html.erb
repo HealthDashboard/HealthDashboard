@@ -90,6 +90,16 @@
                 <li class="legend-data-li" id="legend-label-2"></li>
             </div>
           </div>
+          <div class="print-only legend-estab">
+            <div class="legend-item">
+              <%= image_tag("/health_centre_icon.png", :class => "legend-img") %>
+              <p>Estadual</p>
+            </div>
+            <div class="legend-item">
+              <%= image_tag("/health_centre_icon2.png", :class => "legend-img") %>
+              <p>Municipal</p>
+            </div>
+          </div>
     </div>
 
     <div class ="col-sm-3 background-white" id="filters">
@@ -259,13 +269,25 @@
         Minimap
       </div>
       <div class="legend">
+        <h3 class="section-title">Legenda</h3>
+        <div id="print-leg">
+        </div>
       </div>
       <div class="source">
-        <p>Fonte:</p>
+        <h3 class="section-title">Fonte</h3>
+        <p class="source-text">
+          Internações SUS - Sec. Mun. Saúde  de São Paulo / Autarquia Hospitalar Municipal / Sistema de internações Hospitalares<br>
+          <br>
+          Disponível na rede intranet da PMSP em:<br>
+          <span class="source-link">health-dashboard.interscity.org</span>
+        </p>
       </div>
     </div>
   </div>
-  <div class="active-filters" id="active-filters">
+  <div class="active-filters">
+    <h3 class="section-title">Filtros</h3>
+    <div id="active-filters" class="source-text">
+    </div>
   </div>
 </div>
 

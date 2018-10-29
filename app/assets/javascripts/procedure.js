@@ -646,6 +646,9 @@ function graphs() {
 //** Called when "Imprimir" butotn is clicked, opens a print dialog **//
 function print_maps() {
     // printPlugin.printMap('CurrentSize', 'map');
+    var html = document.getElementById("heatmap-leg").innerHTML;
+    document.getElementById("print-leg").innerHTML = html;
+    
     var filters_div_text = '<div>';
      $.each(filters_print, function(index, value){
        if (filters_text[index] != null && filters_text[index] != "")
