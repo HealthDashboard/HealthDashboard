@@ -184,16 +184,14 @@ class ProcedureController < ApplicationController
 	def proceduresMaxValues
 		parsed_json = JSON.parse params[:data]
 
-		if parsed_json["send_all"] == "True"
-			render json: [351,148,99,351,110786.71.ceil,84.5.ceil], status: 200 and return #default value for faster load time
-		end
-
 		getProcedures()
 		render json: "Bad request", status: 400 and return unless @procedures != nil
 
 		max = []
 		[:days, :days_uti, :days_ui, :days_total, :val_total, :distance].each do |filter|
-			maximum  = @procedures.maximum(filter)
+			maximum = Rails.cache.fetch("max/#{filter}#{parsed_json}", expires_in: 12.hours) do
+				@procedures.maximum(filter)
+			end
 			if maximum != nil
 				max.append(maximum.ceil)
 			else
@@ -209,36 +207,45 @@ class ProcedureController < ApplicationController
 	def proceduresQuartiles
 		parsed_json = JSON.parse params[:data]
 
-		if parsed_json["send_all"] == "True"
-			render json: [[2, 3.0, 6], [0, 0.0, 0], [0, 0.0, 0], [2, 3.0, 6], [0.0, 0.0, 0.0], [3.6, 6.9, 13.9]], status: 200 and return # default value for faster load time
-		end
-
 		getProcedures()
 		render json: "Bad request", status: 400 and return unless @procedures != nil
 
 		quartiles = []
 		# 1 - days(Total Geral de Diárias)
-		days = @procedures.group(:days).order(:days).count
+		days = Rails.cache.fetch("quartiles/days#{parsed_json}", expires_in: 12.hours) do
+			@procedures.group(:days).order(:days).count
+		end
+		# puts(days)
 		quartiles.append(quartiles_calc(days))
 
 		# 2 - days_uti(Diárias UTI)
-		days_uti = @procedures.group(:days_uti).order(:days_uti).count
+		days_uti = Rails.cache.fetch("quartiles/diarias_uti#{parsed_json}", expires_in: 12.hours) do
+			@procedures.group(:days_uti).order(:days_uti).count
+		end
 		quartiles.append(quartiles_calc(days_uti))
 
 		# 3 - days_ui(Diárias UI)
-		days_ui = @procedures.group(:days_ui).order(:days_ui).count
+		days_ui = Rails.cache.fetch("quartiles/diasrias_ui#{parsed_json}", expires_in: 12.hours) do
+			@procedures.group(:days_ui).order(:days_ui).count
+		end
 		quartiles.append(quartiles_calc(days_ui))
 
 		# 4 - days_total(Dias de permanência)
-		days_total = @procedures.group(:days_total).order(:days_total).count
+		days_total = Rails.cache.fetch("quartiles/days_total#{parsed_json}", expires_in: 12.hours) do 
+			@procedures.group(:days_total).order(:days_total).count
+		end
 		quartiles.append(quartiles_calc(days_total))
 
 		# 5 - val_total(Valor da Parcela)
-		val_total = @procedures.group(:val_total).order(:val_total).count
+		val_total = Rails.cache.fetch("quartiles/val_total#{parsed_json}", expires_in: 12.hours) do
+			@procedures.group(:val_total).order(:val_total).count
+		end
 		quartiles.append(quartiles_calc(val_total))
 
 		# 6 - distance(Distância de Deslocamento)
-		distance = @procedures.group(:distance).order(:distance).count
+		distance = Rails.cache.fetch("quartiles/distance#{parsed_json}", expires_in: 12.hours) do
+			@procedures.group(:distance).order(:distance).count
+		end
 		quartiles.append(quartiles_calc(distance))
 
 		render json: quartiles, status: 200

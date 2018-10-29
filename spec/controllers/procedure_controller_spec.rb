@@ -22,17 +22,6 @@ describe ProcedureController, type: 'controller' do
 		end
 	end
 
-	describe 'Testing procedures quartiles method' do
-		it 'should return default values when send all is set' do
-			data = {"send_all" => "True"}.to_json
-			self.send(:get, 'proceduresQuartiles', params: {data: data}, format: :json)
-			expect(response.status).to eq(200)
-			expect(response.body).to_not be_nil
-			expect(JSON.parse(response.body)).to eq([[2, 3.0, 6], [0, 0.0, 0], [0, 0.0, 0], [2, 3.0, 6],
-				[0.0, 0.0, 0.0], [3.6, 6.9, 13.9]])
-		end
-	end
-
 	describe 'Testing procedure download method' do
 		before :each  do
 			HealthCentre.create id: 1, cnes: 431, lat: -23.555885, long: -46.666458
@@ -564,7 +553,7 @@ describe ProcedureController, type: 'controller' do
 			data = {send_all: "True"}.to_json
 			self.send(:get, 'proceduresMaxValues', params: {data: data}, as: :json)
 			expect(response.status).to eq(200)
-			expect(response.body).to eq("[351,148,99,351,110787,85]")
+			expect(response.body).to eq("[11,7,7,7,7,4]")
 		end
 
 		it 'should return the max filtered values' do
@@ -617,12 +606,12 @@ describe ProcedureController, type: 'controller' do
 			expect(response.body).to eq("[[],[],[],[],[],[]]")
 		end
 
-		# it 'should return a constant when send_all == true' do	TODO: Fix the constant and adjust the test
-		#	data = {}.to_json
-		#	self.send(:get, 'proceduresQuartiles', params: {data: data, send_all: "True"}, as: :json)
-		#	expect(response.status).to eq(200)
-		#	expect(response.body).to eq("[[2,5,7],[22,25,27],[12,15,17],[32,35,37],[52.0,55.0,57.0],[92.0,95.0,97.0]]")
-		# end
+		it 'should return a constant when send_all == true' do
+			data = {send_all: "True"}.to_json
+			self.send(:get, 'proceduresQuartiles', params: {data: data}, as: :json)
+			expect(response.status).to eq(200)
+			expect(response.body).to eq("[[2,5,7],[22,25,27],[12,15,17],[32,35,37],[52.0,55.0,57.0],[92.0,95.0,97.0]]")
+		end
 
 		it 'should return quartiles for cnes id 1' do
 			filters = [["1"]]
