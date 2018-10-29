@@ -265,8 +265,11 @@ function getData() {
     filters = [];
     filters_text = [];
 
+    if(typeof NUM_FILTERS === 'undefined' || NUM_FILTERS === null){
+        return null;
+    }
+
     for (i = 0; i < NUM_FILTERS; i++) {
-        console.log(NUM_FILTERS);
         var aux = [];
         var aux_name = [];
         var select_name = $('#' + i + ' option:selected');

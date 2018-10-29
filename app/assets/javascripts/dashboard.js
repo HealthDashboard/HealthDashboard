@@ -51,7 +51,6 @@ function init_dashboard_chart() {
     } else {
         dynamic = false;
         document.getElementById("filters-div").style.display = "none";
-
     }
     google.charts.setOnLoadCallback(create_dashboard_charts);
     dashboard_legend();
@@ -87,10 +86,18 @@ function filters_show(){
 }
 
 function create_dashboard_charts() {
-    $.getJSON("procedure/proceduresVariables", data, function(loaded) {
-        result = loaded;
-        create_one_variable_graph(result["cnes_id"]);
-    });
+    if(data === null){
+        $.getJSON("/variables_metric.json", data, function(loaded) {
+            result = loaded;
+            create_one_variable_graph(result["cnes_id"]);
+        });
+    }
+    else{
+        $.getJSON("procedure/proceduresVariables", data, function(loaded) {
+            result = loaded;
+            create_one_variable_graph(result["cnes_id"]);
+        });
+    }
     create_proceduresPerSpecialties();
     create_specialties_distance_between_patients_hospital();
     create_analise();
