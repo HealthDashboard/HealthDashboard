@@ -326,12 +326,26 @@ function create_one_variable_graph(data){
                 type : 'shadow'
             }
         },
+        dataZoom: [{
+            id: 'dataZoomX',
+            type: 'slider',
+            xAxisIndex: [0],
+            filterMode: 'filter'
+        },
+        {
+            id: 'dataZoomY',
+            type: 'slider',
+            yAxisIndex: [0],
+            filterMode: 'empty'
+        }],
         grid: {containLabel: true},
-        xAxis: {name: 'Procedimentos'},
+        xAxis: {
+          name: 'Procedimentos',
+          axisLabel: {interval : 0},
+        },
         yAxis: {type: 'category'},
         visualMap: {
             orient: 'horizontal',
-            left: 'center',
             min: 0,
             max: max,
             text: ['Máximo', 'Mínimo'],
@@ -340,8 +354,6 @@ function create_one_variable_graph(data){
             inRange: {
                 color: ['#D7DA8B', '#E15457']
             },
-            calculable: true,
-            realtime: true,
         },
         series: [
             {
