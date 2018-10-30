@@ -136,7 +136,7 @@
                         <% @patient_info.each.with_index do |f, i| %>
                             <div class="col-sm-12">
                                 <div class="filter-label">
-                                    <label for="<%= i %>" title="<%= @titles_procedure_filters[i] %>"><b>
+                                    <label for="<%= i %>" title="<%= @titles_patient_info_filters[i] %>"><b>
                                         <%= f %>
                                     </b></label>
                                     <p class="label-subtitle" title="<%= @filters_completeness[j] %>% dos dados possuem essa informação"><%= @filters_completeness[j].round(0) %>%</p>
@@ -175,7 +175,7 @@
                         <% @establishment.each.with_index do |f, i| %>
                             <div class="col-sm-12">
                                 <div class="filter-label">
-                                    <label for="<%= i %>" title="<%= @titles_procedure_filters[i] %>"><b>
+                                    <label for="<%= i %>" title="<%= @titles_establishment_filters[i] %>"><b>
                                         <%= f %>
                                     </b></label>
                                     <p class="label-subtitle" title="<%= @filters_completeness[j] %>% dos dados possuem essa informação"><%= @filters_completeness[j].round(0) %>%</p>
