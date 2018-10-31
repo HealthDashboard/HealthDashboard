@@ -1,0 +1,18 @@
+#!/bin/bash
+
+TEMPDIR=`mktemp -d`
+cd ${TEMPDIR}
+
+# Creating Dockerfile
+echo 'FROM ruby:2.5'                                                                                                     >  ${TEMPDIR}/Dockerfile
+echo 'RUN apt-get update && apt-get install -y nodejs --no-install-recommends && rm -rf /var/lib/apt/lists/*'            >> ${TEMPDIR}/Dockerfile
+echo 'RUN apt-get update && apt-get install -y postgresql-client --no-install-recommends && rm -rf /var/lib/apt/lists/*' >> ${TEMPDIR}/Dockerfile
+echo 'ENV RAILS_VERSION 5.0.1'                                                                                           >> ${TEMPDIR}/Dockerfile
+echo 'RUN gem install rails --version "$RAILS_VERSION"'                                                                  >> ${TEMPDIR}/Dockerfile
+
+docker build -t rails:latest --label rails .
+
+# Removing temp folder
+rm -rf "${TEMPDIR}"
+
+sleep 2

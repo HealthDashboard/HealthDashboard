@@ -1,5 +1,29 @@
 development:
   adapter: postgresql
+  database: my_database_development
+  pool: 5
+  timeout: 5000
+
+docker:
+  adapter: postgresql
+  host: psql-container
+  database: health-dashboard
+  username: health-user
+  password: health-password
+  pool: 5
+  timeout: 5000
+
+rspec:
+  adapter: postgresql
+  host: psql-container-test
+  database: health-dashboard-test
+  username: health-user
+  password: health-password
+  pool: 5
+  timeout: 5000
+
+docker-compose:
+  adapter: postgresql
   host: <%= ENV["POSTGRES_HOST"] %>
   username: <%= ENV["POSTGRES_USER"] %>
   password: <%= ENV["POSTGRES_PASSWORD"] %>

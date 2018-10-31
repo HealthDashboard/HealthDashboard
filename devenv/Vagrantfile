@@ -19,7 +19,8 @@ Vagrant.configure('2') do |config|
   config.vm.provision :shell, path: 'bootstrap.sh'
 
   # Shared folder
-  config.vm.synced_folder '../', '/home/vagrant/shared', create: true
+  config.vm.synced_folder './bin', '/home/vagrant/bin', create: true
+  config.vm.synced_folder '../',   '/home/vagrant/shared', create: true
 
   # VM settings
   config.vm.provider :virtualbox do |vb|

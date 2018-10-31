@@ -1,0 +1,10 @@
+#!/bin/bash
+
+docker run -d                                  \
+       -v ~/tmp/postgresql:/var/lib/postgresql \
+       -p 5432:5432                            \
+       -e POSTGRES_DB=health-dashboard         \
+       -e POSTGRES_USER=health-user            \
+       -e POSTGRES_PASSWORD=health-password    \
+       --name psql-container                   \
+       postgres:10

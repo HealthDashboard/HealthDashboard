@@ -2,12 +2,8 @@
 
 cd /health-dashboard
 
+rake db:create
 rake db:migrate
-rake db:seed
+rake db:seed || sleep 3
 
-if [ -n "${1}" ]; then
-    ${1}
-else
-    rails s
-fi
-
+rails s

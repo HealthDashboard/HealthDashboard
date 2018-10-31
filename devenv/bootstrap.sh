@@ -1,10 +1,8 @@
 #!/bin/bash
 
 # Updating apt-get data
+apt-get upgrade -y
 apt-get update -y
-
-# Installing project requirements
-apt-get install postgresql-10 postgresql-client-10 postgresql-server-dev-10 ruby-all-dev rails build-essential patch ruby-dev zlib1g-dev liblzma-dev -y
 
 # Docker instalation
 apt-get install apt-transport-https ca-certificates curl software-properties-common -y
@@ -15,3 +13,6 @@ if [ -n "`apt-key fingerprint 0EBFCD88`" ]; then
 	apt-get install docker-ce -y
     usermod -a -G docker vagrant
 fi
+
+# Docker Compose instalation
+apt-get install docker-compose -y

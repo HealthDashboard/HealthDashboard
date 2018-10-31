@@ -1,17 +1,13 @@
 #!/bin/bash
 
+if [ -z "`docker ps --filter "name=psql-container" -q`" ]; then
+    startPostgresql
+fi
+
 if [ -z "`docker images --filter "label=rails" -q`" ]; then
     echo "Docker image for rails not found. Please wait while I create it."
     sleep 2
-    TEMPDIR=`mktemp -d`
-    cd ${TEMPDIR}
-    echo 'FROM ruby:2.5'                                                                                                     >  ${TEMPDIR}/Dockerfile
-    echo 'RUN apt-get update && apt-get install -y nodejs --no-install-recommends && rm -rf /var/lib/apt/lists/*'            >> ${TEMPDIR}/Dockerfile
-    echo 'RUN apt-get update && apt-get install -y postgresql-client --no-install-recommends && rm -rf /var/lib/apt/lists/*' >> ${TEMPDIR}/Dockerfile
-    echo 'ENV RAILS_VERSION 5.0.1'                                                                                           >> ${TEMPDIR}/Dockerfile
-    echo 'RUN gem install rails --version "$RAILS_VERSION"'                                                                  >> ${TEMPDIR}/Dockerfile
-    docker build -t rails:latest --label rails .
-    rm -rf "${TEMPDIR}"
+    createRailsImage
 fi
 
 docker run -it --rm                     \
@@ -19,5 +15,8 @@ docker run -it --rm                     \
        -v $PWD:/usr/src/myapp           \
        -w /usr/src/myapp                \
        -p 3000:3000                     \
+       -e RAILS_ENV=docker              \
+       --link psql-container            \
+       --name rails                     \
        rails:latest rails "$@"
 

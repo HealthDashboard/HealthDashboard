@@ -11,6 +11,7 @@ services:
     - POSTGRES_DB=health-dashboard
     - POSTGRES_USER=health-user
     - POSTGRES_PASSWORD=health-password
+    - RAILS_ENV=docker-compose
     links:
     - postgresql
     ports:

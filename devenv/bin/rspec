@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ -z "`docker ps --filter "name=psql-container" -q`" ]; then
-    startPostgresql
+if [ -z "`docker ps --filter "name=psql-container-test" -q`" ]; then
+    startPostgresqlTest
 fi
 
 if [ -z "`docker images --filter "label=rails" -q`" ]; then
@@ -14,8 +14,8 @@ docker run -it --rm                     \
        -v $HOME/.gems:/usr/local/bundle \
        -v $PWD:/usr/src/myapp           \
        -w /usr/src/myapp                \
-       -e RAILS_ENV=docker              \
-       --link psql-container            \
+       -e RAILS_ENV=rspec               \
+       --link psql-container-test       \
        --name rails                     \
-       rails:latest rake "$@"
+       rails:latest bundle exec rspec "$@"
 
