@@ -1,4 +1,4 @@
-.no-print, .fab {
+.no-print, .fab, .leaflet-control-zoom {
   display: none;
 }
 
@@ -11,7 +11,7 @@
   margin: .5cm .75cm;
 }
 
-* {
+* , *:before, *:after {
   -webkit-print-color-adjust: exact !important;
   color-adjust: exact !important;
 }
@@ -46,18 +46,27 @@ h1 {
 
 }
 
-#map-affix, .affix, .map-wrapper, #procedure_map, .map {
+.container {
+  margin: 0;
+}
+
+.map {
   display: block;
   margin: 0;
+  padding: 0;
   position: fixed;
   top: 3cm;
   height: 70%;
   width: 70%;
-  border: 1px solid #000;
+  border: solid 1px black;
+  overflow: hidden;
 }
 
-.map {
-  z-index: -2;
+.map img {
+  display: block;
+  margin: 0;
+  height: 100%;
+  object-fit: cover;
 }
 
 .info-column {
@@ -187,4 +196,8 @@ h1 {
   bottom: 0;
   width: 100%;
   height: calc(30% - 3.5cm);
+}
+
+.easyPrintHolder .custom-print {
+  background-image: url(data:image/svg+xml;utf8;base64,PD9...go=);
 }

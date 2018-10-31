@@ -113,17 +113,16 @@ function download(dataFilters) {
         data: dataFilters,
         dataType: 'text',
         success: function(result) {
+            var uri = "data:text/csv;Content-Type:text/csv"
             var today = new Date().toLocaleString("pt-BR", {day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric"})
-            download_file(result, "SIH_resultado_busca_" + today + ".csv");
+            download_file("data:text/html," + encodeURIComponent(result), "SIH_resultado_busca_" + today + ".csv");
         }
     });
 }
 
 function download_file(dataurl, filename) {
     var a = document.createElement("a");
-    csvData = new Blob([dataurl], { type: 'text/csv' }); 
-    var csvUrl = URL.createObjectURL(csvData);
-    a.href = csvUrl;
+    a.href = dataurl;
     a.setAttribute("download", filename);
     var b = document.createEvent("MouseEvents");
     b.initEvent("click", false, true);
@@ -138,7 +137,6 @@ function downloadCluster(paramLat, paramLong){
     allData["lat"] = paramLatJSON;
     allData["long"] = paramLongJSON;
     allData["ClusterDownload"] = "True"
-    console.log(allData)
     download(allData);
 }
 
@@ -379,7 +377,7 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
 
             $.each(procedures, function(index, latlong){
                 icon = L.divIcon({ html: latlong[2], className: 'map-marker marker-single a-class', iconSize: L.point(34, 34) });
-                marker = L.marker(L.latLng(latlong[0], latlong[1]), {icon: icon, title: latlong[2] + ' internações no mesmo setor censitário'})
+                marker = L.marker(L.latLng(latlong[0], latlong[1]), {icon: icon})
                 marker.latlong = [latlong[0], latlong[1]];
                 marker.number = latlong[2];
                 marker.clusterOpen = false;
@@ -532,17 +530,27 @@ function markerOnClick(e) {
         $.getJSON(proceduresInfo_path, function(procedure) {
             cnes = procedure[0].cnes_id;
             $.getJSON("procedure/healthCentresCnes", {cnes: cnes.toString()}, function(hc_latlong) {
-                text =  "<strong>Estabelecimento: </strong>" + health_centres_array[parseInt(cnes)] + "<br>";
-                text += "<strong>Sexo: </strong>" + sexp_var[procedure[0].gender] + "<br>";
-                text +=  "<strong>Idade: </strong>" + procedure[0].age_number + "<br>";
-                text += "<strong>CID: </strong>" + cid_array[procedure[0].cid_primary] + "<br>";
-                text += "<strong>CRS: </strong>" + procedure[0].CRS + "<br>";
-                text += "<strong>Data: </strong>" + procedure[0].date + "<br>";
-                text += "<strong>Distância: </strong>" + parseFloat(procedure[0].distance).toFixed(1).replace(".", ",") + " Km <br>";
+                path_distance_real = "http:\/\/router.project-osrm.org\/route\/v1\/driving\/"
+                + hc_latlong[0][1] + "," + hc_latlong[0][0] + ";" + procedure[0].long + ","
+                + procedure[0].lat + "?overview=false";
 
-                e.target.bindPopup(text, {direction:'top', cnes: cnes});
-                e.target.openPopup();
-                health_centres_makers(cnes);
+                $.getJSON(path_distance_real, function(distance) { //get Real distance usign router.project-osrm.org
+                    v_distance = parseFloat(distance.routes[0].distance);
+                    v_distance = v_distance / 1000; // m -> km
+
+                    text =  "<strong>Estabelecimento: </strong>" + health_centres_array[parseInt(cnes)] + "<br>";
+                    text += "<strong>Sexo: </strong>" + sexp_var[procedure[0].gender] + "<br>";
+                    text +=  "<strong>Idade: </strong>" + procedure[0].age_number + "<br>";
+                    text += "<strong>CID: </strong>" + cid_array[procedure[0].cid_primary] + "<br>";
+                    text += "<strong>CRS: </strong>" + procedure[0].CRS + "<br>";
+                    text += "<strong>Data: </strong>" + procedure[0].date + "<br>";
+                    text += "<strong>Distância: </strong>" + parseFloat(procedure[0].distance).toFixed(1).replace(".", ",") + " Km <br>";
+                    text += "<strong>Distância viária: </strong>" + v_distance.toFixed(1).replace(".", ",") + " Km <br>";
+
+                    e.target.bindPopup(text, {direction:'top', cnes: cnes});
+                    e.target.openPopup();
+                    health_centres_makers(cnes);
+                });
             });
         });
     } else {
@@ -646,38 +654,53 @@ function graphs() {
 //** Called when "Imprimir" butotn is clicked, opens a print dialog **//
 function print_maps() {
     // printPlugin.printMap('CurrentSize', 'map');
-    var html = document.getElementById("map-affix").innerHTML;
-    document.getElementById("print-map").innerHTML = html;
-    console.log (html)
-    html = document.getElementById("heatmap-leg").innerHTML;
-    document.getElementById("print-leg").innerHTML = html;
+    // var html = document.getElementById("map-affix").innerHTML;
+    // document.getElementById("print-map").innerHTML = html;
 
-    var filters_div_text = '<div>';
-     $.each(filters_print, function(index, value){
-       if (filters_text[index] != null && filters_text[index] != "")
-           filters_div_text = filters_div_text.concat("<br />" + value + ": " + filters_text[index]);
-     });
+    var node = document.getElementById('map-affix');
 
-     if (genders[0] != null)
-       filters_div_text = filters_div_text.concat("<br />Sexo: " + genders.join(", "));
+    domtoimage.toPng(node)
+        .then(function (dataUrl) {
+            var img = new Image();
+            img.src = dataUrl;
+            console.log(img)
+            document.getElementById("print-map").appendChild(img);
 
-     if (start_date != null && start_date != "")
-       filters_div_text = filters_div_text.concat("<br />Data mínima: " + start_date);
+            html = document.getElementById("heatmap-leg").innerHTML;
+            document.getElementById("print-leg").innerHTML = html;
 
-     if (end_date != null && end_date != "")
-       filters_div_text = filters_div_text.concat("<br />Data máxima: " + end_date);
+            var filters_div_text = '<div>';
+            $.each(filters_print, function(index, value){
+              if (filters_text[index] != null && filters_text[index] != "")
+                filters_div_text = filters_div_text.concat("<br />" + value + ": " + filters_text[index]);
+            });
 
-     if (dist_min != null)
-       filters_div_text = filters_div_text.concat("<br />Distância mínima: " + dist_min);
+            if (genders[0] != null)
+              filters_div_text = filters_div_text.concat("<br />Sexo: " + genders.join(", "));
 
-     if (dist_max != null)
-       filters_div_text = filters_div_text.concat("<br />Distância máxima: " + dist_max);
+            if (start_date != null && start_date != "")
+              filters_div_text = filters_div_text.concat("<br />Data mínima: " + start_date);
 
-     filters_div_text = filters_div_text.concat("</div>");
+            if (end_date != null && end_date != "")
+              filters_div_text = filters_div_text.concat("<br />Data máxima: " + end_date);
 
-     $("#active-filters").html(filters_div_text);
+            if (dist_min != null)
+              filters_div_text = filters_div_text.concat("<br />Distância mínima: " + dist_min);
 
-    window.print();
+            if (dist_max != null)
+              filters_div_text = filters_div_text.concat("<br />Distância máxima: " + dist_max);
+
+            filters_div_text = filters_div_text.concat("</div>");
+
+            $("#active-filters").html(filters_div_text);
+
+            window.print();
+            document.getElementById("print-map").innerHTML = "";
+        })
+        .catch(function (error) {
+            console.error('oops, something went wrong!', error);
+        });
+
 }
 
 function filters_value(data) {
