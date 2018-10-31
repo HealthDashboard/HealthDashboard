@@ -8,7 +8,7 @@
       window.MAX_SLIDERS = '<%= @MAX_SLIDERS.inspect.html_safe %>';
       window.NUM_FILTERS = '<%= @NUM_FILTERS.inspect.html_safe %>';
     <% end %>
-    <div id="map-affix" class = "affix printable">
+    <div id="map-affix" class = "affix">
         <div class = "map-wrapper" id="procedure_map"> </div>
     </div>
     <div class="col-md-9">
@@ -258,14 +258,16 @@
 
 <div id="loading_overlay"class="loading">Loading&#8230;</div> <!-- Loading Overlay -->
 
+<div class="mini-map" id="mini_map">
+</div>
+
 <div class="print-only">
   <h1>Internações Hospitalares em Estabelecimentos Públicos e Conveniados SUS</h1>
   <div class="map-section">
     <div class="map" id="print-map">
     </div>
     <div class="info-column">
-      <div class="mini-map">
-        Minimap
+      <div class="mini-map-div" id="mini_map_div">
       </div>
       <div class="legend">
         <h3 class="section-title">Legenda</h3>

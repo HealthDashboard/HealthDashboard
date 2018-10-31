@@ -28,6 +28,8 @@ var myStyle;
 
 var pixels_cluster, pixels_heatmap;
 
+var minimap;
+
 //** Called when loading the page, init vars, hide overlay and draw the map **//
 function initProcedureMap() {
     auto = false;
@@ -86,6 +88,12 @@ function initProcedureMap() {
     printPlugin = L.easyPrint({
         hidden: true
     }).addTo(map);
+
+    minimap = L.map('mini_map').setView(latlng, 11);
+
+    tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(minimap);
 }
 
 function change_sliders() {
@@ -656,7 +664,7 @@ function print_maps() {
     // printPlugin.printMap('CurrentSize', 'map');
     // var html = document.getElementById("map-affix").innerHTML;
     // document.getElementById("print-map").innerHTML = html;
-
+    $(".container").css('margin-top', 0);
     var node = document.getElementById('map-affix');
 
     domtoimage.toPng(node)
@@ -665,6 +673,14 @@ function print_maps() {
             img.src = dataUrl;
             console.log(img)
             document.getElementById("print-map").appendChild(img);
+
+            minimap.setZoom(map.getZoom());
+            minimap.panTo(map.getCenter());
+            L.circle(map.getCenter(), {radius: 2000}).addTo(minimap);
+            minimap.setZoom(11);
+
+            html = document.getElementById("mini_map").innerHTML;
+            document.getElementById("mini_map_div").innerHTML = html;
 
             html = document.getElementById("heatmap-leg").innerHTML;
             document.getElementById("print-leg").innerHTML = html;
@@ -694,11 +710,14 @@ function print_maps() {
 
             $("#active-filters").html(filters_div_text);
 
-            window.print();
-            document.getElementById("print-map").innerHTML = "";
         })
         .catch(function (error) {
             console.error('oops, something went wrong!', error);
+        })
+        .then(function () {
+            window.print();
+            document.getElementById("print-map").innerHTML = "";
+            $(".container").css('margin-top', "50px");
         });
 
 }
@@ -826,7 +845,6 @@ function dadosInput() {
     });
 
     $("#slider_cluster").slider({min: 0, max: 22, step: 0.01, value: 5.5});
-
     $("#slider_cluster").on("change", function(slideEvt) {
         pixels_cluster = metresToPixels(slideEvt.value.newValue * 1000);
     });

@@ -359,6 +359,16 @@ h1 {
   display: block;
 }
 
+#mini_map {
+  display: block !important;
+  top: -300;
+  right: -300;
+  position: fixed;
+  width: 200px;
+  height: 200px;
+  background-color: #000;
+}
+
 
 @media (orientation: portrait) {
   .container {
