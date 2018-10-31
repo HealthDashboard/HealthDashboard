@@ -8,7 +8,12 @@
 
 @page {
   size: A4;
-  margin: .75cm;
+  margin: .5cm .75cm;
+}
+
+* {
+  -webkit-print-color-adjust: exact !important;
+  color-adjust: exact !important;
 }
 
 body {
@@ -97,6 +102,11 @@ h1 {
   right: 0;
   position: relative;
   margin-bottom: 5px;
+}
+
+.item-legend {
+  bottom: none;
+  right: none;
 }
 
 .legend-bar {
