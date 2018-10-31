@@ -1,0 +1,9 @@
+#!/bin/bash
+
+docker run -it --rm                     \
+       -v $HOME/.gems:/usr/local/bundle \
+       -v $PWD:/usr/src/myapp           \
+       -w /usr/src/myapp                \
+       -p 3000:3000                     \
+       rails:latest rails "$@"
+
