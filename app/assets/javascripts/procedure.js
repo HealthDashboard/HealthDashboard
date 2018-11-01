@@ -85,15 +85,32 @@ function initProcedureMap() {
     L.control.scale({imperial: false, position: 'bottomright'}).addTo(map);
     map.on('zoom', change_sliders);
 
-    printPlugin = L.easyPrint({
-        hidden: true
-    }).addTo(map);
-
-    minimap = L.map('mini_map').setView(latlng, 11);
+    latlng = L.latLng(-23.72, -46.48);
+    minimap = L.map('mini_map').setView(latlng, 9);
 
     tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(minimap);
+
+    myStyle = {
+        "color": "#444444",
+        "opacity": 0.6,
+        "stroke": true,
+        "fill": false,
+    };
+    $.ajax({
+        dataType: "json",
+        url: "Shape_SP.geojson",
+        success: function(data) {
+            shape = new L.geoJson(data,
+                {onEachFeature: function(feature, layer) {
+                  if (feature.properties && feature.properties.Name) {
+                      layer.bindTooltip(feature.properties.Name, {closeButton: false});
+                  }
+                }}).addTo(minimap);
+            shape.setStyle(myStyle);
+        }
+    });
 }
 
 function change_sliders() {
@@ -661,54 +678,42 @@ function graphs() {
 
 //** Called when "Imprimir" butotn is clicked, opens a print dialog **//
 function print_maps() {
-    // printPlugin.printMap('CurrentSize', 'map');
-    // var html = document.getElementById("map-affix").innerHTML;
-    // document.getElementById("print-map").innerHTML = html;
     $(".container").css('margin-top', 0);
+
+    minimap.setZoom(map.getZoom(), {animate: false, noMoveStart: true});
+    var circle = L.circle(map.getCenter(), {radius: 2000}).addTo(minimap);
+    minimap.setZoom(9);
+
     var node = document.getElementById('map-affix');
 
     domtoimage.toPng(node)
         .then(function (dataUrl) {
             var img = new Image();
             img.src = dataUrl;
-            console.log(img)
             document.getElementById("print-map").appendChild(img);
 
-            minimap.setZoom(map.getZoom());
-            minimap.panTo(map.getCenter());
-            L.circle(map.getCenter(), {radius: 2000}).addTo(minimap);
-            minimap.setZoom(11);
+            $('#mini_map-container').contents().appendTo('#mini_map_div')
+            $('#heatmap-leg').contents().appendTo('#print-leg')
 
-            html = document.getElementById("mini_map").innerHTML;
-            document.getElementById("mini_map_div").innerHTML = html;
-
-            html = document.getElementById("heatmap-leg").innerHTML;
-            document.getElementById("print-leg").innerHTML = html;
-
-            var filters_div_text = '<div>';
+            var filters_div_text = '<p>';
             $.each(filters_print, function(index, value){
               if (filters_text[index] != null && filters_text[index] != "")
                 filters_div_text = filters_div_text.concat("<br />" + value + ": " + filters_text[index]);
             });
-
             if (genders[0] != null)
               filters_div_text = filters_div_text.concat("<br />Sexo: " + genders.join(", "));
-
             if (start_date != null && start_date != "")
               filters_div_text = filters_div_text.concat("<br />Data mínima: " + start_date);
-
             if (end_date != null && end_date != "")
               filters_div_text = filters_div_text.concat("<br />Data máxima: " + end_date);
-
             if (dist_min != null)
               filters_div_text = filters_div_text.concat("<br />Distância mínima: " + dist_min);
-
             if (dist_max != null)
               filters_div_text = filters_div_text.concat("<br />Distância máxima: " + dist_max);
+            filters_div_text = filters_div_text.concat("</p>");
 
-            filters_div_text = filters_div_text.concat("</div>");
-
-            $("#active-filters").html(filters_div_text);
+            $("#active-filters-div").html(filters_div_text);
+            console.log(document.getElementById("active-filters-div"))
 
         })
         .catch(function (error) {
@@ -718,6 +723,9 @@ function print_maps() {
             window.print();
             document.getElementById("print-map").innerHTML = "";
             $(".container").css('margin-top', "50px");
+            $('#mini_map_div').contents().appendTo('#mini_map-container')
+            $('#print-leg').contents().appendTo('#heatmap-leg')
+            minimap.removeLayer(circle);
         });
 
 }
