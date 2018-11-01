@@ -142,7 +142,10 @@ class ProcedureController < ApplicationController
 	# Params: none
 	# Return: Procedures counter
 	def proceduresTotal
-		render json: Procedure.count, status: 200
+		total = Rails.cache.fetch("proceduresTotal", expires_in: 24.hours) do
+			Procedure.count
+		end
+		render json: total, status: 200
 	end
 
 	# GET /procedure/proceduresInfo/{params}

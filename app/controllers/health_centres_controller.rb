@@ -11,14 +11,20 @@ class HealthCentresController < ApplicationController
     # Params: None
     # Return: Return the number of health centres
     def health_centre_count
-        render json: HealthCentre.count, status: 200 and return
+        total = Rails.cache.fetch("health_centre_count", expires_in: 24.hours) do
+            HealthCentre.count
+        end
+        render json: total, status: 200 and return
     end
 
     # GET /total_distance_average
     # Params: None
     # Return: the average distance between pacients and health centre
     def total_distance_average
-        render json: Procedure.average(:distance).to_f.round(1), status: 200 and return
+        total = Rails.cache.fetch("total_distance_average", expires_in: 24.hours) do
+            Procedure.average(:distance).to_f.round(1)
+        end
+        render json: total, status: 200 and return
     end
 
     # GET /hospital/:id
