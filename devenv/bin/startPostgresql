@@ -10,4 +10,8 @@ docker run -d                                             \
        --name psql-container                              \
        postgres:10
 
-docker exec psql-container psql --dbname postgres -U health-user --set db=test_db -c 'CREATE DATABASE health-dashboard-test;' 2>&1 > /dev/null
+docker exec psql-container psql            \
+            --dbname postgres              \
+            -U health-user                 \
+            --set db=health-dashboard-test \
+            -c 'CREATE DATABASE "health-dashboard-test";' 2>&1 > /dev/null
