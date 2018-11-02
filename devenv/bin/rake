@@ -16,6 +16,5 @@ docker run -it --rm                     \
        -w /usr/src/myapp                \
        -e RAILS_ENV=docker              \
        --link psql-container            \
-       --name rails                     \
+       --name rake                      \
        rails:latest rake "$@"
-

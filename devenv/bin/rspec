@@ -1,8 +1,12 @@
 #!/bin/bash
 
-if [ -z "`docker ps --filter "name=psql-container-test" -q`" ]; then
-    startPostgresqlTest
+# Inicio o container de PostgreSQL se não estiver rodando
+if [ -z "`docker ps --filter "name=psql-container" -q`" ]; then
+    startPostgresql
 fi
+
+# Rodo um db:migrate para o environment rspec
+rake db:migrate RAILS_ENV=rspec
 
 if [ -z "`docker images --filter "label=rails" -q`" ]; then
     echo "Docker image for rails not found. Please wait while I create it."
@@ -15,7 +19,6 @@ docker run -it --rm                     \
        -v $PWD:/usr/src/myapp           \
        -w /usr/src/myapp                \
        -e RAILS_ENV=rspec               \
-       --link psql-container-test       \
+       --link psql-container            \
        --name rails                     \
        rails:latest bundle exec rspec "$@"
-

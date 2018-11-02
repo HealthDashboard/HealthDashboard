@@ -15,7 +15,7 @@ docker:
 
 rspec:
   adapter: postgresql
-  host: psql-container-test
+  host: psql-container
   database: health-dashboard-test
   username: health-user
   password: health-password

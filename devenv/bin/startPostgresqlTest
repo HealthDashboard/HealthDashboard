@@ -1,8 +1,0 @@
-#!/bin/bash
-
-docker run -d                                  \
-       -e POSTGRES_DB=health-dashboard-test    \
-       -e POSTGRES_USER=health-user            \
-       -e POSTGRES_PASSWORD=health-password    \
-       --name psql-container-test              \
-       postgres:10
