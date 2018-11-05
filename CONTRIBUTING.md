@@ -5,28 +5,32 @@ este projeto.
 
 ## Como montar o ambiente de execução do projeto
 
-Para executar o projeto de health-dashboard, é necessário ter uma máquina com
-Rails e PostgreSQL instalado. As versões necessárias são:
+O projeto health-dashboard, requer o framework Rails e um banco de dados
+PostgreSQL para ser executado. As versões mínimas necessárias destes
+aplicativos são:
 
 * PostgreSQL >= 9.5.12
 * Rails >= 5.0.1
 
-Existem duas abordagens para instalar este ambiente:
- * Utilizar uma máquina virtual pré-configurada por scripts;
- * Instalar manualmente as aplicações em uma máquina com Linux.
+Existem três opções para ter um ambiente para começar a contribuir com o
+projeto:
+ * Utilizar o VirtualBox e VagrantUp para criar uma máquina virtual
+   pré-configurada;
+ * Instalar em uma máquina com Linux os programas docker e docker-compose; 
+ * Instalar manualmente os programas em uma máquina com Linux.
  
-### Instalando o ambiente com uma máquina virtual
+### Instalando o ambiente usando uma máquina virtual
 
 Primeiramente é necessário instalar as aplicações VirtualBox e VagrantUp em sua
 máquina. Isto deve ser possível independente do sistema operacional que você
 está utilizando. A versão recomendada do VirtualBox é 5.2.18 e a do VagrantUp
 é a 2.1.2.
 
-Após instalar estes programas, será necessário ativar o suporte a virtualização
-na BIOS do seu PC.
+Importante: Após instalar estes programas, será necessário ativar o suporte a
+virtualização na BIOS do seu PC.
 
-Feito isto, basta executar os seguintes comandos dentro da pasta **devenv** do
-projeto:
+Após ter clonado o repositório para sua máquina local, basta executar os
+seguintes comandos dentro da pasta **devenv** do projeto:
 
 ```
 $ vagrant up
@@ -43,7 +47,53 @@ Dentro da pasta home deste usuário, será mapeada a pasta do projeto na máquin
 hospedeira, permitindo que arquivos sejam editados fora da máquina virtual e
 executados dentro dela.
 
+A máquina virtual contará ainda com a subpasta **devenv/bin** mapeada para a
+pasta **bin** na pasta do usuário, adicionando automaticamente os scripts
+contidos nela no PATH do usuário. Isto permitirá que o contribuinte do projeto
+utilize scripts para execução do PostgreSQL e Rails da mesma forma que
+documentado abaixo com docker e docker-compose.
+
 Feito isto, basta executar os comandos da seção [Como executar o projeto](#como-executar-o-projeto).
+
+### Utilizando docker e docker-compose
+
+Para simplificar o processo de configuração do ambiente foram criados scripts
+que executam containers para os principais comandos de Rails que o projeto
+requer. Através destes scripts, um container com todos os binários e arquivos
+necessários é criado e a execução acontece dentro do container, dispensando
+a instalação de aplicações na máquina Linux.
+
+O script **bundle** utiliza uma imagem com Ruby versão 2.5 e pode ser utilizado
+para fazer o download de todas as gemas que o projeto requer. As gemas baixadas
+são armazenadas na pasta **.gems** na pasta do usuário.
+
+Os scripts **rake**, **rails** e **rspec** utilizam a imagem **rails:latest**
+que é criada automaticamente pelo script **createRailsImage**, se baseando na
+mesma imagem Ruby utilizada pelo comando bundle. Estes scripts requerem um
+banco de dados PostgreSQL para serem executados, e o script **startPostgresql**
+é utilizado para isto.
+
+O script **startPostgresql** inicia um container com o bando de dados Postgres
+versão 10, criando os bancos de dados de desenvolvimento e de testes. Os dados
+destes bancos de dados são armazenados na pasta **.psql-container-data** na
+pasta do usuário.
+
+Para testar um deploy com uma imagem empacotando toda a aplicação e banco de
+dados pode ser utilizado o docker-compose. Para isto basta executar na pasta
+principal do projeto os comandos abaixo:
+
+```
+$ docker-compose build
+```
+O comando acima irá criar uma imagem para o health-dashboard empacotando todo
+o código e dependências.
+
+```
+$ docker-compose up
+```
+Este comando irá criar um container de PostgreSQL e um container com o
+health-dashboard, executando os como se fosse um deploy da aplicação em um
+ambiente de homologação ou produção. 
 
 ### Instalando o ambiente em uma máquina Linux
 

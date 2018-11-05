@@ -1,5 +1,12 @@
 #!/bin/bash
 
+if [ "`docker inspect psql-container -f "{{json .State.Running}}"`" == "false" ]; then
+    echo "Restarting PostgreSQL container.."
+    docker start psql-container
+    exit 0
+fi
+
+echo "Starting PostgreSQL container.."
 docker run -d                                             \
        -v $HOME/.psql-container-data:/psql-container-data \
        -p 5432:5432                                       \
@@ -10,6 +17,7 @@ docker run -d                                             \
        --name psql-container                              \
        postgres:10
 
+echo "Creating test database.."
 docker exec psql-container psql            \
             --dbname postgres              \
             -U health-user                 \
