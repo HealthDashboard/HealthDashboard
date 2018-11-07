@@ -341,6 +341,11 @@ function metresToPixels(metres) {
     return metres / metresPerPixel;
 }
 
+function pixelsToMetres(pixels) {
+    var metresPerPixel = 40075016.686*Math.abs(Math.cos((-23.557296000000001)*Math.PI/180))/Math.pow(2, map.getZoom()+8);
+    return pixels * metresPerPixel;
+}
+
 function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pixels, heatmap_opacity, function_maker) {
     cluster = L.markerClusterGroup({
         maxClusterRadius: max_cluster_pixels,
@@ -678,11 +683,20 @@ function graphs() {
 
 //** Called when "Imprimir" butotn is clicked, opens a print dialog **//
 function print_maps() {
+    $('#loading_overlay').show();
     $(".container").css('margin-top', 0);
+    center = map.getCenter()
+    h = pixelsToMetres($("#procedure_map").height())/2;
+    w = h * 0.69;
+    h = h/111111
+    w = w/111111
+    var bounds = [[center.lat - h, center.lng - w], [center.lat + h, center.lng + w]];
 
     minimap.setZoom(map.getZoom(), {animate: false, noMoveStart: true});
-    var circle = L.circle(map.getCenter(), {radius: 2000}).addTo(minimap);
+    var rectangle = L.rectangle(bounds, {color: "rgba(56, 22, 179, 0.85)", weight: 1}).addTo(minimap);
     minimap.setZoom(9);
+
+
 
     var node = document.getElementById('map-affix');
 
@@ -713,11 +727,10 @@ function print_maps() {
             filters_div_text = filters_div_text.concat("</p>");
 
             $("#active-filters-div").html(filters_div_text);
-            console.log(document.getElementById("active-filters-div"))
-
         })
         .catch(function (error) {
             console.error('oops, something went wrong!', error);
+            $('#loading_overlay').hide();
         })
         .then(function () {
             window.print();
@@ -725,7 +738,8 @@ function print_maps() {
             $(".container").css('margin-top', "50px");
             $('#mini_map_div').contents().appendTo('#mini_map-container')
             $('#print-leg').contents().appendTo('#heatmap-leg')
-            minimap.removeLayer(circle);
+            minimap.removeLayer(rectangle);
+            $('#loading_overlay').hide();
         });
 
 }
