@@ -685,6 +685,10 @@ function graphs() {
 function print_maps() {
     $('#loading_overlay').show();
     $(".container").css('margin-top', 0);
+    $(".collapsible.active").each(function() {
+      $(this).click();
+    });
+
     center = map.getCenter()
     h = pixelsToMetres($("#procedure_map").height())/2;
     w = h * 0.69;
@@ -693,7 +697,7 @@ function print_maps() {
     var bounds = [[center.lat - h, center.lng - w], [center.lat + h, center.lng + w]];
 
     minimap.setZoom(map.getZoom(), {animate: false, noMoveStart: true});
-    var rectangle = L.rectangle(bounds, {color: "rgba(56, 22, 179, 0.85)", weight: 1}).addTo(minimap);
+    var rectangle = L.rectangle(bounds, {color: "rgba(56, 22, 179, 0.6)", fillColor: 'rgba(56, 22, 179, 0)', weight: 3}).addTo(minimap);
     minimap.setZoom(9);
 
 

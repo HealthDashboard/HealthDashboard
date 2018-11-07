@@ -363,6 +363,7 @@ h1 {
   display: block;
   top: -300;
   right: -300;
+  z-index: -1000;
   position: fixed;
   width: 300px;
   height: 300px;
