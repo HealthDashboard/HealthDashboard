@@ -100,7 +100,7 @@ gem 'slideshow', '~> 3.1'
 # Use Capistrano for deployment
 # gem 'capistrangem 'slideshow', '~> 3.1'gem 'slideshow', '~> 3.1'o-rails', group: :development
 
-group :development, :test do
+group :development, :test, :docker do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
   gem 'rspec-rails', '~> 3.7'
