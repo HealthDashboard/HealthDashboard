@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  mount JasmineRails::Engine => '/specs' if defined?(JasmineRails)
   root to: 'application#home'
 
   get 'points', to: 'health_centres#points'
