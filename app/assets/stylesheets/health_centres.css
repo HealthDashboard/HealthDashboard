@@ -242,6 +242,20 @@ input[type="radio"] {
   flex: 1 1 auto;
 }
 
+.sources {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  z-index: 100;
+  margin-bottom: 0;
+  padding-left: .5em;
+}
+
+.sources-text {
+  color: gray;
+  font-size: smaller;
+}
+
 .heatmap-legend {
   display: none;
   visibility: hidden;
