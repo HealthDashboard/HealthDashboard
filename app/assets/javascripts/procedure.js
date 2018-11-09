@@ -445,7 +445,11 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
                     max_value_heatmap = procedure[2]
 
             });
-
+            if (document.getElementById('checkGradient').checked) {
+                gradient = { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"}
+            } else {
+                gradient = null
+            }
             var cfg = {
               // radius should be small ONLY if scaleRadius is true (or small radius is intended)
               // if scaleRadius is false it will be the constant radius used in pixels
@@ -459,7 +463,8 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
               lngField: 'lng',
               // which field name in your data represents the data value - default "value"
               valueField: 'count',
-              gradient: { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"},
+              //gradient: { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"},
+              gradient: gradient,
               opacity: heatmap_opacity / 100,
               onExtremaChange: makeLegend
             };
