@@ -249,7 +249,17 @@ h1 {
 }
 
 .span-normal {
-  background: linear-gradient(to right, #D3C9F8, #3816B3);
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#2bffd3+0,77ff99+33,fffd57+66,f93434+100 */
+  background: #2bffd3; /* Old browsers */
+  background: -moz-linear-gradient(left, #2bffd3 0%, #77ff99 33%, #fffd57 66%, #f93434 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(left, #2bffd3 0%,#77ff99 33%,#fffd57 66%,#f93434 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to right, #2bffd3 0%,#77ff99 33%,#fffd57 66%,#f93434 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2bffd3', endColorstr='#f93434',GradientType=1 ); /* IE6-9 */
+  width: 166px;
+}
+
+.span-normal.dalt {
+  background: linear-gradient(to right, #D3C9F8, #3816B3) !important;
   width: 166px;
 }
 

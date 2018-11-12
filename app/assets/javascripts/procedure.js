@@ -447,8 +447,10 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
             });
             if (document.getElementById('checkGradient').checked) {
                 gradient = { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"}
+                $("#gradient").addClass("dalt");
             } else {
-                gradient = null
+                gradient = { 0.25: "#2bffd3", 0.55: "#77ff99", 0.85: "#fffd57", 1.0: "#f93434"}
+                $("#gradient").removeClass("dalt");
             }
             var cfg = {
               // radius should be small ONLY if scaleRadius is true (or small radius is intended)
