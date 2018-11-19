@@ -30,7 +30,7 @@ var pixels_cluster, pixels_heatmap;
 
 var minimap;
 
-//** Called when loading the page, init vars, hide overlay and draw the map **//
+// //** Called when loading the page, init vars, hide overlay and draw the map **//
 function initProcedureMap() {
     auto = false;
     cleaning = false;
@@ -165,7 +165,7 @@ function downloadCluster(paramLat, paramLong){
     download(allData);
 }
 
-//** Called when a visualization shape is selected, remove the selected shape if its already selected or draws a new one **//
+// //** Called when a visualization shape is selected, remove the selected shape if its already selected or draws a new one **//
 function setShape(name, popup) {
     myStyle = {
         "color": "#444444",
@@ -227,11 +227,11 @@ function setShape(name, popup) {
 function setor_censitario(e) {
     $.ajax({
         dataType: "json",
-        url: `SetorCensitario/Setor_with_pop-${e.target.name_sc}.json`,
+        url: "SetorCensitario/Setor_with_pop-" + e.target.name_sc + ".json",
         success: function(data) {
             shape = new L.geoJson(data,
                 {onEachFeature: function(feature, layer) {
-                    layer.bindTooltip(`População: ${feature.properties.POPULACAO}`, {closeButton: false});
+                    layer.bindTooltip("População:" + feature.properties.POPULACAO, {closeButton: false});
                 }}).addTo(map);
             shape.setStyle(myStyle);
             shapes_setor.push(shape);
