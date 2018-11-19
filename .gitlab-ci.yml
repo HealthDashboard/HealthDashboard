@@ -13,16 +13,17 @@ rspec:
     POSTGRES_USER: health_dashboard
     POSTGRES_PASSWORD: health_dashboard
     POSTGRES_DB: health_dashboard_test
+    RAILS_ENV: test
 
   script:
     - cp config/database-ci.yml config/database.yml
-    - cp Gemfile-ci Gemfile
+    - apt-get install -y nodejs --no-install-recommends
     - gem install bundler --no-ri --no-rdoc
     - bundle check || bundle install
-    - RAILS_ENV=test bundle exec rake db:create
-    - RAILS_ENV=test bundle exec rake db:migrate
+    - bundle exec rake db:create
+    - bundle exec rake db:migrate
     - bundle exec rspec
-    - rake spec:javascript
+    - bundle exec rake spec:javascript
   artifacts:
     paths:
       - coverage/
