@@ -61,25 +61,26 @@ function init_dashboard_chart() {
 
 function filters_show(){
     var filters_div_text = "";
-    $.each(filters_print, function(index, value){
-      if (filters_text[index] != null && filters_text[index] != "")
-        filters_div_text = filters_div_text.concat("<br /><strong>" + value + ": </strong>" + filters_text[index]);
-      });
-  
-      if (genders[0] != null)
+    $.each(filters_print, function(index, value) {
+        if (filters_text[index] != null && filters_text[index] != "") {
+            filters_div_text = filters_div_text.concat("<br /><strong>" + value + ": </strong>" + filters_text[index]);
+        }
+    });
+    if (genders[0] != null) {
         filters_div_text = filters_div_text.concat("<br /><strong>Sexo:</strong> " + genders.join(", "));
-  
-      if (start_date != null && start_date != "")
+    }
+    if (start_date != null && start_date != "") {
         filters_div_text = filters_div_text.concat("<br /><strong>Data mínima:</strong> " + start_date);
-  
-      if (end_date != null && end_date != "")
+    }
+    if (end_date != null && end_date != "") {
         filters_div_text = filters_div_text.concat("<br /><strong>Data máxima:</strong> " + end_date);
-  
-      if (dist_min != null)
+    }
+    if (dist_min != null) {
         filters_div_text = filters_div_text.concat("<br /><strong>Distância mínima:</strong> " + dist_min);
-  
-      if (dist_max != null)
+    }
+    if (dist_max != null) {
         filters_div_text = filters_div_text.concat("<br /><strong>Distância máxima:</strong> " + dist_max);
+    }
     filters_div_text = filters_div_text.concat("<br/><br/>");
     document.getElementById("filters-text").innerHTML = filters_div_text;
     console.log(filters_div_text);

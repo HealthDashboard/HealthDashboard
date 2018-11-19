@@ -4,8 +4,18 @@
 describe("Testing show_email of About", function() {
 
     beforeAll(function() {
-        html = '<i id="buttonEmail" class="fas fa-lg fa-envelope-square" onclick="show_email(this)"></i><p id="txtEmail"class="email">dciriaco@ime.usp.br</p>'
-        document.body.innerHTML += html;
+
+        if (document.getElementById("sandbox") == null) {
+            document.body.innerHTML += '<div id="sandbox"></div>';
+        }
+        
+        var sandbox = document.getElementById("sandbox");
+        sandbox.innerHTML = '<i id="buttonEmail" class="fas fa-lg fa-envelope-square" onclick="show_email(this)"></i><p id="txtEmail"class="email">nobody@healthdashboard</p>'
+    });
+    
+    afterAll(function() {
+        var sandbox = document.getElementById("sandbox");
+        sandbox.innerHTML = '';
     });
 
     beforeEach(function() {
