@@ -29,6 +29,11 @@ var start_date = null;
 var end_date = null;
 var genders = null;
 
+var chart_type = {"CRS":"bar", "DA":"bar", "PR":"bar", "STS":"bar", "age_code":"bar", "cid_primary":"bar", "cid_secondary":"bar",
+ "cid_secondary2":"bar", "cmpt":"line", "cnes_id":"bar", "complexity":"pie", "days":"line", "days_total":"line", "days_uti":"line",
+ "days_ui":"line", "distance":"line", "finance":"pie", "gender":"pie", "gestor_ide":"pie", "lv_instruction":"pie", "proce_re":"bar",
+ "race":"pie", "specialty_id":"pie", "treatment_type":"pie", "val_total":"line"};
+
 function init_dashboard_chart() {
     dynamic = false;
     dashboard_legend_clicked = false;
@@ -89,13 +94,13 @@ function create_dashboard_charts() {
     if(data === null){
         $.getJSON("/variables_metric.json", data, function(loaded) {
             result = loaded;
-            create_one_variable_graph(result["cnes_id"]);
+            create_one_variable_graph(result["cnes_id"], "cnes_id");
         });
     }
     else{
         $.getJSON("procedure/proceduresVariables", data, function(loaded) {
             result = loaded;
-            create_one_variable_graph(result["cnes_id"]);
+            create_one_variable_graph(result["cnes_id"], "cnes_id");
         });
     }
     create_proceduresPerSpecialties();
@@ -312,7 +317,7 @@ function create_table_rank(result) {
     rank_table.html(rows);
 }
 
-function create_one_variable_graph(data){
+function create_one_variable_graph(data, field){
     var formatData = [];
     formatData.push(['score', 'amount', 'variable']);
     var max = 0;
@@ -322,62 +327,193 @@ function create_one_variable_graph(data){
             max = Math.max(max, data[i][1]);
         }
     }
-    var option = {
-        dataset: {
-            source: formatData,
-        },
-        //title: 'Title',
-        tooltip : {
-            trigger: 'axis',
-            axisPointer : {
-                type : 'shadow'
-            }
-        },
-        dataZoom: [{
-            id: 'dataZoomX',
-            type: 'slider',
-            xAxisIndex: [0],
-            filterMode: 'filter'
-        },
-        {
-            id: 'dataZoomY',
-            type: 'slider',
-            yAxisIndex: [0],
-            filterMode: 'empty'
-        }],
-        grid: {containLabel: true},
-        xAxis: {
-          name: 'Procedimentos',
-          axisLabel: {interval : 0},
-        },
-        yAxis: {type: 'category'},
-        visualMap: {
-            orient: 'horizontal',
-            min: 0,
-            max: max,
-            text: ['Máximo', 'Mínimo'],
-            // Map the score column to color
-            dimension: 0,
-            inRange: {
-                color: ['#D7DA8B', '#E15457']
+    myChart.clear();
+    switch (chart_type[field]) {
+      case "bar":
+        var option = {
+            dataset: {
+                source: formatData,
             },
-        },
-        series: [
-            {
-                type: 'bar',
-                encode: {
-                    // Map the "amount" column to X axis.
-                    x: 'amount',
-                    // Map the "product" column to Y axis
-                    y: 'variable',
+            //title: 'Title',
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : {
+                    type : 'shadow'
                 }
-            }
-        ]
-    };
-    myChart.setOption(option);
+            },
+            dataZoom: [{
+                id: 'dataZoomX',
+                type: 'slider',
+                xAxisIndex: [0],
+                filterMode: 'filter'
+            },
+            {
+                id: 'dataZoomY',
+                type: 'slider',
+                yAxisIndex: [0],
+                filterMode: 'empty'
+            }],
+            grid: {containLabel: true},
+            xAxis: {
+              name: 'Procedimentos',
+              axisLabel: {interval : 0},
+            },
+            yAxis: {type: 'category'},
+            visualMap: {
+                orient: 'horizontal',
+                min: 0,
+                max: max,
+                text: ['Máximo', 'Mínimo'],
+                // Map the score column to color
+                dimension: 0,
+                inRange: {
+                    color: ['#D7DA8B', '#E15457']
+                },
+            },
+            series: [
+                {
+                    type: 'bar',
+                    encode: {
+                        // Map the "amount" column to X axis.
+                        x: 'amount',
+                        // Map the "product" column to Y axis
+                        y: 'variable',
+                    }
+                }
+            ]
+        };
+        myChart.setOption(option);
+        break;
+      case "pie":
+        var option = {
+            dataset: {
+                source: formatData,
+            },
+            //title: 'Title',
+            tooltip : {
+                trigger: 'item',
+
+            },
+            legend: {
+                type: 'scroll',
+                orient: 'vertical',
+                right: 10,
+                top: 20,
+                bottom: 20,
+            },
+            label: {
+                    formatter: '{b}: ({d}%)'
+                },
+            series : [
+                {
+                    type: 'pie',
+                    radius : '55%',
+                    center: ['40%', '50%'],
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    },
+                    encode: {
+                      itemName: 'variable',
+                      value: 'amount'
+                    }
+                }
+            ]
+        };
+        myChart.setOption(option);
+        break;
+      case "line":
+        var option = {
+            dataset: {
+                source: formatData,
+            },
+            //title: 'Title',
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : {
+                    type : 'shadow'
+                }
+            },
+            dataZoom: [{
+                id: 'dataZoomX',
+                type: 'slider',
+                xAxisIndex: [0],
+                filterMode: 'filter'
+            }],
+            grid: {containLabel: true},
+            yAxis: {
+              name: 'Procedimentos',
+              type: 'value',
+              axisLabel: {interval : 0}
+            },
+            xAxis: {
+              type: 'category',
+              boundaryGap: false
+            },
+            toolbox: {
+              feature: {
+                magicType: {
+                  type: ['line', 'bar']
+                }
+              }
+            },
+            series: [
+                {
+                    type: 'line',
+                    encode: {
+                        y: 'amount',
+                        x: 'variable',
+                    }
+                }
+            ]
+        };
+        myChart.setOption(option);
+        break;
+      // case "DA":
+      //   $.get('Shape_DA.geojson', function (DA) {
+      //     echarts.registerMap('da', DA);
+      //     var option = {
+      //       dataset: {
+      //         source: formatData,
+      //       },
+      //       tooltip: {
+      //         trigger: 'item'
+      //       },
+      //       visualMap: {
+      //         orient: 'horizontal',
+      //         min: 0,
+      //         max: max,
+      //         text: ['Máximo', 'Mínimo'],
+      //         // Map the score column to color
+      //         dimension: 0,
+      //         inRange: {
+      //             color: ['#D7DA8B', '#E15457']
+      //         },
+      //       },
+      //       series: [
+      //         {
+      //           type: 'map',
+      //           mapType: 'da',
+      //           roam: false,
+      //           itemStyle:{
+      //             normal:{label:{show:true}},
+      //             emphasis:{label:{show:true}},
+      //         },
+      //         data: formatData,
+      //       },
+      //     ]
+      //   };
+      //   myChart.setOption(option);
+      // })
+      // break;
+  }
 }
 
 function changeChart(){
     const field = document.getElementById("select-chart").value;
-    create_one_variable_graph(result[field]);
+    console.log(field)
+    create_one_variable_graph(result[field], field);
 }
