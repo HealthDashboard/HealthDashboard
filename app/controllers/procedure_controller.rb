@@ -312,6 +312,8 @@ class ProcedureController < ApplicationController
 	# Params: [filter values array]
 	# Return: A hash with infos about each variable
 	def proceduresVariables
+	    render json: "Bad request", status: 400 and return unless @procedures != nil
+
 		result = Hash.new
 		variables = [:cnes_id, :cmpt, :proce_re, :specialty_id, :treatment_type, :cid_primary, :cid_secondary, 
 			:cid_secondary2, :complexity, :finance, :age_code, :race, :lv_instruction,
@@ -328,16 +330,18 @@ class ProcedureController < ApplicationController
 		# Replace the values - HEALTH_CENTRES
 		health_centres = @health_centres.map{|x| x["id"]}
 		result["cnes_id"].each.with_index do |key, index|
-			unless key.nil?
+			unless key[0].nil?
 				indexAux = health_centres.find_index(key[0].to_s)
 				result["cnes_id"][index][0] = @health_centres[indexAux]["text"]
 			end
 		end
 
+		# puts res
+
 		# Replace the values - CMPT
 		cmpt = @cmpt.map{|x| x["id"]}
 		result["cmpt"].each.with_index do |key, index|
-			unless key.nil?
+			unless key[0].nil?
 				indexAux = cmpt.find_index(key[0].to_s)
 				result["cmpt"][index][0] = @cmpt[indexAux]["text"]
 			end
@@ -346,7 +350,7 @@ class ProcedureController < ApplicationController
 		# Replace the values - TREATMENT_TYPE
 		treatment_type = @treatments.map{|x| x["id"]}
 		result["treatment_type"].each.with_index do |key, index|
-			unless key.nil?
+			unless key[0].nil?
 				indexAux = treatment_type.find_index(key[0].to_s)
 				result["treatment_type"][index][0] = @treatments[indexAux]["text"]
 			end
@@ -355,7 +359,7 @@ class ProcedureController < ApplicationController
 		# Replace the values - COMPLEXITY
 		complexity = @complexity.map{|x| x["id"].to_s}
 		result["complexity"].each.with_index do |key, index|
-			unless key.nil?
+			unless key[0].nil?
 				key[0] = "0"+key[0].to_s
 				indexAux = complexity.find_index(key[0].to_s)
 				result["complexity"][index][0] = @complexity[indexAux]["text"]
@@ -365,7 +369,7 @@ class ProcedureController < ApplicationController
 		# Replace the values - FINANCE
 		finance = @finance.map{|x| x["id"].to_s}
 		result["finance"].each.with_index do |key, index|
-			unless key.nil?
+			unless key[0].nil?
 				key[0] = "0"+key[0].to_s
 				indexAux = finance.find_index(key[0].to_s)
 				result["finance"][index][0] = @finance[indexAux]["text"]
@@ -375,7 +379,7 @@ class ProcedureController < ApplicationController
 		# Replace the values - AGE_CODE
 		age_code = @age_group.map{|x| x["id"].to_s}
 		result["age_code"].each.with_index do |key, index|
-			unless key.nil?
+			unless key[0].nil?
 				indexAux = age_code.find_index(key[0].to_s)
 				result["age_code"][index][0] = @age_group[indexAux]["text"]
 			end
@@ -384,7 +388,7 @@ class ProcedureController < ApplicationController
 		# Replace the values - RACE
 		race = @race.map{|x| x["id"].to_s}
 		result["race"].each.with_index do |key, index|
-			unless key.nil?
+			unless key[0].nil?
 				if (key[0].to_s).length < 2
 					key[0] = "0"+key[0].to_s
 				end
@@ -396,7 +400,7 @@ class ProcedureController < ApplicationController
 		# Replace the values - LV_INSTRUCTION
 		lv_instruction = @lv_instruction.map{|x| x["id"].to_s}
 		result["lv_instruction"].each.with_index do |key, index|
-			unless key.nil?
+			unless key[0].nil?
 				indexAux = lv_instruction.find_index(key[0].to_s)
 				result["lv_instruction"][index][0] = @lv_instruction[indexAux]["text"]
 			end
@@ -405,7 +409,7 @@ class ProcedureController < ApplicationController
 		# Replace the values - GESTOR
 		gestor = @gestor.map{|x| x["id"].to_s}
 		result["gestor_ide"].each.with_index do |key, index|
-			unless key.nil?
+			unless key[0].nil?
 				key[0] = "0"+key[0].to_s
 				indexAux = gestor.find_index(key[0].to_s)
 				result["gestor_ide"][index][0] = @gestor[indexAux]["text"]
@@ -415,7 +419,7 @@ class ProcedureController < ApplicationController
 		# Replace the values - SPECIALTIES
 		specialties = @specialties.map{|x| x["id"].to_s}
 		result["specialty_id"].each.with_index do |key, index|
-			unless key.nil?
+			unless key[0].nil?
 				key[0] = key[0].to_s
 				unless specialties.find_index(key[0].to_s).nil?
 					indexAux = specialties.find_index(key[0].to_s)
@@ -426,7 +430,7 @@ class ProcedureController < ApplicationController
 
 		# Replace the values - DISTANCE
 		result["distance"].each.with_index do |key, index|
-			unless key.nil?
+			unless key[0].nil?
 				key[0] = '%.2f' % key[0].to_f
 				result["distance"][index][0] = (key[0].to_s).gsub('.', ',')
 			end
@@ -434,7 +438,7 @@ class ProcedureController < ApplicationController
 
 		# Replace the values - VAL_TOTAL
 		result["val_total"].each.with_index do |key, index|
-			unless key.nil?
+			unless key[0].nil?
 				key[0] = '%.2f' % key[0].to_f
 				result["val_total"][index][0] = (key[0].to_s).gsub('.', ',')
 			end
@@ -444,7 +448,7 @@ class ProcedureController < ApplicationController
 		#"cid_primary", "cid_secondary", "cid_secondary2"
 		cid_primary = @cid.map{|x| x["id"].to_s}
 		result["cid_primary"].each.with_index do |key, index|
-			unless key.nil?
+			unless key[0].nil?
 				key[0] = key[0].to_s
 				unless cid_primary.find_index(key[0].to_s).nil?
 					indexAux = cid_primary.find_index(key[0].to_s)
@@ -455,7 +459,7 @@ class ProcedureController < ApplicationController
 
 		cid_secondary = @cid.map{|x| x["id"].to_s}
 		result["cid_secondary"].each.with_index do |key, index|
-			unless key.nil?
+			unless key[0].nil?
 				key[0] = key[0].to_s
 				unless cid_secondary.find_index(key[0].to_s).nil?
 					indexAux = cid_secondary.find_index(key[0].to_s)
@@ -466,7 +470,7 @@ class ProcedureController < ApplicationController
 
 		cid_secondary2 = @cid.map{|x| x["id"].to_s}
 		result["cid_secondary2"].each.with_index do |key, index|
-			unless key.nil?
+			unless key[0].nil?
 				key[0] = key[0].to_s
 				unless cid_secondary2.find_index(key[0].to_s).nil?
 					indexAux = cid_secondary2.find_index(key[0].to_s)
