@@ -1,7 +1,7 @@
 //= require leaflet.js
 //= require procedure.js
 
-describe("Tests for metresToPixels method", function() {
+describe("Tests for procedure.js", function() {
 
 	beforeAll(function() {
 
@@ -11,6 +11,7 @@ describe("Tests for metresToPixels method", function() {
 		
 		var sandbox = document.getElementById("sandbox");
 		sandbox.innerHTML = '<div id="procedure_map"></div>'
+		sandbox.innerHTML += '<div class="legend-data"><li class="legend-data-li" id="legend-label-2"><p class="legend-data"></p></li></div>' 
 
 	    var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	        maxZoom: 18,
@@ -25,7 +26,16 @@ describe("Tests for metresToPixels method", function() {
 		sandbox.innerHTML = '';
 	});
 
-	it("All filters null", function() {
+	it("Metres to pixels", function() {
 		expect(metresToPixels(5000)).toBe(71.3604400578994);
 	});
+        it("Pixels to metres", function(){
+                expect(pixelsToMetres(71.3604400578994)).toBe(5000);
+        });
+        it("Legend", function(){
+                var e = {}
+                e.max = 1000;
+                makeLegend(e);
+                expect(document.getElementById("legend-label-2").innerText).toBe('1000');
+        });
 });
