@@ -453,7 +453,7 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
                 gradient = { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"}
                 $("#gradient").addClass("dalt");
             } else {
-                gradient = { 0.25: "#2bffd3", 0.55: "#77ff99", 0.85: "#fffd57", 1.0: "#f93434"}
+                gradient = { 0.25: "#2bffd3", 0.62: "#fffd57", 1.0: "#f93434"}
                 $("#gradient").removeClass("dalt");
             }
             var cfg = {
