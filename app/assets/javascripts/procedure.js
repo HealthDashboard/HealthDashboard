@@ -708,7 +708,7 @@ function print_maps() {
     var bounds = [[center.lat - h, center.lng - w], [center.lat + h, center.lng + w]];
 
     minimap.setZoom(map.getZoom(), {animate: false, noMoveStart: true});
-    var rectangle = L.rectangle(bounds, {color: "rgba(56, 22, 179, 0.6)", fillColor: 'rgba(56, 22, 179, 0)', weight: 3}).addTo(minimap);
+    var rectangle = L.rectangle(bounds, {color: "rgba(0, 0, 0, 0.85)", fillColor: 'rgba(56, 22, 179, 0)', weight: 3}).addTo(minimap);
     minimap.setZoom(9);
 
 
