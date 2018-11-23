@@ -8,18 +8,21 @@ class ProcedureController < ApplicationController
 		@NUM_FILTERS = 17
 		@MAX_SLIDERS = [351,148,99,351,110786.71.ceil, 84.5.ceil]
 
-		@procedure = ["Estabelecimento de ocorrência", "Competência (aaaamm)", "Especialidade do leito", "Caráter do atendimento",
-					  "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Complexidade", "Tipo de financiamento"]
+		@establishment = ["Estabelecimento de ocorrência", "Gestão", "Especialidade do leito"]
+		@procedure = ["Competência (aaaamm)", "Caráter do atendimento", "Diagnóstico principal (CID-10)", 
+			"Diagnóstico secundário (CID-10)", "Diagnóstico secundário 2 (CID-10)", "Complexidade", "Tipo de financiamento", 
+			"Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde"]
 		@patient_info = ["Faixa etária", "Raça/Cor", "Nível de instrução"]
-		@establishment = ["Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde", "Gestão"]
 
 		#'Hints' to display on each label
-		@titles_procedure_filters = ["Estabelecimento do atendimento prestado.", "Ano/mês de processamento da AIH. Ex: 201506(junho de 2015).", "Especialidade do leito de internação.", "Caráter da internação.",
-									 "Motivo da internação.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.", "Nível de atenção para realização do procedimento.", "Tipo de financiamento da internação."]
+
+		@titles_establishment_filters = ["Estabelecimento do atendimento prestado.", "Secretaria responsável.", "Especialidade do leito de internação."]
+
+		@titles_procedure_filters = ["Ano/mês de processamento da AIH. Ex: 201506(junho de 2015).", "Caráter da internação.",
+									 "Motivo da internação.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.", "Nível de atenção para realização do procedimento.", 
+									 "Tipo de financiamento da internação.", "Distrito administrativo da internação.", "Subprefeitura do estabelecimento.", "Supervisão técnica de saúde.", "Coordenadoria regional de saúde."]
 
 		@titles_patient_info_filters = ["Faixa etária do paciente.", "Raça/Cor do paciente.", "Grau de instrução do paciente."]
-
-		@titles_establishment_filters = ["Distrito administrativo da internação.", "Subprefeitura do estabelecimento.", "Supervisão técnica de saúde.", "Coordenadoria regional de saúde.", "Secretaria responsável."]
 
 		@sliders = ["Total geral de diárias", "Diárias UTI", "Diárias UI", "Dias de permanência", "Valor da parcela", "Distância de deslocamento(Km)"]
 
@@ -51,12 +54,12 @@ class ProcedureController < ApplicationController
 		@gestor = [{"id" => "00", "text" => "ESTADUAL"},
 				  {"id" => "01", "text" => "MUNICIPAL"}];
 
-		@options_procedure = [@health_centres, @cmpt, @specialties, @treatments, @cid, @cid, @cid, @complexity, @finance]
+		@options_establishment = [@health_centres, @gestor, @specialties]
+		@options_procedure = [@cmpt, @treatments, @cid, @cid, @cid, @complexity, @finance, @da, @pr, @sts, @crs]
 		@options_patient_info = [@age_group, @race, @lv_instruction]
-		@options_establishment = [@da, @pr, @sts, @crs, @gestor]
 
-		@filters_name = ["cnes_id", "cmpt", "specialty_id", "treatment_type", "cid_primary", "cid_secondary", "cid_secondary2",
-			"complexity", "finance", "age_code", "race", "lv_instruction", "DA", "PR", "STS", "CRS", "gestor_ide"]
+		@filters_name = ["cnes_id", "gestor_ide", "specialty_id", "cmpt", "treatment_type", "cid_primary", "cid_secondary", "cid_secondary2",
+			"complexity", "finance", "DA", "PR", "STS", "CRS", "age_code", "race", "lv_instruction"]
 
 		@sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
 
