@@ -221,7 +221,7 @@ function create_circles(id, lat, long) {
             var circle = L.circle([lat, long], {
                 color: colors_circle[i],
                 fillColor: colors_circle[i],
-                fillOpacity: 0.4,
+                fillOpacity: 0.2,
                 radius: radius[i] * 1000
             }).addTo(map);
             circle.bindTooltip("Raio de " + radius[i] + " Km<br>" + (100 - (25 + 25 * i)).toString() + "% das internações hospitalares", {direction:'top'})

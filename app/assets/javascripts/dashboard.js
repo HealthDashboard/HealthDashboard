@@ -433,9 +433,6 @@ function create_one_variable_graph(data, field){
             //title: 'Title',
             tooltip : {
                 trigger: 'axis',
-                axisPointer : {
-                    type : 'shadow'
-                }
             },
             dataZoom: [{
                 id: 'dataZoomX',
