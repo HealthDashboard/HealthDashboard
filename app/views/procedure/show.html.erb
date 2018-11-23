@@ -123,8 +123,30 @@
 
                 <div class="col-sm-12"><hr></div> <!-- Space line -->
 
-                <button class="collapsible diagnostic"><h4><b>Procedimento</b></h4></button>
+                <button class="collapsible location"><h4><b>Estabelecimento</b></h4></button>
                 <% j = 0 %>
+                <div class="wrap">
+                    <div class="content">
+                        <% @establishment.each.with_index do |f, i| %>
+                            <div class="col-sm-12">
+                                <div class="filter-label">
+                                    <label for="<%= i %>" title="<%= @titles_establishment_filters[i] %>"><b>
+                                        <%= f %>
+                                    </b></label>
+                                    <p class="label-subtitle" id="filters_<%= @filters_name[j] %>"></p>
+                                </div>
+                                <select class="select-<%= i %> form-control" id="<%= j %>" multiple="multiple" onchange='change()'>
+                                    <%= @options_establishment[i].each do |v| %>
+                                        <option value= "<%= v["id"] %>" > <%= v["text"] %> </option>
+                                    <% end %>
+                                </select>
+                            </div>
+                            <% j = j + 1 %>
+                            <div class="col-sm-12"><hr></div> <!-- Space line -->
+                        <% end %>
+                    </div>
+                </div>
+                <button class="collapsible diagnostic"><h4><b>Procedimento</b></h4></button>
                 <div class="wrap">
                     <div class="content">
                         <% @procedure.each.with_index do |f, i| %>
@@ -137,28 +159,6 @@
                                 </div>
                                 <select class="select-<%= i %> form-control" id="<%= j %>" multiple="multiple" onchange='change()'>
                                     <%= @options_procedure[i].each do |v| %>
-                                        <option value= "<%= v["id"] %>" > <%= v["text"] %> </option>
-                                    <% end %>
-                                </select>
-                            </div>
-                            <% j = j + 1 %>
-                            <div class="col-sm-12"><hr></div> <!-- Space line -->
-                        <% end %>
-                    </div>
-                </div>
-                <button class="collapsible patient_info"><h4><b>Informações do Paciente</b></h4></button>
-                <div class="wrap">
-                    <div class="content">
-                        <% @patient_info.each.with_index do |f, i| %>
-                            <div class="col-sm-12">
-                                <div class="filter-label">
-                                    <label for="<%= i %>" title="<%= @titles_patient_info_filters[i] %>"><b>
-                                        <%= f %>
-                                    </b></label>
-                                    <p class="label-subtitle" id="filters_<%= @filters_name[j] %>"></p>
-                                </div>
-                                <select class="select-<%= i %> form-control" id="<%= j %>" multiple="multiple" onchange='change()'>
-                                    <%= @options_patient_info[i].each do |v| %>
                                         <option value= "<%= v["id"] %>" > <%= v["text"] %> </option>
                                     <% end %>
                                 </select>
@@ -185,19 +185,19 @@
                         </div>
                     </div>
                 </div>
-                <button class="collapsible location"><h4><b>Estabelecimento</b></h4></button>
+                <button class="collapsible patient_info"><h4><b>Informações do Paciente</b></h4></button>
                 <div class="wrap">
                     <div class="content">
-                        <% @establishment.each.with_index do |f, i| %>
+                        <% @patient_info.each.with_index do |f, i| %>
                             <div class="col-sm-12">
                                 <div class="filter-label">
-                                    <label for="<%= i %>" title="<%= @titles_establishment_filters[i] %>"><b>
+                                    <label for="<%= i %>" title="<%= @titles_patient_info_filters[i] %>"><b>
                                         <%= f %>
                                     </b></label>
                                     <p class="label-subtitle" id="filters_<%= @filters_name[j] %>"></p>
                                 </div>
                                 <select class="select-<%= i %> form-control" id="<%= j %>" multiple="multiple" onchange='change()'>
-                                    <%= @options_establishment[i].each do |v| %>
+                                    <%= @options_patient_info[i].each do |v| %>
                                         <option value= "<%= v["id"] %>" > <%= v["text"] %> </option>
                                     <% end %>
                                 </select>
