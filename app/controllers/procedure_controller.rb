@@ -310,34 +310,37 @@ class ProcedureController < ApplicationController
 
 	def proceduresCompleteness
 		render json: "Bad request", status: 400 and return unless @procedures != nil
-    		filters_completeness = []
-    		sliders_completeness = []
+    	filters_completeness = []
+    	sliders_completeness = []
 
     		# Values for completeness at each filter
    		@filters_name.each.with_index do |name, i|
-        		if name == "race"
-            			freq = @procedures.where(name.to_sym => '99').count.to_f
-            		# puts freq.round(3) 
-        		elsif name != "gestor_ide" and name != "lv_instruction"
-            			freq = @procedures.where(name.to_sym => [nil, '0']).count.to_f
-        		else
-            			freq = @procedures.where(name.to_sym => nil).count.to_f
-        		end
-        		filters_completeness[i] = ((1 - (freq / @procedures.all.count)) * 100).round(2)
-    		end
 
-    		# Values for completeness at each slider
-    		@sliders_name.each.with_index do |name, i|
-        		freq = @procedures.where(name.to_sym => '0').count.to_f
-        		sliders_completeness[i] = ((1 - (freq / @procedures.all.count)) * 100).round(2)
+        	if name == "race"
+            	freq = @procedures.where(name.to_sym => '99').count.to_f
+            # puts freq.round(3) 
+        	elsif name != "gestor_ide" and name != "lv_instruction"
+            	freq = @procedures.where(name.to_sym => [nil, '0']).count.to_f
+        	else
+            	freq = @procedures.where(name.to_sym => nil).count.to_f
+        	end
+
+        	filters_completeness[i] = ((1 - (freq / @procedures.all.count)) * 100).round(2)
+    	end
+
+    	# Values for completeness at each slider
+    	@sliders_name.each.with_index do |name, i|
+        	freq = @procedures.where(name.to_sym => '0').count.to_f
+        	sliders_completeness[i] = ((1 - (freq / @procedures.all.count)) * 100).round(2)
+        	print(@procedures.all.count)
 		end
 
-    		completeness = {
-        		:filters => filters_completeness,
-        		:sliders => sliders_completeness
-    		}
+    	completeness = {
+        	:filters => filters_completeness,
+        	:sliders => sliders_completeness
+    	}
 
-	    	return completeness
+    	render json: completeness, status: 200  
 
 	end
 

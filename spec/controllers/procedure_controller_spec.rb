@@ -934,17 +934,12 @@ describe ProcedureController, type: 'controller' do
 			expect(responseArray[5]).to eq(10)
 		end
                 it 'Completeness With filters specialty_id' do
-                        filters = [["2"]]
+                        filters = [[], [], ["2"]]
                         data = {"filters" => filters}.to_json
                         self.send(:get, 'proceduresCompleteness', params: {data: data}, as: :json)
                         expect(response.status).to eq(200)
                         responseArray = JSON.parse(response.body)
-                        expect(responseArray[0]).to eq(100)
-                        expect(responseArray[1]).to eq(0)
-                        expect(responseArray[2]).to eq(0)
-                        expect(responseArray[3]).to eq(100)
-                        expect(responseArray[4]).to eq(20)
-                        expect(responseArray[5]).to eq(20)
+                        expect(JSON.parse(response.body)).to eq({"filters" => [100, 0, 0, 100, 20, 20]})
                 end
 	end
 end
