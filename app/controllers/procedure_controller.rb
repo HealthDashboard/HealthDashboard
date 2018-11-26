@@ -58,8 +58,8 @@ class ProcedureController < ApplicationController
 		@options_procedure = [@cmpt, @treatments, @cid, @cid, @cid, @complexity, @finance, @da, @pr, @sts, @crs]
 		@options_patient_info = [@age_group, @race, @lv_instruction]
 
-		@filters_name = ["cnes_id", "gestor_ide", "specialty_id", "cmpt", "treatment_type", "cid_primary", "cid_secondary", "cid_secondary2",
-			"complexity", "finance", "DA", "PR", "STS", "CRS", "age_code", "race", "lv_instruction"]
+		@filters_name = ["cnes_id", "cmpt", "specialty_id", "treatment_type", "cid_primary", "cid_secondary", "cid_secondary2",
+			"complexity", "finance", "age_code", "race", "lv_instruction", "DA", "PR", "STS", "CRS", "gestor_ide"]
 
 		@sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
 
