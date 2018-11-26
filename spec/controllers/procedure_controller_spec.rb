@@ -901,4 +901,50 @@ describe ProcedureController, type: 'controller' do
 			    "val_total"=>[["213,32", 1], [nil, 8]], "distance"=>[["20,70", 1], [nil, 8]]})
 		end
 	end
+
+        describe 'Testing  method' do
+                before :each do
+                        HealthCentre.create id: 1, cnes: 2028840,name: "Hospital Teste", lat: -23.555885, long: -46.666458
+
+                        Specialty.create id: 1, name: "Specialty 1"
+                        Specialty.create id: 2, name: "Specialty 2"
+
+                        Procedure.create id: 1, cnes_id: 2028840, specialty_id: 1, cmpt: 201506, date: Date.parse("20150909")
+                        Procedure.create id: 2, cnes_id: 2028840, specialty_id: 1, cmpt: 201506,date: Date.parse("20150809")
+                        Procedure.create id: 3, cnes_id: 2028840, specialty_id: 2, complexity: 01, cid_secondary2: "A03",date: Date.parse("20150909")
+                        Procedure.create id: 4, cnes_id: 2028840, specialty_id: 2, DA: "Jaraguá", cid_secondary: "A02",date: Date.parse("20151009")
+                        Procedure.create id: 5, cnes_id: 2028840, specialty_id: 2, PR: "Perus", cid_primary: "A01",date: Date.parse("20151109")
+                        Procedure.create id: 6, cnes_id: 2028840, specialty_id: 2, treatment_type: 1,val_total: 213.32,date: Date.parse("20151209")
+                        Procedure.create id: 7, cnes_id: 2028840, specialty_id: 2, finance: 05, distance: 20.7,date: Date.parse("20150809")
+                        Procedure.create id: 8, cnes_id: 2028840, specialty_id: 1, age_code: "TP_10A14", gestor_ide: 00,date: Date.parse("20150909")
+                        Procedure.create id: 9, cnes_id: 2028840, specialty_id: 1, race: 02, lv_instruction: 3,date: Date.parse("20160909")
+			Procedure.create id: 10, cnes_id: 2028840, specialty_id: 1, race: 02, lv_instruction: 3,date: Date.parse("20160909")
+                end
+		it 'Completeness Without filters' do
+                        filters = []
+                        data = {"filters" => filters}.to_json
+			self.send(:get, 'proceduresCompleteness', params: {data: data}, as: :json)
+                        expect(response.status).to eq(200)
+			responseArray = JSON.parse(response.body)
+                        expect(responseArray[0]).to eq(100)
+			expect(responseArray[1]).to eq(20)
+			expect(responseArray[2]).to eq(0)
+			expect(responseArray[3]).to eq(100)
+			expect(responseArray[4]).to eq(10)
+			expect(responseArray[5]).to eq(10)
+		end
+                it 'Completeness With filters specialty_id' do
+                        filters = [["2"]]
+                        data = {"filters" => filters}.to_json
+                        self.send(:get, 'proceduresCompleteness', params: {data: data}, as: :json)
+                        expect(response.status).to eq(200)
+                        responseArray = JSON.parse(response.body)
+                        expect(responseArray[0]).to eq(100)
+                        expect(responseArray[1]).to eq(0)
+                        expect(responseArray[2]).to eq(0)
+                        expect(responseArray[3]).to eq(100)
+                        expect(responseArray[4]).to eq(20)
+                        expect(responseArray[5]).to eq(20)
+                end
+	end
 end

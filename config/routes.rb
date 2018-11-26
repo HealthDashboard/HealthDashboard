@@ -51,5 +51,6 @@ Rails.application.routes.draw do
     get :proceduresClusterPoints, on: :collection
     get :proceduresSetorCensitario, on: :collection 
     get :proceduresVariables, on: :collection
+    get :proceduresCompleteness, on: :collection
   end
 end
