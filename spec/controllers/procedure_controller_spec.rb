@@ -910,7 +910,7 @@ describe ProcedureController, type: 'controller' do
                         Specialty.create id: 2, name: "Specialty 2"
 
                         Procedure.create id: 1, cnes_id: 2028840, specialty_id: 1, cmpt: 201506, date: Date.parse("20150909")
-                        Procedure.create id: 2, cnes_id: 2028840, specialty_id: 1, cmpt: 201506,date: Date.parse("20150809")
+                        Procedure.create id: 2, cnes_id: 2028840, specialty_id: 1, cmpt: 201506, days: 4, date: Date.parse("20150809")
                         Procedure.create id: 3, cnes_id: 2028840, specialty_id: 2, complexity: 01, cid_secondary2: "A03",date: Date.parse("20150909")
                         Procedure.create id: 4, cnes_id: 2028840, specialty_id: 2, DA: "Jaraguá", cid_secondary: "A02",date: Date.parse("20151009")
                         Procedure.create id: 5, cnes_id: 2028840, specialty_id: 2, PR: "Perus", cid_primary: "A01",date: Date.parse("20151109")
@@ -920,26 +920,78 @@ describe ProcedureController, type: 'controller' do
                         Procedure.create id: 9, cnes_id: 2028840, specialty_id: 1, race: 02, lv_instruction: 3,date: Date.parse("20160909")
 			Procedure.create id: 10, cnes_id: 2028840, specialty_id: 1, race: 02, lv_instruction: 3,date: Date.parse("20160909")
                 end
-		it 'Completeness Without filters' do
-                        filters = []
-                        data = {"filters" => filters}.to_json
+		it 'Completeness send all' do
+                        data = {"send_all" => "True"}.to_json
 			self.send(:get, 'proceduresCompleteness', params: {data: data}, as: :json)
                         expect(response.status).to eq(200)
-			responseArray = JSON.parse(response.body)
-                        expect(responseArray[0]).to eq(100)
-			expect(responseArray[1]).to eq(20)
-			expect(responseArray[2]).to eq(0)
-			expect(responseArray[3]).to eq(100)
-			expect(responseArray[4]).to eq(10)
-			expect(responseArray[5]).to eq(10)
+			responsePayload = JSON.parse(response.body)
+			filters = responsePayload['filters']
+			sliders = responsePayload['sliders']
+                        expect(filters["cnes_id"]).to eq(100)
+			expect(filters["cmpt"]).to eq(20)
+			expect(filters["specialty_id"]).to eq(100)
+			expect(filters["treatment_type"]).to eq(10)
+			expect(filters["cid_primary"]).to eq(10)
+			expect(filters["cid_secondary"]).to eq(10)
+			expect(filters["cid_secondary2"]).to eq(10)
+                        expect(filters["complexity"]).to eq(10)
+                        expect(filters["finance"]).to eq(10)
+                        expect(filters["age_code"]).to eq(10)
+                        expect(filters["race"]).to eq(20)
+                        expect(filters["lv_instruction"]).to eq(20)
+                        expect(filters["DA"]).to eq(10)
+                        expect(filters["PR"]).to eq(10)
+                        expect(filters["STS"]).to eq(0)
+                        expect(filters["CRS"]).to eq(0)
+                        expect(filters["gestor_ide"]).to eq(10)
+
+			expect(sliders["days"]).to eq(10)
+                        expect(sliders["days_uti"]).to eq(0)
+                        expect(sliders["days_ui"]).to eq(0)
+                        expect(sliders["days_total"]).to eq(0)
+                        expect(sliders["val_total"]).to eq(10)
+                        expect(sliders["distance"]).to eq(10)
+
 		end
-                it 'Completeness With filters specialty_id' do
+                it 'Completeness With filters specialty_id 2' do
                         filters = [[], [], ["2"]]
                         data = {"filters" => filters}.to_json
                         self.send(:get, 'proceduresCompleteness', params: {data: data}, as: :json)
                         expect(response.status).to eq(200)
-                        responseArray = JSON.parse(response.body)
-                        expect(JSON.parse(response.body)).to eq({"filters" => [100, 0, 0, 100, 20, 20]})
+			responsePayload = JSON.parse(response.body)
+                        filters = responsePayload['filters']
+                        sliders = responsePayload['sliders']
+                        expect(filters["cnes_id"]).to eq(100)
+                        expect(filters["cmpt"]).to eq(0)
+                        expect(filters["specialty_id"]).to eq(100)
+                        expect(filters["treatment_type"]).to eq(20)
+                        expect(filters["cid_primary"]).to eq(20)
+                        expect(filters["cid_secondary"]).to eq(20)
+                        expect(filters["cid_secondary2"]).to eq(20)
+                        expect(filters["complexity"]).to eq(20)
+                        expect(filters["finance"]).to eq(20)
+                        expect(filters["age_code"]).to eq(0)
+                        expect(filters["race"]).to eq(0)
+                        expect(filters["lv_instruction"]).to eq(0)
+                        expect(filters["DA"]).to eq(20)
+                        expect(filters["PR"]).to eq(20)
+                        expect(filters["STS"]).to eq(0)
+                        expect(filters["CRS"]).to eq(0)
+                        expect(filters["gestor_ide"]).to eq(0)
+
+                        expect(sliders["days"]).to eq(0)
+                        expect(sliders["days_uti"]).to eq(0)
+                        expect(sliders["days_ui"]).to eq(0)
+                        expect(sliders["days_total"]).to eq(0)
+                        expect(sliders["val_total"]).to eq(20)
+                        expect(sliders["distance"]).to eq(20)
+
                 end
+                it 'Completeness With filters' do
+                        data = {"filters" => []}.to_json
+                        self.send(:get, 'proceduresCompleteness', params: {data: data}, as: :json)
+                        expect(response.status).to eq(400)
+			expect(response.body).to eq("Bad request")
+		end
 	end
 end
