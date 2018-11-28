@@ -133,7 +133,7 @@
                                     <label for="<%= i %>" title="<%= @titles_procedure_filters[i] %>"><b>
                                         <%= f %>
                                     </b></label>
-                                    <p class="label-subtitle" title="<%= @filters_completeness[j] %>% dos dados possuem essa informação"><%= @filters_completeness[j].round(0) %>%</p>
+                                    <p class="label-subtitle" id="filters_<%= @filters_name[j] %>"></p>
                                 </div>
                                 <select class="select-<%= i %> form-control" id="<%= j %>" multiple="multiple" onchange='change()'>
                                     <%= @options_procedure[i].each do |v| %>
@@ -155,7 +155,7 @@
                                     <label for="<%= i %>" title="<%= @titles_patient_info_filters[i] %>"><b>
                                         <%= f %>
                                     </b></label>
-                                    <p class="label-subtitle" title="<%= @filters_completeness[j] %>% dos dados possuem essa informação"><%= @filters_completeness[j].round(0) %>%</p>
+                                    <p class="label-subtitle" id="filters_<%= @filters_name[j] %>"></p>
                                 </div>
                                 <select class="select-<%= i %> form-control" id="<%= j %>" multiple="multiple" onchange='change()'>
                                     <%= @options_patient_info[i].each do |v| %>
@@ -194,7 +194,7 @@
                                     <label for="<%= i %>" title="<%= @titles_establishment_filters[i] %>"><b>
                                         <%= f %>
                                     </b></label>
-                                    <p class="label-subtitle" title="<%= @filters_completeness[j] %>% dos dados possuem essa informação"><%= @filters_completeness[j].round(0) %>%</p>
+                                    <p class="label-subtitle" id="filters_<%= @filters_name[j] %>"></p>
                                 </div>
                                 <select class="select-<%= i %> form-control" id="<%= j %>" multiple="multiple" onchange='change()'>
                                     <%= @options_establishment[i].each do |v| %>
@@ -210,24 +210,24 @@
                 <button class="collapsible values_search"><h4><b>Valores de Busca</b></h4></button>
                 <div class="wrap">
                   <div class="content">
-                      <% @sliders.each.with_index do |slid, index| %>
+                      <% @sliders.each.with_index do |slid, i| %>
                           <div class="col-sm-12">
                                 <div class="filter-label">
-                                    <label id="label_slider_<%= index %>" for="<%= index %>" title="<%= @titles_sliders[index] %>">
+                                    <label id="label_slider_<%= i %>" for="<%= i %>" title="<%= @titles_sliders[i] %>">
                                         <%= slid %><b>
                                     </b></label>
-                                    <p class="label-subtitle" title="<%= @sliders_completeness[index] %>% dos dados possuem essa informação"><%= @sliders_completeness[index].round(0) %>%</p>
+                                    <p class="label-subtitle" id="sliders_<%= @sliders_name[i] %>"></p>
                                 </div>
                               <div class="row slider-div">
                                   <div class="col-sm-1 text-right left">
-                                      <span id="slider_<%= index %>_min"><input id="input_slider_<%= index %>_min" class="min-number" type="number" name="minSlider" value="0" onchange="inputSlider()" min="0"></span>
+                                      <span id="slider_<%= i %>_min"><input id="input_slider_<%= i %>_min" class="min-number" type="number" name="minSlider" value="0" onchange="inputSlider()" min="0"></span>
                                   </div>
                                   <div class="col-sm-9 left">
-                                      <input class="slider" id="slider_<%= index %>" type="text" style="width: 85%"/>
-                                      <label id="label_median_slider_<%= index %>" class="label-median"></label>
+                                      <input class="slider" id="slider_<%= i %>" type="text" style="width: 85%"/>
+                                      <label id="label_median_slider_<%= i %>" class="label-median"></label>
                                   </div>
                                   <div class="col-sm-1 left" style = "text-align: left" id="text-left">
-                                      <span id="slider_<%= index %>_max"><input id="input_slider_<%= index %>_max" class="max-number" type="number" name="maxSlider" value="<%= @MAX_SLIDERS[index].to_s %>" onchange="inputSlider()" min="0"></span>
+                                      <span id="slider_<%= i %>_max"><input id="input_slider_<%= i %>_max" class="max-number" type="number" name="maxSlider" value="<%= @MAX_SLIDERS[i].to_s %>" onchange="inputSlider()" min="0"></span>
                                   </div>
                               </div>
                           </div>

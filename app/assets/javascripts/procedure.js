@@ -111,6 +111,8 @@ function initProcedureMap() {
             shape.setStyle(myStyle);
         }
     });
+
+    updateCompleteness();
 }
 
 function change_sliders() {
@@ -953,6 +955,23 @@ function inputSlider(){
             $("#slider_" + i.toString()).slider("setValue", [maxValue, minValue]);
         }
     }
+}
+
+function updateCompleteness(){
+    $.ajax({
+        dataType: "json",
+        url: "completeness.json",
+        success: function(data) {
+            for (var key in data) {
+                data_key = data[key];
+                for(var id in data_key){
+                    var html_elmt = $("#" + key + "_" + id);
+                    html_elmt.html(data_key[id] + "%");
+                    html_elmt.prop("title", data_key[id] + "% dos dados possuem esta informação");
+                }
+            }
+        }
+    });
 }
 
 function toggleFilters() {
