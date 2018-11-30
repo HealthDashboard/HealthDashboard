@@ -5,7 +5,7 @@ este projeto.
 
 ## Como montar o ambiente de execução do projeto
 
-O projeto health-dashboard, requer o framework Rails e um banco de dados
+O projeto GeoMonitor da Saúde, requer o framework Rails e um banco de dados
 PostgreSQL para ser executado. As versões mínimas necessárias destes
 aplicativos são:
 
@@ -85,14 +85,14 @@ principal do projeto os comandos abaixo:
 ```
 $ docker-compose build
 ```
-O comando acima irá criar uma imagem para o health-dashboard empacotando todo
+O comando acima irá criar uma imagem para o GeoMonitor da Saúde empacotando todo
 o código e dependências.
 
 ```
 $ docker-compose up
 ```
 Este comando irá criar um container de PostgreSQL e um container com o
-health-dashboard, executando os como se fosse um deploy da aplicação em um
+GeoMonitor da Saúde, executando os como se fosse um deploy da aplicação em um
 ambiente de homologação ou produção. 
 
 ### Instalando o ambiente em uma máquina Linux
