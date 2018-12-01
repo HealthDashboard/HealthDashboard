@@ -60,7 +60,7 @@ body {
 }
 
 .type-1::after {
-  content: '\f0e7';
+  content: '\f015';
 }
 
 .type-2 {
