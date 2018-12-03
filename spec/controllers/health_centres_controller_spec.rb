@@ -122,11 +122,11 @@ describe HealthCentresController, type: 'controller' do
             id = 1
             self.send(:get, 'specialty_distance', params: {id: id}, format: :json)
             expect(response.status).to eq(200)
-            expect(response.body).to eq('{"0":{"0":"Specialty 1","1":"","2":"","3":"3","4":"","5":""}}')
+            expect(response.body).to eq('{"0":{"0":"Specialty 1","1":0,"2":0,"3":3,"4":0}}')
             id = 2
             self.send(:get, 'specialty_distance', params: {id: id}, format: :json)
             expect(response.status).to eq(200)
-            expect(response.body).to eq('{"0":{"0":"Specialty 2","1":"1","2":"","3":"1","4":"","5":""}}')
+            expect(response.body).to eq('{"0":{"0":"Specialty 2","1":1,"2":0,"3":1,"4":0}}')
 		end
 	end
 

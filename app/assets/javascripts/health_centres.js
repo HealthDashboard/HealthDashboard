@@ -302,61 +302,37 @@ function create_homepage_charts(id) {
     if (id == undefined) {
       pathTotal = '/distance_metric.json';
       pathSpecialty = '/specialties_distance_metric.json'
-      $.when (
-        $.getJSON(pathTotal, function(data) {
-            update_right_graph_text(data)
-            dataTotal = data;
-        }),
-        $.getJSON(pathSpecialty, function(data) {
-          dataSpecialty = data;
-          dataSpecialty = lower_case(dataSpecialty);
-        })
-      ).then(function(){
-          dataSpecialty = add_total_to_data(dataTotal, dataSpecialty);
-
-          let dataNormalized = $.extend(true, [], dataSpecialty);
-          for (i = 0; i < dataNormalized.length; i++) {
-            dataNormalized[i] = normalize_to_100(dataNormalized[i]);
-          }
-
-;          create_chart(dataSpecialty, dataNormalized);
-      });
     }
     else {
       pathTotal = ["/distances/", id].join("");
       pathSpecialty = ["/specialty_distance/", id].join("");
-      $.when (
-        $.getJSON(pathTotal, function(data) {
-            update_right_graph_text(data)
-            dataTotal = data;
-        }),
-        $.getJSON(pathSpecialty, function(data) {
-          dataSpecialty = data;
-        })
-      ).then(function(){
-          for (i = 0; i < Object.keys(dataSpecialty).length; i++) {
-            for (j = 1; j < 5; j++) {
-              if (dataSpecialty[i][j] !== "")
-                dataSpecialty[i][j] = parseInt(dataSpecialty[i][j]);
-              else
-                dataSpecialty[i][j] = 0;
-            }
-            dataSpecialty[i] = Object.values(dataSpecialty[i]);
-          }
-          dataSpecialty = Object.values(dataSpecialty);
-
-          dataSpecialty = lower_case(dataSpecialty);
-
-          dataSpecialty = add_total_to_data(dataTotal, dataSpecialty);
-
-          let dataNormalized = $.extend(true, [], dataSpecialty);
-          for (i = 0; i < dataNormalized.length; i++) {
-            dataNormalized[i] = normalize_to_100(dataNormalized[i]);
-          }
-
-          create_chart(dataSpecialty, dataNormalized);
-      });
     }
+    $.when (
+      $.getJSON(pathTotal, function(data) {
+          update_right_graph_text(data)
+          dataTotal = data;
+      }),
+      $.getJSON(pathSpecialty, function(data) {
+        dataSpecialty = data;
+      })
+    ).then(function(){
+      for (i = 0; i < Object.keys(dataSpecialty).length; i++) {
+        dataSpecialty[i] = Object.values(dataSpecialty[i]);
+      }
+      dataSpecialty = Object.values(dataSpecialty);
+
+      dataSpecialty = lower_case(dataSpecialty);
+
+      dataSpecialty = add_total_to_data(dataTotal, dataSpecialty);
+
+      let dataNormalized = $.extend(true, [], dataSpecialty);
+      for (i = 0; i < dataNormalized.length; i++) {
+        dataNormalized[i] = normalize_to_100(dataNormalized[i]);
+      }
+
+      create_chart(dataSpecialty, dataNormalized);
+    }
+  );
 }
 
 function lower_case(data) {
@@ -370,7 +346,7 @@ function lower_case(data) {
 // Adds the row Total to the data
 function add_total_to_data (dataTotal, data) {
   n = data.length;
-  data[n] = ["Total", 0, 0, 0, 0, ""];
+  data[n] = ["Total", 0, 0, 0, 0];
 
   i = 1;
   for (d in dataTotal) {
