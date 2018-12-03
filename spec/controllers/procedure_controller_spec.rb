@@ -825,7 +825,7 @@ describe ProcedureController, type: 'controller' do
 			Procedure.create id: 6, cnes_id: 1, specialty_id: 2, date: Date.parse("20151209")
 			Procedure.create id: 7, cnes_id: 1, specialty_id: 2, date: Date.parse("20150809")
 			Procedure.create id: 8, cnes_id: 1, specialty_id: 1, date: Date.parse("20150909")
-			Procedure.create id: 9, cnes_id: 1, specialty_id: 1, date: Date.parse("20160909")
+			Procedure.create id: 9, cnes_id: 1, specialty_id: 1, date: Date.parse("20160309")
 		end
 
 		it 'should return Bad request when a call has no params' do
@@ -848,7 +848,7 @@ describe ProcedureController, type: 'controller' do
 			data = {"filters" => filters}.to_json
 			self.send(:get, 'proceduresPerMonth', params: {data: data}, as: :json)
 			expect(response.status).to eq(200)
-			expect(JSON.parse(response.body)).to eq([["2015-08-01", 2], ["2015-09-01", 3], ["2015-10-01", 1], ["2015-11-01", 1], ["2015-12-01", 1]])
+			expect(JSON.parse(response.body)).to eq([["2015-08-01", 2], ["2015-09-01", 3], ["2015-10-01", 1], ["2015-11-01", 1], ["2015-12-01", 1], ["2016-01-01", 0], ["2016-02-01", 0], ["2016-03-01", 1]])
 		end
 	end
 

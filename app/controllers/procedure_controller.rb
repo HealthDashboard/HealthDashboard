@@ -88,8 +88,7 @@ class ProcedureController < ApplicationController
 		render json: "Bad request", status: 400 and return unless @procedures != nil
 
 		result = []
-		@procedures.where("date >= ? AND date <= ?", "2015-01-01", "2015-12-31")
-		.group_by_month(:date).count.each.with_index do |date, _index|
+		@procedures.group_by_month(:date).count.each.with_index do |date, _index|
 			result.append([date[0], date[1]])
 		end
 		render json: result, status: 200
@@ -115,7 +114,7 @@ class ProcedureController < ApplicationController
 	def proceduresPerSpecialties
 		render json: "Bad request", status: 400 and return unless @procedures != nil
 
-		perSpecialties = @procedures.where("specialty_id < ?", 10).order(:specialty_id).group(:specialty_id).count
+		perSpecialties = @procedures.order(:specialty_id).group(:specialty_id).count
 		result = {}
 		perSpecialties.each do |specialty|
 			result[Specialty.find_by(id: specialty[0]).name] = specialty[1].to_i
@@ -130,7 +129,7 @@ class ProcedureController < ApplicationController
 		render json: "Bad request", status: 400 and return unless @procedures != nil
 
 		result = {}
-		@procedures.where("specialty_id < ?", 10).order(:specialty_id).group(:specialty_id)
+		@procedures.order(:specialty_id).group(:specialty_id)
 				  .average(:distance).each.with_index do |p, i|
 				 	result[Specialty.find_by(id: p[0]).name.to_s] = p[1].round(2).to_f
 		end
