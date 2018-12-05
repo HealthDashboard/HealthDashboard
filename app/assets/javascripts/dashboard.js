@@ -30,9 +30,9 @@ var end_date = null;
 var genders = null;
 
 var chart_type = {"CRS":"bar", "DA":"bar", "PR":"bar", "STS":"bar", "age_code":"bar", "cid_primary":"bar", "cid_secondary":"bar",
- "cid_secondary2":"bar", "cmpt":"line", "cnes_id":"bar", "complexity":"pie", "days":"line", "days_total":"line", "days_uti":"line",
- "days_ui":"line", "distance":"line", "finance":"pie", "gender":"pie", "gestor_ide":"pie", "lv_instruction":"pie", "proce_re":"bar",
- "race":"pie", "specialty_id":"pie", "treatment_type":"pie", "val_total":"line"};
+ "cid_secondary2":"bar", "cmpt":"line", "cnes_id":"bar", "complexity":"pie", "days":"bar-line", "days_total":"bar-line", "days_uti":"bar-line",
+ "days_ui":"bar-line", "distance":"bar-line", "finance":"pie", "gender":"pie", "gestor_ide":"pie", "lv_instruction":"pie", "proce_re":"bar",
+ "race":"pie", "specialty_id":"pie", "treatment_type":"pie", "val_total":"bar-line"};
 
 function init_dashboard_chart() {
     dynamic = false;
@@ -319,11 +319,11 @@ function create_table_rank(result) {
 
 function create_one_variable_graph(data, field){
     var formatData = [];
-    formatData.push(['score', 'amount', 'variable']);
+    formatData.push(['amount', 'variable']);
     var max = 0;
     for(var i=0; i<data.length; i++){
         if(data[i][1] != null && data[i][0] != null){
-            formatData.push([data[i][1], data[i][1], data[i][0].toString()]);
+            formatData.push([data[i][1], data[i][0].toString()]);
             max = Math.max(max, data[i][1]);
         }
     }
@@ -469,43 +469,70 @@ function create_one_variable_graph(data, field){
         };
         myChart.setOption(option);
         break;
-      // case "DA":
-      //   $.get('Shape_DA.geojson', function (DA) {
-      //     echarts.registerMap('da', DA);
-      //     var option = {
-      //       dataset: {
-      //         source: formatData,
-      //       },
-      //       tooltip: {
-      //         trigger: 'item'
-      //       },
-      //       visualMap: {
-      //         orient: 'horizontal',
-      //         min: 0,
-      //         max: max,
-      //         text: ['Máximo', 'Mínimo'],
-      //         // Map the score column to color
-      //         dimension: 0,
-      //         inRange: {
-      //             color: ['#D7DA8B', '#E15457']
-      //         },
-      //       },
-      //       series: [
-      //         {
-      //           type: 'map',
-      //           mapType: 'da',
-      //           roam: false,
-      //           itemStyle:{
-      //             normal:{label:{show:true}},
-      //             emphasis:{label:{show:true}},
-      //         },
-      //         data: formatData,
-      //       },
-      //     ]
-      //   };
-      //   myChart.setOption(option);
-      // })
-      // break;
+        case "bar-line":
+          var option = {
+              dataset: {
+                  source: formatData,
+              },
+              //title: 'Title',
+              tooltip : {
+                  trigger: 'axis',
+                  axisPointer : {
+                      type : 'shadow'
+                  },
+              },
+              dataZoom: [{
+                  id: 'dataZoomX',
+                  type: 'slider',
+                  xAxisIndex: [0],
+                  filterMode: 'filter'
+              }],
+              grid: {containLabel: true},
+              yAxis: {
+                name: 'Procedimentos',
+                type: 'value',
+                axisLabel: {interval : 0}
+              },
+              xAxis: {
+                type: 'category',
+                boundaryGap: false
+              },
+              toolbox: {
+                feature: {
+                  magicType: {
+                    type: ['line', 'bar']
+                  }
+                }
+              },
+              series: [
+                  {
+                      type: 'bar',
+                      encode: {
+                          y: 'amount',
+                          x: 'variable',
+                      },
+                      // markPoint: {
+                      //   data : [
+                      //       {type : 'average'}
+                      //   ]
+                      // },
+                      markArea: {
+                          data: [
+                            [
+                              {
+                                xAxis: 5
+                              },
+                              {
+                                xAxis: 100
+                              }
+                            ]
+                          ]
+                      },
+                  }
+              ]
+          };
+          myChart.setOption(option);
+          break;
   }
 }
 
