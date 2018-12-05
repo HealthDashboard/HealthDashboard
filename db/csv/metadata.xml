@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dspl
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://schemas.google.com/dspl/2010" >
+
+  <info>
+    <name>
+      <value>Internações Hospitalares em São Paulo de 2014-2015</value>
+    </name>
+    <description>
+      <value>Informações das internações ocorridas em estabelecimentos de saúde públicos na cidade de São Paulo no período de 2014-2015</value>
+    </description>
+    <!--<url>
+      <value></value>
+    </url>-->
+  </info>
+  <provider>
+    <name>
+      <value>Secretaria Municipal da Saúde de São Paulo<!-- ~*Revisar*~ Pode ser a Gerência de Geoprocessamento e Informações Socioambientais, o que for melhor --></value>
+    </name>
+    <initials>
+      <value>SMS - SP<!-- ~*Revisar*~ Pode ser a GISA, o que for melhor --></value>
+    </initials>
+    <url>
+      <value>https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/</value>
+    </url>
+  </provider>
+  <tables>
+    <table id="procedures">
+      <column id="CD_GEOCODI" type="float"/>
+      <column id="LAT_SC" type="float"/>
+      <column id="LONG_SC" type="float"/>
+      <column id="P_SEXO" type="string"/>
+      <column id="P_IDADE" type="integer"/>
+      <column id="P_RACA" type="integer"/>
+      <column id="LV_INSTRU" type="integer"/>
+      <column id="LAT_CNES" type="float"/>
+      <column id="lONG_CNES" type="float"/>
+      <column id="CNES" type="integer"/>
+      <column id="GESTOR_IDE" type="integer"/>
+      <column id="CAR_INTEN" type="integer"/>
+      <column id="CMPT" type="date" format="aaaamm"/>
+      <column id="DT_EMISSAO" type="date" format="aaaammdd"/>
+      <column id="DT_INTERNA" type="date" format="aaaammdd"/>
+      <column id="DT_SAIDA" type="date" format="aaaammdd"/>
+      <column id="COMPLEXIDA" type="integer"/>
+      <column id="ESPECIALID" type="integer"/>
+      <column id="PROC_RE" type="integer"/>
+      <column id="DIAG_PR" type="string"/>
+      <column id="DIAG_SE1" type="string"/>
+      <column id="DIAG_SE2" type="string"/>
+      <column id="DIAG_SE3" type="string"/>
+      <column id="DIARIAS" type="integer"/>
+      <column id="DIARIAS_UT" type="integer"/>
+      <column id="DIARIAS_UI" type="integer"/>
+      <column id="DIAS_PERM" type="integer"/>
+      <column id="FINANCIAME" type="integer"/>
+      <column id="VAL_TOT" type="float"/>
+      <column id="COD_DA" type="integer"/>
+      <column id="DA" type="string"/>
+      <column id="SUB" type="string"/>
+      <column id="STS" type="string"/>
+      <column id="CRS" type="string"/>
+      <data>
+        <file format="csv" encoding="utf-8">procedures.csv</file>
+      </data>
+    </table>
+    <table id="CID10">
+      <column id="CÓDIGO" type="string"/>
+      <column id="NOME" type="string"/>
+      <data>
+        <file format="csv" encoding="utf-8">CID10.csv</file>
+      </data>
+    </table>
+    <table id="health_centres_real">
+      <column id="CNES" type="integer"/>
+      <column id="CNES_DENO" type="string"/>
+      <column id="CNES_DENOR" type="string"/>
+      <column id="LEITOS" type="integer"/>
+      <column id="LAT" type="float"/>
+      <column id="LONG" type="float"/>
+      <column id="TIPO" type="string"/>
+      <column id="REGIONAL" type="integer"/>
+      <column id="FONE" type="string"/>
+      <column id="GESTAO" type="string"/>
+      <column id="DA" type="string"/>
+      <column id="PR" type="string"/>
+      <column id="STS" type="string"/>
+      <column id="CRS" type="string"/>
+      <data>
+        <file format="csv" encoding="utf-8">health_centres_real.csv</file>
+      </data>
+    </table>
+    <table id="procedures_group">
+      <column id="id" type="integer"/>
+      <column id="nome" type="string"/>
+      <data>
+        <file format="csv" encoding="utf-8">procedures_group.csv</file>
+      </data>
+    </table>
+    <table id="specialties">
+      <column id="id" type="integer"/>
+      <column id="nome" type="string"/>
+      <data>
+        <file format="csv" encoding="utf-8">specialties.csv</file>
+      </data>
+    </table>
+  </tables>
+</dspl>
