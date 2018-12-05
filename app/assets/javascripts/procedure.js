@@ -329,6 +329,7 @@ function buscar(data) {
 
     // handling all cluster now
     health_centres_makers(health_centres);
+    updateCompleteness(data);
     handleLargeCluster(map, "procedure/proceduresClusterPoints", data, metresToPixels(metres_bounds_cluster), metresToPixels(metres_bounds_heatmap), heatmap_opacity, CustomMarkerOnClick);
 
     // Divida tecnica
@@ -957,10 +958,15 @@ function inputSlider(){
     }
 }
 
-function updateCompleteness(){
+function updateCompleteness(data){
+    if (!data) {
+        data = { "data": JSON.stringify({ send_all: "True" }) };
+    }
     $.ajax({
         dataType: "json",
-        url: "completeness.json",
+        url: "procedure/proceduresCompleteness",
+        contentType: 'application/json',
+        data: data,
         success: function(data) {
             for (var key in data) {
                 data_key = data[key];

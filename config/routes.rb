@@ -32,6 +32,7 @@ Rails.application.routes.draw do
   get '/procedure/specialties', to: 'procedure#specialties'
   get 'procedure/proceduresInfo/:id', to: 'procedure#proceduresInfo'
   # get '/procedure/quartiles', to: 'procedure#proceduresQuartiles'
+  get '/procedure/proceduresCompleteness', to: 'procedure#proceduresCompleteness'
 
   get '/about', to: 'application#about'
   get '/faq', to: 'application#faq'

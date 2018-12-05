@@ -59,12 +59,7 @@ class ProcedureController < ApplicationController
 			"complexity", "finance", "age_code", "race", "lv_instruction", "DA", "PR", "STS", "CRS", "gestor_ide"]
 
 		@sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
-		
-		# Variables for completeness
-		completeness = JSON.parse(File.read(Rails.root.join('public/completeness.json')))
-		@filters_completeness = completeness['filters']
-		@sliders_completeness = completeness['sliders']
-		
+
 		super
 	end
 
