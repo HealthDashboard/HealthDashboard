@@ -470,6 +470,9 @@ function create_one_variable_graph(data, field){
         myChart.setOption(option);
         break;
         case "bar-line":
+          var q = quartile(formatData);
+          console.log("q")
+          console.log(q)
           var option = {
               dataset: {
                   source: formatData,
@@ -495,7 +498,6 @@ function create_one_variable_graph(data, field){
               },
               xAxis: {
                 type: 'category',
-                boundaryGap: false
               },
               toolbox: {
                 feature: {
@@ -511,19 +513,30 @@ function create_one_variable_graph(data, field){
                           y: 'amount',
                           x: 'variable',
                       },
-                      // markPoint: {
-                      //   data : [
-                      //       {type : 'average'}
-                      //   ]
-                      // },
+                      markPoint: {
+                        data : [[
+                            {
+                              name: "q1",
+                              value: q[1]
+                            }]
+                        ]
+                      },
                       markArea: {
+                        label: {
+                          show: true,
+                          formatter: "Q1: " + q[0] + " até Q3: " + q[2],
+                          position: ["102%", "2%"],
+                          emphasis: {
+                            position: ["102%", "2%"],
+                          }
+                        },
                           data: [
                             [
                               {
-                                xAxis: 5
+                                xAxis: q[0]
                               },
                               {
-                                xAxis: 100
+                                xAxis: q[2]
                               }
                             ]
                           ]
@@ -535,6 +548,43 @@ function create_one_variable_graph(data, field){
           break;
   }
 }
+
+function quartile(data) {
+  var q = [];
+  var total = 0;
+  data = data.sort(function(a,b){return a[1] - b[1];});
+  for (var i = 1; i < data.length; i++) {
+    total = total + data[i][0];
+  }
+  var total1 = Math.floor(total * 0.25);
+  var total2 = Math.floor(total * 0.5);
+  var total3 = Math.floor(total * 0.75);
+
+  total = 0;
+  for (i = 1; i < data.length; i++) {
+    total += data[i][0];
+    if (total1 <= total) {
+      q.push(data[i][1])
+      break;
+    }
+  }
+  for (i; i < data.length; i++) {
+    total += data[i][0];
+    if (total2 <= total) {
+      q.push(data[i][1])
+      break;
+    }
+  }
+  for (i; i < data.length; i++) {
+    total += data[i][0];
+    if (total3 <= total) {
+      q.push(data[i][1]);
+      break;
+    }
+  }
+  return q;
+}
+
 
 function changeChart(){
     const field = document.getElementById("select-chart").value;
