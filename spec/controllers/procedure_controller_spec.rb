@@ -64,7 +64,7 @@ describe ProcedureController, type: 'controller' do
 		end
 
 		it 'download age_code TP_0A4' do
-			filters = [[], [], [], [], [], [], [], [], [], ["TP_0A4"]]
+			filters = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], ["TP_0A4"]]
 			data = {"filters" => filters}.to_json
 			self.send(:get, 'download', params: {data: data}, as: :json)
 			expect(response.status).to eq(200)
@@ -249,7 +249,7 @@ describe ProcedureController, type: 'controller' do
 			Procedure.create id: 2, cnes_id: 1, specialty_id: 1, age_code: "TP_0A4", gender: "M"
 			Procedure.create id: 3, cnes_id: 1, specialty_id: 1, days: 50, gender: "F"
 		 	Procedure.create id: 4, cnes_id: 1, specialty_id: 1, cmpt: 201502, gender: "M"
-		 	Procedure.create id: 5, cnes_id: 1, specialty_id: 1, proce_re: 3030, days: 5
+		 	# Procedure.create id: 5, cnes_id: 1, specialty_id: 1, proce_re: 3030, days: 5
 		 	Procedure.create id: 6, cnes_id: 1, specialty_id: 2, days: 1, date: Date.parse("20180909")
 		 	Procedure.create id: 7, cnes_id: 1, specialty_id: 1, treatment_type: 1, days: 22
 		 	Procedure.create id: 8, cnes_id: 1, specialty_id: 1, cid_primary: "A42", date: Date.parse("20180101")
@@ -327,12 +327,12 @@ describe ProcedureController, type: 'controller' do
 			expect(assigns(:procedures)).to eq(Procedure.where(:cnes_id => 431))
 		end
 
-		it 'shoud return the correct procedure for cmpt' do
-			filters = [[], ["201502"]]
+		it 'shoud return the correct procedure for gestor_ide' do
+			filters = [[], ["1"]]
 			data = {"filters" => filters}.to_json
 			controller.params[:data] = data
 			controller.send :getProcedures
-			expect(assigns(:procedures)).to eq(Procedure.where(:cmpt => 201502))
+			expect(assigns(:procedures)).to eq(Procedure.where(:gestor_ide => 1))
 		end
 
 		# it 'shoud return the correct procedure for proce_re' do
@@ -351,8 +351,16 @@ describe ProcedureController, type: 'controller' do
 			expect(assigns(:procedures)).to eq(Procedure.where(:specialty_id => 2))
 		end
 
+		it 'shoud return the correct procedure for cmpt' do
+			filters = [[], [], [], ["201502"]]
+			data = {"filters" => filters}.to_json
+			controller.params[:data] = data
+			controller.send :getProcedures
+			expect(assigns(:procedures)).to eq(Procedure.where(:cmpt => 201502))
+		end
+
 		it 'shoud return the correct procedure for treatment_type' do
-			filters = [[], [],  [], ["1"]]
+			filters = [[], [], [], [], ["1"]]
 			data = {"filters" => filters}.to_json
 			controller.params[:data] = data
 			controller.send :getProcedures
@@ -360,7 +368,7 @@ describe ProcedureController, type: 'controller' do
 		end
 
 		it 'shoud return the correct procedure for cid_primary' do
-			filters = [[], [], [], [],  ["A42"]]
+			filters = [[], [], [], [], [], ["A42"]]
 			data = {"filters" => filters}.to_json
 			controller.params[:data] = data
 			controller.send :getProcedures
@@ -368,7 +376,7 @@ describe ProcedureController, type: 'controller' do
 		end
 
 		it 'shoud return the correct procedure for cid_secondary' do
-			filters = [[],  [],  [],  [], [], ["B21"]]
+			filters = [[], [], [], [], [], [], ["B21"]]
 			data = {"filters" => filters}.to_json
 			controller.params[:data] = data
 			controller.send :getProcedures
@@ -376,7 +384,7 @@ describe ProcedureController, type: 'controller' do
 		end
 
 		it 'shoud return the correct procedure for cid_secondary2' do
-			filters = [[], [], [], [], [], [], ["Z12"]]
+			filters = [[], [], [], [], [], [], [], ["Z12"]]
 			data = {"filters" => filters}.to_json
 			controller.params[:data] = data
 			controller.send :getProcedures
@@ -384,7 +392,7 @@ describe ProcedureController, type: 'controller' do
 		end
 
 		it 'shoud return the correct procedure for complexity' do
-			filters = [[], [], [], [], [], [], [], ["3"]]
+			filters = [[], [], [], [], [], [], [], [], ["3"]]
 			data = {"filters" => filters}.to_json
 			controller.params[:data] = data
 			controller.send :getProcedures
@@ -392,39 +400,15 @@ describe ProcedureController, type: 'controller' do
 		end
 
 		it 'shoud return the correct procedure for finance' do
-			filters = [[], [], [], [], [], [], [], [], ["6"]]
+			filters = [[], [], [], [], [], [], [], [], [], ["6"]]
 			data = {"filters" => filters}.to_json
 			controller.params[:data] = data
 			controller.send :getProcedures
 			expect(assigns(:procedures)).to eq(Procedure.where(:finance => 6))
 		end
 
-		it 'should return the correct procedure for age_code' do
-			filters = [[], [], [], [], [], [], [], [], [], ["TP_0A4"]]
-			data = {"filters" => filters}.to_json
-			controller.params[:data] = data
-			controller.send :getProcedures
-			expect(assigns(:procedures)).to eq(Procedure.where(:age_code => "TP_0A4"))
-		end
-
-		it 'shoud return the correct procedure for race' do
-			filters = [[], [], [], [], [], [], [], [], [], [], ["1"]]
-			data = {"filters" => filters}.to_json
-			controller.params[:data] = data
-			controller.send :getProcedures
-			expect(assigns(:procedures)).to eq(Procedure.where(:race => 1))
-		end
-
-		it 'shoud return the correct procedure for lv_instruction' do
-			filters = [[], [], [], [], [], [], [], [], [], [],[], ["0"]]
-			data = {"filters" => filters}.to_json
-			controller.params[:data] = data
-			controller.send :getProcedures
-			expect(assigns(:procedures)).to eq(Procedure.where(:lv_instruction => 0))
-		end
-
 		it 'shoud return the correct procedure for DA' do
-			filters = [[], [], [], [], [], [], [], [], [], [],[], [], ["REPUBLICA"]]
+			filters = [[], [], [], [], [], [], [], [], [], [], ["REPUBLICA"]]
 			data = {"filters" => filters}.to_json
 			controller.params[:data] = data
 			controller.send :getProcedures
@@ -432,7 +416,7 @@ describe ProcedureController, type: 'controller' do
 		end
 
 		it 'shoud return the correct procedure for PR' do
-			filters = [[], [], [], [], [], [], [], [], [], [],[], [], [], ["SE"]]
+			filters = [[], [], [], [], [], [], [], [], [], [], [], ["SE"]]
 			data = {"filters" => filters}.to_json
 			controller.params[:data] = data
 			controller.send :getProcedures
@@ -440,7 +424,7 @@ describe ProcedureController, type: 'controller' do
 		end
 
 		it 'shoud return the correct procedure for STS' do
-			filters = [[], [], [], [], [], [], [], [], [], [],[], [], [], [], ["SE"]]
+			filters = [[], [], [], [], [], [], [], [], [], [], [], [], ["SE"]]
 			data = {"filters" => filters}.to_json
 			controller.params[:data] = data
 			controller.send :getProcedures
@@ -448,20 +432,37 @@ describe ProcedureController, type: 'controller' do
 		end
 
 		it 'shoud return the correct procedure for CRS' do
-			filters = [[], [], [], [], [], [], [], [], [], [],[], [], [], [], [], ["CENTRO"]]
+			filters = [[], [], [], [], [], [], [], [], [], [], [], [], [], ["CENTRO"]]
 			data = {"filters" => filters}.to_json
 			controller.params[:data] = data
 			controller.send :getProcedures
 			expect(assigns(:procedures)).to eq(Procedure.where(:CRS => "CENTRO"))
 		end
 
-		it 'shoud return the correct procedure for gestor_ide' do
-			filters = [[], [], [], [], [], [], [], [], [], [],[], [], [], [], [], [], ["1"]]
+		it 'should return the correct procedure for age_code' do
+			filters = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], ["TP_0A4"]]
 			data = {"filters" => filters}.to_json
 			controller.params[:data] = data
 			controller.send :getProcedures
-			expect(assigns(:procedures)).to eq(Procedure.where(:gestor_ide => 1))
+			expect(assigns(:procedures)).to eq(Procedure.where(:age_code => "TP_0A4"))
 		end
+
+		it 'shoud return the correct procedure for race' do
+			filters = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], ["1"]]
+			data = {"filters" => filters}.to_json
+			controller.params[:data] = data
+			controller.send :getProcedures
+			expect(assigns(:procedures)).to eq(Procedure.where(:race => 1))
+		end
+
+		it 'shoud return the correct procedure for lv_instruction' do
+			filters = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], ["0"]]
+			data = {"filters" => filters}.to_json
+			controller.params[:data] = data
+			controller.send :getProcedures
+			expect(assigns(:procedures)).to eq(Procedure.where(:lv_instruction => 0))
+		end
+
 	end
 	
 	describe 'Testing proceduresTotal method' do
