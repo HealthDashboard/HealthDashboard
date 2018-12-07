@@ -230,7 +230,7 @@ class ProcedureController < ApplicationController
 		quartiles.append(quartiles_calc(days_ui))
 
 		# 4 - days_total(Dias de permanência)
-		days_total = Rails.cache.fetch("quartiles/days_total#{parsed_json}", expires_in: 12.hours) do 
+		days_total = Rails.cache.fetch("quartiles/days_total#{parsed_json}", expires_in: 12.hours) do
 			@procedures.group(:days_total).order(:days_total).count
 		end
 		quartiles.append(quartiles_calc(days_total))
@@ -303,36 +303,38 @@ class ProcedureController < ApplicationController
 		render json: health_centres, status: 200
 	end
 
+	# GET /procedure/proceduresCompleteness
+	# Params: [filters values array]
+	# Return: A hash with infos about each filter completeness
 	def proceduresCompleteness
 		render json: "Bad request", status: 400 and return unless @procedures != nil
-    		filters_completeness = {}
+    filters_completeness = {}
 		sliders_completeness = {}
 
-    		# Values for completeness at each filter
-   		@filters_name.each.with_index do |name, i|
-
-        		if name == "race"
+    # Values for completeness at each filter
+   	@filters_name.each.with_index do |name, i|
+      if name == "race"
 				freq = @procedures.where(name.to_sym => [nil, '99']).count.to_f
-        		elsif name != "gestor_ide" and name != "lv_instruction"
+      elsif name != "gestor_ide" and name != "lv_instruction"
 				freq = @procedures.where(name.to_sym => [nil, '0']).count.to_f
-        		else
+      else
 				freq = @procedures.where(name.to_sym => nil).count.to_f
-        		end
-        		filters_completeness[name] = ((1 - (freq / @procedures.all.count)) * 100).round(2)
-    		end
+      end
+      filters_completeness[name] = ((1 - (freq / @procedures.all.count)) * 100).round(2)
+    end
 
-    		# Values for completeness at each slider
-    		@sliders_name.each.with_index do |name, i|
-        		freq = @procedures.where(name.to_sym => [nil, '0']).count.to_f
-        		sliders_completeness[name] = ((1 - (freq / @procedures.all.count)) * 100).round(2)
+    # Values for completeness at each slider
+    @sliders_name.each.with_index do |name, i|
+      freq = @procedures.where(name.to_sym => [nil, '0']).count.to_f
+    	sliders_completeness[name] = ((1 - (freq / @procedures.all.count)) * 100).round(2)
 		end
+
 		completeness = {
 			:filters => filters_completeness,
-        		:sliders => sliders_completeness
-    		}
+      :sliders => sliders_completeness
+    }
 
-    		render json: completeness, status: 200  
-
+    render json: completeness, status: 200
 	end
 
 	# GET /procedure/proceduresVariables{params}
@@ -342,7 +344,7 @@ class ProcedureController < ApplicationController
 	    render json: "Bad request", status: 400 and return unless @procedures != nil
 
 		result = Hash.new
-		variables = [:cnes_id, :cmpt, :proce_re, :specialty_id, :treatment_type, :cid_primary, :cid_secondary, 
+		variables = [:cnes_id, :cmpt, :proce_re, :specialty_id, :treatment_type, :cid_primary, :cid_secondary,
 			:cid_secondary2, :complexity, :finance, :age_code, :race, :lv_instruction,
 			:gender, :DA, :PR, :STS, :CRS, :gestor_ide, :days, :days_uti, :days_ui, :days_total, :val_total, :distance];
 		data = []
@@ -521,11 +523,11 @@ private
 			@procedures = nil
 			return
 		end
-		
+
 		parsed_json["lat"].each do |_index, value|
 			latSet.push(value.to_f)
 		end
-		
+
 		parsed_json["long"].each do |_index, value|
 			longSet.push(value.to_f)
 		end
