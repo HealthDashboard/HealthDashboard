@@ -12,18 +12,25 @@
         </div>
     </div>
 </div>
+
 <div class="main">
-<div class="container">
-  <header class="header">
-    <%= image_tag("sms.jpg", :class => "logo-img") %>
-    <h1 class="title">GeoMonitor da Saúde</h1>
-  </header>
-</div>
+  <div class="container">
+    <header class="header">
+      <%= image_tag("sms.jpg", :class => "logo-img") %>
+      <h1 class="title">GeoMonitor da Saúde</h1>
+    </header>
+  </div>
 </div>
 
-<section class="parallax-container">
-  <div class="parallax"></div>
-</section>
+<div class="slider" id="slideshow">
+  <i class="fas fa-2x fa-chevron-left slider-btn left" onclick="plusDivs(1)"></i>
+  <!-- O slider nao funciona com menos de 4 imagens -->
+  <%= image_tag("slide1.jpg", :alt => "Imagem da vista de São Paulo a noite",:class => "slider-img active", :id => "slider1") %>
+  <%= image_tag("slide2.jpg", :alt => "Imagem da vista da Avenida Paulista",:class => "slider-img left", :id => "slider2") %>
+  <%= image_tag("slide3.jpg", :alt => "Imagem da vista de São Paulo de dia",:class => "slider-img right", :id => "slider3") %>
+  <%= image_tag("slide4.png", :alt => "Imagem da Ponte Estaiada",:class => "slider-img", :id => "slider4") %>
+  <i class="fas fa-2x fa-chevron-right slider-btn right" onclick="plusDivs(-1)"></i>
+</div>
 
   <div class="main">
     <div class="data-row">
@@ -45,15 +52,6 @@
       </div>
     </div>
     <div class="container margin">
-<!--       <h2 class="section"> SOBRE </h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-         Vivamus sed luctus est, commodo luctus enim.
-         Fusce quis nisl cursus, porttitor augue a, accumsan quam.
-         Donec dignissim quam non laoreet maximus.
-         Praesent imperdiet dui id orci sagittis, vitae fermentum odio gravida.
-         Phasellus dolor mauris, varius a lectus nec, viverra convallis ipsum.
-       </p> -->
-
       <h2 class="section"> SERVIÇOS </h2>
 
       <div class="grid">
