@@ -13,7 +13,7 @@ var clean_up_cluster;
 
 var shapes;
 
-var source = "Escreva fonte aqui";
+var source;
 
 function initialize() {
     markers_visible(true, -1);
@@ -43,7 +43,16 @@ function initialize() {
     map = L.map('map', { center: latlng, zoom: 11, layers: [tiles] });
     L.control.scale({imperial: false, position: 'bottomright'}).addTo(map);
 
-    $('#source').html(source);
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            source = findSource(xhttp.responseXML);
+            $('#source').html(source);
+        }
+    };
+    xhttp.open("GET", "metadata.xml", true);
+    xhttp.send();
+
     $('#loading_overlay').hide();
 }
 
@@ -377,7 +386,7 @@ function normalize_to_100 (data) {
 function create_chart(data, dataNormalized){
   option = {
       legend: {
-        bottom: '13px',
+        bottom: '15px',
         right: '5px',
         type: 'scroll'
       },

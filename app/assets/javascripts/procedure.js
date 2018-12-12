@@ -998,6 +998,7 @@ function updateCompleteness(data){
 
 function findSource(xml) {
     // Melhorar esse path, ia ser bom verificar se é o xml certo
+    // Seria bom verificar para cada filtro qual a source dele, mas isso fica para quando tivermos outras dbs
     path = "//provider/name/value"
     if (xml.evaluate) {
         var nodes = xml.evaluate(path, xml, null, XPathResult.ANY_TYPE, null);
