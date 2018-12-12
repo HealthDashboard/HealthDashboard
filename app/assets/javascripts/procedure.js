@@ -30,6 +30,8 @@ var pixels_cluster, pixels_heatmap;
 
 var minimap;
 
+var source_xml;
+
 // //** Called when loading the page, init vars, hide overlay and draw the map **//
 function initProcedureMap() {
     auto = false;
@@ -112,6 +114,14 @@ function initProcedureMap() {
         }
     });
 
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            source_xml = xhttp.responseXML;
+        }
+    };
+    xhttp.open("GET", "metadata.xml", true);
+    xhttp.send();
     updateCompleteness();
 }
 
@@ -973,16 +983,32 @@ function updateCompleteness(data){
         contentType: 'application/json',
         data: data,
         success: function(data) {
+            source = findSource(source_xml)
             for (var key in data) {
                 data_key = data[key];
                 for(var id in data_key){
                     var html_elmt = $("#" + key + "_" + id);
                     html_elmt.html(data_key[id] + "%");
-                    html_elmt.prop("title", data_key[id] + "% dos dados possuem esta informação");
+                    html_elmt.prop("title", data_key[id] + "% dos dados possuem esta informação\u000AFonte: " + source);
                 }
             }
         }
     });
+}
+
+function findSource(xml) {
+    // Melhorar esse path, ia ser bom verificar se é o xml certo
+    path = "//provider/name/value"
+    if (xml.evaluate) {
+        var nodes = xml.evaluate(path, xml, null, XPathResult.ANY_TYPE, null);
+        var result = nodes.iterateNext();
+        result = result.childNodes[0].nodeValue;
+    } else if (window.ActiveXObject || xhttp.responseType == "msxml-document") {
+        xml.setProperty("SelectionLanguage", "XPath");
+        nodes = xml.selectNodes(path);
+        result = nodes[i].childNodes[0].nodeValue;
+    }
+    return result;
 }
 
 function toggleFilters() {

@@ -61,11 +61,6 @@ class ProcedureController < ApplicationController
 			"complexity", "finance", "age_code", "race", "lv_instruction", "DA", "PR", "STS", "CRS"]
 
 		@sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
-
-		@filters_sources = ["OSRM", "OSRM", "OSRM", "OSRM", "OSRM", "OSRM", "OSRM",
-			"OSRM", "OSRM", "OSRM", "OSRM", "OSRM", "OSRM", "OSRM", "OSRM", "OSRM", "OSRM"]
-		@sliders_sources = ["OSRM", "OSRM", "OSRM", "OSRM", "OSRM", "OSRM"]
-
 		super
 	end
 
