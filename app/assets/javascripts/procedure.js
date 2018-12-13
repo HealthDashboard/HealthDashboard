@@ -178,19 +178,21 @@ function setShape(name, popup) {
     };
     if(name === 'Shape_ESF.geojson'){
         // Default Stripes
-        var stripes = new L.StripePattern();
-        console.log(stripes)
+        var stripes = new L.StripePattern({
+            angle:  45,
+            weight:  2
+        });
         stripes.addTo(map);
 
         myStyle = {
             "color": "#444444",
-            "opacity": 0.6,
+            "opacity": 0.8,
             "stroke": true,
             "lineCap": "butt",
             "fill": true,
             "fillColor": "#444444",
             "fillRule": "nonzero",
-            "fillOpacity": 0.15,
+            "fillOpacity": 0.25,
         };
     }
 
