@@ -244,7 +244,7 @@ function setShape(name, popup) {
 function setor_censitario(e) {
     $.ajax({
         dataType: "json",
-        url: `Setor_Censitario/Setor_with_pop-${e.target.name_sc}.json`,
+        url: `SetorCensitario/Setor_with_pop-${e.target.name_sc}.json`,
         success: function(data) {
             shape = new L.geoJson(data,
                 {onEachFeature: function(feature, layer) {
