@@ -168,13 +168,7 @@ function downloadCluster(paramLat, paramLong){
 }
 
 // //** Called when a visualization shape is selected, remove the selected shape if its already selected or draws a new one **//
-function setShape(name, popup) {
-    
-    // Default Stripes.
-    var stripes = new L.StripePattern();
-    console.log(stripes)
-    stripes.addTo(map);
-
+function setShape(name, popup) {    
     myStyle = {
         "color": "#444444",
         "opacity": 0.6,
@@ -183,6 +177,11 @@ function setShape(name, popup) {
         "fillOpacity": 0.05,
     };
     if(name === 'Shape_ESF.geojson'){
+        // Default Stripes
+        var stripes = new L.StripePattern();
+        console.log(stripes)
+        stripes.addTo(map);
+
         myStyle = {
             "color": "#444444",
             "opacity": 0.6,
