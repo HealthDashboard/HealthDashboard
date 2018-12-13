@@ -169,6 +169,12 @@ function downloadCluster(paramLat, paramLong){
 
 // //** Called when a visualization shape is selected, remove the selected shape if its already selected or draws a new one **//
 function setShape(name, popup) {
+    
+    // Default Stripes.
+    var stripes = new L.StripePattern();
+    console.log(stripes)
+    stripes.addTo(map);
+
     myStyle = {
         "color": "#444444",
         "opacity": 0.6,
@@ -179,14 +185,13 @@ function setShape(name, popup) {
     if(name === 'Shape_ESF.geojson'){
         myStyle = {
             "color": "#444444",
-            "opacity": 0.9,
+            "opacity": 0.6,
             "stroke": true,
             "lineCap": "butt",
             "fill": true,
-            "fillColor": "#4e4e4e",
+            "fillColor": "#444444",
             "fillRule": "nonzero",
-            "fillOpacity": 0.05,
-            "dashArray": "4",
+            "fillOpacity": 0.15,
         };
     }
 
@@ -216,7 +221,8 @@ function setShape(name, popup) {
                             layer.name_sc = feature.properties.NM_DISTRIT
                             layer.on('click', setor_censitario)
                         }
-                    }}).addTo(map);
+                        }, style: { fillPattern: stripes } 
+                    }).addTo(map);
                 shape.setStyle(myStyle);
                 if (popup != null)
                     shape.bindPopup(popup);
