@@ -250,7 +250,13 @@ function setor_censitario(e) {
                 {onEachFeature: function(feature, layer) {
                     layer.bindTooltip(`População Total: ${parseInt(feature.properties.POPULACAO_TOTAL)} </br>
                                        População Feminina: ${parseInt(feature.properties.POPULACAO_MULHER)} </br>
-                                       População Masculina: ${parseInt(feature.properties.POPULACAO_HOMEM)}`, {closeButton: false});
+                                       População Masculina: ${parseInt(feature.properties.POPULACAO_HOMEM)} </br>
+                                       População Branca: ${parseInt(feature.properties.POPULACAO_BRANCA)} </br>
+                                       População Preta: ${parseInt(feature.properties.POPULACAO_PRETA)} </br>
+                                       População Amarela: ${parseInt(feature.properties.POPULACAO_AMARELA)} </br>
+                                       População Parda: ${parseInt(feature.properties.POPULACAO_PARDA)} </br>
+                                       População Indígena: ${parseInt(feature.properties.POPULACAO_INDIGENA)} </br>`, {closeButton: false});
+
                 }}).addTo(map);
             shape.setStyle(myStyle);
             shapes_setor.push(shape);
