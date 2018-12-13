@@ -32,7 +32,7 @@ var minimap;
 
 var source_xml;
 
-// //** Called when loading the page, init vars, hide overlay and draw the map **//
+//** Called when loading the page, init vars, hide overlay and draw the map **//
 function initProcedureMap() {
     auto = false;
     cleaning = false;
@@ -177,8 +177,8 @@ function downloadCluster(paramLat, paramLong){
     download(allData);
 }
 
-// //** Called when a visualization shape is selected, remove the selected shape if its already selected or draws a new one **//
-function setShape(name, popup) {    
+//** Called when a visualization shape is selected, remove the selected shape if its already selected or draws a new one **//
+function setShape(name, popup) {
     myStyle = {
         "color": "#444444",
         "opacity": 0.6,
@@ -244,11 +244,13 @@ function setShape(name, popup) {
 function setor_censitario(e) {
     $.ajax({
         dataType: "json",
-        url: "SetorCensitario/Setor_with_pop-" + e.target.name_sc + ".json",
+        url: `Setor_Censitario/Setor_with_pop-${e.target.name_sc}.json`,
         success: function(data) {
             shape = new L.geoJson(data,
                 {onEachFeature: function(feature, layer) {
-                    layer.bindTooltip("População:" + feature.properties.POPULACAO, {closeButton: false});
+                    layer.bindTooltip(`População Total: ${parseInt(feature.properties.POPULACAO_TOTAL)} </br>
+                                       População Feminina: ${parseInt(feature.properties.POPULACAO_MULHER)} </br>
+                                       População Masculina: ${parseInt(feature.properties.POPULACAO_HOMEM)}`, {closeButton: false});
                 }}).addTo(map);
             shape.setStyle(myStyle);
             shapes_setor.push(shape);
@@ -344,7 +346,6 @@ function buscar(data) {
 
     // handling all cluster now
     health_centres_makers(health_centres);
-    updateCompleteness(data);
     handleLargeCluster(map, "procedure/proceduresClusterPoints", data, metresToPixels(metres_bounds_cluster), metresToPixels(metres_bounds_heatmap), heatmap_opacity, CustomMarkerOnClick);
 
     // Divida tecnica
