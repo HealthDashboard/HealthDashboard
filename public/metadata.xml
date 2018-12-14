@@ -5,21 +5,21 @@ xmlns="http://schemas.google.com/dspl/2010" >-->
 
   <info>
     <name>
-      <value>Internações Hospitalares em São Paulo de 2014-2015</value>
+      <value>Internações Hospitalares SUS em São Paulo de 2015</value>
     </name>
     <description>
-      <value>Informações das internações ocorridas em estabelecimentos de saúde públicos na cidade de São Paulo no período de 2014-2015</value>
+      <value>Informações das internações ocorridas em estabelecimentos de saúde/leitos públicos dos residentes da cidade de São Paulo no período de 2015</value>
     </description>
-    <!--<url>
-      <value></value>
-    </url>-->
+    <url>
+      <value>https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/tabnet/internacoes_hospitalares/index.php?p=39949</value>
+    </url>
   </info>
   <provider>
     <name>
-      <value>Secretaria Municipal da Saúde de São Paulo<!-- ~*Revisar*~ Pode ser a Gerência de Geoprocessamento e Informações Socioambientais, o que for melhor --></value>
+      <value>Sistema de Internações Hospitalares (SIH) - Secretaria Municipal da Saúde de São Paulo</value>
     </name>
     <initials>
-      <value>SMS - SP<!-- ~*Revisar*~ Pode ser a GISA, o que for melhor --></value>
+      <value>SIH</value>
     </initials>
     <url>
       <value>https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/</value>
