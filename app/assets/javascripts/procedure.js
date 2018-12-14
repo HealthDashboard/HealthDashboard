@@ -185,9 +185,7 @@ function setShape(name, popup) {
         stripes.addTo(map);
 
         myStyle = {
-            "color": "#444444",
-            "opacity": 0.8,
-            "stroke": true,
+            "stroke": false,
             "lineCap": "butt",
             "fill": true,
             "fillColor": "#444444",
