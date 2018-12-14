@@ -53,12 +53,3 @@ function showDivs() {
   }
   timeout = setTimeout(function() { plusDivs(-1) }, 5000);
 }
-
-// function scrollBanner() {
-//   var scrollPos;
-//   var headerDiv = document.querySelector('.header-paralax');
-//   scrollPos = window.scrollY;
-//   if (scrollPos <= 400) {
-//       headerDiv.style.transform =  "translateY(" + (-scrollPos/6) +"px" + ")";
-//   }
-// }

@@ -471,8 +471,6 @@ function create_one_variable_graph(data, field){
         break;
         case "bar-line":
           var q = quartile(formatData);
-          console.log("q")
-          console.log(q)
           var option = {
               dataset: {
                   source: formatData,
@@ -522,6 +520,7 @@ function create_one_variable_graph(data, field){
                         ]
                       },
                       markArea: {
+                        silent: true,
                         label: {
                           show: true,
                           formatter: "Q1: " + q[0] + " até Q3: " + q[2],
