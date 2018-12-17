@@ -53,5 +53,6 @@ Rails.application.routes.draw do
     get :proceduresSetorCensitario, on: :collection 
     get :proceduresVariables, on: :collection
     get :proceduresCompleteness, on: :collection
+    get :proceduresPop, on: :collection
   end
 end
