@@ -1,7 +1,8 @@
 class ProcedureController < ApplicationController
 	before_action :getProcedures, only: [:proceduresDistanceGroup, :proceduresPerMonth,
 		:proceduresPerHealthCentre, :proceduresPerSpecialties, :proceduresDistance,
-		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario, :download, :downloadCluster, :proceduresVariables, :proceduresCompleteness]
+		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario, :download, :downloadCluster, :proceduresVariables, 
+		:proceduresCompleteness, :proceduresPop]
 
 	def initialize
 		# Cons, AVOID USING NUMBERS, make a constant instead
@@ -160,7 +161,7 @@ class ProcedureController < ApplicationController
 	def proceduresClusterPoints
 		render json: "Bad request", status: 400 and return unless @procedures != nil
 
-		clusters = @procedures.group(:lat, :long).count.to_a.flatten.each_slice(3) #Convert hash {[lat, long] => count} to array [lat, long,count]"
+		clusters = @procedures.group(:lat, :long, :cd_geocodi).count.to_a.flatten.each_slice(4) #Convert hash {[lat, long] => count} to array [lat, long,count]"
 
 		render json: clusters, status: 200
 	end
@@ -510,6 +511,16 @@ class ProcedureController < ApplicationController
 
 		render json: result, status: 200
 	end
+
+	# GET /procedure/proceduresPop{params}
+	# Params: [filter values array]
+	# Return: A hash with pop counters
+	def proceduresPop
+		render json: "Bad request", status: 400 and return unless @procedures != nil
+		result = @procedures.group(:cd_geocodi).count
+		render json: result, status: 200
+	end
+
 
 private
 	# Used when downloading a specific cluster

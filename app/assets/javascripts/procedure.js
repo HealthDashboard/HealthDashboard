@@ -41,6 +41,7 @@ function initProcedureMap() {
     filters_text = [];
     filters = [];
     genders = [];
+    cd_geocodi = null;
     start_date = null;
     end_date = null;
     dist_min = null;
@@ -262,6 +263,16 @@ function setor_censitario(e) {
             shapes_setor.push(shape);
         }
     })
+    data = getData();
+    $.ajax({
+        type: "GET",
+        dataType: 'json',
+        contentType: 'application/json',
+        data: data,
+        url: "procedure/proceduresPop",
+        success: function(result) {
+            console.log(result);
+    }});
 }
 
 //** Called when automatic search checkbox is changed, update auto var accordingly **//
@@ -431,24 +442,27 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
         data: data,
         url: path,
         success: function(procedures) {
+            console.log(procedures.length);
             markerList = [];
             heatmap_procedure = [];
 
             $.each(procedures, function(index, latlong){
-                icon = L.divIcon({ html: latlong[2], className: 'map-marker marker-single a-class', iconSize: L.point(34, 34) });
+                icon = L.divIcon({ html: latlong[3], className: 'map-marker marker-single a-class', iconSize: L.point(34, 34) });
                 marker = L.marker(L.latLng(latlong[0], latlong[1]), {icon: icon})
                 marker.latlong = [latlong[0], latlong[1]];
-                marker.number = latlong[2];
+                marker.number = latlong[3];
                 marker.clusterOpen = false;
                 marker.cluster = null;
-                marker.id = latlong[2];
+                marker.id = latlong[3];
+                marker.cd_geocodi = latlong[2];
                 marker.on('click', function_maker);
                 marker.on('contextmenu',function(e){
                     var button = document.createElement('button');
+                    var label = e.target.cd_geocodi;
                     button.type = "button"
                     button.id = marker.id;
                     button.className = 'btn btn-dark btn-sm';
-                    button.innerText = 'Download';
+                    button.innerText = label;
                     button.lat = e.latlng.lat;
                     button.long = e.latlng.lng;
                     button.addEventListener('click', function(){
