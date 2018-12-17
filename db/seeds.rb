@@ -77,7 +77,7 @@ def create_procedures()
 
     age_code = get_age_code(row[15].to_i)
     spec = specialties[row[3].to_i]
-    p = Procedure.new long: row[1], lat: row[2], specialty: spec, cmpt: row[4], date: row[5], date_in: row[6], 
+    p = Procedure.new cd_geocodi: row[0],long: row[1], lat: row[2], specialty: spec, cmpt: row[4], date: row[5], date_in: row[6], 
     date_out: row[7], proce_re: row[8], treatment_type: row[9], cid_primary: row[10], cid_secondary: row[11],
     cid_secondary2: row[12], gender: row[13], race: row[14], age_number: row[15], age_code: age_code, lv_instruction: row[16],
     gestor_ide: row[17], days: row[18], days_uti: row[19], days_ui: row[20], complexity: row[21], finance: row[22],

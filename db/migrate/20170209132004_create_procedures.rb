@@ -1,6 +1,7 @@
 class CreateProcedures < ActiveRecord::Migration[5.0]
   def change
     create_table :procedures do |t|
+      t.string :cd_geocodi
       t.float :lat
       t.float :long
       t.string :gender
