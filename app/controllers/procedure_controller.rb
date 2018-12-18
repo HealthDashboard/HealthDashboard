@@ -514,11 +514,15 @@ class ProcedureController < ApplicationController
 
 	# GET /procedure/proceduresPop{params}
 	# Params: [filter values array]
-	# Return: A hash with pop counters
+	# Return: A hash with pop counters by gender and race
 	def proceduresPop
 		render json: "Bad request", status: 400 and return unless @procedures != nil
-		result = @procedures.group(:cd_geocodi).count
-		render json: result, status: 200
+		pop_info = Hash.new()
+		result_gender = @procedures.group(:cd_geocodi).group(:gender).count
+		result_race = @procedures.group(:cd_geocodi).group(:race).count
+		pop_info[:gender] = result_gender
+		pop_info[:race] = result_race
+		render json: pop_info, status: 200
 	end
 
 
