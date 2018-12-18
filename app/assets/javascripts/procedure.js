@@ -32,6 +32,9 @@ var minimap;
 
 var source_xml;
 
+//** Population sectors vars **//
+var population_sectors;
+
 //** Called when loading the page, init vars, hide overlay and draw the map **//
 function initProcedureMap() {
     auto = false;
@@ -41,7 +44,6 @@ function initProcedureMap() {
     filters_text = [];
     filters = [];
     genders = [];
-    cd_geocodi = null;
     start_date = null;
     end_date = null;
     dist_min = null;
@@ -124,6 +126,11 @@ function initProcedureMap() {
     xhttp.open("GET", "metadata.xml", true);
     xhttp.send();
     updateCompleteness();
+
+    // Loading the file with the information of the population about each sector
+    $.getJSON('/Sectors_by_geocodi.json', function(result) {
+        population_sectors = result;
+    });
 }
 
 function change_sliders() {
@@ -263,16 +270,6 @@ function setor_censitario(e) {
             shapes_setor.push(shape);
         }
     })
-    data = getData();
-    $.ajax({
-        type: "GET",
-        dataType: 'json',
-        contentType: 'application/json',
-        data: data,
-        url: "procedure/proceduresPop",
-        success: function(result) {
-            console.log(result);
-    }});
 }
 
 //** Called when automatic search checkbox is changed, update auto var accordingly **//
@@ -442,10 +439,21 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
         data: data,
         url: path,
         success: function(procedures) {
-            console.log(procedures.length);
             markerList = [];
             heatmap_procedure = [];
-
+            var proceduresPop;
+            $.ajax({
+                type: "GET",
+                dataType: 'json',
+                contentType: 'application/json',
+                data: data,
+                async: false,
+                url: "procedure/proceduresPop",
+                success: function(result) {
+                    proceduresPop = result;
+                    //console.log(result["gender"]['[\"355030801000045\", \"M\"]']);
+                }
+            });
             $.each(procedures, function(index, latlong){
                 icon = L.divIcon({ html: latlong[3], className: 'map-marker marker-single a-class', iconSize: L.point(34, 34) });
                 marker = L.marker(L.latLng(latlong[0], latlong[1]), {icon: icon})
@@ -462,7 +470,7 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
                     button.type = "button"
                     button.id = marker.id;
                     button.className = 'btn btn-dark btn-sm';
-                    button.innerText = label;
+                    button.innerText = "Download";
                     button.lat = e.latlng.lat;
                     button.long = e.latlng.lng;
                     button.addEventListener('click', function(){
@@ -477,6 +485,13 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
                     map.openPopup(popup_cluster);
                 });
                 markerList.push(marker);
+                // population data about each marker to show in the tooltip
+                const string_tooltip = ("População Total: " + marker.number + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_TOTAL"]) + '</br>'
+                    + "População Feminina: " + proceduresPop["gender"]['[\"' + marker.cd_geocodi + '\", \"F\"]'] + "/"
+                    + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_MULHER"]) + '</br>'
+                    + "População Masculina: " + proceduresPop["gender"]['[\"' + marker.cd_geocodi + '\", \"M\"]'] + "/" 
+                    + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_HOMEM"]) + '</br>');
+                marker.bindTooltip(string_tooltip).openTooltip();
             });
             cluster.addLayers(markerList);
             map.addLayer(cluster);
