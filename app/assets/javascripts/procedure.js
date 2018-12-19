@@ -486,11 +486,46 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
                 });
                 markerList.push(marker);
                 // population data about each marker to show in the tooltip
-                const string_tooltip = ("População Total: " + marker.number + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_TOTAL"]) + '</br>'
-                    + "População Feminina: " + proceduresPop["gender"]['[\"' + marker.cd_geocodi + '\", \"F\"]'] + "/"
-                    + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_MULHER"]) + '</br>'
-                    + "População Masculina: " + proceduresPop["gender"]['[\"' + marker.cd_geocodi + '\", \"M\"]'] + "/" 
-                    + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_HOMEM"]) + '</br>');
+                var value_pop_mulher = proceduresPop["gender"]['[\"' + marker.cd_geocodi + '\", \"F\"]'];
+                var value_pop_homem = proceduresPop["gender"]['[\"' + marker.cd_geocodi + '\", \"M\"]'];
+                var value_pop_branca = proceduresPop["race"]['[\"' + marker.cd_geocodi + '\", \"01\"]'];
+                var value_pop_preta = proceduresPop["race"]['[\"' + marker.cd_geocodi + '\", \"02\"]'];
+                var value_pop_amarela = proceduresPop["race"]['[\"' + marker.cd_geocodi + '\", \"03\"]'];
+                var value_pop_indigena = proceduresPop["race"]['[\"' + marker.cd_geocodi + '\", \"04\"]'];
+                var str_percentage_pop_total = 100*marker.number/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_TOTAL"]);
+                var str_percentage_pop_mulher = 100*value_pop_mulher/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_MULHER"]);
+                var str_percentage_pop_homem = 100*value_pop_homem/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_HOMEM"]);
+                var str_percentage_pop_branca = 100*value_pop_branca/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_BRANCA"]);
+                var str_percentage_pop_preta = 100*value_pop_preta/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_PRETA"]);
+                var str_percentage_pop_amarela = 100*value_pop_amarela/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_AMARELA"]);
+                var str_percentage_pop_indigena = 100*value_pop_indigena/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_INDIGENA"]);
+                if(value_pop_mulher == undefined) value_pop_mulher = 0;
+                if(value_pop_homem == undefined) value_pop_homem = 0;
+                if(value_pop_branca == undefined) value_pop_branca = 0;
+                if(value_pop_preta == undefined) value_pop_preta = 0;
+                if(value_pop_amarela == undefined) value_pop_amarela = 0;
+                if(value_pop_indigena == undefined) value_pop_indigena = 0;
+                if(isNaN(str_percentage_pop_total) || !isFinite(str_percentage_pop_total)) str_percentage_pop_total = 0;
+                if(isNaN(str_percentage_pop_mulher) || !isFinite(str_percentage_pop_mulher)) str_percentage_pop_mulher = 0;
+                if(isNaN(str_percentage_pop_homem) || !isFinite(str_percentage_pop_homem)) str_percentage_pop_homem = 0;
+                if(isNaN(str_percentage_pop_branca) || !isFinite(str_percentage_pop_branca)) str_percentage_pop_branca = 0;
+                if(isNaN(str_percentage_pop_preta) || !isFinite(str_percentage_pop_preta)) str_percentage_pop_preta = 0;
+                if(isNaN(str_percentage_pop_amarela) || !isFinite(str_percentage_pop_amarela)) str_percentage_pop_amarela = 0;
+                if(isNaN(str_percentage_pop_indigena) || !isFinite(str_percentage_pop_indigena)) str_percentage_pop_indigena = 0;
+                const string_tooltip = ("População Total: " + marker.number + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_TOTAL"])
+                    + ' (' + str_percentage_pop_total.toFixed(2).replace(".", ",") + '%)' + '</br>'
+                    + "População Feminina: " + value_pop_mulher + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_MULHER"])
+                    + ' (' + str_percentage_pop_mulher.toFixed(2).replace(".", ",") + '%)' + '</br>'
+                    + "População Masculina: " + value_pop_homem + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_HOMEM"])
+                    + ' (' + str_percentage_pop_homem.toFixed(2).replace(".", ",") +  '%)' + '</br>'
+                    + "População Branca: " + value_pop_branca + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_BRANCA"])
+                    + ' (' + str_percentage_pop_branca.toFixed(2).replace(".", ",") + '%)' + '</br>'
+                    + "População Preta: " + value_pop_preta + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_PRETA"])
+                    + ' (' + str_percentage_pop_preta.toFixed(2).replace(".", ",") + '%)' + '</br>'
+                    + "População Amarela: " + value_pop_amarela + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_AMARELA"])
+                    + ' (' + str_percentage_pop_amarela.toFixed(2).replace(".", ",") + '%)' + '</br>'
+                    + "População Indígena: " + value_pop_indigena + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_INDIGENA"])
+                    + ' (' + str_percentage_pop_indigena.toFixed(2).replace(".", ",") + '%)' + '</br>');
                 marker.bindTooltip(string_tooltip).openTooltip();
             });
             cluster.addLayers(markerList);
