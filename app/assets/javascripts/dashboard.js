@@ -29,8 +29,8 @@ var start_date = null;
 var end_date = null;
 var genders = null;
 
-var chart_type = {"CRS":"bar", "DA":"bar", "PR":"bar", "STS":"bar", "age_code":"bar", "cid_primary":"bar", "cid_secondary":"bar",
- "cid_secondary2":"bar", "cmpt":"line", "cnes_id":"bar", "complexity":"pie", "days":"bar-line", "days_total":"bar-line", "days_uti":"bar-line",
+var chart_type = {"CRS":"bar", "DA":"bar", "PR":"bar", "STS":"bar", "age_code":"bar", "cid_primary":"cid", "cid_secondary":"cid",
+ "cid_secondary2":"cid", "cmpt":"line", "cnes_id":"bar", "complexity":"pie", "days":"bar-line", "days_total":"bar-line", "days_uti":"bar-line",
  "days_ui":"bar-line", "distance":"bar-line", "finance":"pie", "gender":"pie", "gestor_ide":"pie", "lv_instruction":"pie", "proce_re":"bar",
  "race":"pie", "specialty_id":"pie", "treatment_type":"pie", "val_total":"bar-line"};
 
@@ -383,7 +383,7 @@ function create_one_variable_graph(data, field){
             ]
         };
         myChart.setOption(option);
-        break;
+      break;
       case "pie":
         var option = {
             dataset: {
@@ -424,7 +424,7 @@ function create_one_variable_graph(data, field){
             ]
         };
         myChart.setOption(option);
-        break;
+      break;
       case "line":
         var option = {
             dataset: {
@@ -468,10 +468,10 @@ function create_one_variable_graph(data, field){
             ]
         };
         myChart.setOption(option);
-        break;
-        case "bar-line":
-          var q = quartile(formatData);
-          var option = {
+      break;
+      case "bar-line":
+        var q = quartile(formatData);
+        var option = {
               dataset: {
                   source: formatData,
               },
@@ -542,10 +542,23 @@ function create_one_variable_graph(data, field){
                       },
                   }
               ]
-          };
-          myChart.setOption(option);
-          break;
-  }
+        };
+        myChart.setOption(option);
+      break;
+      case "cid":
+        var cid10 = formatCID(formatData);
+        var option = {
+          tooltip: {},
+          series: [{
+            type: "treemap",
+            name: "Procedimentos",
+            data: cid10,
+            leafDepth: 3,
+          }],
+        }
+        myChart.setOption(option);
+      break;
+    }
 }
 
 function quartile(data) {
@@ -584,9 +597,55 @@ function quartile(data) {
   return q;
 }
 
+function formatCID (data) {
+  var cid10 = [];
+  for (i = 0; i < 26; i++) {
+    obj = {
+      name: String.fromCharCode(i + 65),
+      children: []
+    }
+    cid10.push(obj)
+    for (j = 0; j < 10; j++) {
+      obj = {
+        name: String.fromCharCode(i + 65, j + 48),
+        children: []
+      }
+      cid10[i].children.push(obj)
+    }
+  }
+
+  for (i=1; i < data.length-1; i++) {
+    letter = data[i][1].charCodeAt(0) - 65;
+    number = data[i][1].charAt(1);
+    obj = {
+      name: data[i][1],
+      value: data[i][0]
+    }
+    cid10[letter].children[number].children.push(obj)
+  }
+
+  // Tratando se o último caso for ""
+  // Está fora do for para não fazer esse if mais que uma vez
+  if (data[i][1] != "") {
+    letter = data[i][1].charCodeAt(0) - 65;
+    number = data[i][1].charAt(1);
+    obj = {
+      name: data[i][1],
+      value: data[i][0]
+    }
+    cid10[letter].children[number].children.push(obj)
+  }
+  // else {
+  //   obj = {
+  //     name: "Indefinido",
+  //     value: data[i][0]
+  //   }
+  //   cid10.push(obj)
+  // }
+  return cid10;
+}
 
 function changeChart(){
     const field = document.getElementById("select-chart").value;
-    console.log(field)
     create_one_variable_graph(result[field], field);
 }
