@@ -61,7 +61,7 @@ function initProcedureMap() {
     shapes_setor = [];
 
     $('#loading_overlay').hide();
-    var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }),
@@ -90,7 +90,7 @@ function initProcedureMap() {
     latlng = L.latLng(-23.72, -46.48);
     minimap = L.map('mini_map').setView(latlng, 9);
 
-    tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(minimap);
 
@@ -230,7 +230,7 @@ function setShape(name, popup) {
                             layer.name_sc = feature.properties.NM_DISTRIT
                             layer.on('click', setor_censitario)
                         }
-                        }, style: { fillPattern: stripes } 
+                        }, style: { fillPattern: stripes }
                     }).addTo(map);
                 shape.setStyle(myStyle);
                 if (popup != null)
@@ -733,7 +733,7 @@ function print_maps() {
     var bounds = [[center.lat - h, center.lng - w], [center.lat + h, center.lng + w]];
 
     minimap.setZoom(map.getZoom(), {animate: false, noMoveStart: true});
-    var rectangle = L.rectangle(bounds, {color: "rgba(0, 0, 0, 0.85)", fillColor: 'rgba(56, 22, 179, 0)', weight: 3}).addTo(minimap);
+    var rectangle = L.rectangle(bounds, {color: "rgb(83, 83, 83)", fillColor: 'rgba(56, 22, 179, 0)', weight: 3}).addTo(minimap);
     minimap.setZoom(9);
 
 
