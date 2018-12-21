@@ -893,7 +893,7 @@ function filters_value(data) {
                 },
             });
             // inputSlider();
-            slider_fix()
+            // slider_fix()
         });
     });
 }
