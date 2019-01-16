@@ -18,7 +18,7 @@ rspec:
   script:
     - cp config/database-ci.yml config/database.yml
     - apt-get update && apt-get install -y nodejs --no-install-recommends
-    - gem install bundler --no-ri --no-rdoc
+    - gem install bundler --no-document
     - bundle check || bundle install
     - bundle exec rake db:create
     - bundle exec rake db:migrate
