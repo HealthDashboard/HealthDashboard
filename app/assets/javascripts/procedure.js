@@ -533,9 +533,9 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
 
             var max_value_heatmap = 0;
             $.each(procedures, function(index, procedure) {
-                heatmap_procedure.push({lat: procedure[0], lng: procedure[1], count: procedure[2]})
-                if (procedure[2] > max_value_heatmap)
-                    max_value_heatmap = procedure[2]
+                heatmap_procedure.push({lat: procedure[0], lng: procedure[1], count: procedure[3]})
+                if (procedure[3] > max_value_heatmap)
+                    max_value_heatmap = procedure[3]
 
             });
             if (document.getElementById('checkGradient').checked) {
