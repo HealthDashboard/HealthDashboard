@@ -451,134 +451,140 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
                 url: "procedure/proceduresPop",
                 success: function(result) {
                     proceduresPop = result;
-                    //console.log(result["gender"]['[\"355030801000045\", \"M\"]']);
                 }
             });
-            $.each(procedures, function(index, latlong){
-                icon = L.divIcon({ html: latlong[3], className: 'map-marker marker-single a-class', iconSize: L.point(34, 34) });
-                marker = L.marker(L.latLng(latlong[0], latlong[1]), {icon: icon})
-                marker.latlong = [latlong[0], latlong[1]];
-                marker.number = latlong[3];
-                marker.clusterOpen = false;
-                marker.cluster = null;
-                marker.id = latlong[3];
-                marker.cd_geocodi = latlong[2];
-                marker.on('click', function_maker);
-                marker.on('contextmenu',function(e){
-                    var button = document.createElement('button');
-                    var label = e.target.cd_geocodi;
-                    button.type = "button"
-                    button.id = marker.id;
-                    button.className = 'btn btn-dark btn-sm';
-                    button.innerText = "Download";
-                    button.lat = e.latlng.lat;
-                    button.long = e.latlng.lng;
-                    button.addEventListener('click', function(){
-                        var paramLat = [];
-                        var paramLong = [];
-                        paramLat.push(button.lat);
-                        paramLong.push(button.long);
-                        downloadCluster(paramLat, paramLong);
+
+            // CLUSTER
+            if (document.getElementById('checkCluster').checked) {
+                $.each(procedures, function(index, latlong){
+                    icon = L.divIcon({ html: latlong[3], className: 'map-marker marker-single a-class', iconSize: L.point(34, 34) });
+                    marker = L.marker(L.latLng(latlong[0], latlong[1]), {icon: icon})
+                    marker.latlong = [latlong[0], latlong[1]];
+                    marker.number = latlong[3];
+                    marker.clusterOpen = false;
+                    marker.cluster = null;
+                    marker.id = latlong[3];
+                    marker.cd_geocodi = latlong[2];
+                    marker.on('click', function_maker);
+                    marker.on('contextmenu',function(e){
+                        var button = document.createElement('button');
+                        var label = e.target.cd_geocodi;
+                        button.type = "button"
+                        button.id = marker.id;
+                        button.className = 'btn btn-dark btn-sm';
+                        button.innerText = "Download";
+                        button.lat = e.latlng.lat;
+                        button.long = e.latlng.lng;
+                        button.addEventListener('click', function(){
+                            var paramLat = [];
+                            var paramLong = [];
+                            paramLat.push(button.lat);
+                            paramLong.push(button.long);
+                            downloadCluster(paramLat, paramLong);
+                        });
+                        var popup_cluster = L.popup().setContent(button);
+                        popup_cluster.setLatLng(e.latlng)
+                        map.openPopup(popup_cluster);
                     });
-                    var popup_cluster = L.popup().setContent(button);
-                    popup_cluster.setLatLng(e.latlng)
-                    map.openPopup(popup_cluster);
+                    markerList.push(marker);
+                    // population data about each marker to show in the tooltip
+                    var value_pop_mulher = proceduresPop["gender"]['[\"' + marker.cd_geocodi + '\", \"F\"]'];
+                    var value_pop_homem = proceduresPop["gender"]['[\"' + marker.cd_geocodi + '\", \"M\"]'];
+                    var value_pop_branca = proceduresPop["race"]['[\"' + marker.cd_geocodi + '\", \"01\"]'];
+                    var value_pop_preta = proceduresPop["race"]['[\"' + marker.cd_geocodi + '\", \"02\"]'];
+                    var value_pop_amarela = proceduresPop["race"]['[\"' + marker.cd_geocodi + '\", \"03\"]'];
+                    var value_pop_indigena = proceduresPop["race"]['[\"' + marker.cd_geocodi + '\", \"04\"]'];
+                    var str_percentage_pop_total = 100*marker.number/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_TOTAL"]);
+                    var str_percentage_pop_mulher = 100*value_pop_mulher/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_MULHER"]);
+                    var str_percentage_pop_homem = 100*value_pop_homem/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_HOMEM"]);
+                    var str_percentage_pop_branca = 100*value_pop_branca/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_BRANCA"]);
+                    var str_percentage_pop_preta = 100*value_pop_preta/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_PRETA"]);
+                    var str_percentage_pop_amarela = 100*value_pop_amarela/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_AMARELA"]);
+                    var str_percentage_pop_indigena = 100*value_pop_indigena/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_INDIGENA"]);
+                    if(value_pop_mulher == undefined) value_pop_mulher = 0;
+                    if(value_pop_homem == undefined) value_pop_homem = 0;
+                    if(value_pop_branca == undefined) value_pop_branca = 0;
+                    if(value_pop_preta == undefined) value_pop_preta = 0;
+                    if(value_pop_amarela == undefined) value_pop_amarela = 0;
+                    if(value_pop_indigena == undefined) value_pop_indigena = 0;
+                    if(isNaN(str_percentage_pop_total) || !isFinite(str_percentage_pop_total)) str_percentage_pop_total = 0;
+                    if(isNaN(str_percentage_pop_mulher) || !isFinite(str_percentage_pop_mulher)) str_percentage_pop_mulher = 0;
+                    if(isNaN(str_percentage_pop_homem) || !isFinite(str_percentage_pop_homem)) str_percentage_pop_homem = 0;
+                    if(isNaN(str_percentage_pop_branca) || !isFinite(str_percentage_pop_branca)) str_percentage_pop_branca = 0;
+                    if(isNaN(str_percentage_pop_preta) || !isFinite(str_percentage_pop_preta)) str_percentage_pop_preta = 0;
+                    if(isNaN(str_percentage_pop_amarela) || !isFinite(str_percentage_pop_amarela)) str_percentage_pop_amarela = 0;
+                    if(isNaN(str_percentage_pop_indigena) || !isFinite(str_percentage_pop_indigena)) str_percentage_pop_indigena = 0;
+                    const string_tooltip = ("População Total: " + marker.number + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_TOTAL"])
+                        + ' (' + str_percentage_pop_total.toFixed(2).replace(".", ",") + '%)' + '</br>'
+                        + "População Feminina: " + value_pop_mulher + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_MULHER"])
+                        + ' (' + str_percentage_pop_mulher.toFixed(2).replace(".", ",") + '%)' + '</br>'
+                        + "População Masculina: " + value_pop_homem + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_HOMEM"])
+                        + ' (' + str_percentage_pop_homem.toFixed(2).replace(".", ",") +  '%)' + '</br>'
+                        + "População Branca: " + value_pop_branca + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_BRANCA"])
+                        + ' (' + str_percentage_pop_branca.toFixed(2).replace(".", ",") + '%)' + '</br>'
+                        + "População Preta: " + value_pop_preta + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_PRETA"])
+                        + ' (' + str_percentage_pop_preta.toFixed(2).replace(".", ",") + '%)' + '</br>'
+                        + "População Amarela: " + value_pop_amarela + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_AMARELA"])
+                        + ' (' + str_percentage_pop_amarela.toFixed(2).replace(".", ",") + '%)' + '</br>'
+                        + "População Indígena: " + value_pop_indigena + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_INDIGENA"])
+                        + ' (' + str_percentage_pop_indigena.toFixed(2).replace(".", ",") + '%)' + '</br>');
+                    marker.bindTooltip(string_tooltip).openTooltip();
                 });
-                markerList.push(marker);
-                // population data about each marker to show in the tooltip
-                var value_pop_mulher = proceduresPop["gender"]['[\"' + marker.cd_geocodi + '\", \"F\"]'];
-                var value_pop_homem = proceduresPop["gender"]['[\"' + marker.cd_geocodi + '\", \"M\"]'];
-                var value_pop_branca = proceduresPop["race"]['[\"' + marker.cd_geocodi + '\", \"01\"]'];
-                var value_pop_preta = proceduresPop["race"]['[\"' + marker.cd_geocodi + '\", \"02\"]'];
-                var value_pop_amarela = proceduresPop["race"]['[\"' + marker.cd_geocodi + '\", \"03\"]'];
-                var value_pop_indigena = proceduresPop["race"]['[\"' + marker.cd_geocodi + '\", \"04\"]'];
-                var str_percentage_pop_total = 100*marker.number/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_TOTAL"]);
-                var str_percentage_pop_mulher = 100*value_pop_mulher/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_MULHER"]);
-                var str_percentage_pop_homem = 100*value_pop_homem/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_HOMEM"]);
-                var str_percentage_pop_branca = 100*value_pop_branca/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_BRANCA"]);
-                var str_percentage_pop_preta = 100*value_pop_preta/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_PRETA"]);
-                var str_percentage_pop_amarela = 100*value_pop_amarela/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_AMARELA"]);
-                var str_percentage_pop_indigena = 100*value_pop_indigena/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_INDIGENA"]);
-                if(value_pop_mulher == undefined) value_pop_mulher = 0;
-                if(value_pop_homem == undefined) value_pop_homem = 0;
-                if(value_pop_branca == undefined) value_pop_branca = 0;
-                if(value_pop_preta == undefined) value_pop_preta = 0;
-                if(value_pop_amarela == undefined) value_pop_amarela = 0;
-                if(value_pop_indigena == undefined) value_pop_indigena = 0;
-                if(isNaN(str_percentage_pop_total) || !isFinite(str_percentage_pop_total)) str_percentage_pop_total = 0;
-                if(isNaN(str_percentage_pop_mulher) || !isFinite(str_percentage_pop_mulher)) str_percentage_pop_mulher = 0;
-                if(isNaN(str_percentage_pop_homem) || !isFinite(str_percentage_pop_homem)) str_percentage_pop_homem = 0;
-                if(isNaN(str_percentage_pop_branca) || !isFinite(str_percentage_pop_branca)) str_percentage_pop_branca = 0;
-                if(isNaN(str_percentage_pop_preta) || !isFinite(str_percentage_pop_preta)) str_percentage_pop_preta = 0;
-                if(isNaN(str_percentage_pop_amarela) || !isFinite(str_percentage_pop_amarela)) str_percentage_pop_amarela = 0;
-                if(isNaN(str_percentage_pop_indigena) || !isFinite(str_percentage_pop_indigena)) str_percentage_pop_indigena = 0;
-                const string_tooltip = ("População Total: " + marker.number + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_TOTAL"])
-                    + ' (' + str_percentage_pop_total.toFixed(2).replace(".", ",") + '%)' + '</br>'
-                    + "População Feminina: " + value_pop_mulher + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_MULHER"])
-                    + ' (' + str_percentage_pop_mulher.toFixed(2).replace(".", ",") + '%)' + '</br>'
-                    + "População Masculina: " + value_pop_homem + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_HOMEM"])
-                    + ' (' + str_percentage_pop_homem.toFixed(2).replace(".", ",") +  '%)' + '</br>'
-                    + "População Branca: " + value_pop_branca + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_BRANCA"])
-                    + ' (' + str_percentage_pop_branca.toFixed(2).replace(".", ",") + '%)' + '</br>'
-                    + "População Preta: " + value_pop_preta + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_PRETA"])
-                    + ' (' + str_percentage_pop_preta.toFixed(2).replace(".", ",") + '%)' + '</br>'
-                    + "População Amarela: " + value_pop_amarela + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_AMARELA"])
-                    + ' (' + str_percentage_pop_amarela.toFixed(2).replace(".", ",") + '%)' + '</br>'
-                    + "População Indígena: " + value_pop_indigena + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_INDIGENA"])
-                    + ' (' + str_percentage_pop_indigena.toFixed(2).replace(".", ",") + '%)' + '</br>');
-                marker.bindTooltip(string_tooltip).openTooltip();
-            });
-            cluster.addLayers(markerList);
-            map.addLayer(cluster);
-
-            var max_value_heatmap = 0;
-            $.each(procedures, function(index, procedure) {
-                heatmap_procedure.push({lat: procedure[0], lng: procedure[1], count: procedure[3]})
-                if (procedure[3] > max_value_heatmap)
-                    max_value_heatmap = procedure[3]
-
-            });
-            if (document.getElementById('checkGradient').checked) {
-                gradient = { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"}
-                $("#gradient").addClass("dalt");
-            } else {
-                gradient = { 0.25: "#2bffd3", 0.62: "#fffd57", 1.0: "#f93434"}
-                $("#gradient").removeClass("dalt");
+                cluster.addLayers(markerList);
+                map.addLayer(cluster);
             }
-            var cfg = {
-              // radius should be small ONLY if scaleRadius is true (or small radius is intended)
-              // if scaleRadius is false it will be the constant radius used in pixels
-              "radius": max_heatmap_pixels,
-              // if activated: uses the data maximum within the current map boundaries
-              //   (there will always be a red spot with useLocalExtremas true)
-              "useLocalExtrema": true,
-              // which field name in your data represents the latitude - default "lat"
-              latField: 'lat',
-              // which field name in your data represents the longitude - default "lng"
-              lngField: 'lng',
-              // which field name in your data represents the data value - default "value"
-              valueField: 'count',
-              //gradient: { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"},
-              gradient: gradient,
-              opacity: heatmap_opacity / 100,
-              onExtremaChange: makeLegend
-            };
 
-            heatdata = {max: max_value_heatmap, data: heatmap_procedure}
-            heat = new HeatmapOverlay(cfg);
-            heat.setData(heatdata);
+            // HEATMAP
+            if (document.getElementById('checkHeatmap').checked) {
+                var max_value_heatmap = 0;
+                $.each(procedures, function(index, procedure) {
+                    heatmap_procedure.push({lat: procedure[0], lng: procedure[1], count: procedure[3]})
+                    if (procedure[3] > max_value_heatmap)
+                        max_value_heatmap = procedure[3]
 
-            //inserting the first and last values
-            legendlabel1 = document.getElementById("legend-label-1")
-            if (legendlabel1 !== null)
-                legendlabel1.innerText = 0.0;
+                });
+                if (document.getElementById('checkGradient').checked) {
+                    gradient = { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"}
+                    $("#gradient").addClass("dalt");
+                } else {
+                    gradient = { 0.25: "#2bffd3", 0.62: "#fffd57", 1.0: "#f93434"}
+                    $("#gradient").removeClass("dalt");
+                }
+                var cfg = {
+                // radius should be small ONLY if scaleRadius is true (or small radius is intended)
+                // if scaleRadius is false it will be the constant radius used in pixels
+                "radius": max_heatmap_pixels,
+                // if activated: uses the data maximum within the current map boundaries
+                //   (there will always be a red spot with useLocalExtremas true)
+                "useLocalExtrema": true,
+                // which field name in your data represents the latitude - default "lat"
+                latField: 'lat',
+                // which field name in your data represents the longitude - default "lng"
+                lngField: 'lng',
+                // which field name in your data represents the data value - default "value"
+                valueField: 'count',
+                //gradient: { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"},
+                gradient: gradient,
+                opacity: heatmap_opacity / 100,
+                onExtremaChange: makeLegend
+                };
 
-            map.addLayer(heat);
+                heatdata = {max: max_value_heatmap, data: heatmap_procedure}
+                heat = new HeatmapOverlay(cfg);
+                heat.setData(heatdata);
 
-            //changing legend opacity
-            X = document.getElementsByClassName("span-normal")
-            X[0].style["opacity"] = heatmap_opacity / 100;
+                //inserting the first and last values
+                legendlabel1 = document.getElementById("legend-label-1")
+                if (legendlabel1 !== null)
+                    legendlabel1.innerText = 0.0;
 
+                map.addLayer(heat);
+
+                //changing legend opacity
+                X = document.getElementsByClassName("span-normal")
+                X[0].style["opacity"] = heatmap_opacity / 100;
+
+            }
             $('#loading_overlay').hide();
         }
     });
