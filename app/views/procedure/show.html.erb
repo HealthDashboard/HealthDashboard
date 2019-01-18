@@ -22,39 +22,43 @@
             <p>Apresentação dos dados:</p>
             <input type="checkbox" name="checkCluster" id="checkCluster" checked>Quantidade (Agrupamento)</input>
             <div class="row justify-content-between"></div>
-            <input type="checkbox" name="checkHeatmap" id="checkHeatmap">Intensidade (Mapa de calor)</input>
+            <input type="checkbox" name="checkHeatmap" id="checkHeatmap" checked>Intensidade (Mapa de calor)</input>
             <div class="col-sm-12"><hr></div>
-            <p>Raio de convergência (Km):</p>
-            <div class="row justify-content-between">
-                <div class="col-sm-2 text-left no-wrap">
-                    Agrupamento:
+            <div id="radiusDiv">
+                <p>Raio de convergência (Km):</p>
+                <div class="row justify-content-between" id="clusterRadius">
+                    <div class="col-sm-2 text-left no-wrap">
+                        Agrupamento:
+                    </div>
+                    <div class="col-sm-10 text-right">
+                        <input class="slider_cluster" id="slider_cluster" type="text" style="width: 70%" title="Cluster"/>
+                    </div>
                 </div>
-                <div class="col-sm-10 text-right">
-                    <input class="slider_cluster" id="slider_cluster" type="text" style="width: 70%" title="Cluster"/>
+                <div class="row justify-content-between" id="heatmapRadius">
+                    <div class="col-sm-2 text-left no-wrap">
+                        Mapa de calor:
+                    </div>
+                    <div class="col-sm-10 text-right">
+                        <input class="slider_heatmap" id="slider_heatmap" type="text" style="width: 70%" title="Heatmap"/>
+                    </div>
                 </div>
+                <div class="col-sm-12"><hr></div>
             </div>
-            <div class="row justify-content-between">
-                <div class="col-sm-2 text-left no-wrap">
-                    Mapa de calor:
+            <div id="heatmapOptions">
+                <p>Cor do heatmap:</p>
+                <input type="checkbox" name="checkGradient" id="checkGradient">Modo Alto Contraste</input>
+                <div class="col-sm-12"><hr></div>
+                <p>Opacidade:</p>
+                <div class="row justify-content-between">
+                    <div class="col-sm-2 text-left no-wrap">
+                        Mapa de calor:
+                    </div>
+                    <div class="col-sm-10 text-right">
+                        <input class="slider_opacity" id="slider_opacity", type="text" style="width: 70%" title="Opacity">
+                    </div>
                 </div>
-                <div class="col-sm-10 text-right">
-                    <input class="slider_heatmap" id="slider_heatmap" type="text" style="width: 70%" title="Heatmap"/>
-                </div>
+                <div class="col-sm-12"><hr></div>
             </div>
-            <div class="col-sm-12"><hr></div>
-            <p>Cor do heatmap:</p>
-            <input type="checkbox" name="checkGradient" id="checkGradient">Modo Alto Contraste</input>
-            <div class="col-sm-12"><hr></div>
-            <p>Opacidade:</p>
-            <div class="row justify-content-between">
-                <div class="col-sm-2 text-left no-wrap">
-                    Mapa de calor:
-                </div>
-                <div class="col-sm-10 text-right">
-                    <input class="slider_opacity" id="slider_opacity", type="text" style="width: 70%" title="Opacity">
-                </div>
-            </div>
-            <div class="col-sm-12"><hr></div>
             <p>Visualizar limites administrativos:</p>
             <form>
                 <ul id="checkbox-list">

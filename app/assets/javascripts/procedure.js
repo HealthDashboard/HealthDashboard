@@ -532,6 +532,12 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
                 });
                 cluster.addLayers(markerList);
                 map.addLayer(cluster);
+
+                document.getElementById("clusterRadius").classList.remove("hidden");
+                document.getElementById("radiusDiv").classList.remove("hidden");
+            }
+            else {
+                document.getElementById("clusterRadius").className+=" hidden";
             }
 
             // HEATMAP
@@ -584,7 +590,22 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
                 X = document.getElementsByClassName("span-normal")
                 X[0].style["opacity"] = heatmap_opacity / 100;
 
+                document.getElementById("heatmapRadius").classList.remove("hidden");
+
+                document.getElementById("radiusDiv").classList.remove("hidden");
+                document.getElementById("heatmapOptions").classList.remove("hidden");
             }
+            else {
+                document.getElementById("heatmapRadius").className+=" hidden";
+                
+                document.getElementById("heatmapOptions").className+=" hidden";
+                
+                // if both are hidden (heatmap and cluster)
+                if (document.getElementById("clusterRadius").classList.contains("hidden")) {
+                    document.getElementById("radiusDiv").className+=" hidden";
+                }
+            }
+            
             $('#loading_overlay').hide();
         }
     });
