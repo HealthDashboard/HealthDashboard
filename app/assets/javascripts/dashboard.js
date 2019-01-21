@@ -548,7 +548,16 @@ function create_one_variable_graph(data, field){
       case "cid":
         var cid10 = formatCID(formatData);
         var option = {
-          tooltip: {},
+          label: {
+            // fontWeight: 'bold',
+            // fontSize: 16
+          },
+          tooltip: {
+            formatter: function (params) {
+              var str = params.data.fullname + ": " + params.data.value;
+              return str;
+            },
+          },
           series: [{
             type: "treemap",
             name: "Procedimentos",
@@ -618,7 +627,8 @@ function formatCID (data) {
     letter = data[i][1].charCodeAt(0) - 65;
     number = data[i][1].charAt(1);
     obj = {
-      name: data[i][1],
+      name: data[i][1].slice(0, 3),
+      fullname: data[i][1],
       value: data[i][0]
     }
     cid10[letter].children[number].children.push(obj)
