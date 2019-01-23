@@ -283,7 +283,11 @@ function automatic_search() {
 }
 
 //** Called when any filter is altered, if automatic search is on it calls "buscar()" **//
-function change() {
+function change(element) {
+    // if the changed element is the specific cid10 filter, so the function called is cid10_change()
+    if (element.id == 5){
+        cid10_change();
+    }
     if (cleaning == false && auto == true) {
         data = getData()
         buscar(data);
@@ -1116,4 +1120,21 @@ function findSource(xml) {
 function toggleFilters() {
   $("#filters").toggleClass("active");
   $("#fab").toggleClass("active");
+}
+
+function cid10_change(){
+    data = getData();
+    $("#6").empty(); //#6 is the id of the specific cid10 multiselect
+    $.getJSON('/CID-10-subcategorias.json', function(file) {    
+        $.getJSON('/procedure/proceduresCid10Specific', data, function(result) {
+            $.each(result, function(index, value){
+                $.each(result[index], function(index_item, value_item){
+                    var index_file = file.findIndex(function(file_item){
+                        return file_item["SUBCAT"] == index_item;
+                    });
+                    $("#6").append(new Option(file[index_file]["DESCRIC"], index_item));
+                });
+            });
+        });
+    });
 }
