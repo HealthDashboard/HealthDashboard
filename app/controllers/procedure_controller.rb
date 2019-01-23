@@ -2,7 +2,7 @@ class ProcedureController < ApplicationController
 	before_action :getProcedures, only: [:proceduresDistanceGroup, :proceduresPerMonth,
 		:proceduresPerHealthCentre, :proceduresPerSpecialties, :proceduresDistance,
 		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario, :download, :downloadCluster, :proceduresVariables, 
-		:proceduresCompleteness, :proceduresPop]
+		:proceduresCompleteness, :proceduresPop, :proceduresCid10Specific]
 
 	def initialize
 		# Cons, AVOID USING NUMBERS, make a constant instead
@@ -55,10 +55,10 @@ class ProcedureController < ApplicationController
 				  {"id" => "01", "text" => "MUNICIPAL"}];
 
 		@options_establishment = [@health_centres, @gestor, @specialties]
-		@options_procedure = [@cmpt, @treatments, @cid, @cid, @cid, @cid, @complexity, @finance]
+		@options_procedure = [@cmpt, @treatments, @cid, [], @cid, @cid, @complexity, @finance]
 		@options_patient_info = [@age_group, @race, @lv_instruction, @da, @pr, @sts, @crs]
 
-		@filters_name = ["cnes_id", "gestor_ide", "specialty_id", "cmpt", "treatment_type", "cid_primary", "cid_secondary", "cid_secondary2",
+		@filters_name = ["cnes_id", "gestor_ide", "specialty_id", "cmpt", "treatment_type", "cid_primary", "cid_primary", "cid_secondary", "cid_secondary2",
 			"complexity", "finance", "age_code", "race", "lv_instruction", "DA", "PR", "STS", "CRS"]
 
 		@sliders_name = ["days", "days_uti", "days_ui", "days_total", "val_total", "distance"]
@@ -156,12 +156,12 @@ class ProcedureController < ApplicationController
 
 	# Handles clustering for large amount of data
 	# GET /procedure/proceduresClusterPoints/{params}
-	# Params: [filters values array]render json: "Bad request", status: 400 and return unless @procedures != nil
+	# Params: [filters values array]
 	# Return: An array of [lat, long, number_of_pacients]
 	def proceduresClusterPoints
 		render json: "Bad request", status: 400 and return unless @procedures != nil
 
-		clusters = @procedures.group(:lat, :long, :cd_geocodi).count.to_a.flatten.each_slice(4) #Convert hash {[lat, long] => count} to array [lat, long,count]"
+		clusters = @procedures.group(:lat, :long, :cd_geocodi).count.to_a.flatten.each_slice(4) #Convert hash {[lat, long, cd_geocodi] => count} to array [lat, long, cd_geocodi, count]"
 
 		render json: clusters, status: 200
 	end
@@ -525,6 +525,19 @@ class ProcedureController < ApplicationController
 		render json: pop_info, status: 200
 	end
 
+	# GET /procedure/proceduresCid10Specific{params}
+	# Params: [array containing the cid10 options selected in advanced search and filter values array]
+	# Return: A hash containing the specific options of cid10
+	def proceduresCid10Specific
+		parsed_json = JSON.parse params[:data]
+		render json: "Bad request", status: 400 and return unless @procedures != nil
+		cid10_selected = parsed_json["filters"][5]
+		cid10_options = Hash.new
+		cid10_selected.each do |option|
+			cid10_options[option] = @procedures.where("cid_primary LIKE ?", "#{option}%").group(:cid_primary).count
+		end
+		render json: cid10_options, status: 200
+	end
 
 private
 	# Used when downloading a specific cluster
@@ -567,7 +580,14 @@ private
 
 		@filters_name.each.with_index do |filter, i|
 			if parsed_json["filters"] != nil && !(parsed_json["filters"][i].to_a.empty?)
-				@procedures = @procedures.where(filter => parsed_json["filters"][i])
+				# Special case for cid filters, because some of the datas have 4 characters and some of them just 3 characters
+				if i == 5 || i == 7 || i == 8
+					tmp = parsed_json["filters"][i]
+					tmp.map! {|word| "#{word}%"}
+					@procedures = @procedures.where(filter + " LIKE ANY ( array[?] )", tmp)
+				else
+					@procedures = @procedures.where(filter => parsed_json["filters"][i])
+				end
 			end
 		end
 
