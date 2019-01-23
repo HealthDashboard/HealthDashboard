@@ -131,6 +131,9 @@ function initProcedureMap() {
     $.getJSON('/Sectors_by_geocodi.json', function(result) {
         population_sectors = result;
     });
+
+    // When the page is loaded, the specific cid_primary filter needs to be disabled
+    $('#6').prop('disabled', true);
 }
 
 function change_sliders() {
@@ -1127,6 +1130,12 @@ function cid10_change(){
     $("#6").empty(); //#6 is the id of the specific cid10 multiselect
     $.getJSON('/CID-10-subcategorias.json', function(file) {    
         $.getJSON('/procedure/proceduresCid10Specific', data, function(result) {
+            if (Object.keys(result).length > 0){
+                $('#6').prop('disabled', false);
+            }
+            else{
+                $('#6').prop('disabled', true);
+            }
             $.each(result, function(index, value){
                 $.each(result[index], function(index_item, value_item){
                     var index_file = file.findIndex(function(file_item){
