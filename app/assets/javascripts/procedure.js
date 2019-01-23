@@ -1208,6 +1208,7 @@ function updateCompleteness(data){
                     html_elmt.prop("title", data_key[id] + "% dos dados possuem esta informação\u000AFonte: " + source);
                 }
             }
+            $("#print-source").html(source);
         }
     });
 }
