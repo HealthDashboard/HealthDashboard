@@ -54,5 +54,6 @@ Rails.application.routes.draw do
     get :proceduresVariables, on: :collection
     get :proceduresCompleteness, on: :collection
     get :proceduresPop, on: :collection
+    get :proceduresCid10Specific, on: :collection
   end
 end
