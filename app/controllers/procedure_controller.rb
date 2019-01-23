@@ -534,7 +534,10 @@ class ProcedureController < ApplicationController
 		cid10_selected = parsed_json["filters"][5]
 		cid10_options = Hash.new
 		cid10_selected.each do |option|
-			cid10_options[option] = @procedures.where("cid_primary LIKE ?", "#{option}%").group(:cid_primary).count
+			result = @procedures.where("cid_primary LIKE ?", "#{option}%").group(:cid_primary).count
+			if result.empty? == false
+				cid10_options[option] = result
+			end
 		end
 		render json: cid10_options, status: 200
 	end
