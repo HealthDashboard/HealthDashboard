@@ -550,7 +550,7 @@ function create_one_variable_graph(data, field){
         var option = {
           label: {
             // fontWeight: 'bold',
-            // fontSize: 16
+            fontSize: 16
           },
           tooltip: {
             formatter: function (params) {
@@ -640,7 +640,8 @@ function formatCID (data) {
     letter = data[i][1].charCodeAt(0) - 65;
     number = data[i][1].charAt(1);
     obj = {
-      name: data[i][1],
+      name: data[i][1].slice(0, 3),
+      fullname: data[i][1],
       value: data[i][0]
     }
     cid10[letter].children[number].children.push(obj)
