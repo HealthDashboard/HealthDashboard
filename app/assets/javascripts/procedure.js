@@ -131,9 +131,6 @@ function initProcedureMap() {
     $.getJSON('/Sectors_by_geocodi.json', function(result) {
         population_sectors = result;
     });
-
-    // When the page is loaded, the specific cid_primary filter needs to be disabled
-    $('#6').prop('disabled', true);
 }
 
 function change_sliders() {
@@ -286,11 +283,7 @@ function automatic_search() {
 }
 
 //** Called when any filter is altered, if automatic search is on it calls "buscar()" **//
-function change(element) {
-    // if the changed element is the specific cid10 filter, so the function called is cid10_change()
-    if (element.id == 5){
-        cid10_change();
-    }
+function change() {
     if (cleaning == false && auto == true) {
         data = getData()
         buscar(data);
@@ -367,7 +360,7 @@ function buscar(data) {
 
     // handling all cluster now
     health_centres_makers(health_centres);
-    handleLargeCluster(map, "procedure/proceduresClusterPoints", data, metresToPixels(metres_bounds_cluster), metresToPixels(metres_bounds_heatmap), heatmap_opacity, CustomMarkerOnClick);
+    handleLargeCluster(map, "procedure/proceduresClusterPoints", data, metresToPixels(metres_bounds_cluster), metresToPixels(metres_bounds_heatmap), heatmap_opacity, CustomMarkerOnClick, "Procedures");
 
     // Divida tecnica
     checked = $('input[name=optCheckbok]:checked', '#checkbox-list');
@@ -393,7 +386,7 @@ function pixelsToMetres(pixels) {
     return pixels * metresPerPixel;
 }
 
-function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pixels, heatmap_opacity, function_maker) {
+function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pixels, heatmap_opacity, function_maker, source) {
     cluster = L.markerClusterGroup({
         maxClusterRadius: max_cluster_pixels,
         chunkedLoading: true,
@@ -452,33 +445,41 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
             markerList = [];
             heatmap_procedure = [];
             var proceduresPop;
-            $.ajax({
-                type: "GET",
-                dataType: 'json',
-                contentType: 'application/json',
-                data: data,
-                async: false,
-                url: "procedure/proceduresPop",
-                success: function(result) {
-                    proceduresPop = result;
-                }
-            });
-
-            // CLUSTER
-            if (document.getElementById('checkCluster').checked) {
+            if(source === "Procedures"){
+                $.ajax({
+                    type: "GET",
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: data,
+                    async: false,
+                    url: "procedure/proceduresPop",
+                    success: function(result) {
+                        proceduresPop = result;
+                    }
+                });
+            }
+            clusterElement = document.getElementById('checkCluster')
+            if ((clusterElement && clusterElement.checked) || source === "HealthCentre") {
                 $.each(procedures, function(index, latlong){
+                    // the index used in latlong to represent the procedures counter depends on the source
+                    // so if the source is "Procedures", the latlong variable has a cd_geocodi field
+                    // if the source is "HealthCentre", the latlong variable does not have a cd_geocodi field.
                     icon = L.divIcon({ html: latlong[3], className: 'map-marker marker-single a-class', iconSize: L.point(34, 34) });
                     marker = L.marker(L.latLng(latlong[0], latlong[1]), {icon: icon})
-                    marker.latlong = [latlong[0], latlong[1]];
                     marker.number = latlong[3];
+                    marker.cd_geocodi = latlong[2];
+                    marker.id = latlong[3];
+                    if(source === "HealthCentre"){
+                        icon = L.divIcon({ html: latlong[2], className: 'map-marker marker-single a-class', iconSize: L.point(34, 34) });
+                        marker.number = latlong[2];
+                        marker.id = latlong[2];
+                    }
+                    marker.latlong = [latlong[0], latlong[1]];
                     marker.clusterOpen = false;
                     marker.cluster = null;
-                    marker.id = latlong[3];
-                    marker.cd_geocodi = latlong[2];
                     marker.on('click', function_maker);
                     marker.on('contextmenu',function(e){
                         var button = document.createElement('button');
-                        var label = e.target.cd_geocodi;
                         button.type = "button"
                         button.id = marker.id;
                         button.className = 'btn btn-dark btn-sm';
@@ -497,61 +498,65 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
                         map.openPopup(popup_cluster);
                     });
                     markerList.push(marker);
-                    // population data about each marker to show in the tooltip
-                    var value_pop_mulher = proceduresPop["gender"]['[\"' + marker.cd_geocodi + '\", \"F\"]'];
-                    var value_pop_homem = proceduresPop["gender"]['[\"' + marker.cd_geocodi + '\", \"M\"]'];
-                    var value_pop_branca = proceduresPop["race"]['[\"' + marker.cd_geocodi + '\", \"01\"]'];
-                    var value_pop_preta = proceduresPop["race"]['[\"' + marker.cd_geocodi + '\", \"02\"]'];
-                    var value_pop_amarela = proceduresPop["race"]['[\"' + marker.cd_geocodi + '\", \"03\"]'];
-                    var value_pop_indigena = proceduresPop["race"]['[\"' + marker.cd_geocodi + '\", \"04\"]'];
-                    var str_percentage_pop_total = 100*marker.number/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_TOTAL"]);
-                    var str_percentage_pop_mulher = 100*value_pop_mulher/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_MULHER"]);
-                    var str_percentage_pop_homem = 100*value_pop_homem/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_HOMEM"]);
-                    var str_percentage_pop_branca = 100*value_pop_branca/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_BRANCA"]);
-                    var str_percentage_pop_preta = 100*value_pop_preta/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_PRETA"]);
-                    var str_percentage_pop_amarela = 100*value_pop_amarela/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_AMARELA"]);
-                    var str_percentage_pop_indigena = 100*value_pop_indigena/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_INDIGENA"]);
-                    if(value_pop_mulher == undefined) value_pop_mulher = 0;
-                    if(value_pop_homem == undefined) value_pop_homem = 0;
-                    if(value_pop_branca == undefined) value_pop_branca = 0;
-                    if(value_pop_preta == undefined) value_pop_preta = 0;
-                    if(value_pop_amarela == undefined) value_pop_amarela = 0;
-                    if(value_pop_indigena == undefined) value_pop_indigena = 0;
-                    if(isNaN(str_percentage_pop_total) || !isFinite(str_percentage_pop_total)) str_percentage_pop_total = 0;
-                    if(isNaN(str_percentage_pop_mulher) || !isFinite(str_percentage_pop_mulher)) str_percentage_pop_mulher = 0;
-                    if(isNaN(str_percentage_pop_homem) || !isFinite(str_percentage_pop_homem)) str_percentage_pop_homem = 0;
-                    if(isNaN(str_percentage_pop_branca) || !isFinite(str_percentage_pop_branca)) str_percentage_pop_branca = 0;
-                    if(isNaN(str_percentage_pop_preta) || !isFinite(str_percentage_pop_preta)) str_percentage_pop_preta = 0;
-                    if(isNaN(str_percentage_pop_amarela) || !isFinite(str_percentage_pop_amarela)) str_percentage_pop_amarela = 0;
-                    if(isNaN(str_percentage_pop_indigena) || !isFinite(str_percentage_pop_indigena)) str_percentage_pop_indigena = 0;
-                    const string_tooltip = ("População Total: " + marker.number + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_TOTAL"])
-                        + ' (' + str_percentage_pop_total.toFixed(2).replace(".", ",") + '%)' + '</br>'
-                        + "População Feminina: " + value_pop_mulher + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_MULHER"])
-                        + ' (' + str_percentage_pop_mulher.toFixed(2).replace(".", ",") + '%)' + '</br>'
-                        + "População Masculina: " + value_pop_homem + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_HOMEM"])
-                        + ' (' + str_percentage_pop_homem.toFixed(2).replace(".", ",") +  '%)' + '</br>'
-                        + "População Branca: " + value_pop_branca + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_BRANCA"])
-                        + ' (' + str_percentage_pop_branca.toFixed(2).replace(".", ",") + '%)' + '</br>'
-                        + "População Preta: " + value_pop_preta + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_PRETA"])
-                        + ' (' + str_percentage_pop_preta.toFixed(2).replace(".", ",") + '%)' + '</br>'
-                        + "População Amarela: " + value_pop_amarela + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_AMARELA"])
-                        + ' (' + str_percentage_pop_amarela.toFixed(2).replace(".", ",") + '%)' + '</br>'
-                        + "População Indígena: " + value_pop_indigena + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_INDIGENA"])
-                        + ' (' + str_percentage_pop_indigena.toFixed(2).replace(".", ",") + '%)' + '</br>');
-                    marker.bindTooltip(string_tooltip).openTooltip();
+                    if(source === "Procedures"){
+                        // population data about each marker to show in the tooltip
+                        var value_pop_mulher = proceduresPop["gender"]['[\"' + marker.cd_geocodi + '\", \"F\"]'];
+                        var value_pop_homem = proceduresPop["gender"]['[\"' + marker.cd_geocodi + '\", \"M\"]'];
+                        var value_pop_branca = proceduresPop["race"]['[\"' + marker.cd_geocodi + '\", \"01\"]'];
+                        var value_pop_preta = proceduresPop["race"]['[\"' + marker.cd_geocodi + '\", \"02\"]'];
+                        var value_pop_amarela = proceduresPop["race"]['[\"' + marker.cd_geocodi + '\", \"03\"]'];
+                        var value_pop_indigena = proceduresPop["race"]['[\"' + marker.cd_geocodi + '\", \"04\"]'];
+                        var str_percentage_pop_total = 100*marker.number/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_TOTAL"]);
+                        var str_percentage_pop_mulher = 100*value_pop_mulher/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_MULHER"]);
+                        var str_percentage_pop_homem = 100*value_pop_homem/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_HOMEM"]);
+                        var str_percentage_pop_branca = 100*value_pop_branca/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_BRANCA"]);
+                        var str_percentage_pop_preta = 100*value_pop_preta/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_PRETA"]);
+                        var str_percentage_pop_amarela = 100*value_pop_amarela/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_AMARELA"]);
+                        var str_percentage_pop_indigena = 100*value_pop_indigena/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_INDIGENA"]);
+                        if(value_pop_mulher == undefined) value_pop_mulher = 0;
+                        if(value_pop_homem == undefined) value_pop_homem = 0;
+                        if(value_pop_branca == undefined) value_pop_branca = 0;
+                        if(value_pop_preta == undefined) value_pop_preta = 0;
+                        if(value_pop_amarela == undefined) value_pop_amarela = 0;
+                        if(value_pop_indigena == undefined) value_pop_indigena = 0;
+                        if(isNaN(str_percentage_pop_total) || !isFinite(str_percentage_pop_total)) str_percentage_pop_total = 0;
+                        if(isNaN(str_percentage_pop_mulher) || !isFinite(str_percentage_pop_mulher)) str_percentage_pop_mulher = 0;
+                        if(isNaN(str_percentage_pop_homem) || !isFinite(str_percentage_pop_homem)) str_percentage_pop_homem = 0;
+                        if(isNaN(str_percentage_pop_branca) || !isFinite(str_percentage_pop_branca)) str_percentage_pop_branca = 0;
+                        if(isNaN(str_percentage_pop_preta) || !isFinite(str_percentage_pop_preta)) str_percentage_pop_preta = 0;
+                        if(isNaN(str_percentage_pop_amarela) || !isFinite(str_percentage_pop_amarela)) str_percentage_pop_amarela = 0;
+                        if(isNaN(str_percentage_pop_indigena) || !isFinite(str_percentage_pop_indigena)) str_percentage_pop_indigena = 0;
+                        const string_tooltip = ("População Total: " + marker.number + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_TOTAL"])
+                            + ' (' + str_percentage_pop_total.toFixed(2).replace(".", ",") + '%)' + '</br>'
+                            + "População Feminina: " + value_pop_mulher + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_MULHER"])
+                            + ' (' + str_percentage_pop_mulher.toFixed(2).replace(".", ",") + '%)' + '</br>'
+                            + "População Masculina: " + value_pop_homem + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_HOMEM"])
+                            + ' (' + str_percentage_pop_homem.toFixed(2).replace(".", ",") +  '%)' + '</br>'
+                            + "População Branca: " + value_pop_branca + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_BRANCA"])
+                            + ' (' + str_percentage_pop_branca.toFixed(2).replace(".", ",") + '%)' + '</br>'
+                            + "População Preta: " + value_pop_preta + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_PRETA"])
+                            + ' (' + str_percentage_pop_preta.toFixed(2).replace(".", ",") + '%)' + '</br>'
+                            + "População Amarela: " + value_pop_amarela + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_AMARELA"])
+                            + ' (' + str_percentage_pop_amarela.toFixed(2).replace(".", ",") + '%)' + '</br>'
+                            + "População Indígena: " + value_pop_indigena + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_INDIGENA"])
+                            + ' (' + str_percentage_pop_indigena.toFixed(2).replace(".", ",") + '%)' + '</br>');
+                        marker.bindTooltip(string_tooltip).openTooltip();
+                    }
                 });
                 cluster.addLayers(markerList);
                 map.addLayer(cluster);
-
-                document.getElementById("clusterRadius").classList.remove("hidden");
-                document.getElementById("radiusDiv").classList.remove("hidden");
+                
+                if (clusterElement && clusterElement.checked) {
+                    document.getElementById("clusterRadius").classList.remove("hidden");
+                    document.getElementById("radiusDiv").classList.remove("hidden");
+                }
             }
-            else {
+            else if (clusterElement) {
                 document.getElementById("clusterRadius").className+=" hidden";
             }
 
-            // HEATMAP
-            if (document.getElementById('checkHeatmap').checked) {
+            heatmapElement = document.getElementById('checkHeatmap')
+            if ((heatmapElement && heatmapElement.checked) || source === "HealthCentre") {
                 var max_value_heatmap = 0;
                 $.each(procedures, function(index, procedure) {
                     heatmap_procedure.push({lat: procedure[0], lng: procedure[1], count: procedure[3]})
@@ -600,12 +605,14 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
                 X = document.getElementsByClassName("span-normal")
                 X[0].style["opacity"] = heatmap_opacity / 100;
 
-                document.getElementById("heatmapRadius").classList.remove("hidden");
+                if (heatmapElement && heatmapElement.checked) {
+                    document.getElementById("heatmapRadius").classList.remove("hidden");
 
-                document.getElementById("radiusDiv").classList.remove("hidden");
-                document.getElementById("heatmapOptions").classList.remove("hidden");
+                    document.getElementById("radiusDiv").classList.remove("hidden");
+                    document.getElementById("heatmapOptions").classList.remove("hidden");
+                }
             }
-            else {
+            else if (heatmapElement) {
                 document.getElementById("heatmapRadius").className+=" hidden";
                 
                 document.getElementById("heatmapOptions").className+=" hidden";
@@ -615,7 +622,7 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
                     document.getElementById("radiusDiv").className+=" hidden";
                 }
             }
-            
+
             $('#loading_overlay').hide();
         }
     });
@@ -1123,27 +1130,4 @@ function findSource(xml) {
 function toggleFilters() {
   $("#filters").toggleClass("active");
   $("#fab").toggleClass("active");
-}
-
-function cid10_change(){
-    data = getData();
-    $("#6").empty(); //#6 is the id of the specific cid10 multiselect
-    $.getJSON('/CID-10-subcategorias.json', function(file) {    
-        $.getJSON('/procedure/proceduresCid10Specific', data, function(result) {
-            if (Object.keys(result).length > 0){
-                $('#6').prop('disabled', false);
-            }
-            else{
-                $('#6').prop('disabled', true);
-            }
-            $.each(result, function(index, value){
-                $.each(result[index], function(index_item, value_item){
-                    var index_file = file.findIndex(function(file_item){
-                        return file_item["SUBCAT"] == index_item;
-                    });
-                    $("#6").append(new Option(file[index_file]["DESCRIC"], index_item));
-                });
-            });
-        });
-    });
 }
