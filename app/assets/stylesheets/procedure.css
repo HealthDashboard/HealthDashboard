@@ -384,6 +384,24 @@ h1 {
   display: none;
 }
 
+.tip {
+  position: absolute;
+  right: 10px;
+
+  background-color: rgba(34, 34, 34, 0.8);
+  padding: .25em .5em;
+  color: #e3e3e3;
+  border-radius: 5px;
+  border: 1px rgba(34, 34, 34, 0.9) solid;
+  max-width: calc(25vw - 20px);
+  z-index: 999999;
+  display: none;
+}
+
+*:hover > .tip {
+  display: block;
+}
+
 @media (orientation: portrait) {
   .container {
     overflow: hidden;

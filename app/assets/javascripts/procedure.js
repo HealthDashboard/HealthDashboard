@@ -1204,8 +1204,8 @@ function updateCompleteness(data){
                 data_key = data[key];
                 for(var id in data_key){
                     var html_elmt = $("#" + key + "_" + id);
-                    html_elmt.html(data_key[id] + "%");
-                    html_elmt.prop("title", data_key[id] + "% dos dados possuem esta informação\u000AFonte: " + source);
+                    html_elmt.html(data_key[id] + "%<div class='tip'><p>" + data_key[id] + "% dos dados possuem esta informação</p><p>Fonte: " + source + "</p></div>");
+                    // html_elmt.prop("title", data_key[id] + "% dos dados possuem esta informação\u000AFonte: " + source);
                 }
             }
             $("#print-source").html(source);
