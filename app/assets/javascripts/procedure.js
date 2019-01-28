@@ -452,6 +452,7 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
         success: function(procedures) {
             markerList = [];
             heatmap_procedure = [];
+            rate_heatmap = [];
             var proceduresPop;
             if(source === "Procedures"){
                 $.ajax({
@@ -466,7 +467,7 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
                     }
                 });
             }
-            clusterElement = document.getElementById('checkCluster')
+            clusterElement = document.getElementById('checkCluster');
             if ((clusterElement && clusterElement.checked) || source === "HealthCentre") {
                 $.each(procedures, function(index, latlong){
                     // the index used in latlong to represent the procedures counter depends on the source
@@ -488,7 +489,7 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
                     marker.on('click', function_maker);
                     marker.on('contextmenu',function(e){
                         var button = document.createElement('button');
-                        button.type = "button"
+                        button.type = "button";
                         button.id = marker.id;
                         button.className = 'btn btn-dark btn-sm';
                         button.innerText = "Download";
@@ -502,7 +503,7 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
                             downloadCluster(paramLat, paramLong);
                         });
                         var popup_cluster = L.popup().setContent(button);
-                        popup_cluster.setLatLng(e.latlng)
+                        popup_cluster.setLatLng(e.latlng);
                         map.openPopup(popup_cluster);
                     });
                     markerList.push(marker);
@@ -569,7 +570,7 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
                 $.each(procedures, function(index, procedure) {
                     heatmap_procedure.push({lat: procedure[0], lng: procedure[1], count: procedure[3]})
                     if (procedure[3] > max_value_heatmap)
-                        max_value_heatmap = procedure[3]
+                        max_value_heatmap = procedure[3];
 
                 });
                 if (document.getElementById('checkGradient').checked) {
@@ -629,6 +630,54 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
                 if (document.getElementById("clusterRadius").classList.contains("hidden")) {
                     document.getElementById("radiusDiv").className+=" hidden";
                 }
+            }
+
+            rateHeatmapElement = document.getElementById('checkHeatmapRate');
+            if ((rateHeatmapElement && rateHeatmapElement.checked) || source === "HealthCentre") {
+                $.each(procedures, function(index, latlong){
+                    if(rate_heatmap[latlong[2]] == undefined){
+                        rate_heatmap[latlong[2]] = 0;
+                    }
+                    rate_heatmap[latlong[2]] += latlong[3];
+                    /*icon = L.divIcon({ html: latlong[3], className: 'map-marker marker-single a-class', iconSize: L.point(34, 34) });
+                    marker = L.marker(L.latLng(latlong[0], latlong[1]), {icon: icon})
+                    marker.number = latlong[3];
+                    marker.cd_geocodi = latlong[2];
+                    marker.id = latlong[3];
+                    marker.latlong = [latlong[0], latlong[1]];
+                    marker.clusterOpen = false;
+                    marker.cluster = null;
+                    var rate = 100*marker.number/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_TOTAL"]);
+                    if(parseInt(population_sectors[latlong[2]]["POPULACAO_TOTAL"]) == 0){
+                        // What should I do if the total value is zero?
+                        rate = 0;
+                    }
+                    rate_heatmap.push({lat: marker.latlong[0], lng: marker.latlong[1], count: rate});*/
+                });
+                console.log(procedures);
+                console.log(Object.keys(rate_heatmap).length);
+                var cfg = {
+                    // radius should be small ONLY if scaleRadius is true (or small radius is intended)
+                    // if scaleRadius is false it will be the constant radius used in pixels
+                    "radius": max_heatmap_pixels,
+                    // if activated: uses the data maximum within the current map boundaries
+                    //   (there will always be a red spot with useLocalExtremas true)
+                    "useLocalExtrema": true,
+                    // which field name in your data represents the latitude - default "lat"
+                    latField: 'lat',
+                    // which field name in your data represents the longitude - default "lng"
+                    lngField: 'lng',
+                    // which field name in your data represents the data value - default "value"
+                    valueField: 'count',
+                    //gradient: { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"},
+                    //gradient: gradient,
+                    opacity: heatmap_opacity / 100,
+                    //onExtremaChange: makeLegend
+                    };
+    
+                    heatdata = {max: max_value_heatmap, data: rate_heatmap}
+                    heat = new HeatmapOverlay(cfg);
+                    heat.setData(heatdata);
             }
 
             $('#loading_overlay').hide();
