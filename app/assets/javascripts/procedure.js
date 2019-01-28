@@ -634,34 +634,31 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
 
             rateHeatmapElement = document.getElementById('checkHeatmapRate');
             if ((rateHeatmapElement && rateHeatmapElement.checked) || source === "HealthCentre") {
+                var max = 0.0;
                 $.each(procedures, function(index, latlong){
-                    if(rate_heatmap[latlong[2]] == undefined){
-                        rate_heatmap[latlong[2]] = 0;
-                    }
-                    rate_heatmap[latlong[2]] += latlong[3];
-                    /*icon = L.divIcon({ html: latlong[3], className: 'map-marker marker-single a-class', iconSize: L.point(34, 34) });
-                    marker = L.marker(L.latLng(latlong[0], latlong[1]), {icon: icon})
-                    marker.number = latlong[3];
-                    marker.cd_geocodi = latlong[2];
-                    marker.id = latlong[3];
-                    marker.latlong = [latlong[0], latlong[1]];
-                    marker.clusterOpen = false;
-                    marker.cluster = null;
-                    var rate = 100*marker.number/parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_TOTAL"]);
-                    if(parseInt(population_sectors[latlong[2]]["POPULACAO_TOTAL"]) == 0){
-                        // What should I do if the total value is zero?
+                    rate = 1000*1.0*latlong[3]/parseInt(population_sectors[latlong[2]]["POPULACAO_TOTAL"]);
+                    if (!isFinite(rate)){
                         rate = 0;
                     }
-                    rate_heatmap.push({lat: marker.latlong[0], lng: marker.latlong[1], count: rate});*/
+                    if(rate > max){
+                        max = rate;
+                    }
+                    rate_heatmap.push({lat: latlong[0], lng: latlong[1], count: rate});
                 });
-                console.log(procedures);
-                console.log(Object.keys(rate_heatmap).length);
+                console.log(max);
+                if (document.getElementById('checkGradient').checked) {
+                    gradient = { 0.10: "#D3C9F8", 0.20: "#7B5CEB", 0.30: "#4E25E4", 1.0: "#3816B3"}
+                    $("#gradient").addClass("dalt");
+                } else {
+                    gradient = { 0.10: "#2bffd3", 0.20: "#fffd57", 0.30: "#f93434"}
+                    $("#gradient").removeClass("dalt");
+                }
                 var cfg = {
-                    // radius should be small ONLY if scaleRadius is true (or small radius is intended)
-                    // if scaleRadius is false it will be the constant radius used in pixels
-                    "radius": max_heatmap_pixels,
-                    // if activated: uses the data maximum within the current map boundaries
+                    // scales the radius based on map zoom 
+                    // if set to false the heatmap uses the global maximum for colorization
+                    // if activated: uses the data maximum within the current map boundaries 
                     //   (there will always be a red spot with useLocalExtremas true)
+                    "radius": max_heatmap_pixels,
                     "useLocalExtrema": true,
                     // which field name in your data represents the latitude - default "lat"
                     latField: 'lat',
@@ -669,14 +666,15 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
                     lngField: 'lng',
                     // which field name in your data represents the data value - default "value"
                     valueField: 'count',
-                    //gradient: { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"},
-                    //gradient: gradient,
+                        //gradient: { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"},
+                    gradient: gradient,
                     opacity: heatmap_opacity / 100,
                     //onExtremaChange: makeLegend
                     };
     
-                    heatdata = {max: max_value_heatmap, data: rate_heatmap}
+                    heatdata = {max: max, data: rate_heatmap}
                     heat = new HeatmapOverlay(cfg);
+                    map.addLayer(heat);
                     heat.setData(heatdata);
             }
 
