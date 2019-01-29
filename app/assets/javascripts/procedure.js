@@ -131,6 +131,9 @@ function initProcedureMap() {
     $.getJSON('/Sectors_by_geocodi.json', function(result) {
         population_sectors = result;
     });
+
+    // When the page is loaded, the specific cid_primary filter needs to be disabled
+    $('#6').prop('disabled', true);
 }
 
 function change_sliders() {
@@ -283,7 +286,11 @@ function automatic_search() {
 }
 
 //** Called when any filter is altered, if automatic search is on it calls "buscar()" **//
-function change() {
+function change(element) {
+    // if the changed element is the specific cid10 filter, so the function called is cid10_change()
+    if (element.id == 5){
+        cid10_change();
+    }
     if (cleaning == false && auto == true) {
         data = getData()
         buscar(data);
@@ -385,6 +392,7 @@ function pixelsToMetres(pixels) {
     var metresPerPixel = 40075016.686*Math.abs(Math.cos((-23.557296000000001)*Math.PI/180))/Math.pow(2, map.getZoom()+8);
     return pixels * metresPerPixel;
 }
+
 
 function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pixels, heatmap_opacity, function_maker, source) {
     cluster = L.markerClusterGroup({
@@ -627,6 +635,7 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
         }
     });
 }
+
 
 function makeLegend(e) {
     legendlabel2 = document.getElementById("legend-label-2")
@@ -1130,4 +1139,27 @@ function findSource(xml) {
 function toggleFilters() {
   $("#filters").toggleClass("active");
   $("#fab").toggleClass("active");
+}
+
+function cid10_change(){
+    data = getData();
+    $("#6").empty(); //#6 is the id of the specific cid10 multiselect
+    $.getJSON('/CID-10-subcategorias.json', function(file) {    
+        $.getJSON('/procedure/proceduresCid10Specific', data, function(result) {
+            if (Object.keys(result).length > 0){
+                $('#6').prop('disabled', false);
+            }
+            else{
+                $('#6').prop('disabled', true);
+            }
+            $.each(result, function(index, value){
+                $.each(result[index], function(index_item, value_item){
+                    var index_file = file.findIndex(function(file_item){
+                        return file_item["SUBCAT"] == index_item;
+                    });
+                    $("#6").append(new Option(file[index_file]["DESCRIC"], index_item));
+                });
+            });
+        });
+    });
 }
