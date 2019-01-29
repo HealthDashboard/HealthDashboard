@@ -374,10 +374,10 @@ function buscar(data) {
     $(checked).attr('checked', true).trigger('click');
 
     // Show heatmap legend
-    if ($("#heatmap-leg").hasClass("hide") && document.getElementById('checkHeatmap').checked) {
+    if ($("#heatmap-leg").hasClass("hide") && (document.getElementById('checkHeatmap').checked || document.getElementById('checkHeatmapRate').checked)) {
         $("#heatmap-leg").toggleClass("hide");
     }
-    else if (!$("#heatmap-leg").hasClass("hide") && !document.getElementById('checkHeatmap').checked) {
+    else if (!$("#heatmap-leg").hasClass("hide") && (!document.getElementById('checkHeatmap').checked && !document.getElementById('checkHeatmapRate').checked)) {
         $("#heatmap-leg").toggleClass("hide");
     }
     toggleFilters();
@@ -581,22 +581,22 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
                     $("#gradient").removeClass("dalt");
                 }
                 var cfg = {
-                // radius should be small ONLY if scaleRadius is true (or small radius is intended)
-                // if scaleRadius is false it will be the constant radius used in pixels
-                "radius": max_heatmap_pixels,
-                // if activated: uses the data maximum within the current map boundaries
-                //   (there will always be a red spot with useLocalExtremas true)
-                "useLocalExtrema": true,
-                // which field name in your data represents the latitude - default "lat"
-                latField: 'lat',
-                // which field name in your data represents the longitude - default "lng"
-                lngField: 'lng',
-                // which field name in your data represents the data value - default "value"
-                valueField: 'count',
-                //gradient: { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"},
-                gradient: gradient,
-                opacity: heatmap_opacity / 100,
-                onExtremaChange: makeLegend
+                    // radius should be small ONLY if scaleRadius is true (or small radius is intended)
+                    // if scaleRadius is false it will be the constant radius used in pixels
+                    "radius": max_heatmap_pixels,
+                    // if activated: uses the data maximum within the current map boundaries
+                    //   (there will always be a red spot with useLocalExtremas true)
+                    "useLocalExtrema": true,
+                    // which field name in your data represents the latitude - default "lat"
+                    latField: 'lat',
+                    // which field name in your data represents the longitude - default "lng"
+                    lngField: 'lng',
+                    // which field name in your data represents the data value - default "value"
+                    valueField: 'count',
+                    //gradient: { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"},
+                    gradient: gradient,
+                    opacity: heatmap_opacity / 100,
+                    onExtremaChange: makeLegend,
                 };
 
                 heatdata = {max: max_value_heatmap, data: heatmap_procedure}
@@ -634,18 +634,17 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
 
             rateHeatmapElement = document.getElementById('checkHeatmapRate');
             if ((rateHeatmapElement && rateHeatmapElement.checked) || source === "HealthCentre") {
-                var max = 0.0;
+                var max_rate = 0.0;
                 $.each(procedures, function(index, latlong){
                     rate = 1000*1.0*latlong[3]/parseInt(population_sectors[latlong[2]]["POPULACAO_TOTAL"]);
                     if (!isFinite(rate)){
                         rate = 0;
                     }
-                    if(rate > max){
-                        max = rate;
+                    if(rate > max_rate){
+                        max_rate = rate;
                     }
                     rate_heatmap.push({lat: latlong[0], lng: latlong[1], count: rate});
                 });
-                console.log(max);
                 if (document.getElementById('checkGradient').checked) {
                     gradient = { 0.10: "#D3C9F8", 0.20: "#7B5CEB", 0.30: "#4E25E4", 1.0: "#3816B3"}
                     $("#gradient").addClass("dalt");
@@ -654,11 +653,11 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
                     $("#gradient").removeClass("dalt");
                 }
                 var cfg = {
-                    // scales the radius based on map zoom 
-                    // if set to false the heatmap uses the global maximum for colorization
-                    // if activated: uses the data maximum within the current map boundaries 
-                    //   (there will always be a red spot with useLocalExtremas true)
+                     // radius should be small ONLY if scaleRadius is true (or small radius is intended)
+                    // if scaleRadius is false it will be the constant radius used in pixels
                     "radius": max_heatmap_pixels,
+                    // if activated: uses the data maximum within the current map boundaries
+                    //   (there will always be a red spot with useLocalExtremas true)
                     "useLocalExtrema": true,
                     // which field name in your data represents the latitude - default "lat"
                     latField: 'lat',
@@ -666,16 +665,43 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
                     lngField: 'lng',
                     // which field name in your data represents the data value - default "value"
                     valueField: 'count',
-                        //gradient: { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"},
+                    //gradient: { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"},
                     gradient: gradient,
                     opacity: heatmap_opacity / 100,
-                    //onExtremaChange: makeLegend
-                    };
-    
-                    heatdata = {max: max, data: rate_heatmap}
-                    heat = new HeatmapOverlay(cfg);
-                    map.addLayer(heat);
-                    heat.setData(heatdata);
+                    onExtremaChange: makeLegend
+                };
+
+                heatdata = {max: max_rate, data: rate_heatmap}
+                heat = new HeatmapOverlay(cfg);
+                heat.setData(heatdata);
+
+                //inserting the first and last values
+                legendlabel1 = document.getElementById("legend-label-1")
+                if (legendlabel1 !== null)
+                    legendlabel1.innerText = 0.0;
+
+                map.addLayer(heat);
+
+                //changing legend opacity
+                X = document.getElementsByClassName("span-normal")
+                X[0].style["opacity"] = heatmap_opacity / 100;
+
+                if (heatmapElement && heatmapElement.checked) {
+                    document.getElementById("heatmapRadius").classList.remove("hidden");
+
+                    document.getElementById("radiusDiv").classList.remove("hidden");
+                    document.getElementById("heatmapOptions").classList.remove("hidden");
+                }
+            }
+            else if (rateHeatmapElement) {
+                document.getElementById("heatmapRadius").className+=" hidden";
+                
+                document.getElementById("heatmapOptions").className+=" hidden";
+                
+                // if both are hidden (heatmap and cluster)
+                if (document.getElementById("clusterRadius").classList.contains("hidden")) {
+                    document.getElementById("radiusDiv").className+=" hidden";
+                }
             }
 
             $('#loading_overlay').hide();
@@ -686,7 +712,11 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
 
 function makeLegend(e) {
     legendlabel2 = document.getElementById("legend-label-2")
+    if(!Number.isInteger(e.max)){
+        e.max = parseFloat(e.max.toFixed(2)).toLocaleString('pt-BR');
+    }
     legendlabel2.innerText = e.max
+    console.log(Number.isInteger(e.max));
 }
 
 function CustomMarkerOnClick(e) {
