@@ -22,9 +22,9 @@
             <p>Apresentação dos dados:</p>
             <input type="checkbox" name="checkCluster" id="checkCluster" checked>Quantidade (Agrupamento)</input>
             <div class="row justify-content-between"></div>
-            <input type="checkbox" name="checkHeatmap" id="checkHeatmap" checked>Intensidade (Mapa de calor)</input>
+            <input type="checkbox" name="checkHeatmap" id="checkHeatmap" checked onchange="checkbox_select(this)">Intensidade (Mapa de calor)</input>
             <div class="row justify-content-between"></div>
-            <input type="checkbox" name="checkHeatmapRate" id="checkHeatmapRate" checked>Taxa (Mapa de calor)</input>
+            <input type="checkbox" name="checkHeatmapRate" id="checkHeatmapRate" onchange="checkbox_select(this)">Taxa (Mapa de calor)</input>
             <div class="col-sm-12"><hr></div>
             <div id="radiusDiv">
                 <p>Raio de convergência (Km):</p>
@@ -327,5 +327,16 @@
             }
             $(content).toggleClass("active");
         });
+    }
+
+
+    /* Function to control the map settings, so when an option of heatmap(intensity or rate) is checked the other one is unchecked */
+    function checkbox_select(sender){
+        if(sender.id === "checkHeatmap" && sender.checked == true && document.getElementById("checkHeatmapRate").checked == true){
+            document.getElementById("checkHeatmapRate").checked = false;
+        }
+        else if(sender.id == "checkHeatmapRate" && sender.checked == true && document.getElementById("checkHeatmap").checked == true){
+            document.getElementById("checkHeatmap").checked = false;
+        }
     }
 </script>
