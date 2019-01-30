@@ -30,7 +30,7 @@ var pixels_cluster, pixels_heatmap;
 
 var minimap;
 
-var source_xml;
+var metadata;
 
 //** Population sectors vars **//
 var population_sectors;
@@ -117,15 +117,15 @@ function initProcedureMap() {
         }
     });
 
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            source_xml = xhttp.responseXML;
-        }
-    };
-    xhttp.open("GET", "metadata.xml", true);
-    xhttp.send();
-    updateCompleteness();
+    $.ajax({
+      type: "GET" ,
+      url: "metadata.xml" ,
+      dataType: "xml" ,
+      success: function(xml) {
+        metadata = xml;
+        updateCompleteness();
+      }
+    });
 
     // Loading the file with the information of the population about each sector
     $.getJSON('/Sectors_by_geocodi.json', function(result) {
@@ -1199,34 +1199,22 @@ function updateCompleteness(data){
         contentType: 'application/json',
         data: data,
         success: function(data) {
-            source = findSource(source_xml)
+            source = {
+              name: $(metadata).find('provider name value').text(),
+              initials: $(metadata).find('provider initials value').text(),
+              url: $(metadata).find('provider url value').text()
+            };
             for (var key in data) {
                 data_key = data[key];
                 for(var id in data_key){
                     var html_elmt = $("#" + key + "_" + id);
-                    html_elmt.html(data_key[id] + "%<div class='tip'><p>" + data_key[id] + "% dos dados possuem esta informação</p><p>Fonte: " + source + "</p></div>");
+                    html_elmt.html(data_key[id] + "%<div class='tip'><p>" + data_key[id] + "% dos dados possuem esta informação</p><p>Fonte: <a href='" + source.url + "' target='_newtab'>" + source.name + "</a></p></div>");
                     // html_elmt.prop("title", data_key[id] + "% dos dados possuem esta informação\u000AFonte: " + source);
                 }
             }
             $("#print-source").html(source);
         }
     });
-}
-
-function findSource(xml) {
-    // Melhorar esse path, ia ser bom verificar se é o xml certo
-    // Seria bom verificar para cada filtro qual a source dele, mas isso fica para quando tivermos outras dbs
-    path = "//provider/name/value"
-    if (xml.evaluate) {
-        var nodes = xml.evaluate(path, xml, null, XPathResult.ANY_TYPE, null);
-        var result = nodes.iterateNext();
-        result = result.childNodes[0].nodeValue;
-    } else if (window.ActiveXObject || xhttp.responseType == "msxml-document") {
-        xml.setProperty("SelectionLanguage", "XPath");
-        nodes = xml.selectNodes(path);
-        result = nodes[i].childNodes[0].nodeValue;
-    }
-    return result;
 }
 
 function toggleFilters() {

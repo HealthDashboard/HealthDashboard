@@ -188,8 +188,8 @@ h1 {
   transform: translateY(0);
 }
 
-.form-control {
-  width: 22vw;
+.select2 {
+  width: 100% !important;
 }
 
 .leaflet-heatmap-layer {
@@ -387,19 +387,28 @@ h1 {
 .tip {
   position: absolute;
   right: 10px;
-
   background-color: rgba(34, 34, 34, 0.8);
   padding: .25em .5em;
   color: #e3e3e3;
   border-radius: 5px;
   border: 1px rgba(34, 34, 34, 0.9) solid;
   max-width: calc(25vw - 20px);
+  width: auto;
   z-index: 999999;
   display: none;
 }
 
 *:hover > .tip {
   display: block;
+}
+
+.tip a {
+  color: #e3e3e3;
+  text-decoration: none;
+}
+
+.tip a:hover {
+  color: #ccc;
 }
 
 @media (orientation: portrait) {
