@@ -480,6 +480,7 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
                     marker.id = latlong[3];
                     if(source === "HealthCentre"){
                         icon = L.divIcon({ html: latlong[2], className: 'map-marker marker-single a-class', iconSize: L.point(34, 34) });
+                        marker = L.marker(L.latLng(latlong[0], latlong[1]), {icon: icon})
                         marker.number = latlong[2];
                         marker.id = latlong[2];
                     }
@@ -567,12 +568,22 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
             heatmapElement = document.getElementById('checkHeatmap')
             if ((heatmapElement && heatmapElement.checked) || source === "HealthCentre") {
                 var max_value_heatmap = 0;
-                $.each(procedures, function(index, procedure) {
-                    heatmap_procedure.push({lat: procedure[0], lng: procedure[1], count: procedure[3]})
-                    if (procedure[3] > max_value_heatmap)
-                        max_value_heatmap = procedure[3];
-
-                });
+                if(source === "Procedures"){
+                    $.each(procedures, function(index, procedure) {
+                        heatmap_procedure.push({lat: procedure[0], lng: procedure[1], count: procedure[3]})
+                        if (procedure[3] > max_value_heatmap)
+                            max_value_heatmap = procedure[3]
+    
+                    });
+                }
+                else if(source === "HealthCentre"){
+                    $.each(procedures, function(index, procedure) {
+                        heatmap_procedure.push({lat: procedure[0], lng: procedure[1], count: procedure[2]})
+                        if (procedure[2] > max_value_heatmap)
+                            max_value_heatmap = procedure[2]
+    
+                    });
+                }
                 if (document.getElementById('checkGradient').checked) {
                     gradient = { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"}
                     $("#gradient").addClass("dalt");
@@ -633,7 +644,7 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
             }
 
             rateHeatmapElement = document.getElementById('checkHeatmapRate');
-            if ((rateHeatmapElement && rateHeatmapElement.checked) || source === "HealthCentre") {
+            if (rateHeatmapElement && rateHeatmapElement.checked) {
                 var max_rate = 0.0;
                 $.each(procedures, function(index, latlong){
                     rate = 1000*1.0*latlong[3]/parseInt(population_sectors[latlong[2]]["POPULACAO_TOTAL"]);
