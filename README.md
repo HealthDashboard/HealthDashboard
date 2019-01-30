@@ -1,4 +1,4 @@
-# GeoMonitor da Saúde
+# InternaSUS
 
 Uma aplicação para visualização espacial de dados de internações hospitalares da cidade de São Paulo.
 
@@ -14,7 +14,7 @@ Master:
 
 ## O GeoMonitor
 
-É possível acessar o GeoMonitor da Saúde através dos seguintes links:
+É possível acessar o InternaSUS através dos seguintes links:
 
 **Produção:** [http://interscity.org/apps/saude](http://interscity.org/apps/saude)
 
