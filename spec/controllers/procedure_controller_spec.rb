@@ -891,16 +891,17 @@ describe ProcedureController, type: 'controller' do
 			filters = [["2028840"]];
 			data = {"filters" => filters}.to_json
 			self.send(:get, 'proceduresVariables', params: {data: data}, as: :json)
+			print response.body
 			expect(response.status).to eq(200)
 			expect(JSON.parse response.body).to eq({"cnes_id"=>[["Hospital Estadual   Inst Infectologia Emilio Ribas", 9]], 
-				"cmpt"=>[["201506", 2], [nil, 7]], "proce_re"=>[[nil, 9]], "specialty_id"=>[["Cirurgia", 4], ["Obstetrícia", 5]], 
-				"treatment_type"=>[["Eletivo", 1], [nil, 8]], "cid_primary"=>[["A01 - Febres Tifóide E Paratifóide", 1], [nil, 8]],
-				"cid_secondary"=>[["A02 - Outras Infecções Por Salmonella", 1], [nil, 8]], "cid_secondary2"=>[["A03 - Shiguelose", 1],
-				[nil, 8]], "complexity"=>[["Atenção Básica", 1], [nil, 8]], "finance"=>[["Incentivo - Mac", 1], [nil, 8]],
-			    "age_code"=>[["10 a 14 anos", 1], [nil, 8]], "race"=>[["Preta", 1], [nil, 8]], "lv_instruction"=>[["3", 1], [nil, 8]], 
-		   	    "gender"=>[[nil, 9]], "DA"=>[["Jaraguá", 1], [nil, 8]], "PR"=>[["Perus", 1], [nil, 8]], "STS"=>[[nil, 9]], "CRS"=>[[nil, 9]], 
-			    "gestor_ide"=>[["ESTADUAL", 1], [nil, 8]], "days"=>[[nil, 9]], "days_uti"=>[[nil, 9]], "days_ui"=>[[nil, 9]], "days_total"=>[[nil, 9]],
-			    "val_total"=>[["213,32", 1], [nil, 8]], "distance"=>[["20,70", 1], [nil, 8]]})
+				"cmpt"=>[[nil, 7], ["201506", 2]], "proce_re"=>[[nil, 9]], "specialty_id"=>[["Cirurgia", 4], ["Obstetrícia", 5]], 
+				"treatment_type"=>[[nil, 8], ["Eletivo", 1]], "cid_primary"=>[[nil, 8], ["A01 - Febres Tifóide E Paratifóide", 1]],
+				"cid_secondary"=>[[nil, 8], ["A02 - Outras Infecções Por Salmonella", 1]], "cid_secondary2"=>[[nil, 8], ["A03 - Shiguelose", 1]], 
+				"complexity"=>[[nil, 8], ["Atenção Básica", 1]], "finance"=>[[nil, 8], ["Incentivo - Mac", 1]],
+			    "age_code"=>[[nil, 8], ["10 a 14 anos", 1]], "race"=>[[nil, 8], ["Preta", 1]], "lv_instruction"=>[[nil, 8], ["3", 1]], 
+		   	    "gender"=>[[nil, 9]], "DA"=>[[nil, 8], ["Jaraguá", 1]], "PR"=>[[nil, 8], ["Perus", 1]], "STS"=>[[nil, 9]], "CRS"=>[[nil, 9]], 
+			    "gestor_ide"=>[[nil, 8], ["ESTADUAL", 1]], "days"=>[[nil, 9]], "days_uti"=>[[nil, 9]], "days_ui"=>[[nil, 9]], "days_total"=>[[nil, 9]],
+			    "val_total"=>[[nil, 8], ["213,32", 1]], "distance"=>[[nil, 8], ["20,70", 1]]})
 		end
 	end
 
