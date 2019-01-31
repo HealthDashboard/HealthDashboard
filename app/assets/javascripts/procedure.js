@@ -686,14 +686,14 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
                 X = document.getElementsByClassName("span-normal")
                 X[0].style["opacity"] = heatmap_opacity / 100;
 
-                if (heatmapElement && heatmapElement.checked) {
+                if (rateHeatmapElement && rateHeatmapElement.checked) {
                     document.getElementById("heatmapRadius").classList.remove("hidden");
 
                     document.getElementById("radiusDiv").classList.remove("hidden");
                     document.getElementById("heatmapOptions").classList.remove("hidden");
                 }
             }
-            else if (rateHeatmapElement) {
+            else if (rateHeatmapElement && !heatmapElement) {
                 document.getElementById("heatmapRadius").className+=" hidden";
                 
                 document.getElementById("heatmapOptions").className+=" hidden";
@@ -716,7 +716,6 @@ function makeLegend(e) {
         e.max = parseFloat(e.max.toFixed(2)).toLocaleString('pt-BR');
     }
     legendlabel2.innerText = e.max
-    console.log(Number.isInteger(e.max));
 }
 
 function CustomMarkerOnClick(e) {
