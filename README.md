@@ -12,7 +12,7 @@ Master:
 [![pipeline status](https://gitlab.com/interscity/health-dashboard/health-smart-city/badges/master/pipeline.svg)](https://gitlab.com/interscity/health-dashboard/health-smart-city/commits/master)
 [![coverage report](https://gitlab.com/interscity/health-dashboard/health-smart-city/badges/master/coverage.svg)](https://gitlab.com/interscity/health-dashboard/health-smart-city/commits/master)
 
-## O GeoMonitor
+## O InternaSUS
 
 É possível acessar o InternaSUS através dos seguintes links:
 
