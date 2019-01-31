@@ -415,6 +415,10 @@ class ProcedureController < ApplicationController
 			end
 		end
 
+		result["age_code"] = result["age_code"].sort_by {|k, v| k[0..2].to_i} #sort by age
+		
+
+
 		# Replace the values - RACE
 		race = @race.map{|x| x["id"].to_s}
 		result["race"].each.with_index do |key, index|
