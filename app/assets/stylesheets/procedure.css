@@ -398,6 +398,12 @@ h1 {
   display: none;
 }
 
+/* Divida Técnica: O ideal seria que o tip não entrasse no
+                   overflow hidden */
+.content > .col-sm-12:nth-last-child(2) > .filter-label > p > .tip{
+  transform: translateY(calc(-100% - 1em));
+}
+
 *:hover > .tip {
   display: block;
 }
@@ -455,6 +461,10 @@ h1 {
 
   .item-legend {
     right: 0;
+  }
+
+  .tip {
+    max-width: calc(100vw - (100vw - 100%) - 20px);
   }
 
   .fab {
