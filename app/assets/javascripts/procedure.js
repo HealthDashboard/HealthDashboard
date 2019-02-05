@@ -288,8 +288,13 @@ function automatic_search() {
 //** Called when any filter is altered, if automatic search is on it calls "buscar()" **//
 function change(element) {
     // if the changed element is the specific cid10 filter, so the function called is cid10_change()
+    var ids_to_change = ["slider_cluster", "slider_heatmap", "checkCluster", "checkHeatmap", "checkHeatmapRate", "checkGradient", "slider_opacity"];
     if (element.id == 5){
         cid10_change();
+    }
+    if (ids_to_change.includes(element.id)) {
+        data = getData();
+        buscar(data);
     }
     if (cleaning == false && auto == true) {
         data = getData()
