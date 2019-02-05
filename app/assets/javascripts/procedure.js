@@ -813,14 +813,13 @@ function markerOnClick(e) {
                 $.getJSON(path_distance_real, function(distance) { //get Real distance usign router.project-osrm.org
                     v_distance = parseFloat(distance.routes[0].distance);
                     v_distance = v_distance / 1000; // m -> km
-                    /*var index_cid_specific = cid_specific_array.findIndex(function(file_item){
+                    var index_cid_specific = cid_specific_array.findIndex(function(file_item){
                         return file_item["SUBCAT"] == procedure[0].cid_primary;
-                    });*/
-
+                    });
                     text =  "<strong>Estabelecimento: </strong>" + health_centres_array[parseInt(cnes)] + "<br>";
                     text += "<strong>Sexo: </strong>" + sexp_var[procedure[0].gender] + "<br>";
                     text +=  "<strong>Idade: </strong>" + procedure[0].age_number + "<br>";
-                    text += "<strong>CID: </strong>" + cid_array[procedure[0].cid_primary.substring(0, procedure[0].cid_primary.length-1)] + "<br>";
+                    text += "<strong>CID: </strong>" + cid_specific_array[index_cid_specific]["DESCRIC"] + "<br>";
                     text += "<strong>CRS: </strong>" + procedure[0].CRS + "<br>";
                     text += "<strong>Data: </strong>" + procedure[0].date + "<br>";
                     text += "<strong>Distância: </strong>" + parseFloat(procedure[0].distance).toFixed(1).replace(".", ",") + " Km <br>";
