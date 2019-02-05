@@ -20,11 +20,11 @@
         </div>
         <div class="select-body">
             <p>Apresentação dos dados:</p>
-            <input type="checkbox" name="checkCluster" id="checkCluster" checked>Quantidade (Agrupamento)</input>
+            <input type="checkbox" name="checkCluster" id="checkCluster" onchange="change(this)" checked>Quantidade (Agrupamento)</input>
             <div class="row justify-content-between"></div>
-            <input type="checkbox" name="checkHeatmap" id="checkHeatmap" checked onchange="checkbox_select(this)">Intensidade (Mapa de calor)</input>
+            <input type="checkbox" name="checkHeatmap" id="checkHeatmap" checked onchange="{checkbox_select(this); change(this)}">Intensidade (Mapa de calor)</input>
             <div class="row justify-content-between"></div>
-            <input type="checkbox" name="checkHeatmapRate" id="checkHeatmapRate" onchange="checkbox_select(this)">Taxa (Mapa de calor)</input>
+            <input type="checkbox" name="checkHeatmapRate" id="checkHeatmapRate" onchange="{checkbox_select(this); change(this)}">Taxa (Mapa de calor)</input>
             <div class="col-sm-12"><hr></div>
             <div id="radiusDiv">
                 <p>Raio de convergência (Km):</p>
@@ -33,7 +33,7 @@
                         Agrupamento:
                     </div>
                     <div class="col-sm-10 text-right">
-                        <input class="slider_cluster" id="slider_cluster" type="text" style="width: 70%" title="Cluster"/>
+                        <input class="slider_cluster" id="slider_cluster" type="text" style="width: 70%" title="Cluster" onchange="change(this)"/>
                     </div>
                 </div>
                 <div class="row justify-content-between" id="heatmapRadius">
@@ -41,14 +41,14 @@
                         Mapa de calor:
                     </div>
                     <div class="col-sm-10 text-right">
-                        <input class="slider_heatmap" id="slider_heatmap" type="text" style="width: 70%" title="Heatmap"/>
+                        <input class="slider_heatmap" id="slider_heatmap" type="text" style="width: 70%" title="Heatmap" onchange="change(this)"/>
                     </div>
                 </div>
                 <div class="col-sm-12"><hr></div>
             </div>
             <div id="heatmapOptions">
                 <p>Cor do heatmap:</p>
-                <input type="checkbox" name="checkGradient" id="checkGradient">Modo Alto Contraste</input>
+                <input type="checkbox" name="checkGradient" id="checkGradient" onchange="change(this)">Modo Alto Contraste</input>
                 <div class="col-sm-12"><hr></div>
                 <p>Opacidade:</p>
                 <div class="row justify-content-between">
@@ -56,7 +56,7 @@
                         Mapa de calor:
                     </div>
                     <div class="col-sm-10 text-right">
-                        <input class="slider_opacity" id="slider_opacity", type="text" style="width: 70%" title="Opacity">
+                        <input class="slider_opacity" id="slider_opacity", type="text" style="width: 70%" title="Opacity" onchange="change(this)">
                     </div>
                 </div>
                 <div class="col-sm-12"><hr></div>
