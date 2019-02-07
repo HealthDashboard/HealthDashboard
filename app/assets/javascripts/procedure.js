@@ -181,10 +181,11 @@ function download_file(dataurl, filename) {
 function downloadCluster(paramLat, paramLong){
     var paramLatJSON = Object.assign({}, paramLat);
     var paramLongJSON = Object.assign({}, paramLong);
-    var allData = getData();
+    var allData;
+    allData = getData();
     allData["lat"] = paramLatJSON;
     allData["long"] = paramLongJSON;
-    allData["ClusterDownload"] = "True"
+    allData["ClusterDownload"] = "True";
     download(allData);
 }
 
@@ -558,26 +559,26 @@ function handleLargeCluster(map, path, data, cluster_pixels, heatmap_opacity, fu
 
             //Changes values in legend
             change_sliders();
-
-            //Falta tratar o caso de ser um ponto e não um cluster
             cluster.on('contextmenu',function(e){
                 var button = document.createElement('button');
                 button.type = "button"
                 button.id = markers.id;
                 button.className = 'btn btn-dark btn-sm';
                 button.innerText = 'Download';
-                button.addEventListener('click', function(){
-                    var paramLat = [];
-                    var paramLong = [];
-                    $.each(markers, function(index, m){
-                        paramLat.push(m.latlong[0]);
-                        paramLong.push(m.latlong[1]);
-                    })
-                    downloadCluster(paramLat, paramLong);
-                });
-                var popup_cluster = L.popup().setContent(button);
-                popup_cluster.setLatLng(e.latlng)
-                map.openPopup(popup_cluster);
+                if(source === "Procedures"){
+                    button.addEventListener('click', function(){
+                        var paramLat = [];
+                        var paramLong = [];
+                        $.each(markers, function(index, m){
+                            paramLat.push(m.latlong[0]);
+                            paramLong.push(m.latlong[1]);
+                        })
+                        downloadCluster(paramLat, paramLong);
+                    });
+                    var popup_cluster = L.popup().setContent(button);
+                    popup_cluster.setLatLng(e.latlng)
+                    map.openPopup(popup_cluster);
+                }
             });
             return L.divIcon({ html: n, className: className, iconSize: L.point(size, size) });
         },
@@ -628,23 +629,15 @@ function handleLargeCluster(map, path, data, cluster_pixels, heatmap_opacity, fu
                     marker.cluster = null;
                     marker.on('click', function_maker);
                     marker.on('contextmenu',function(e){
-                        var button = document.createElement('button');
-                        button.type = "button";
-                        button.id = marker.id;
-                        button.className = 'btn btn-dark btn-sm';
-                        button.innerText = "Download";
-                        button.lat = e.latlng.lat;
-                        button.long = e.latlng.lng;
-                        button.addEventListener('click', function(){
-                            var paramLat = [];
-                            var paramLong = [];
-                            paramLat.push(button.lat);
-                            paramLong.push(button.long);
-                            downloadCluster(paramLat, paramLong);
-                        });
-                        var popup_cluster = L.popup().setContent(button);
-                        popup_cluster.setLatLng(e.latlng);
-                        map.openPopup(popup_cluster);
+                        if (source === "Procedures"){
+                            menu = "<button type='button' id='button-download_" + marker.id + "' class='btn btn-dark btn-sm' onclick='handlePopupMarker(" 
+                                + e.latlng.lat + "," + e.latlng.lng + "," + e.target.cd_geocodi + ",\"Download\")'> Download </button></br>";
+                            menu += "<button type='button' id='button-shape_" + marker.id + "' class='btn btn-dark btn-sm' onclick='handlePopupMarker(" 
+                                + e.latlng.lat + "," + e.latlng.lng + "," + e.target.cd_geocodi + ", \"Shape\")'> Mostrar Contorno </button>";
+                            var popup_cluster = L.popup().setContent(menu);
+                            popup_cluster.setLatLng(e.latlng);
+                            map.openPopup(popup_cluster);                                
+                        }                       
                     });
                     markerList.push(marker);
                     if(source === "Procedures"){
@@ -1280,7 +1273,8 @@ function toggleFilters() {
 
 function cid10_change(){
     data = getData();
-    $("#6").empty(); //#6 is the id of the specific cid10 multiselect 
+    $("#6").empty(); //#6 is the id of the specific cid10 multiselect
+    $.getJSON('/CID-10-subcategorias.json', function(file) {    
         $.getJSON('/procedure/proceduresCid10Specific', data, function(result) {
             if (Object.keys(result).length > 0){
                 $('#6').prop('disabled', false);
@@ -1290,11 +1284,25 @@ function cid10_change(){
             }
             $.each(result, function(index, value){
                 $.each(result[index], function(index_item, value_item){
-                    var index_cid_specific = cid_specific_array.findIndex(function(file_item){
+                    var index_file = file.findIndex(function(file_item){
                         return file_item["SUBCAT"] == index_item;
                     });
-                    $("#6").append(new Option(cid_specific_array[index_cid_specific]["DESCRIC"], index_item));
+                    $("#6").append(new Option(file[index_file]["DESCRIC"], index_item));
                 });
             });
         });
+    });
+}
+
+function handlePopupMarker(lat, long, cd_geocodi, action){
+    if(action === "Download"){
+        var paramLat = [];
+        var paramLong = [];
+        paramLat.push(lat);
+        paramLong.push(long);
+        downloadCluster(paramLat, paramLong, "Procedures");
+    }
+    if(action === "Shape"){
+        
+    }
 }
