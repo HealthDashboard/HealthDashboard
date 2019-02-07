@@ -244,6 +244,7 @@ input[type="radio"] {
 
 .sources {
   position: fixed;
+  height: 1.3em;
   bottom: 0;
   left: 50%;
   z-index: 100;

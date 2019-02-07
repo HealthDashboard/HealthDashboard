@@ -1269,6 +1269,7 @@ function updateCompleteness(data){
                 for(var id in data_key){
                     var html_elmt = $("#" + key + "_" + id);
                     html_elmt.html(data_key[id] + "%<div class='tip'><p>" + data_key[id] + "% dos dados possuem esta informação</p><p>Fonte: <a href='" + source.url + "' target='_newtab'>" + source.name + "</a></p></div>");
+                    $("#source").html("<a href='" + source.url + "' target='_newtab'>" + source.name + "</a></p></div>");
                     // html_elmt.prop("title", data_key[id] + "% dos dados possuem esta informação\u000AFonte: " + source);
                 }
             }
