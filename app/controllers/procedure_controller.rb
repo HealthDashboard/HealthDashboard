@@ -367,7 +367,13 @@ class ProcedureController < ApplicationController
 				result["STS"][index][0] = @sts[indexAux]["text"]
 			end
 		end
+<<<<<<< HEAD
 		result["STS"] = result["STS"].select(&:first).sort + result["STS"].reject(&:first)
+=======
+
+		result["STS"] = result["STS"].sort_by {|name, id| name }
+		result["STS"] = result["STS"].reverse()
+>>>>>>> 306b552... fix the data order
 
 		# Replace the values of DA
 		health_centres = @da.map{|x| x["id"]}
@@ -377,7 +383,13 @@ class ProcedureController < ApplicationController
 				result["DA"][index][0] = @da[indexAux]["text"]
 			end
 		end
+<<<<<<< HEAD
 		result["DA"] = result["DA"].select(&:first).sort + result["DA"].reject(&:first)
+=======
+
+		result["DA"] = result["DA"].sort_by {|name, id| name }
+		result["DA"] = result["DA"].reverse()
+>>>>>>> 306b552... fix the data order
 		
 		# Replace the values of PR
 		health_centres = @pr.map{|x| x["id"]}
@@ -387,7 +399,12 @@ class ProcedureController < ApplicationController
 				result["PR"][index][0] = @pr[indexAux]["text"]
 			end
 		end
+<<<<<<< HEAD
 		result["PR"] = result["PR"].select(&:first).sort + result["PR"].reject(&:first)
+=======
+
+		result["PR"] = result["PR"].sort_by {|name, id| name }
+>>>>>>> 306b552... fix the data order
 		result["PR"] = result["PR"].reverse()
 
 		# Replace the values of CRS
@@ -398,7 +415,13 @@ class ProcedureController < ApplicationController
 				result["CRS"][index][0] = @crs[indexAux]["text"]
 			end
 		end
+<<<<<<< HEAD
 		result["CRS"] = result["CRS"].select(&:first).sort + result["CRS"].reject(&:first)
+=======
+
+		result["CRS"] = result["CRS"].sort_by {|name, id| name }
+		result["CRS"] = result["CRS"].reverse()
+>>>>>>> 306b552... fix the data order
 
 		# Replace the values - HEALTH_CENTRES
 		health_centres = @health_centres.map{|x| x["id"]}
@@ -408,8 +431,17 @@ class ProcedureController < ApplicationController
 				result["cnes_id"][index][0] = @health_centres[indexAux]["text"]
 			end
 		end
+<<<<<<< HEAD
 		result["cnes_id"] = result["cnes_id"].sort_by {|name, id| name }
 		result["cnes_id"] = result["cnes_id"].reverse()
+=======
+
+		#print result["cnes_id"]
+		#print ("\n -------------------------------------------------------------------- \n")
+		result["cnes_id"] = result["cnes_id"].sort_by {|name, id| name }
+		result["cnes_id"] = result["cnes_id"].reverse()
+		#print result["cnes_id")
+>>>>>>> 306b552... fix the data order
 		
 		# Replace the values - CMPT
 		cmpt = @cmpt.map{|x| x["id"]}
@@ -507,11 +539,24 @@ class ProcedureController < ApplicationController
 		result["distance"].each.with_index do |key, index|
 			unless key[0].nil?
 				key[0] = '%.2f' % key[0].to_f
+<<<<<<< HEAD
 				result["distance"][index][0] = (key[0].to_s).gsub('.', ',')
 				result["distance"][index][0] = (key[0].to_s)
 			end
 		end		
 		result["distance"] = result["distance"].sort_by {|x, y| x.to_f }		
+=======
+				# result["distance"][index][0] = (key[0].to_s).gsub('.', ',')
+				result["distance"][index][0] = (key[0].to_s)
+			end
+		end		
+
+		#print result["distance"]
+		#print("\n ------------------------------ \n")
+		result["distance"] = result["distance"].sort_by {|x, y| x.to_f }
+		#print result["distance"]
+		
+>>>>>>> 306b552... fix the data order
 
 		# Replace the values - VAL_TOTAL
 		result["val_total"].each.with_index do |key, index|
@@ -520,6 +565,9 @@ class ProcedureController < ApplicationController
 				result["val_total"][index][0] = (key[0].to_s).gsub('.', ',')
 			end
 		end
+		result["val_total"] = result["val_total"].sort_by {|x, y| x.to_f }
+
+
 		result["val_total"] = result["val_total"].sort_by {|x, y| x.to_f }
 
 

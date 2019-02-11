@@ -898,7 +898,7 @@ describe ProcedureController, type: 'controller' do
 				"cid_secondary"=>[["A02 - Outras Infecções Por Salmonella", 1], [nil, 8]], "cid_secondary2"=>[["A03 - Shiguelose", 1], [nil, 8]], 
 				"complexity"=>[["Atenção Básica", 1], [nil, 8]], "finance"=>[["Incentivo - Mac", 1], [nil, 8]],
 			    "age_code"=>[[nil, 8], ["10 a 14 anos", 1]], "race"=>[["Preta", 1], [nil, 8]], "lv_instruction"=>[["3", 1], [nil, 8]], 
-		   	    "gender"=>[[nil, 9]], "DA"=>[["Jaraguá", 1], [nil, 8]], "PR"=>[[nil, 8], ["Perus", 1]], "STS"=>[[nil, 9]], "CRS"=>[[nil, 9]], 
+		   	    "gender"=>[[nil, 9]], "DA"=>[["Jaraguá", 1], [nil, 8]], "PR"=>[["Perus", 1], [nil, 8]], "STS"=>[[nil, 9]], "CRS"=>[[nil, 9]], 
 			    "gestor_ide"=>[["ESTADUAL", 1], [nil, 8]], "days"=>[[nil, 9]], "days_uti"=>[[nil, 9]], "days_ui"=>[[nil, 9]], "days_total"=>[[nil, 9]],
 			    "val_total"=>[[nil, 8], ["213,32", 1]], "distance"=>[[nil, 8], ["20,70", 1]]})
 		end
