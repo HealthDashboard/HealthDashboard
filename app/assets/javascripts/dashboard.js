@@ -122,11 +122,12 @@ function create_dashboard_charts() {
             }
           });
     }
-    create_proceduresPerSpecialties();
-    create_specialties_distance_between_patients_hospital();
-    create_analise();
+    
+    create_proceduresPerSpecialties(result["specialty_id"], "specialty_id");
+    create_specialties_distance_between_patients_hospital(result["specialty_id"], "specialty_id");
+    create_analise(result["distance"], "distance");
     populate_procedures_by_date();
-    create_specialties_total();
+    create_specialties_total(result["specialty_id"], "specialty_id");
     update_rank();
 }
 
@@ -150,65 +151,260 @@ function animate_legend() {
     });
 }
 
-function create_proceduresPerSpecialties() {
-    var header = ["Especialidades", "Número de Internações", {role: "style" }]
-    var chart = new google.visualization.PieChart(document.getElementById("chart_specialties"));
+/*
+*               Gráfico de Porcentagem de Internações por especialidades
+*
+*/
 
-    var options = {
-        title:'Porcentagem de Internações por especialidades',
-        slices: get_color_slice()
-    };
+function create_proceduresPerSpecialties(data, field){
+    var myChart = echarts.init(document.getElementById("chart_specialties"));
+    var formatData = [];
+    formatData.push(['amount', 'variable']);
+    var max = 0;
 
-    if (dynamic == false) {
-        var specialty_path = "specialties_count"
-    } else {
-        var specialty_path = "/procedure/proceduresPerSpecialties"
+    for(var i=0; i<data.length; i++){
+        if(data[i][1] != null && data[i][0] != null){
+            formatData.push([data[i][1], data[i][0].toString()]);
+            max = Math.max(max, data[i][1]);
+            // console.log(formatData)
+        }
     }
-    $.getJSON(specialty_path, data, function(result) {
-        draw_chart(header, result, chart, options, specialties_color);
-    });
+    option = {
+        dataset: {
+            source: formatData,
+        },
+        title: {
+            text: 'Porcentagem de Internações por especialidades',
+            top: 20,
+            left: 100,
+            textStyle: {
+                color: '#333'
+            }
+        },
+        legend: {
+            type: 'scroll',
+            orient: 'vertical',
+            right: 10,
+            top: 20,
+            bottom: 20,
+        },
+        
+        tooltip : {
+            trigger: 'item',
+            formatter: "({d}%)"
+        },
+    
+        series : [
+            {
+                type:'pie',
+                radius : '50%',
+                center: ['39%', '50%'],
+
+                encode: {
+                    itemName: 'variable',
+                    value: 'amount'
+                  }
+            }
+        ]
+    };
+    myChart.setOption(option);
 }
 
-function create_specialties_distance_between_patients_hospital() {
-    var chart = new google.visualization.BarChart(document.getElementById("chart_spec_distance_average"));
-    var header = ["Especialidades", "Distância média(Km)", {role: "style"}]
-    var options = {
-        title: "Distância média por especialidade (Km)",
-        legend: {position: 'none'},
-        chartArea: {
-            top: 55,
-            left: 250 },
-        vAxis: { textStyle:  {fontSize: 14,bold: false}},
-        titleTextStyle: {fontSize: 20, bold: true }
-    };
+/*
+*               Gráfico de Porcentagem de Distância Média por Especialidade
+*
+*/
+
+function create_specialties_distance_between_patients_hospital(data, field){
+    var myChart = echarts.init(document.getElementById("chart_spec_distance_average"));
+        
     if (dynamic == false) {
-        var distance_average_path = 'specialties_procedure_distance_average'
+        var path = 'specialties_procedure_distance_average'
     } else {
-        var distance_average_path = '/procedure/proceduresDistance'
+        var path = '/procedure/proceduresDistance'
     }
-    $.getJSON(distance_average_path, data, function(result) {
-        draw_chart(header, result, chart, options, specialties_color);
+
+    var formatData = [];
+    
+    formatData.push(['amount', 'variable']);
+    
+    $.getJSON(path, data, function(result){     
+        $.each(result, function(name, number) {
+            // console.log([name, number]);
+            formatData.push([name, number]);
+        });
+        
+        var option = {
+            dataset: {
+                source: formatData
+            },
+            title: {
+                text: 'Distância Média por Especialidade',
+                top: 20,
+                right: 20,
+                left: 450,
+                textStyle: {
+                    color: '#333'
+                }
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{c} "
+            },
+            
+            grid: {containLabel: true},
+            
+            xAxis: {
+                type: 'value'    
+            },
+            yAxis: {
+                type: 'category'
+            },
+            
+            series: [
+                {
+                    type: 'bar',
+                    encode: {
+                        // Map the "amount" column to X axis.
+                        x: 'variable',
+                        // Map the "product" column to Y axis
+                        y: 'amount'
+                    }
+                }
+        ]
+    };
+    
+    myChart.setOption(option);
     });
+}    
+
+
+
+/*
+*           Gráfico de Total de Internações Hospitalares
+*
+*/
+
+function create_specialties_total(data, field) {
+    var myChart = echarts.init(document.getElementById("chart_spec_total"));
+    var formatData = [];
+    formatData.push(['amount', 'variable']);
+    var max = 0;
+
+    for(var i=0; i<data.length; i++){
+        if(data[i][1] != null && data[i][0] != null){
+            formatData.push([data[i][1], data[i][0].toString()]);
+            max = Math.max(max, data[i][1]);
+        }
+    }
+
+    option = {
+        dataset: {
+            source: formatData
+        },
+        title: {
+            text: 'Total de internações hospitalares',
+            top: 20,
+            left: 800,
+            textStyle: {
+                color: '#333'
+            }
+        },
+
+        tooltip : {
+            trigger: 'item',
+            formatter: "{c} "
+        },
+        grid: {containLabel: true},
+        xAxis: {name: 'amount'},
+        yAxis: {type: 'category'},
+        visualMap: {
+            orient: 'horizontal',
+            left: 'center',
+            min: 10,
+            max: 100,
+            text: ['High Score', 'Low Score'],
+            // Map the score column to color
+            dimension: 0,
+            inRange: {
+                color: ['#D7DA8B', '#E15457']
+            }
+        },
+        series: [
+            {
+                type: 'bar',
+                encode: {
+                    // Map the "amount" column to X axis.
+                    x: 'amount',
+                    // Map the "product" column to Y axis
+                    y: 'product'
+                }
+            }
+        ]
+    }
+    myChart.setOption(option);
 }
 
-function create_analise() {
-    var header = ["Especialidades", "Número de Internações", {role: "style" }]
-    var chart = new google.visualization.PieChart(document.getElementById("chart_div_analise"));
+/*
+*               Gráfico de Porcentagem de Internações por distância percorrida
+*
+*/
 
-    var options = {
-        // title:'Porcentagem de Internações por distância percorrida',
-        width: 550,
-        height: 550,
-        colors: ["#B9D8C2", "#84C8C2", "#2066A9", "#19407F"],
-    };
+function create_analise(data, field){
+    var myChart = echarts.init(document.getElementById("chart_div_analise"));
+
+    var formatData = [];
+    formatData.push(['variable', 'amount']);
+    // var max = 0;
+    
     if (dynamic == false) {
         var path = '/distance_metric.json'
     } else {
         var path = 'procedure/proceduresDistanceGroup'
     }
-    $.getJSON(path, data,function(result) {
-        draw_chart(header, result, chart, options, specialties_color);
-    });
+
+    var aux = []
+
+    $.getJSON(path, data, function(result){     
+        $.each(result, function(name, number) {
+            formatData.push([name, number]);
+            
+        });
+        
+        // console.log(formatData.length)
+        
+        option = {
+            dataset: {
+                source: formatData,
+            },
+            legend: {
+                type: 'scroll',
+                orient: 'vertical',
+                right: 10,
+                top: 20,
+                bottom: 20,
+            },
+            
+            tooltip : {
+                trigger: 'item',
+                formatter: "({d}%)"
+            },
+        
+            series : [
+                {
+                    type:'pie',
+                    radius : '50%',
+                    center: ['39%', '50%'],
+    
+                    encode: {
+                        itemName: 'variable',
+                        value: 'amount'
+                      }
+                }
+            ]
+        };
+    myChart.setOption(option);
+});
 }
 
 function populate_procedures_by_date() {
@@ -217,7 +413,7 @@ function populate_procedures_by_date() {
     } else {
         var path = "/procedure/proceduresPerMonth"
     }
-
+    
     var options = {
         width: '100%',
         height:'100%',
@@ -243,30 +439,6 @@ function populate_procedures_by_date() {
     });
 }
 
-function create_specialties_total() {
-    var chart = new google.visualization.BarChart(document.getElementById("chart_spec_total"));
-    var header = ["Especialidades", "Total de Internações", {role: "style"}]
-    var options = {
-        title: "Total de internações hospitalares",
-        legend: {position: 'none'},
-        chartArea: {
-            top: 55,
-            left: 250 },
-        vAxis: { textStyle:  {fontSize: 14,bold: false}},
-        titleTextStyle: {fontSize: 20, bold: true }
-    };
-
-    if (dynamic == false) {
-        var distance_average_path = 'specialties_count'
-    } else {
-        var distance_average_path = '/procedure/proceduresPerSpecialties'
-    }
-
-    $.getJSON(distance_average_path, data, function(result) {
-        draw_chart(header, result, chart, options, specialties_color);
-    });
-}
-
 function create_line_chart(values, options) {
     var chart = new google.visualization.LineChart(document.getElementById('procedure_by_date'));
     var table = new google.visualization.DataTable();
@@ -285,20 +457,23 @@ function get_color_slice() {
     return slices;
 }
 
-function draw_chart(header, result, chart, options, color) {
-    if (color == null) {
-        color = specialties_color;
-    }
-    var values = [];
-    $.each(result, function(name, number) {
-        values.push([name, parseFloat(number.toFixed(1)), color[name]]);
-    });
-    values.unshift(header)
-    var data_table = google.visualization.arrayToDataTable(values);
-    var view = new google.visualization.DataView(data_table);
-    view.setColumns([0, 1, {calc: "stringify", sourceColumn: 1, type: "string", role: "annotation"}, 2]);
-    chart.draw(view, options);
-}
+// function draw_chart(header, result, chart, options, color) {
+//     if (color == null) {
+//         color = specialties_color;
+//     }
+//     var values = [];
+    
+//     $.each(result, function(name, number) {
+//         values.push([name, parseFloat(number.toFixed(1)), color[name]]);
+//         //console.log(values)
+//     });
+
+//     values.unshift(header)
+//     var data_table = google.visualization.arrayToDataTable(values);
+//     var view = new google.visualization.DataView(data_table);
+//     view.setColumns([0, 1, {calc: "stringify", sourceColumn: 1, type: "string", role: "annotation"}, 2]);
+//     chart.draw(view, options);
+// }
 
 function dashboard_legend() {
     text = ""
@@ -311,8 +486,10 @@ function dashboard_legend() {
 function update_rank() {
     if (dynamic == false) {
         $.getJSON('/rank_health_centres.json', create_table_rank);
+        //console.log("RodolfoIf")
     } else {
         $.getJSON('/procedure/proceduresPerHealthCentre', data, create_table_rank);
+        //console.log("RodolfoElse")
     }
 }
 
@@ -346,6 +523,7 @@ function create_one_variable_graph(data, field){
             max = Math.max(max, data[i][1]);
         }
     }
+
     myChart.clear();
     switch (chart_type[field]) {
       case "bar":

@@ -373,7 +373,7 @@ class ProcedureController < ApplicationController
 
 		# Replace the values of DA
 		health_centres = @da.map{|x| x["id"]}
-		result["DA"].each.with_index do |kgir ey, index|
+		result["DA"].each.with_index do |key, index|
 			unless key[0].nil?
 				indexAux = health_centres.find_index(key[0].to_s)
 				result["DA"][index][0] = @da[indexAux]["text"]
@@ -467,7 +467,7 @@ class ProcedureController < ApplicationController
 		end
 		result["age_code"] = result["age_code"].sort_by {|k, v| (k && k[0..2].to_i) || 0}
 
-		# Replace the values - RACE
+		# Replace the values - RACE		
 		race = @race.map{|x| x["id"].to_s}
 		result["race"].each.with_index do |key, index|
 			unless key[0].nil?
