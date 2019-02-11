@@ -100,7 +100,11 @@ function create_dashboard_charts() {
             success: function(loaded) {
                 result = loaded;
                 result["cnes_id"].reverse();
-                
+                result["STS"].reverse()
+                result["PR"].reverse()
+                result["CRS"].reverse()
+                result["DA"].reverse()
+            
                 create_one_variable_graph(result["cnes_id"], "cnes_id");
             }
           });
@@ -114,7 +118,6 @@ function create_dashboard_charts() {
             data: data,
             success: function(loaded) {
                 result = loaded;
-
                 create_one_variable_graph(result["cnes_id"], "cnes_id");
             }
           });
