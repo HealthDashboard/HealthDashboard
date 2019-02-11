@@ -1303,6 +1303,21 @@ function handlePopupMarker(lat, long, cd_geocodi, action){
         downloadCluster(paramLat, paramLong, "Procedures");
     }
     if(action === "Shape"){
-        
+        $.getJSON("procedure/getSectorByCd_geocodi/", {data: cd_geocodi}, function(result){
+            var polygon = {
+                "type": "Feature",
+                    "properties": {
+                    "style": myStyle,
+                },
+                    "geometry": {
+                    "type": "Polygon",
+                        "coordinates": [
+                            JSON.parse(result[0]["coordinates"])["coordinates"][0],
+                    ]
+                }
+            };
+            var geojsonLayer = new L.GeoJSON(polygon);
+            map.addLayer(geojsonLayer);
+        });
     }
 }
