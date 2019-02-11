@@ -55,5 +55,6 @@ Rails.application.routes.draw do
     get :proceduresCompleteness, on: :collection
     get :proceduresPop, on: :collection
     get :proceduresCid10Specific, on: :collection
+    get :getSectorByCd_geocodi, on: :collection
   end
 end
