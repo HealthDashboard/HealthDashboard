@@ -133,9 +133,29 @@ def linkTypeHealthCentre
     puts "#{hc_counter} Health Centres successfully updated"
 end
 
+def create_sectors
+  puts "Getting Sectors."
+  list = []
+  da_array = Procedure.distinct.pluck(:DA).sort
+  da_counter = 0
+  da_array.each.with_index do |da|
+    data_hash = JSON.parse(File.read("public/SetorCensitario/Setor_with_pop-" + da.upcase! + ".json"))
+    data_hash["features"].each.with_index do |feature|
+      s = Sector.new cd_geocodi: feature["properties"]["CD_GEOCODI"], DA: da, coordinates: feature["geometry"].to_json
+      list << s
+      da_counter += 1
+    end
+    print "."
+  end
+  Sector.import list
+  puts ""
+  puts "#{da_counter} DA successfully saved"
+end
+
 get_health_centres()
 get_specialties()
 create_procedures()
 health_centre_specialty()
 addTypes()
 linkTypeHealthCentre()
+create_sectors()
