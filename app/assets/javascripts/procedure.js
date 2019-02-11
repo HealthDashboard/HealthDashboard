@@ -26,7 +26,7 @@ var filters_text, filters, genders, start_date, end_date, dist_min, dist_max;
 var printPlugin;
 
 //** Open Street view vars **//
-var heat, cluster, shapes, shape, clean_up_cluster, max, shapes_setor;
+var heat, cluster, shapes, shape, clean_up_cluster, max, shapes_setor, shapes_cd_geocodi;
 
 var myStyle;
 
@@ -66,6 +66,7 @@ function initProcedureMap() {
         'Shape_ESF.geojson': null
     };
     shapes_setor = [];
+    shapes_cd_geocodi = [];
 
     $('#loading_overlay').hide();
     var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
@@ -630,13 +631,24 @@ function handleLargeCluster(map, path, data, cluster_pixels, heatmap_opacity, fu
                     marker.on('click', function_maker);
                     marker.on('contextmenu',function(e){
                         if (source === "Procedures"){
-                            menu = "<button type='button' id='button-download_" + marker.id + "' class='btn btn-dark btn-sm' onclick='handlePopupMarker(" 
-                                + e.latlng.lat + "," + e.latlng.lng + "," + e.target.cd_geocodi + ",\"Download\")'> Download </button></br>";
-                            menu += "<button type='button' id='button-shape_" + marker.id + "' class='btn btn-dark btn-sm' onclick='handlePopupMarker(" 
-                                + e.latlng.lat + "," + e.latlng.lng + "," + e.target.cd_geocodi + ", \"Shape\")'> Mostrar Contorno </button>";
-                            var popup_cluster = L.popup().setContent(menu);
-                            popup_cluster.setLatLng(e.latlng);
-                            map.openPopup(popup_cluster);                                
+                            if(shapes_cd_geocodi[e.target.cd_geocodi] == null){
+                                menu = "<button type='button' id='button-download_" + marker.id + "' class='btn btn-dark btn-sm' onclick='handlePopupMarker(" 
+                                + e.latlng.lat + "," + e.latlng.lng + "," + e.target.cd_geocodi + ",\"Download\", "+ marker.id + ")'> Download </button></br>";
+                                menu += "<button type='button' id='button-shape_" + marker.id + "' class='btn btn-dark btn-sm' onclick='handlePopupMarker(" 
+                                    + e.latlng.lat + "," + e.latlng.lng + "," + e.target.cd_geocodi + ", \"Shape\", " + marker.id + ")'> Mostrar Contorno </button>";
+                                var popup_cluster = L.popup().setContent(menu);
+                                popup_cluster.setLatLng(e.latlng);
+                                map.openPopup(popup_cluster);     
+                            }     
+                            else{
+                                menu = "<button type='button' id='button-download_" + marker.id + "' class='btn btn-dark btn-sm' onclick='handlePopupMarker(" 
+                                + e.latlng.lat + "," + e.latlng.lng + "," + e.target.cd_geocodi + ",\"Download\", "+ marker.id + ")'> Download </button></br>";
+                                menu += "<button type='button' id='button-shape_" + marker.id + "' class='btn btn-dark btn-sm' onclick='handlePopupMarker(" 
+                                    + e.latlng.lat + "," + e.latlng.lng + "," + e.target.cd_geocodi + ", \"Shape\", " + marker.id + ")'> Esconder Contorno </button>";
+                                var popup_cluster = L.popup().setContent(menu);
+                                popup_cluster.setLatLng(e.latlng);
+                                map.openPopup(popup_cluster);     
+                            }                                                 
                         }                       
                     });
                     markerList.push(marker);
@@ -1294,7 +1306,7 @@ function cid10_change(){
     });
 }
 
-function handlePopupMarker(lat, long, cd_geocodi, action){
+function handlePopupMarker(lat, long, cd_geocodi, action, id){
     if(action === "Download"){
         var paramLat = [];
         var paramLong = [];
@@ -1303,21 +1315,30 @@ function handlePopupMarker(lat, long, cd_geocodi, action){
         downloadCluster(paramLat, paramLong, "Procedures");
     }
     if(action === "Shape"){
-        $.getJSON("procedure/getSectorByCd_geocodi/", {data: cd_geocodi}, function(result){
-            var polygon = {
-                "type": "Feature",
-                    "properties": {
-                    "style": myStyle,
-                },
-                    "geometry": {
-                    "type": "Polygon",
-                        "coordinates": [
-                            JSON.parse(result[0]["coordinates"])["coordinates"][0],
-                    ]
-                }
-            };
-            var geojsonLayer = new L.GeoJSON(polygon);
-            map.addLayer(geojsonLayer);
-        });
+        if(document.getElementById("button-shape_" + id).innerText == "Mostrar Contorno"){
+            $.getJSON("procedure/getSectorByCd_geocodi/", {data: cd_geocodi}, function(result){
+                var polygon = {
+                    "type": "Feature",
+                        "properties": {
+                        "style": myStyle,
+                    },
+                        "geometry": {
+                        "type": "Polygon",
+                            "coordinates": [
+                                JSON.parse(result[0]["coordinates"])["coordinates"][0],
+                        ]
+                    }
+                };
+                var geojsonLayer = new L.GeoJSON(polygon);
+                map.addLayer(geojsonLayer);
+                shapes_cd_geocodi[cd_geocodi] = geojsonLayer;
+            });
+            document.getElementById("button-shape_" + id).innerText = "Esconder Contorno";
+        }
+        if(document.getElementById("button-shape_" + id).innerText == "Esconder Contorno"){
+            map.removeLayer(shapes_cd_geocodi[cd_geocodi]);
+            document.getElementById("button-shape_" + id).innerText = "Mostrar Contorno";
+            shapes_cd_geocodi[cd_geocodi] = null;
+        }
     }
 }
