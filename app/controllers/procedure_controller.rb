@@ -373,7 +373,7 @@ class ProcedureController < ApplicationController
 
 		# Replace the values of DA
 		health_centres = @da.map{|x| x["id"]}
-		result["DA"].each.with_index do |key, index|
+		result["DA"].each.with_index do |kgir ey, index|
 			unless key[0].nil?
 				indexAux = health_centres.find_index(key[0].to_s)
 				result["DA"][index][0] = @da[indexAux]["text"]
