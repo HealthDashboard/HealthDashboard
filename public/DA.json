@@ -1,1 +1,386 @@
-[{"id":"Jaraguá","text":"Jaraguá"},{"id":"Tremembé","text":"Tremembé"},{"id":"Brasilândia","text":"Brasilândia"},{"id":"Anhanguera","text":"Anhanguera"},{"id":"Jaçanã","text":"Jaçanã"},{"id":"Perus","text":"Perus"},{"id":"Cachoeirinha","text":"Cachoeirinha"},{"id":"Grajaú","text":"Grajaú"},{"id":"Jabaquara","text":"Jabaquara"},{"id":"Sacomã","text":"Sacomã"},{"id":"Cidade Ademar","text":"Cidade Ademar"},{"id":"Pedreira","text":"Pedreira"},{"id":"Ermelino Matarazzo","text":"Ermelino Matarazzo"},{"id":"Consolação","text":"Consolação"},{"id":"Cidade Tiradentes","text":"Cidade Tiradentes"},{"id":"Jardim Paulista","text":"Jardim Paulista"},{"id":"Jardim Ângela","text":"Jardim Ângela"},{"id":"Santo Amaro","text":"Santo Amaro"},{"id":"Penha","text":"Penha"},{"id":"Jardim São Luís","text":"Jardim São Luís"},{"id":"São Rafael","text":"São Rafael"},{"id":"Vila Jacuí","text":"Vila Jacuí"},{"id":"Guaianases","text":"Guaianases"},{"id":"São Mateus","text":"São Mateus"},{"id":"Sapopemba","text":"Sapopemba"},{"id":"Parque do Carmo","text":"Parque do Carmo"},{"id":"Iguatemi","text":"Iguatemi"},{"id":"Itaim Paulista","text":"Itaim Paulista"},{"id":"Vila Maria","text":"Vila Maria"},{"id":"Pari","text":"Pari"},{"id":"Vila Sônia","text":"Vila Sônia"},{"id":"Belém","text":"Belém"},{"id":"São Miguel","text":"São Miguel"},{"id":"Raposo Tavares","text":"Raposo Tavares"},{"id":"Limão","text":"Limão"},{"id":"Santana","text":"Santana"},{"id":"Rio Pequeno","text":"Rio Pequeno"},{"id":"Saúde","text":"Saúde"},{"id":"Jaguaré","text":"Jaguaré"},{"id":"Ipiranga","text":"Ipiranga"},{"id":"Itaquera","text":"Itaquera"},{"id":"Vila Mariana","text":"Vila Mariana"},{"id":"Cangaíba","text":"Cangaíba"},{"id":"Cidade Líder","text":"Cidade Líder"},{"id":"Sé","text":"Sé"},{"id":"Vila Prudente","text":"Vila Prudente"},{"id":"Liberdade","text":"Liberdade"},{"id":"Vila Andrade","text":"Vila Andrade"},{"id":"São Lucas","text":"São Lucas"},{"id":"Moóca","text":"Moóca"},{"id":"Parelheiros","text":"Parelheiros"},{"id":"Campo Limpo","text":"Campo Limpo"},{"id":"República","text":"República"},{"id":"Tatuapé","text":"Tatuapé"},{"id":"José Bonifácio","text":"José Bonifácio"},{"id":"Butantã","text":"Butantã"},{"id":"Santa Cecília","text":"Santa Cecília"},{"id":"Jardim Helena","text":"Jardim Helena"},{"id":"Pirituba","text":"Pirituba"},{"id":"Vila Leopoldina","text":"Vila Leopoldina"},{"id":"Cidade Dutra","text":"Cidade Dutra"},{"id":"Capão Redondo","text":"Capão Redondo"},{"id":"Cambuci","text":"Cambuci"},{"id":"Campo Grande","text":"Campo Grande"},{"id":"Campo Belo","text":"Campo Belo"},{"id":"Lajeado","text":"Lajeado"},{"id":"Morumbi","text":"Morumbi"},{"id":"Vila Curuçá","text":"Vila Curuçá"},{"id":"Perdizes","text":"Perdizes"},{"id":"Barra Funda","text":"Barra Funda"},{"id":"Bom Retiro","text":"Bom Retiro"},{"id":"Vila Matilde","text":"Vila Matilde"},{"id":"Freguesia do Ó","text":"Freguesia do Ó"},{"id":"Brás","text":"Brás"},{"id":"Pinheiros","text":"Pinheiros"},{"id":"Vila Guilherme","text":"Vila Guilherme"},{"id":"São Domingos","text":"São Domingos"},{"id":"Vila Medeiros","text":"Vila Medeiros"},{"id":"Mandaqui","text":"Mandaqui"},{"id":"Bela Vista","text":"Bela Vista"},{"id":"Casa Verde","text":"Casa Verde"},{"id":"Marsilac","text":"Marsilac"},{"id":"Artur Alvim","text":"Artur Alvim"},{"id":"Cursino","text":"Cursino"},{"id":"Lapa","text":"Lapa"},{"id":"Aricanduva","text":"Aricanduva"},{"id":"Ponte Rasa","text":"Ponte Rasa"},{"id":"Carrão","text":"Carrão"},{"id":"Tucuruvi","text":"Tucuruvi"},{"id":"Socorro","text":"Socorro"},{"id":"Vila Formosa","text":"Vila Formosa"},{"id":"Água Rasa","text":"Água Rasa"},{"id":"Alto de Pinheiros","text":"Alto de Pinheiros"},{"id":"Itaim Bibi","text":"Itaim Bibi"},{"id":"Jaguara","text":"Jaguara"},{"id":"Moema","text":"Moema"}]
+[
+	{
+		"id": "Alto de Pinheiros",
+		"text": "Alto de Pinheiros"
+	},
+	{
+		"id": "Anhanguera",
+		"text": "Anhanguera"
+	},
+	{
+		"id": "Aricanduva",
+		"text": "Aricanduva"
+	},
+	{
+		"id": "Artur Alvim",
+		"text": "Artur Alvim"
+	},
+	{
+		"id": "Barra Funda",
+		"text": "Barra Funda"
+	},
+	{
+		"id": "Bela Vista",
+		"text": "Bela Vista"
+	},
+	{
+		"id": "Belém",
+		"text": "Belém"
+	},
+	{
+		"id": "Bom Retiro",
+		"text": "Bom Retiro"
+	},
+	{
+		"id": "Brasilândia",
+		"text": "Brasilândia"
+	},
+	{
+		"id": "Brás",
+		"text": "Brás"
+	},
+	{
+		"id": "Butantã",
+		"text": "Butantã"
+	},
+	{
+		"id": "Cachoeirinha",
+		"text": "Cachoeirinha"
+	},
+	{
+		"id": "Cambuci",
+		"text": "Cambuci"
+	},
+	{
+		"id": "Campo Belo",
+		"text": "Campo Belo"
+	},
+	{
+		"id": "Campo Grande",
+		"text": "Campo Grande"
+	},
+	{
+		"id": "Campo Limpo",
+		"text": "Campo Limpo"
+	},
+	{
+		"id": "Cangaíba",
+		"text": "Cangaíba"
+	},
+	{
+		"id": "Capão Redondo",
+		"text": "Capão Redondo"
+	},
+	{
+		"id": "Carrão",
+		"text": "Carrão"
+	},
+	{
+		"id": "Casa Verde",
+		"text": "Casa Verde"
+	},
+	{
+		"id": "Cidade Ademar",
+		"text": "Cidade Ademar"
+	},
+	{
+		"id": "Cidade Dutra",
+		"text": "Cidade Dutra"
+	},
+	{
+		"id": "Cidade Líder",
+		"text": "Cidade Líder"
+	},
+	{
+		"id": "Cidade Tiradentes",
+		"text": "Cidade Tiradentes"
+	},
+	{
+		"id": "Consolação",
+		"text": "Consolação"
+	},
+	{
+		"id": "Cursino",
+		"text": "Cursino"
+	},
+	{
+		"id": "Ermelino Matarazzo",
+		"text": "Ermelino Matarazzo"
+	},
+	{
+		"id": "Freguesia do Ó",
+		"text": "Freguesia do Ó"
+	},
+	{
+		"id": "Grajaú",
+		"text": "Grajaú"
+	},
+	{
+		"id": "Guaianases",
+		"text": "Guaianases"
+	},
+	{
+		"id": "Iguatemi",
+		"text": "Iguatemi"
+	},
+	{
+		"id": "Ipiranga",
+		"text": "Ipiranga"
+	},
+	{
+		"id": "Itaim Bibi",
+		"text": "Itaim Bibi"
+	},
+	{
+		"id": "Itaim Paulista",
+		"text": "Itaim Paulista"
+	},
+	{
+		"id": "Itaquera",
+		"text": "Itaquera"
+	},
+	{
+		"id": "Jabaquara",
+		"text": "Jabaquara"
+	},
+	{
+		"id": "Jaguara",
+		"text": "Jaguara"
+	},
+	{
+		"id": "Jaguaré",
+		"text": "Jaguaré"
+	},
+	{
+		"id": "Jaraguá",
+		"text": "Jaraguá"
+	},
+	{
+		"id": "Jardim Helena",
+		"text": "Jardim Helena"
+	},
+	{
+		"id": "Jardim Paulista",
+		"text": "Jardim Paulista"
+	},
+	{
+		"id": "Jardim São Luís",
+		"text": "Jardim São Luís"
+	},
+	{
+		"id": "Jardim Ângela",
+		"text": "Jardim Ângela"
+	},
+	{
+		"id": "Jaçanã",
+		"text": "Jaçanã"
+	},
+	{
+		"id": "José Bonifácio",
+		"text": "José Bonifácio"
+	},
+	{
+		"id": "Lajeado",
+		"text": "Lajeado"
+	},
+	{
+		"id": "Lapa",
+		"text": "Lapa"
+	},
+	{
+		"id": "Liberdade",
+		"text": "Liberdade"
+	},
+	{
+		"id": "Limão",
+		"text": "Limão"
+	},
+	{
+		"id": "Mandaqui",
+		"text": "Mandaqui"
+	},
+	{
+		"id": "Marsilac",
+		"text": "Marsilac"
+	},
+	{
+		"id": "Moema",
+		"text": "Moema"
+	},
+	{
+		"id": "Morumbi",
+		"text": "Morumbi"
+	},
+	{
+		"id": "Moóca",
+		"text": "Moóca"
+	},
+	{
+		"id": "Parelheiros",
+		"text": "Parelheiros"
+	},
+	{
+		"id": "Pari",
+		"text": "Pari"
+	},
+	{
+		"id": "Parque do Carmo",
+		"text": "Parque do Carmo"
+	},
+	{
+		"id": "Pedreira",
+		"text": "Pedreira"
+	},
+	{
+		"id": "Penha",
+		"text": "Penha"
+	},
+	{
+		"id": "Perdizes",
+		"text": "Perdizes"
+	},
+	{
+		"id": "Perus",
+		"text": "Perus"
+	},
+	{
+		"id": "Pinheiros",
+		"text": "Pinheiros"
+	},
+	{
+		"id": "Pirituba",
+		"text": "Pirituba"
+	},
+	{
+		"id": "Ponte Rasa",
+		"text": "Ponte Rasa"
+	},
+	{
+		"id": "Raposo Tavares",
+		"text": "Raposo Tavares"
+	},
+	{
+		"id": "República",
+		"text": "República"
+	},
+	{
+		"id": "Rio Pequeno",
+		"text": "Rio Pequeno"
+	},
+	{
+		"id": "Sacomã",
+		"text": "Sacomã"
+	},
+	{
+		"id": "Santa Cecília",
+		"text": "Santa Cecília"
+	},
+	{
+		"id": "Santana",
+		"text": "Santana"
+	},
+	{
+		"id": "Santo Amaro",
+		"text": "Santo Amaro"
+	},
+	{
+		"id": "Sapopemba",
+		"text": "Sapopemba"
+	},
+	{
+		"id": "Saúde",
+		"text": "Saúde"
+	},
+	{
+		"id": "Socorro",
+		"text": "Socorro"
+	},
+	{
+		"id": "São Domingos",
+		"text": "São Domingos"
+	},
+	{
+		"id": "São Lucas",
+		"text": "São Lucas"
+	},
+	{
+		"id": "São Mateus",
+		"text": "São Mateus"
+	},
+	{
+		"id": "São Miguel",
+		"text": "São Miguel"
+	},
+	{
+		"id": "São Rafael",
+		"text": "São Rafael"
+	},
+	{
+		"id": "Sé",
+		"text": "Sé"
+	},
+	{
+		"id": "Tatuapé",
+		"text": "Tatuapé"
+	},
+	{
+		"id": "Tremembé",
+		"text": "Tremembé"
+	},
+	{
+		"id": "Tucuruvi",
+		"text": "Tucuruvi"
+	},
+	{
+		"id": "Vila Andrade",
+		"text": "Vila Andrade"
+	},
+	{
+		"id": "Vila Curuçá",
+		"text": "Vila Curuçá"
+	},
+	{
+		"id": "Vila Formosa",
+		"text": "Vila Formosa"
+	},
+	{
+		"id": "Vila Guilherme",
+		"text": "Vila Guilherme"
+	},
+	{
+		"id": "Vila Jacuí",
+		"text": "Vila Jacuí"
+	},
+	{
+		"id": "Vila Leopoldina",
+		"text": "Vila Leopoldina"
+	},
+	{
+		"id": "Vila Maria",
+		"text": "Vila Maria"
+	},
+	{
+		"id": "Vila Mariana",
+		"text": "Vila Mariana"
+	},
+	{
+		"id": "Vila Matilde",
+		"text": "Vila Matilde"
+	},
+	{
+		"id": "Vila Medeiros",
+		"text": "Vila Medeiros"
+	},
+	{
+		"id": "Vila Prudente",
+		"text": "Vila Prudente"
+	},
+	{
+		"id": "Vila Sônia",
+		"text": "Vila Sônia"
+	},
+	{
+		"id": "Água Rasa",
+		"text": "Água Rasa"
+	}
+]

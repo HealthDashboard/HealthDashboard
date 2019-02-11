@@ -1,6 +1,26 @@
-[{"id":"Norte","text":"Norte"},
-{"id":"Oeste","text":"Oeste"},
-{"id":"Sul","text":"Sul"},
-{"id":"Centro","text":"Centro"},
-{"id":"Sudeste","text":"Sudeste"},
-{"id":"Leste","text":"Leste"}]
+[
+	{
+		"id": "Centro",
+		"text": "Centro"
+	},
+	{
+		"id": "Leste",
+		"text": "Leste"
+	},
+	{
+		"id": "Norte",
+		"text": "Norte"
+	},
+	{
+		"id": "Oeste",
+		"text": "Oeste"
+	},
+	{
+		"id": "Sudeste",
+		"text": "Sudeste"
+	},
+	{
+		"id": "Sul",
+		"text": "Sul"
+	}
+]

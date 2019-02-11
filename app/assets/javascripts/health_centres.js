@@ -315,7 +315,7 @@ function create_homepage_charts(id) {
 
     if (id == undefined) {
       pathTotal = '/distance_metric.json';
-      pathSpecialty = '/specialties_distance_metric.json'
+      pathSpecialty = '/specialties_'
     }
     else {
       pathTotal = ["/distances/", id].join("");

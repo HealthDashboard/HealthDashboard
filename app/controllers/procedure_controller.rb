@@ -65,6 +65,7 @@ class ProcedureController < ApplicationController
 		super
 	end
 
+	#AQUI
 	# GET /procedure/proceduresDistanceGroup{params}
 	# Params: [filters values array]
 	# Return: Hash of {interval => count_of_procedures}
@@ -103,7 +104,7 @@ class ProcedureController < ApplicationController
 		@procedures.group(:cnes_id).order("count_id DESC").limit(10)
 				  .count(:id).each.with_index do |p, i|
 				result[HealthCentre.find_by(cnes: p[0]).name.to_s] = p[1].to_i
-		end
+			end
 		render json: result, status: 200
 	end
 
@@ -121,6 +122,7 @@ class ProcedureController < ApplicationController
 		render json: result, status: 200
 	end
 
+	#AQUI
 	# GET /procedure/proceduresDistance{params}
 	# Params: [filters values array]
 	# Return: Hash of {specialty => distance_average}
@@ -165,7 +167,6 @@ class ProcedureController < ApplicationController
 
 		render json: clusters, status: 200
 	end
-
 
 
 	# GET /procedure/proceduresSetorCensitario/{params}
@@ -301,6 +302,7 @@ class ProcedureController < ApplicationController
 		cnes = params[:cnes].to_s
 		cnes = cnes.split(",")
 		health_centres = HealthCentre.where(cnes: cnes).pluck(:lat, :long)
+		#print(health_centres)
 		render json: health_centres, status: 200
 	end
 
@@ -357,6 +359,54 @@ class ProcedureController < ApplicationController
 			result[var.to_s] = data
 		end
 
+		# Replace the values of STS 
+		health_centres = @sts.map{|x| x["id"]}
+		result["STS"].each.with_index do |key, index|
+			unless key[0].nil?
+				indexAux = health_centres.find_index(key[0].to_s)
+				result["STS"][index][0] = @sts[indexAux]["text"]
+			end
+		end
+
+		result["STS"] = result["STS"].sort_by {|name, id| name }
+		result["STS"] = result["STS"].reverse()
+
+		# Replace the values of DA
+		health_centres = @da.map{|x| x["id"]}
+		result["DA"].each.with_index do |key, index|
+			unless key[0].nil?
+				indexAux = health_centres.find_index(key[0].to_s)
+				result["DA"][index][0] = @da[indexAux]["text"]
+			end
+		end
+
+		result["DA"] = result["DA"].sort_by {|name, id| name }
+		result["DA"] = result["DA"].reverse()
+		
+		# Replace the values of PR
+		health_centres = @pr.map{|x| x["id"]}
+		result["PR"].each.with_index do |key, index|
+			unless key[0].nil?
+				indexAux = health_centres.find_index(key[0].to_s)
+				result["PR"][index][0] = @pr[indexAux]["text"]
+			end
+		end
+
+		result["PR"] = result["PR"].sort_by {|name, id| name }
+		result["PR"] = result["PR"].reverse()
+
+		# Replace the values of CRS
+		health_centres = @crs.map{|x| x["id"]}
+		result["CRS"].each.with_index do |key, index|
+			unless key[0].nil?
+				indexAux = health_centres.find_index(key[0].to_s)
+				result["CRS"][index][0] = @crs[indexAux]["text"]
+			end
+		end
+
+		result["CRS"] = result["CRS"].sort_by {|name, id| name }
+		result["CRS"] = result["CRS"].reverse()
+
 		# Replace the values - HEALTH_CENTRES
 		health_centres = @health_centres.map{|x| x["id"]}
 		result["cnes_id"].each.with_index do |key, index|
@@ -365,9 +415,9 @@ class ProcedureController < ApplicationController
 				result["cnes_id"][index][0] = @health_centres[indexAux]["text"]
 			end
 		end
-
-		# puts res
-
+		result["cnes_id"] = result["cnes_id"].sort_by {|name, id| name }
+		result["cnes_id"] = result["cnes_id"].reverse()
+		
 		# Replace the values - CMPT
 		cmpt = @cmpt.map{|x| x["id"]}
 		result["cmpt"].each.with_index do |key, index|
@@ -377,6 +427,7 @@ class ProcedureController < ApplicationController
 			end
 		end
 
+		
 		# Replace the values - TREATMENT_TYPE
 		treatment_type = @treatments.map{|x| x["id"]}
 		result["treatment_type"].each.with_index do |key, index|
@@ -414,7 +465,6 @@ class ProcedureController < ApplicationController
 				result["age_code"][index][0] = @age_group[indexAux]["text"]
 			end
 		end
-
 		result["age_code"] = result["age_code"].sort_by {|k, v| (k && k[0..2].to_i) || 0}
 
 		# Replace the values - RACE
@@ -464,9 +514,16 @@ class ProcedureController < ApplicationController
 		result["distance"].each.with_index do |key, index|
 			unless key[0].nil?
 				key[0] = '%.2f' % key[0].to_f
-				result["distance"][index][0] = (key[0].to_s).gsub('.', ',')
+				# result["distance"][index][0] = (key[0].to_s).gsub('.', ',')
+				result["distance"][index][0] = (key[0].to_s)
 			end
-		end
+		end		
+
+		#print result["distance"]
+		#print("\n ------------------------------ \n")
+		result["distance"] = result["distance"].sort_by {|x, y| x.to_f }
+		#print result["distance"]
+		
 
 		# Replace the values - VAL_TOTAL
 		result["val_total"].each.with_index do |key, index|
@@ -475,6 +532,9 @@ class ProcedureController < ApplicationController
 				result["val_total"][index][0] = (key[0].to_s).gsub('.', ',')
 			end
 		end
+
+		result["val_total"] = result["val_total"].sort_by {|x, y| x.to_f }
+
 
 		# Replace the values - CID_PRIMARY
 		#"cid_primary", "cid_secondary", "cid_secondary2"

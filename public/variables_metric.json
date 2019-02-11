@@ -1,393 +1,393 @@
 {
    "cnes_id":[
       [
-         "Hospital Estadual   Inst Infectologia Emilio Ribas",
-         2209
-      ],
-      [
-         "Hosp Albert Einstein",
-         276
-      ],
-      [
-         "Hospital Do Servidor Público Estadual Francisco Morato De Oliveira",
-         102
-      ],
-      [
-         "Hospital Estadual Maternidade Interlagos",
-         4773
-      ],
-      [
-         "Hospital Estadual Geral De Pedreira",
-         16405
-      ],
-      [
-         "Hospital Estadual Heliópolis",
-         5148
-      ],
-      [
-         "Pam Varzea Do Carmo Nga 63",
-         192
-      ],
-      [
-         "Ambulatorio De Especialidades   Consolação",
-         430
-      ],
-      [
-         "Caism Dr Davi Capistrano   Agua Funda",
-         947
-      ],
-      [
-         "Hospital Estadual Infantil Darcy Vargas",
-         2538
-      ],
-      [
-         "Instituto Do Coração   Incor",
-         6859
-      ],
-      [
-         "Hosp Municipal Prof. Mario Degni   Jardim Sarah",
-         3943
-      ],
-      [
-         "Hosp Da Sta Casa De Sto Amaro",
-         11152
-      ],
-      [
-         "Hosp Municipal São Luiz Gonzaga",
-         9005
-      ],
-      [
-         "Hospital Universitario   Hu/Usp",
-         11956
-      ],
-      [
-         "Casa Da Crianca Betinho",
-         25
-      ],
-      [
-         "Hospital Mat Amparo Maternal",
-         8150
-      ],
-      [
-         "Caism Philippe  Pinel",
-         194
-      ],
-      [
-         "Hospital Estadual De Vila Alpina",
-         14084
-      ],
-      [
-         "Hosp Municipal Dr. José Soares Hungria   Pirituba",
-         5936
-      ],
-      [
-         "Hosp Dom Antonio De Alvarenga",
-         681
-      ],
-      [
-         "Hospital Santa Marcelina",
-         22571
-      ],
-      [
-         "Hospital São Paulo   Unifesp",
-         17364
-      ],
-      [
-         "Hospital Estadual De São Mateus   Manoel Bifulco",
-         7041
-      ],
-      [
-         "Hosp Bandeirantes",
-         293
-      ],
-      [
-         "Hospital Estadual Ipiranga",
-         10427
-      ],
-      [
-         "Hospital Do Cancer A C Camargo",
-         4761
-      ],
-      [
-         "Hospital Estadual Do Mandaqui",
-         19324
-      ],
-      [
-         "Instituto Brasileiro Controle Cancer Ibcc",
-         5115
-      ],
-      [
-         "Casa De Saúde Nossa Senhora De Fatima",
-         462
-      ],
-      [
-         "Hospital Estadual De Itaim Paulista",
-         13365
-      ],
-      [
-         "Hosp Municipal Prof. Dr. Waldomiro De Paula   Itaquera/Planalto",
-         8882
-      ],
-      [
          "Aacd Vila Clementino",
          606
-      ],
-      [
-         "Hospital Estadual Geral Do Grajau   Prof Liber. John Alphonse Di Dio",
-         15679
-      ],
-      [
-         "Hospital Estadual E Maternidade Leonor Mendes De Barros",
-         8395
-      ],
-      [
-         "Hosp Monumento Cehm",
-         5373
-      ],
-      [
-         "Centro De Referência E Treinamento Dst/Aids   São Paulo",
-         155
-      ],
-      [
-         "Hospital Das Clinicas   Hc/Fmusp",
-         29415
-      ],
-      [
-         "Centro De Referencia Da Saude Da Mulher",
-         4100
-      ],
-      [
-         "Hosp Municipal Infantil Menino Jesus",
-         4608
-      ],
-      [
-         "Hosp Mat Sta Maria Cruz Azul",
-         5
-      ],
-      [
-         "Hosp Municipal E Matern Esc Dr. Mário De M A Da Silva   Cachoeirinha",
-         11340
-      ],
-      [
-         "Hospital Estadual Geral De  Guaianases   Jesus Teixeira Da Costa",
-         6339
-      ],
-      [
-         "Instituto Do Cancer Arnaldo Vieira De Carvalho",
-         4192
-      ],
-      [
-         "Hosp Municipal Dr. Carmino Caricchio   Tatuapé",
-         12734
-      ],
-      [
-         "Hosp Benef Portuguesa   São Joaquim",
-         6292
-      ],
-      [
-         "Hosp Municipal Tide Setubal   São Miguel",
-         9011
-      ],
-      [
-         "Hosp Municipal Dr. Alexandre Zaio   Vila Nhocuné",
-         2586
-      ],
-      [
-         "Hosp Samaritano",
-         40
-      ],
-      [
-         "Hosp Municipal Dr. Arthur Ribeiro Saboya   Jabaquara",
-         11666
-      ],
-      [
-         "Hospital Estadual De Taipas   Katia De Souza Rodrigues",
-         8835
-      ],
-      [
-         "Hosp Municipal Prof. Alípio Correa Netto   Ermelino Matarazzo",
-         13696
-      ],
-      [
-         "Hosp Municipal Dr. Benedito Montenegro   Jardim Iva",
-         2527
-      ],
-      [
-         "Hosp Municipal Dr. Ignácio Proença De Gouvea",
-         4764
-      ],
-      [
-         "Hospital Estadual Dante Pazzanese",
-         5426
-      ],
-      [
-         "Hospital Estadual Infantil Candido Fontoura",
-         3541
-      ],
-      [
-         "Hospital Estadual Euryclides De Jesus Zerbini",
-         3508
-      ],
-      [
-         "Casa De Saude De São João De Deus",
-         317
-      ],
-      [
-         "Assoc Cruz Verde",
-         33
-      ],
-      [
-         "Casa De Saude Nsra Do Caminho",
-         261
-      ],
-      [
-         "Instituto De Oncologia Pediatrica Graacc",
-         645
-      ],
-      [
-         "Hosp Nipo Brasileiro",
-         6
-      ],
-      [
-         "Hosp Rim Hipert F.Oswaldo Ramos",
-         2220
-      ],
-      [
-         "Hospital Estadual Regional Sul",
-         8418
-      ],
-      [
-         "Hospital Estadual Vital Brazil",
-         45
-      ],
-      [
-         "Hosp N Sra Do Pari",
-         5338
-      ],
-      [
-         "Ame  Maria Zelia",
-         728
-      ],
-      [
-         "Instituto Cema De Oftalmologia E Otorrinolaringologia",
-         1413
-      ],
-      [
-         "Centro De Oftalmo T Cvintal",
-         44
-      ],
-      [
-         "Hospital Estadual De Sapopemba",
-         12125
-      ],
-      [
-         "Hospital Dia Da Rede Hora Certa   M'boi Mirim I",
-         899
-      ],
-      [
-         "Hospital Estadual Vila Penteado   Dr Jose Pangela",
-         8434
-      ],
-      [
-         "Caism Sta Casa De Misericordia De S Paulo",
-         2289
-      ],
-      [
-         "Hosp Casa De David",
-         55
-      ],
-      [
-         "Hospital Estadual Geral Vila Nova Cachoeirinha",
-         8089
-      ],
-      [
-         "Instituto Suel Abujamra",
-         685
-      ],
-      [
-         "Santa Casa De São Paulo",
-         22421
-      ],
-      [
-         "Hospital Dia Da Rede Hora Certa   Penha",
-         545
-      ],
-      [
-         "Hosp Servidor Público Municipal   Hspm",
-         3068
-      ],
-      [
-         "Hosp Municipal Dr. Fernando Mauro Pires Da Rocha   Campo Limpo",
-         15724
-      ],
-      [
-         "Instituto De Psiquiatria   Hc/Fmusp ",
-         500
-      ],
-      [
-         "Centro Hospitalar Do Sistema Penitenciário",
-         596
-      ],
-      [
-         "Hosp Municipal Vila Maria    Vereador José Storopolli",
-         10027
-      ],
-      [
-         "Hosp Municipal Cidade Tiradentes    Carmen Prudente",
-         14352
-      ],
-      [
-         "Hospital Estadual Local De Sapopemba",
-         1675
-      ],
-      [
-         "Instituto De Reabilitação Lucy Montoro",
-         535
-      ],
-      [
-         "Hosp Mun M Boi Mirim   Dr Moyses Deustsch",
-         16241
-      ],
-      [
-         "Instituto Do Câncer Do Estado De São Paulo",
-         13580
-      ],
-      [
-         "Hospital Dia Da Rede Hora Certa   Itaim Paulista",
-         723
-      ],
-      [
+     ],
+     [
+         "Ambulatorio De Especialidades   Consolação",
+         430
+     ],
+     [
          "Ame  Dr. Luiz Roberto Barradas Barata",
          2247
-      ],
-      [
-         "Unidade De Atendimento Ao Dependente   Unad",
-         16
-      ],
-      [
-         "Hospital Santo Antonio",
-         7302
-      ],
-      [
-         "Hospital Dia Da Rede Hora Certa   Lapa",
-         501
-      ],
-      [
-         "Hospital Dia Da Rede Hora Certa   Brasilândia/Fó",
-         444
-      ],
-      [
-         "Hospital Dia Da Rede Hora Certa   M'boi Mirim Ii",
-         479
-      ],
-      [
-         "Rhc Modular Lapa",
-         1452
-      ],
-      [
+     ],
+     [
+         "Ame  Maria Zelia",
+         728
+     ],
+     [
+         "Assoc Cruz Verde",
+         33
+     ],
+     [
+         "Caism Dr Davi Capistrano   Agua Funda",
+         947
+     ],
+     [
+         "Caism Philippe  Pinel",
+         194
+     ],
+     [
+         "Caism Sta Casa De Misericordia De S Paulo",
+         2289
+     ],
+     [
+         "Casa Da Crianca Betinho",
+         25
+     ],
+     [
+         "Casa De Saude De São João De Deus",
+         317
+     ],
+     [
+         "Casa De Saude Nsra Do Caminho",
+         261
+     ],
+     [
+         "Casa De Saúde Nossa Senhora De Fatima",
+         462
+     ],
+     [
+         "Centro De Oftalmo T Cvintal",
+         44
+     ],
+     [
+         "Centro De Referencia Da Saude Da Mulher",
+         4100
+     ],
+     [
+         "Centro De Referência E Treinamento Dst/Aids   São Paulo",
+         155
+     ],
+     [
+         "Centro Hospitalar Do Sistema Penitenciário",
+         596
+     ],
+     [
+         "Hosp Albert Einstein",
+         276
+     ],
+     [
+         "Hosp Bandeirantes",
+         293
+     ],
+     [
+         "Hosp Benef Portuguesa   São Joaquim",
+         6292
+     ],
+     [
+         "Hosp Casa De David",
+         55
+     ],
+     [
+         "Hosp Da Sta Casa De Sto Amaro",
+         11152
+     ],
+     [
+         "Hosp Dom Antonio De Alvarenga",
+         681
+     ],
+     [
+         "Hosp Mat Sta Maria Cruz Azul",
+         5
+     ],
+     [
+         "Hosp Monumento Cehm",
+         5373
+     ],
+     [
+         "Hosp Mun M Boi Mirim   Dr Moyses Deustsch",
+         16241
+     ],
+     [
+         "Hosp Municipal Cidade Tiradentes    Carmen Prudente",
+         14352
+     ],
+     [
+         "Hosp Municipal Dr. Alexandre Zaio   Vila Nhocuné",
+         2586
+     ],
+     [
+         "Hosp Municipal Dr. Arthur Ribeiro Saboya   Jabaquara",
+         11666
+     ],
+     [
+         "Hosp Municipal Dr. Benedito Montenegro   Jardim Iva",
+         2527
+     ],
+     [
+         "Hosp Municipal Dr. Carmino Caricchio   Tatuapé",
+         12734
+     ],
+     [
+         "Hosp Municipal Dr. Fernando Mauro Pires Da Rocha   Campo Limpo",
+         15724
+     ],
+     [
+         "Hosp Municipal Dr. Ignácio Proença De Gouvea",
+         4764
+     ],
+     [
+         "Hosp Municipal Dr. José Soares Hungria   Pirituba",
+         5936
+     ],
+     [
+         "Hosp Municipal E Matern Esc Dr. Mário De M A Da Silva   Cachoeirinha",
+         11340
+     ],
+     [
          "Hosp Municipal Gilson De Cassia M. De Carvalho",
          287
-      ]
+     ],
+     [
+         "Hosp Municipal Infantil Menino Jesus",
+         4608
+     ],
+     [
+         "Hosp Municipal Prof. Alípio Correa Netto   Ermelino Matarazzo",
+         13696
+     ],
+     [
+         "Hosp Municipal Prof. Dr. Waldomiro De Paula   Itaquera/Planalto",
+         8882
+     ],
+     [
+         "Hosp Municipal Prof. Mario Degni   Jardim Sarah",
+         3943
+     ],
+     [
+         "Hosp Municipal São Luiz Gonzaga",
+         9005
+     ],
+     [
+         "Hosp Municipal Tide Setubal   São Miguel",
+         9011
+     ],
+     [
+         "Hosp Municipal Vila Maria    Vereador José Storopolli",
+         10027
+     ],
+     [
+         "Hosp N Sra Do Pari",
+         5338
+     ],
+     [
+         "Hosp Nipo Brasileiro",
+         6
+     ],
+     [
+         "Hosp Rim Hipert F.Oswaldo Ramos",
+         2220
+     ],
+     [
+         "Hosp Samaritano",
+         40
+     ],
+     [
+         "Hosp Servidor Público Municipal   Hspm",
+         3068
+     ],
+     [
+         "Hospital Das Clinicas   Hc/Fmusp",
+         29415
+     ],
+     [
+         "Hospital Dia Da Rede Hora Certa   Brasilândia/Fó",
+         444
+     ],
+     [
+         "Hospital Dia Da Rede Hora Certa   Itaim Paulista",
+         723
+     ],
+     [
+         "Hospital Dia Da Rede Hora Certa   Lapa",
+         501
+     ],
+     [
+         "Hospital Dia Da Rede Hora Certa   M'boi Mirim I",
+         899
+     ],
+     [
+         "Hospital Dia Da Rede Hora Certa   M'boi Mirim Ii",
+         479
+     ],
+     [
+         "Hospital Dia Da Rede Hora Certa   Penha",
+         545
+     ],
+     [
+         "Hospital Do Cancer A C Camargo",
+         4761
+     ],
+     [
+         "Hospital Do Servidor Público Estadual Francisco Morato De Oliveira",
+         102
+     ],
+     [
+         "Hospital Estadual   Inst Infectologia Emilio Ribas",
+         2209
+     ],
+     [
+         "Hospital Estadual Dante Pazzanese",
+         5426
+     ],
+     [
+         "Hospital Estadual De Itaim Paulista",
+         13365
+     ],
+     [
+         "Hospital Estadual De Sapopemba",
+         12125
+     ],
+     [
+         "Hospital Estadual De São Mateus   Manoel Bifulco",
+         7041
+     ],
+     [
+         "Hospital Estadual De Taipas   Katia De Souza Rodrigues",
+         8835
+     ],
+     [
+         "Hospital Estadual De Vila Alpina",
+         14084
+     ],
+     [
+         "Hospital Estadual Do Mandaqui",
+         19324
+     ],
+     [
+         "Hospital Estadual E Maternidade Leonor Mendes De Barros",
+         8395
+     ],
+     [
+         "Hospital Estadual Euryclides De Jesus Zerbini",
+         3508
+     ],
+     [
+         "Hospital Estadual Geral De  Guaianases   Jesus Teixeira Da Costa",
+         6339
+     ],
+     [
+         "Hospital Estadual Geral De Pedreira",
+         16405
+     ],
+     [
+         "Hospital Estadual Geral Do Grajau   Prof Liber. John Alphonse Di Dio",
+         15679
+     ],
+     [
+         "Hospital Estadual Geral Vila Nova Cachoeirinha",
+         8089
+     ],
+     [
+         "Hospital Estadual Heliópolis",
+         5148
+     ],
+     [
+         "Hospital Estadual Infantil Candido Fontoura",
+         3541
+     ],
+     [
+         "Hospital Estadual Infantil Darcy Vargas",
+         2538
+     ],
+     [
+         "Hospital Estadual Ipiranga",
+         10427
+     ],
+     [
+         "Hospital Estadual Local De Sapopemba",
+         1675
+     ],
+     [
+         "Hospital Estadual Maternidade Interlagos",
+         4773
+     ],
+     [
+         "Hospital Estadual Regional Sul",
+         8418
+     ],
+     [
+         "Hospital Estadual Vila Penteado   Dr Jose Pangela",
+         8434
+     ],
+     [
+         "Hospital Estadual Vital Brazil",
+         45
+     ],
+     [
+         "Hospital Mat Amparo Maternal",
+         8150
+     ],
+     [
+         "Hospital Santa Marcelina",
+         22571
+     ],
+     [
+         "Hospital Santo Antonio",
+         7302
+     ],
+     [
+         "Hospital São Paulo   Unifesp",
+         17364
+     ],
+     [
+         "Hospital Universitario   Hu/Usp",
+         11956
+     ],
+     [
+         "Instituto Brasileiro Controle Cancer Ibcc",
+         5115
+     ],
+     [
+         "Instituto Cema De Oftalmologia E Otorrinolaringologia",
+         1413
+     ],
+     [
+         "Instituto De Oncologia Pediatrica Graacc",
+         645
+     ],
+     [
+         "Instituto De Psiquiatria   Hc/Fmusp ",
+         500
+     ],
+     [
+         "Instituto De Reabilitação Lucy Montoro",
+         535
+     ],
+     [
+         "Instituto Do Cancer Arnaldo Vieira De Carvalho",
+         4192
+     ],
+     [
+         "Instituto Do Coração   Incor",
+         6859
+     ],
+     [
+         "Instituto Do Câncer Do Estado De São Paulo",
+         13580
+     ],
+     [
+         "Instituto Suel Abujamra",
+         685
+     ],
+     [
+         "Pam Varzea Do Carmo Nga 63",
+         192
+     ],
+     [
+         "Rhc Modular Lapa",
+         1452
+     ],
+     [
+         "Santa Casa De São Paulo",
+         22421
+     ],
+     [
+         "Unidade De Atendimento Ao Dependente   Unad",
+         16
+     ]   
    ],
    "cmpt":[
       [
@@ -27628,7 +27628,7 @@
    "val_total":[
       [
          "0,00",
-         539758
+         694
       ],
       [
          "20,74",
@@ -57838,7 +57838,7 @@
       ],
       [
          "84,50",
-         3
-      ]
+         125127567
+      ],
    ]
 }

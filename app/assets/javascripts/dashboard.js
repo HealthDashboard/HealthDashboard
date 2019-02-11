@@ -92,16 +92,32 @@ function filters_show(){
 
 function create_dashboard_charts() {
     if(data === null){
-        $.getJSON("/variables_metric.json", data, function(loaded) {
-            result = loaded;
-            create_one_variable_graph(result["cnes_id"], "cnes_id");
-        });
+        $.ajax({
+            url: "variables_metric.json",
+            dataType: 'json',
+            async: false,
+            data: data,
+            success: function(loaded) {
+                result = loaded;
+                result["cnes_id"].reverse();
+                
+                create_one_variable_graph(result["cnes_id"], "cnes_id");
+            }
+          });
+
     }
     else{
-        $.getJSON("procedure/proceduresVariables", data, function(loaded) {
-            result = loaded;
-            create_one_variable_graph(result["cnes_id"], "cnes_id");
-        });
+        $.ajax({
+            url: "procedure/proceduresVariables",
+            dataType: 'json',
+            async: false,
+            data: data,
+            success: function(loaded) {
+                result = loaded;
+
+                create_one_variable_graph(result["cnes_id"], "cnes_id");
+            }
+          });
     }
     create_proceduresPerSpecialties();
     create_specialties_distance_between_patients_hospital();
