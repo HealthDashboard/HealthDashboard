@@ -71,7 +71,7 @@ function create_specialty_chart(index, specialty){
   // console.log("RODOLFO")
   // console.log(index)
   // console.log("---------------------")
-  console.log(values)
+  // console.log(values)
   // console.log("---------------------")
   // console.log(specialty)
 

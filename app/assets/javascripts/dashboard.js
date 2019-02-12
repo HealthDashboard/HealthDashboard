@@ -104,7 +104,6 @@ function create_dashboard_charts() {
                 result["PR"].reverse()
                 result["CRS"].reverse()
                 result["DA"].reverse()
-            
                 create_one_variable_graph(result["cnes_id"], "cnes_id");
             }
           });
@@ -408,45 +407,77 @@ function create_analise(data, field){
 }
 
 function populate_procedures_by_date() {
+    var myChart = echarts.init(document.getElementById("procedure_by_date"));
+
     if (dynamic == false) {
         var path = "/procedures_by_date.json";
     } else {
         var path = "/procedure/proceduresPerMonth"
     }
-    
-    var options = {
-        width: '100%',
-        height:'100%',
-        title: 'Número de internações por mês',
-        series: {
-         0: {axis: 'Número de internações'}
-        },
-        axes: {
-         y: {
-           Temps: {label: 'Número de internações'}
-         }
-        },
-        legend: {position: 'none'},
-        backgroundColor: { fill:'transparent'}
-    };
 
     $.getJSON(path, data, function(result) {
         var values = [];
         $.each(result, function(k,v) {
           values.push([new Date(v[0] + "T00:00:00"), v[1]]); // Fix timezone problem
         });
-        create_line_chart(values, options);
+
+        option = {
+            dataset: {
+                source: values,
+            },
+            title: {
+                text: 'Número de internações por mês',
+                top: 20,
+                right: 20,
+                left: 150,
+                textStyle: {
+                    color: '#333'
+                }
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{c} "
+            },
+            xAxis: {
+                type: 'category',
+            },
+            yAxis: {
+                type: 'value'
+                
+            },
+            series: [{
+                type: 'line'
+                
+            }]
+        };
+
+        myChart.setOption(option);
+
+        
+        // var chart = new google.visualization.LineChart(document.getElementById('procedure_by_date'));
+        // var table = new google.visualization.DataTable();
+        // table.addColumn('date', 'Mês');
+        // table.addColumn('number', "Número de Internações");
+        // table.addRows(values);
+        // chart.draw(table, options);
+
     });
 }
 
-function create_line_chart(values, options) {
-    var chart = new google.visualization.LineChart(document.getElementById('procedure_by_date'));
-    var table = new google.visualization.DataTable();
-    table.addColumn('date', 'Mês');
-    table.addColumn('number', "Número de Internações");
-    table.addRows(values);
-    chart.draw(table, options);
-}
+// function create_line_chart(values, options){
+//     var myChart = echarts.init(document.getElementById("procedure_by_date"));
+
+//     console.log(values)
+//     console.log(options)
+
+//     var option = {
+//         dataset: {
+//             source: values,
+//         },
+        
+//     }
+
+// }
 
 function get_color_slice() {
     var slices = {};
