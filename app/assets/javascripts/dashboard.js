@@ -39,6 +39,7 @@ function init_dashboard_chart() {
     dashboard_legend_clicked = false;
     if (window._data_filters != null && window._data_filters != []) {
         dynamic = true;
+        //aqui
         data = window._data_filters;
         filters_text = window._filters_text;
         start_date = window._start_date;
@@ -122,9 +123,10 @@ function create_dashboard_charts() {
           });
     }
     
+
     create_proceduresPerSpecialties(result["specialty_id"], "specialty_id");
-    create_specialties_distance_between_patients_hospital(result["specialty_id"], "specialty_id");
-    create_analise(result["distance"], "distance");
+    create_specialties_distance_between_patients_hospital(data);
+    create_analise(data);
     populate_procedures_by_date();
     create_specialties_total(result["specialty_id"], "specialty_id");
     update_rank();
@@ -214,9 +216,9 @@ function create_proceduresPerSpecialties(data, field){
 *
 */
 
-function create_specialties_distance_between_patients_hospital(data, field){
+function create_specialties_distance_between_patients_hospital(data){
     var myChart = echarts.init(document.getElementById("chart_spec_distance_average"));
-        
+
     if (dynamic == false) {
         var path = 'specialties_procedure_distance_average'
     } else {
@@ -349,7 +351,7 @@ function create_specialties_total(data, field) {
 *
 */
 
-function create_analise(data, field){
+function create_analise(data){
     var myChart = echarts.init(document.getElementById("chart_div_analise"));
 
     var formatData = [];
@@ -452,32 +454,8 @@ function populate_procedures_by_date() {
         };
 
         myChart.setOption(option);
-
-        
-        // var chart = new google.visualization.LineChart(document.getElementById('procedure_by_date'));
-        // var table = new google.visualization.DataTable();
-        // table.addColumn('date', 'Mês');
-        // table.addColumn('number', "Número de Internações");
-        // table.addRows(values);
-        // chart.draw(table, options);
-
     });
 }
-
-// function create_line_chart(values, options){
-//     var myChart = echarts.init(document.getElementById("procedure_by_date"));
-
-//     console.log(values)
-//     console.log(options)
-
-//     var option = {
-//         dataset: {
-//             source: values,
-//         },
-        
-//     }
-
-// }
 
 function get_color_slice() {
     var slices = {};
@@ -487,24 +465,6 @@ function get_color_slice() {
     });
     return slices;
 }
-
-// function draw_chart(header, result, chart, options, color) {
-//     if (color == null) {
-//         color = specialties_color;
-//     }
-//     var values = [];
-    
-//     $.each(result, function(name, number) {
-//         values.push([name, parseFloat(number.toFixed(1)), color[name]]);
-//         //console.log(values)
-//     });
-
-//     values.unshift(header)
-//     var data_table = google.visualization.arrayToDataTable(values);
-//     var view = new google.visualization.DataView(data_table);
-//     view.setColumns([0, 1, {calc: "stringify", sourceColumn: 1, type: "string", role: "annotation"}, 2]);
-//     chart.draw(view, options);
-// }
 
 function dashboard_legend() {
     text = ""
