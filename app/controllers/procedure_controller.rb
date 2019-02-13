@@ -367,8 +367,7 @@ class ProcedureController < ApplicationController
 				result["STS"][index][0] = @sts[indexAux]["text"]
 			end
 		end
-		result["STS"] = result["STS"].sort_by {|name, id| name }
-		result["STS"] = result["STS"].reverse()
+		result["STS"] = result["STS"].select(&:first).sort + result["STS"].reject(&:first)
 
 		# Replace the values of DA
 		health_centres = @da.map{|x| x["id"]}
@@ -378,7 +377,7 @@ class ProcedureController < ApplicationController
 				result["DA"][index][0] = @da[indexAux]["text"]
 			end
 		end
-		result["DA"].select(&:first).sort + result["DA"].reject(&:first)
+		result["DA"] = result["DA"].select(&:first).sort + result["DA"].reject(&:first)
 		
 		# Replace the values of PR
 		health_centres = @pr.map{|x| x["id"]}
@@ -388,7 +387,7 @@ class ProcedureController < ApplicationController
 				result["PR"][index][0] = @pr[indexAux]["text"]
 			end
 		end
-		result["PR"].select(&:first).sort + result["PR"].reject(&:first)
+		result["PR"] = result["PR"].select(&:first).sort + result["PR"].reject(&:first)
 
 		# Replace the values of CRS
 		health_centres = @crs.map{|x| x["id"]}
@@ -398,8 +397,7 @@ class ProcedureController < ApplicationController
 				result["CRS"][index][0] = @crs[indexAux]["text"]
 			end
 		end
-		result["CRS"] = result["CRS"].sort_by {|name, id| name }
-		result["CRS"] = result["CRS"].reverse()
+		result["CRS"] = result["CRS"].select(&:first).sort + result["CRS"].reject(&:first)
 
 		# Replace the values - HEALTH_CENTRES
 		health_centres = @health_centres.map{|x| x["id"]}
