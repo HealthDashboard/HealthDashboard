@@ -15,6 +15,8 @@ var shapes;
 
 var source;
 
+var procedure_path;
+
 function initialize() {
     markers_visible(true, -1);
     circles = [];
@@ -138,7 +140,7 @@ function show_clusters(id, lat, long) {
 function setup_cluster(id, lat, long) {
     $('#loading_overlay').show();
     markers_visible(false, id);
-    var procedure_path = ["/procedures/", id].join("");
+    procedure_path = ["/procedures/", id].join("");
     hc_id = id;
 
     $.getJSON(procedure_path, function(procedures) {
@@ -520,4 +522,10 @@ function update_right_graph_text(data) {
     sum = sum.toLocaleString('pt-BR'); //command to change the number format
     $graph_text1.html(sum);
     $graph_text2.html("Internações");
+}
+
+// Reload heatmap and clusters
+function reload() {
+    teardown_markers()
+    handleLargeCluster(map, procedure_path, null, 80, 30, 60, clickOnMarkersHealthCentre, "HealthCentre");
 }
