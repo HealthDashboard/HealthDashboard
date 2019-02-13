@@ -659,7 +659,7 @@ function create_one_variable_graph(data, field){
               yAxis: {
                 name: 'Procedimentos',
                 type: 'value',
-                axisLabel: {interval : 0}
+                axisLabel: {interval : 10}
               },
               xAxis: {
                 type: 'category',
