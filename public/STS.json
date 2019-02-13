@@ -1,1 +1,110 @@
-[{"id":"Pirituba","text":"Pirituba"},{"id":"Santana/Jaçanã","text":"Santana/Jaçanã"},{"id":"Freguesia/Brasilândia","text":"Freguesia/Brasilândia"},{"id":"Perus","text":"Perus"},{"id":"Casa Verde/Cachoeirinha","text":"Casa Verde/Cachoeirinha"},{"id":"Capela do Socorro","text":"Capela do Socorro"},{"id":"Vila Mariana/Jabaquara","text":"Vila Mariana/Jabaquara"},{"id":"Ipiranga","text":"Ipiranga"},{"id":"Santo Amaro/Cidade Ademar","text":"Santo Amaro/Cidade Ademar"},{"id":"Ermelino Matarazzo","text":"Ermelino Matarazzo"},{"id":"Santa Cecília","text":"Santa Cecília"},{"id":"Cidade Tiradentes","text":"Cidade Tiradentes"},{"id":"Lapa/Pinheiros","text":"Lapa/Pinheiros"},{"id":"M´Boi Mirim","text":"M´Boi Mirim"},{"id":"Penha","text":"Penha"},{"id":"São Mateus","text":"São Mateus"},{"id":"São Miguel","text":"São Miguel"},{"id":"Guaianases","text":"Guaianases"},{"id":"Vila Prudente/Sapopemba","text":"Vila Prudente/Sapopemba"},{"id":"Itaquera","text":"Itaquera"},{"id":"Itaim Paulista","text":"Itaim Paulista"},{"id":"Vila Maria/Vila Guilherme","text":"Vila Maria/Vila Guilherme"},{"id":"Moóca/Aricanduva","text":"Moóca/Aricanduva"},{"id":"Butantã","text":"Butantã"},{"id":"Sé","text":"Sé"},{"id":"Campo Limpo","text":"Campo Limpo"},{"id":"Parelheiros","text":"Parelheiros"}]
+[
+	{
+		"id": "Butantã",
+		"text": "Butantã"
+	},
+	{
+		"id": "Campo Limpo",
+		"text": "Campo Limpo"
+	},
+	{
+		"id": "Capela do Socorro",
+		"text": "Capela do Socorro"
+	},
+	{
+		"id": "Casa Verde/Cachoeirinha",
+		"text": "Casa Verde/Cachoeirinha"
+	},
+	{
+		"id": "Cidade Tiradentes",
+		"text": "Cidade Tiradentes"
+	},
+	{
+		"id": "Ermelino Matarazzo",
+		"text": "Ermelino Matarazzo"
+	},
+	{
+		"id": "Freguesia/Brasilândia",
+		"text": "Freguesia/Brasilândia"
+	},
+	{
+		"id": "Guaianases",
+		"text": "Guaianases"
+	},
+	{
+		"id": "Ipiranga",
+		"text": "Ipiranga"
+	},
+	{
+		"id": "Itaim Paulista",
+		"text": "Itaim Paulista"
+	},
+	{
+		"id": "Itaquera",
+		"text": "Itaquera"
+	},
+	{
+		"id": "Lapa/Pinheiros",
+		"text": "Lapa/Pinheiros"
+	},
+	{
+		"id": "Moóca/Aricanduva",
+		"text": "Moóca/Aricanduva"
+	},
+	{
+		"id": "M´Boi Mirim",
+		"text": "M´Boi Mirim"
+	},
+	{
+		"id": "Parelheiros",
+		"text": "Parelheiros"
+	},
+	{
+		"id": "Penha",
+		"text": "Penha"
+	},
+	{
+		"id": "Perus",
+		"text": "Perus"
+	},
+	{
+		"id": "Pirituba",
+		"text": "Pirituba"
+	},
+	{
+		"id": "Santa Cecília",
+		"text": "Santa Cecília"
+	},
+	{
+		"id": "Santana/Jaçanã",
+		"text": "Santana/Jaçanã"
+	},
+	{
+		"id": "Santo Amaro/Cidade Ademar",
+		"text": "Santo Amaro/Cidade Ademar"
+	},
+	{
+		"id": "São Mateus",
+		"text": "São Mateus"
+	},
+	{
+		"id": "São Miguel",
+		"text": "São Miguel"
+	},
+	{
+		"id": "Sé",
+		"text": "Sé"
+	},
+	{
+		"id": "Vila Maria/Vila Guilherme",
+		"text": "Vila Maria/Vila Guilherme"
+	},
+	{
+		"id": "Vila Mariana/Jabaquara",
+		"text": "Vila Mariana/Jabaquara"
+	},
+	{
+		"id": "Vila Prudente/Sapopemba",
+		"text": "Vila Prudente/Sapopemba"
+	}
+]
