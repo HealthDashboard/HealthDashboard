@@ -368,8 +368,7 @@ class ProcedureController < ApplicationController
 			end
 		end
 
-		result["STS"] = result["STS"].sort_by {|name, id| name }
-		result["STS"] = result["STS"].reverse()
+		result["STS"] = (result["STS"].sort_by {|name, id| name }).reverse()
 
 		# Replace the values of DA
 		health_centres = @da.map{|x| x["id"]}
@@ -380,8 +379,7 @@ class ProcedureController < ApplicationController
 			end
 		end
 
-		result["DA"] = result["DA"].sort_by {|name, id| name }
-		result["DA"] = result["DA"].reverse()
+		result["DA"] = (result["DA"].sort_by {|name, id| name }).reverse()
 		
 		# Replace the values of PR
 		health_centres = @pr.map{|x| x["id"]}
@@ -392,8 +390,7 @@ class ProcedureController < ApplicationController
 			end
 		end
 
-		result["PR"] = result["PR"].sort_by {|name, id| name }
-		result["PR"] = result["PR"].reverse()
+		result["PR"] = (result["PR"].sort_by {|name, id| name }).reverse()
 
 		# Replace the values of CRS
 		health_centres = @crs.map{|x| x["id"]}
@@ -404,8 +401,7 @@ class ProcedureController < ApplicationController
 			end
 		end
 
-		result["CRS"] = result["CRS"].sort_by {|name, id| name }
-		result["CRS"] = result["CRS"].reverse()
+		result["CRS"] = (result["CRS"].sort_by {|name, id| name }).reverse()
 
 		# Replace the values - HEALTH_CENTRES
 		health_centres = @health_centres.map{|x| x["id"]}
@@ -416,11 +412,7 @@ class ProcedureController < ApplicationController
 			end
 		end
 
-		#print result["cnes_id"]
-		#print ("\n -------------------------------------------------------------------- \n")
-		result["cnes_id"] = result["cnes_id"].sort_by {|name, id| name }
-		result["cnes_id"] = result["cnes_id"].reverse()
-		#print result["cnes_id")
+		result["cnes_id"] = (result["cnes_id"].sort_by {|name, id| name }).reverse()
 		
 		# Replace the values - CMPT
 		cmpt = @cmpt.map{|x| x["id"]}
@@ -431,6 +423,7 @@ class ProcedureController < ApplicationController
 			end
 		end
 
+		result["cmpt"] = result["cmpt"].sort_by {|name, id| name }
 		
 		# Replace the values - TREATMENT_TYPE
 		treatment_type = @treatments.map{|x| x["id"]}
@@ -535,7 +528,6 @@ class ProcedureController < ApplicationController
 
 
 		result["val_total"] = result["val_total"].sort_by {|x, y| x.to_f }
-
 
 		# Replace the values - CID_PRIMARY
 		#"cid_primary", "cid_secondary", "cid_secondary2"
