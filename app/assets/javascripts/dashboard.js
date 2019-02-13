@@ -39,13 +39,11 @@ function init_dashboard_chart() {
     dashboard_legend_clicked = false;
     if (window._data_filters != null && window._data_filters != []) {
         dynamic = true;
-        //aqui
         data = window._data_filters;
         filters_text = window._filters_text;
         start_date = window._start_date;
         end_date = window._end_date;
         genders = window._genders;
-        var element = document.getElementById("avarage_distance_div").style.display = "none";
         window._data_filters = null;
         window._filters_text = null;
         window._start_date = null;
@@ -152,12 +150,8 @@ function animate_legend() {
     });
 }
 
-/*
-*               Gráfico de Porcentagem de Internações por especialidades
-*
-*/
-
-function create_proceduresPerSpecialties(data, field){
+/* Gráfico de Porcentagem de Internações por especialidades */
+function create_proceduresPerSpecialties(data){
     var myChart = echarts.init(document.getElementById("chart_specialties"));
     var formatData = [];
     formatData.push(['amount', 'variable']);
@@ -167,7 +161,6 @@ function create_proceduresPerSpecialties(data, field){
         if(data[i][1] != null && data[i][0] != null){
             formatData.push([data[i][1], data[i][0].toString()]);
             max = Math.max(max, data[i][1]);
-            // console.log(formatData)
         }
     }
     option = {
@@ -211,11 +204,7 @@ function create_proceduresPerSpecialties(data, field){
     myChart.setOption(option);
 }
 
-/*
-*               Gráfico de Porcentagem de Distância Média por Especialidade
-*
-*/
-
+/* Gráfico de Porcentagem de Distância Média por Especialidade */
 function create_specialties_distance_between_patients_hospital(data){
     var myChart = echarts.init(document.getElementById("chart_spec_distance_average"));
 
@@ -279,14 +268,8 @@ function create_specialties_distance_between_patients_hospital(data){
     });
 }    
 
-
-
-/*
-*           Gráfico de Total de Internações Hospitalares
-*
-*/
-
-function create_specialties_total(data, field) {
+/* Gráfico de Total de Internações Hospitalares */
+function create_specialties_total(data) {
     var myChart = echarts.init(document.getElementById("chart_spec_total"));
     var formatData = [];
     formatData.push(['amount', 'variable']);
@@ -346,11 +329,7 @@ function create_specialties_total(data, field) {
     myChart.setOption(option);
 }
 
-/*
-*               Gráfico de Porcentagem de Internações por distância percorrida
-*
-*/
-
+/* Gráfico de Porcentagem de Internações por distância percorrida */
 function create_analise(data){
     var myChart = echarts.init(document.getElementById("chart_div_analise"));
 
@@ -822,8 +801,6 @@ function formatCID (data) {
     cid10[letter].children[number].children.push(obj)
   }
 
-  // Tratando se o último caso for ""
-  // Está fora do for para não fazer esse if mais que uma vez
   if (data[i][1] != "") {
     letter = data[i][1].charCodeAt(0) - 65;
     number = data[i][1].charAt(1);
@@ -834,13 +811,6 @@ function formatCID (data) {
     }
     cid10[letter].children[number].children.push(obj)
   }
-  // else {
-  //   obj = {
-  //     name: "Indefinido",
-  //     value: data[i][0]
-  //   }
-  //   cid10.push(obj)
-  // }
   return cid10;
 }
 
