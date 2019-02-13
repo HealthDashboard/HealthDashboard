@@ -367,7 +367,6 @@ class ProcedureController < ApplicationController
 				result["STS"][index][0] = @sts[indexAux]["text"]
 			end
 		end
-
 		result["STS"] = result["STS"].sort_by {|name, id| name }
 		result["STS"] = result["STS"].reverse()
 
@@ -379,9 +378,7 @@ class ProcedureController < ApplicationController
 				result["DA"][index][0] = @da[indexAux]["text"]
 			end
 		end
-
-		result["DA"] = result["DA"].sort_by {|name, id| name }
-		result["DA"] = result["DA"].reverse()
+		result["DA"].select(&:first).sort + result["DA"].reject(&:first)
 		
 		# Replace the values of PR
 		health_centres = @pr.map{|x| x["id"]}
@@ -391,9 +388,7 @@ class ProcedureController < ApplicationController
 				result["PR"][index][0] = @pr[indexAux]["text"]
 			end
 		end
-
-		result["PR"] = result["PR"].sort_by {|name, id| name }
-		result["PR"] = result["PR"].reverse()
+		result["PR"].select(&:first).sort + result["PR"].reject(&:first)
 
 		# Replace the values of CRS
 		health_centres = @crs.map{|x| x["id"]}
@@ -403,7 +398,6 @@ class ProcedureController < ApplicationController
 				result["CRS"][index][0] = @crs[indexAux]["text"]
 			end
 		end
-
 		result["CRS"] = result["CRS"].sort_by {|name, id| name }
 		result["CRS"] = result["CRS"].reverse()
 
@@ -466,7 +460,7 @@ class ProcedureController < ApplicationController
 			end
 		end
 		result["age_code"] = result["age_code"].sort_by {|k, v| (k && k[0..2].to_i) || 0}
-
+		
 		# Replace the values - RACE		
 		race = @race.map{|x| x["id"].to_s}
 		result["race"].each.with_index do |key, index|
@@ -514,16 +508,11 @@ class ProcedureController < ApplicationController
 		result["distance"].each.with_index do |key, index|
 			unless key[0].nil?
 				key[0] = '%.2f' % key[0].to_f
-				# result["distance"][index][0] = (key[0].to_s).gsub('.', ',')
+				result["distance"][index][0] = (key[0].to_s).gsub('.', ',')
 				result["distance"][index][0] = (key[0].to_s)
 			end
 		end		
-
-		#print result["distance"]
-		#print("\n ------------------------------ \n")
-		result["distance"] = result["distance"].sort_by {|x, y| x.to_f }
-		#print result["distance"]
-		
+		result["distance"] = result["distance"].sort_by {|x, y| x.to_f }		
 
 		# Replace the values - VAL_TOTAL
 		result["val_total"].each.with_index do |key, index|
@@ -532,7 +521,6 @@ class ProcedureController < ApplicationController
 				result["val_total"][index][0] = (key[0].to_s).gsub('.', ',')
 			end
 		end
-
 		result["val_total"] = result["val_total"].sort_by {|x, y| x.to_f }
 
 
