@@ -900,7 +900,7 @@ describe ProcedureController, type: 'controller' do
 			    "age_code"=>[[nil, 8], ["10 a 14 anos", 1]], "race"=>[["Preta", 1], [nil, 8]], "lv_instruction"=>[["3", 1], [nil, 8]], 
 		   	    "gender"=>[[nil, 9]], "DA"=>[["Jaraguá", 1], [nil, 8]], "PR"=>[["Perus", 1], [nil, 8]], "STS"=>[[nil, 9]], "CRS"=>[[nil, 9]], 
 			    "gestor_ide"=>[["ESTADUAL", 1], [nil, 8]], "days"=>[[nil, 9]], "days_uti"=>[[nil, 9]], "days_ui"=>[[nil, 9]], "days_total"=>[[nil, 9]],
-			    "val_total"=>[["213,32", 1], [nil, 8]], "distance"=>[["20,70", 1], [nil, 8]]})
+			    "val_total"=>[[nil, 8], ["213,32", 1]], "distance"=>[[nil, 8], ["20,70", 1]]})
 		end
 	end
 
