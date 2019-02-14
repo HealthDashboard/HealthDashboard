@@ -9,6 +9,9 @@ var cid_specific_array = null;
 //** Data input from filters **//
 var data = null;
 
+//** Procedures data **//
+var all_procedures;
+
 //** Automatic search **//
 var auto, cleaning;
 
@@ -399,10 +402,87 @@ function pixelsToMetres(pixels) {
     return pixels * metresPerPixel;
 }
 
+function setHeatmapData(source, heat_type, heatmap_pixels) {
+    var heatmap_procedures = [];
+    var max_value_heatmap = 0.0;
+    var heatmap_opacity = $("#slider_opacity").slider("getValue");
 
-function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pixels, heatmap_opacity, function_maker, source) {
+    if (document.getElementById('checkGradient').checked) {
+        gradient = { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"}
+        $("#gradient").addClass("dalt");
+    } else {
+        gradient = { 0.25: "#2bffd3", 0.62: "#fffd57", 1.0: "#f93434"}
+        $("#gradient").removeClass("dalt");
+    }
+
+    if(source === "Procedures"){
+        if (heat_type === "default") {
+            $.each(all_procedures, function(index, procedure) {
+                heatmap_procedures.push({lat: procedure[0], lng: procedure[1], count: procedure[3]})
+                if (procedure[3] > max_value_heatmap)
+                    max_value_heatmap = procedure[3]
+            });
+        }    
+        else if(heat_type === "rate") {
+            // hate heatmap gradient is different
+            if (document.getElementById('checkGradient').checked) {
+                gradient = { 0.1: "#D3C9F8", 0.2: "#7B5CEB", 0.3: "#4E25E4", 1.0: "#3816B3"}
+                $("#gradient").addClass("dalt");
+            } else {
+                gradient = { 0.1: "#2bffd3", 0.2: "#fffd57", 0.3: "#f93434"}
+                $("#gradient").removeClass("dalt");
+            }
+
+            $.each(all_procedures, function(index, latlong){
+                rate = 1000*1.0*latlong[3]/parseInt(population_sectors[latlong[2]]["POPULACAO_TOTAL"]);
+                if (!isFinite(rate)){
+                    rate = 0;
+                }
+                if(rate > max_value_heatmap){
+                    max_value_heatmap = rate;
+                }
+                heatmap_procedures.push({lat: latlong[0], lng: latlong[1], count: rate});
+            });
+        }
+    }
+    else if(source === "HealthCentre"){
+        heatmap_opacity = 60;
+        $.each(all_procedures, function(index, procedure) {
+            heatmap_procedures.push({lat: procedure[0], lng: procedure[1], count: procedure[2]})
+            if (procedure[2] > max_value_heatmap)
+                max_value_heatmap = procedure[2]
+        });
+    }
+    
+    var cfg = {
+        // radius should be small ONLY if scaleRadius is true (or small radius is intended)
+        // if scaleRadius is false it will be the constant radius used in pixels
+        "radius": heatmap_pixels,
+        // if activated: uses the data maximum within the current map boundaries
+        //   (there will always be a red spot with useLocalExtremas true)
+        "useLocalExtrema": true,
+        // which field name in your data represents the latitude - default "lat"
+        latField: 'lat',
+        // which field name in your data represents the longitude - default "lng"
+        lngField: 'lng',
+        // which field name in your data represents the data value - default "value"
+        valueField: 'count',
+        //gradient: { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"},
+        gradient: gradient,
+        opacity: heatmap_opacity / 100,
+        onExtremaChange: makeLegend,
+    };
+
+    heatdata = {max: max_value_heatmap, data: heatmap_procedures}
+    heat = new HeatmapOverlay(cfg);
+    heat.setData(heatdata);
+    map.addLayer(heat);
+
+}
+
+function handleLargeCluster(map, path, data, cluster_pixels, heatmap_pixels, heatmap_opacity, function_maker, source) {
     cluster = L.markerClusterGroup({
-        maxClusterRadius: max_cluster_pixels,
+        maxClusterRadius: cluster_pixels,
         chunkedLoading: true,
         iconCreateFunction: function(cluster) {
             var markers = cluster.getAllChildMarkers();
@@ -456,9 +536,8 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
         data: data,
         url: path,
         success: function(procedures) {
+            all_procedures = procedures.slice(0);
             markerList = [];
-            heatmap_procedure = [];
-            rate_heatmap = [];
             var proceduresPop;
             if(source === "Procedures"){
                 $.ajax({
@@ -573,59 +652,14 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
 
             heatmapElement = document.getElementById('checkHeatmap')
             if ((heatmapElement && heatmapElement.checked) || source === "HealthCentre") {
-                var max_value_heatmap = 0;
-                if(source === "Procedures"){
-                    $.each(procedures, function(index, procedure) {
-                        heatmap_procedure.push({lat: procedure[0], lng: procedure[1], count: procedure[3]})
-                        if (procedure[3] > max_value_heatmap)
-                            max_value_heatmap = procedure[3]
-    
-                    });
-                }
-                else if(source === "HealthCentre"){
-                    $.each(procedures, function(index, procedure) {
-                        heatmap_procedure.push({lat: procedure[0], lng: procedure[1], count: procedure[2]})
-                        if (procedure[2] > max_value_heatmap)
-                            max_value_heatmap = procedure[2]
-    
-                    });
-                }
-                if (document.getElementById('checkGradient').checked) {
-                    gradient = { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"}
-                    $("#gradient").addClass("dalt");
-                } else {
-                    gradient = { 0.25: "#2bffd3", 0.62: "#fffd57", 1.0: "#f93434"}
-                    $("#gradient").removeClass("dalt");
-                }
-                var cfg = {
-                    // radius should be small ONLY if scaleRadius is true (or small radius is intended)
-                    // if scaleRadius is false it will be the constant radius used in pixels
-                    "radius": max_heatmap_pixels,
-                    // if activated: uses the data maximum within the current map boundaries
-                    //   (there will always be a red spot with useLocalExtremas true)
-                    "useLocalExtrema": true,
-                    // which field name in your data represents the latitude - default "lat"
-                    latField: 'lat',
-                    // which field name in your data represents the longitude - default "lng"
-                    lngField: 'lng',
-                    // which field name in your data represents the data value - default "value"
-                    valueField: 'count',
-                    //gradient: { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"},
-                    gradient: gradient,
-                    opacity: heatmap_opacity / 100,
-                    onExtremaChange: makeLegend,
-                };
-
-                heatdata = {max: max_value_heatmap, data: heatmap_procedure}
-                heat = new HeatmapOverlay(cfg);
-                heat.setData(heatdata);
+                
+                // create default heatmap
+                setHeatmapData(source, "default", heatmap_pixels);
 
                 //inserting the first and last values
                 legendlabel1 = document.getElementById("legend-label-1")
                 if (legendlabel1 !== null)
                     legendlabel1.innerText = 0.0;
-
-                map.addLayer(heat);
 
                 //changing legend opacity
                 X = document.getElementsByClassName("span-normal")
@@ -651,53 +685,14 @@ function handleLargeCluster(map, path, data, max_cluster_pixels, max_heatmap_pix
 
             rateHeatmapElement = document.getElementById('checkHeatmapRate');
             if (rateHeatmapElement && rateHeatmapElement.checked) {
-                var max_rate = 0.0;
-                $.each(procedures, function(index, latlong){
-                    rate = 1000*1.0*latlong[3]/parseInt(population_sectors[latlong[2]]["POPULACAO_TOTAL"]);
-                    if (!isFinite(rate)){
-                        rate = 0;
-                    }
-                    if(rate > max_rate){
-                        max_rate = rate;
-                    }
-                    rate_heatmap.push({lat: latlong[0], lng: latlong[1], count: rate});
-                });
-                if (document.getElementById('checkGradient').checked) {
-                    gradient = { 0.10: "#D3C9F8", 0.20: "#7B5CEB", 0.30: "#4E25E4", 1.0: "#3816B3"}
-                    $("#gradient").addClass("dalt");
-                } else {
-                    gradient = { 0.10: "#2bffd3", 0.20: "#fffd57", 0.30: "#f93434"}
-                    $("#gradient").removeClass("dalt");
-                }
-                var cfg = {
-                     // radius should be small ONLY if scaleRadius is true (or small radius is intended)
-                    // if scaleRadius is false it will be the constant radius used in pixels
-                    "radius": max_heatmap_pixels,
-                    // if activated: uses the data maximum within the current map boundaries
-                    //   (there will always be a red spot with useLocalExtremas true)
-                    "useLocalExtrema": true,
-                    // which field name in your data represents the latitude - default "lat"
-                    latField: 'lat',
-                    // which field name in your data represents the longitude - default "lng"
-                    lngField: 'lng',
-                    // which field name in your data represents the data value - default "value"
-                    valueField: 'count',
-                    //gradient: { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"},
-                    gradient: gradient,
-                    opacity: heatmap_opacity / 100,
-                    onExtremaChange: makeLegend
-                };
-
-                heatdata = {max: max_rate, data: rate_heatmap}
-                heat = new HeatmapOverlay(cfg);
-                heat.setData(heatdata);
+                
+                // create rate heatmap
+                setHeatmapData(source, "rate", heatmap_pixels);
 
                 //inserting the first and last values
                 legendlabel1 = document.getElementById("legend-label-1")
                 if (legendlabel1 !== null)
                     legendlabel1.innerText = 0.0;
-
-                map.addLayer(heat);
 
                 //changing legend opacity
                 X = document.getElementsByClassName("span-normal")
