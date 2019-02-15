@@ -16,7 +16,7 @@ var all_procedures;
 var auto, cleaning;
 
 //** Max value for sliders, change with the search result **//
-var max_sliders = null
+var max_sliders = null;
 
 //** Health Centres icon on map **//
 var health_centre_markers;
@@ -30,7 +30,7 @@ var heat, cluster, shapes, shape, clean_up_cluster, max, shapes_setor;
 
 var myStyle;
 
-var pixels_cluster, pixels_heatmap;
+var pixels_cluster, pixels_heatmap, heat_type;
 
 var minimap;
 
@@ -93,6 +93,7 @@ function initProcedureMap() {
 
     L.control.scale({imperial: false, position: 'bottomright'}).addTo(map);
     map.on('zoom', change_sliders);
+    map.on('zoomstart', reload_heatmap);
 
     latlng = L.latLng(-23.72, -46.48);
     minimap = L.map('mini_map').setView(latlng, 9);
@@ -155,6 +156,25 @@ function change_sliders() {
     legendscale = document.getElementById("legend-scale")
     if (legendscale !== null) {
         legendscale.innerText = ("Internações num raio de " + max_heatmap_km.toFixed(2) + "Km")
+    }
+}
+
+function reload_heatmap() {
+    if (heat) {
+        map.removeLayer(heat);
+        heat = null;
+
+        $.ajax({
+            type: "GET",
+            dataType: 'json',
+            contentType: 'application/json',
+            data: data,
+            url: "procedure/proceduresClusterPoints",
+            success: function(procedures) {
+                all_procedures = procedures.slice(0);
+                setHeatmapData("Procedures", heat_type, pixels_heatmap);
+            }
+        });
     }
 }
 
@@ -402,10 +422,24 @@ function pixelsToMetres(pixels) {
     return pixels * metresPerPixel;
 }
 
+// returns distance between two latlong points
+function latlongDist(point1, point2) {
+    var R = 6371;
+    var dLat = (point2[0]-point1[0]) * Math.PI / 180;
+    var dLon = (point2[1]-point1[1]) * Math.PI / 180;
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(point1[0] * Math.PI / 180 ) * Math.cos(point2[0] * Math.PI / 180 ) *
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    var d = R * c;
+    return d; 
+} 
+
 function setHeatmapData(source, heat_type, heatmap_pixels) {
     var heatmap_procedures = [];
     var max_value_heatmap = 0.0;
     var heatmap_opacity = $("#slider_opacity").slider("getValue");
+    var radius_km = $("#slider_heatmap").slider("getValue");
 
     if (document.getElementById('checkGradient').checked) {
         gradient = { 0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"}
@@ -417,11 +451,26 @@ function setHeatmapData(source, heat_type, heatmap_pixels) {
 
     if(source === "Procedures"){
         if (heat_type === "default") {
-            $.each(all_procedures, function(index, procedure) {
-                heatmap_procedures.push({lat: procedure[0], lng: procedure[1], count: procedure[3]})
-                if (procedure[3] > max_value_heatmap)
-                    max_value_heatmap = procedure[3]
+            $.each(all_procedures, function(index, centerProcedure) {
+                if (!centerProcedure[4]) {
+                    totalCount = 0;
+                    $.each(all_procedures, function(index, procedure) {
+                        if (latlongDist(centerProcedure, procedure) <= radius_km) {
+                            totalCount += procedure[3]
+                            procedure.push(true)
+                        }
+                    });
+                    heatmap_procedures.push({lat: centerProcedure[0], lng: centerProcedure[1], count: totalCount})
+                    if (totalCount > max_value_heatmap)
+                        max_value_heatmap = totalCount
+                }
             });
+            
+            // $.each(all_procedures, function(index, procedure) {
+            //     heatmap_procedures.push({lat: procedure[0], lng: procedure[1], count: procedure[3]})
+            //     if (procedure[3] > max_value_heatmap)
+            //         max_value_heatmap = procedure[3]
+            // });
         }    
         else if(heat_type === "rate") {
             // hate heatmap gradient is different
@@ -433,16 +482,37 @@ function setHeatmapData(source, heat_type, heatmap_pixels) {
                 $("#gradient").removeClass("dalt");
             }
 
-            $.each(all_procedures, function(index, latlong){
-                rate = 1000*1.0*latlong[3]/parseInt(population_sectors[latlong[2]]["POPULACAO_TOTAL"]);
-                if (!isFinite(rate)){
-                    rate = 0;
+            $.each(all_procedures, function(index, centerProcedure) {
+                if (!centerProcedure[4]) {
+                    totalRate = 0.0;
+                    numRate = 0;
+                    $.each(all_procedures, function(index, procedure) {
+                        if (latlongDist(centerProcedure, procedure) <= radius_km) {
+                            rate = 1000*1.0*procedure[3]/parseInt(population_sectors[procedure[2]]["POPULACAO_TOTAL"]);
+                            if (!isFinite(rate)){
+                                rate = 0;
+                            }
+                            totalRate += rate
+                            numRate += 1
+                            procedure.push(true)
+                        }
+                    });
+                    heatmap_procedures.push({lat: centerProcedure[0], lng: centerProcedure[1], count: totalRate/numRate})
+                    if (totalRate > max_value_heatmap)
+                        max_value_heatmap = totalRate
                 }
-                if(rate > max_value_heatmap){
-                    max_value_heatmap = rate;
-                }
-                heatmap_procedures.push({lat: latlong[0], lng: latlong[1], count: rate});
             });
+
+            // $.each(all_procedures, function(index, latlong){
+            //     rate = 1000*1.0*latlong[3]/parseInt(population_sectors[latlong[2]]["POPULACAO_TOTAL"]);
+            //     if (!isFinite(rate)){
+            //         rate = 0;
+            //     }
+            //     if(rate > max_value_heatmap){
+            //         max_value_heatmap = rate;
+            //     }
+            //     heatmap_procedures.push({lat: latlong[0], lng: latlong[1], count: rate});
+            // });
         }
     }
     else if(source === "HealthCentre"){
@@ -654,7 +724,8 @@ function handleLargeCluster(map, path, data, cluster_pixels, heatmap_pixels, hea
             if ((heatmapElement && heatmapElement.checked) || source === "HealthCentre") {
                 
                 // create default heatmap
-                setHeatmapData(source, "default", heatmap_pixels);
+                heat_type = "default";
+                setHeatmapData(source, heat_type, heatmap_pixels);
 
                 //inserting the first and last values
                 legendlabel1 = document.getElementById("legend-label-1")
@@ -687,7 +758,8 @@ function handleLargeCluster(map, path, data, cluster_pixels, heatmap_pixels, hea
             if (rateHeatmapElement && rateHeatmapElement.checked) {
                 
                 // create rate heatmap
-                setHeatmapData(source, "rate", heatmap_pixels);
+                heat_type = "rate";
+                setHeatmapData(source, heat_type, heatmap_pixels);
 
                 //inserting the first and last values
                 legendlabel1 = document.getElementById("legend-label-1")
