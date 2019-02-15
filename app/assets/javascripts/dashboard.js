@@ -103,6 +103,8 @@ function create_dashboard_charts() {
                 result["PR"].reverse()
                 result["CRS"].reverse()
                 result["DA"].reverse()
+                result["distance"].sort()
+                result["val_total"] = result["val_total"].map(x => {return [x[0].replace("," , "."), x[1]]})
                 create_one_variable_graph(result["cnes_id"], "cnes_id");
             }
           });
@@ -116,6 +118,7 @@ function create_dashboard_charts() {
             data: data,
             success: function(loaded) {
                 result = loaded;
+                result["val_total"] = result["val_total"].map(x => {return [x[0].replace("," , "."), x[1]]})
                 create_one_variable_graph(result["cnes_id"], "cnes_id");
             }
           });
@@ -487,6 +490,7 @@ function create_one_variable_graph(data, field){
     var formatData = [];
     formatData.push(['amount', 'variable']);
     var max = 0;
+    
     for(var i=0; i<data.length; i++){
         if(data[i][1] != null && data[i][0] != null){
             formatData.push([data[i][1], data[i][0].toString()]);
