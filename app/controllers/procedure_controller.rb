@@ -379,7 +379,7 @@ class ProcedureController < ApplicationController
 			end
 		end
 
-		result["DA"] = (result["DA"].sort_by {|name, id| name }).reverse()
+		result["DA"] = result["DA"].select(&:first).sort + result["DA"].reject(&:first).reverse()
 		
 		# Replace the values of PR
 		health_centres = @pr.map{|x| x["id"]}
@@ -390,7 +390,7 @@ class ProcedureController < ApplicationController
 			end
 		end
 
-		result["PR"] = (result["PR"].sort_by {|name, id| name }).reverse()
+		result["PR"] = result["PR"].select(&:first).sort + result["PR"].reject(&:first).reverse()
 
 		# Replace the values of CRS
 		health_centres = @crs.map{|x| x["id"]}
@@ -423,7 +423,7 @@ class ProcedureController < ApplicationController
 			end
 		end
 
-		result["cmpt"] = result["cmpt"].sort_by {|name, id| name }
+		result["cmpt"] = result["cmpt"].select(&:first).sort + result["cmpt"].reject(&:first).reverse()
 		
 		# Replace the values - TREATMENT_TYPE
 		treatment_type = @treatments.map{|x| x["id"]}
