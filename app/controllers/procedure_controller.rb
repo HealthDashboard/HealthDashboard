@@ -367,7 +367,8 @@ class ProcedureController < ApplicationController
 				result["STS"][index][0] = @sts[indexAux]["text"]
 			end
 		end
-		result["STS"] = result["STS"].select(&:first).sort + result["STS"].reject(&:first)
+
+		result["STS"] = (result["STS"].sort_by {|name, id| name }).reverse()
 
 		# Replace the values of DA
 		health_centres = @da.map{|x| x["id"]}
@@ -377,7 +378,8 @@ class ProcedureController < ApplicationController
 				result["DA"][index][0] = @da[indexAux]["text"]
 			end
 		end
-		result["DA"] = result["DA"].select(&:first).sort + result["DA"].reject(&:first)
+
+		result["DA"] = result["DA"].select(&:first).sort + result["DA"].reject(&:first).reverse()
 		
 		# Replace the values of PR
 		health_centres = @pr.map{|x| x["id"]}
@@ -387,8 +389,8 @@ class ProcedureController < ApplicationController
 				result["PR"][index][0] = @pr[indexAux]["text"]
 			end
 		end
-		result["PR"] = result["PR"].select(&:first).sort + result["PR"].reject(&:first)
-		result["PR"] = result["PR"].reverse()
+
+		result["PR"] = result["PR"].select(&:first).sort + result["PR"].reject(&:first).reverse()
 
 		# Replace the values of CRS
 		health_centres = @crs.map{|x| x["id"]}
@@ -398,7 +400,8 @@ class ProcedureController < ApplicationController
 				result["CRS"][index][0] = @crs[indexAux]["text"]
 			end
 		end
-		result["CRS"] = result["CRS"].select(&:first).sort + result["CRS"].reject(&:first)
+
+		result["CRS"] = (result["CRS"].sort_by {|name, id| name }).reverse()
 
 		# Replace the values - HEALTH_CENTRES
 		health_centres = @health_centres.map{|x| x["id"]}
@@ -408,8 +411,8 @@ class ProcedureController < ApplicationController
 				result["cnes_id"][index][0] = @health_centres[indexAux]["text"]
 			end
 		end
-		result["cnes_id"] = result["cnes_id"].sort_by {|name, id| name }
-		result["cnes_id"] = result["cnes_id"].reverse()
+
+		result["cnes_id"] = (result["cnes_id"].sort_by {|name, id| name }).reverse()
 		
 		# Replace the values - CMPT
 		cmpt = @cmpt.map{|x| x["id"]}
@@ -420,6 +423,7 @@ class ProcedureController < ApplicationController
 			end
 		end
 
+		result["cmpt"] = result["cmpt"].select(&:first).sort + result["cmpt"].reject(&:first).reverse()
 		
 		# Replace the values - TREATMENT_TYPE
 		treatment_type = @treatments.map{|x| x["id"]}
@@ -507,11 +511,11 @@ class ProcedureController < ApplicationController
 		result["distance"].each.with_index do |key, index|
 			unless key[0].nil?
 				key[0] = '%.2f' % key[0].to_f
-				result["distance"][index][0] = (key[0].to_s).gsub('.', ',')
 				result["distance"][index][0] = (key[0].to_s)
 			end
 		end		
-		result["distance"] = result["distance"].sort_by {|x, y| x.to_f }		
+		result["distance"] = result["distance"].sort_by {|x, y| x.to_f }
+		
 
 		# Replace the values - VAL_TOTAL
 		result["val_total"].each.with_index do |key, index|
@@ -522,6 +526,8 @@ class ProcedureController < ApplicationController
 		end
 		result["val_total"] = result["val_total"].sort_by {|x, y| x.to_f }
 
+
+		result["val_total"] = result["val_total"].sort_by {|x, y| x.to_f }
 
 		# Replace the values - CID_PRIMARY
 		#"cid_primary", "cid_secondary", "cid_secondary2"

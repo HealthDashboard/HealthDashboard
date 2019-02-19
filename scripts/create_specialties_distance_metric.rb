@@ -48,7 +48,7 @@ end
 def main
   specialties_distance_metric = create_specialties_distance_metric()
 
-  fJson = File.open(Rails.root.join("public/specialties_distance_metric.json"),"w")
+  fJson = File.open(Rails.root.join("public/specialties_"),"w")
   fJson.write(specialties_distance_metric.values.to_json)
   fJson.close()
 end
