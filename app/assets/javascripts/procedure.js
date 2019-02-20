@@ -162,16 +162,17 @@ function download(dataFilters) {
         data: dataFilters,
         dataType: 'text',
         success: function(result) {
-            var uri = "data:text/csv;Content-Type:text/csv"
             var today = new Date().toLocaleString("pt-BR", {day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric"})
-            download_file("data:text/html," + encodeURIComponent(result), "SIH_resultado_busca_" + today + ".csv");
+            download_file(result, "SIH_resultado_busca_" + today + ".csv");
         }
     });
 }
 
 function download_file(dataurl, filename) {
     var a = document.createElement("a");
-    a.href = dataurl;
+    csvData = new Blob([dataurl], { type: 'text/csv' }); 
+    var csvUrl = URL.createObjectURL(csvData);
+    a.href = csvUrl;
     a.setAttribute("download", filename);
     var b = document.createEvent("MouseEvents");
     b.initEvent("click", false, true);
