@@ -6,7 +6,7 @@ class ProcedureController < ApplicationController
 
 	def initialize
 		# Cons, AVOID USING NUMBERS, make a constant instead
-		@NUM_FILTERS = 17
+		@NUM_FILTERS = 18
 		@MAX_SLIDERS = [351,148,99,351,110786.71.ceil, 84.5.ceil]
 
 		@establishment = ["Estabelecimento de ocorrência", "Gestão", "Especialidade do leito"]
@@ -216,7 +216,6 @@ class ProcedureController < ApplicationController
 		days = Rails.cache.fetch("quartiles/days#{parsed_json}", expires_in: 12.hours) do
 			@procedures.group(:days).order(:days).count
 		end
-		# puts(days)
 		quartiles.append(quartiles_calc(days))
 
 		# 2 - days_uti(Diárias UTI)
