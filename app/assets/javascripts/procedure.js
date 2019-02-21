@@ -88,7 +88,7 @@ function initProcedureMap() {
         map.openPopup(popup);
     });
 
-    pixels_cluster = metresToPixels(5500);
+    pixels_cluster = metresToPixels(8000);
 
     L.control.scale({imperial: false, position: 'bottomright'}).addTo(map);
     
@@ -366,7 +366,6 @@ function buscar(data) {
     $('#loading_overlay').show();
 
     var metres_bounds_cluster = 1000*$("#slider_cluster").slider("getValue");
-    var metres_bounds_heatmap = 1000*$("#slider_heatmap").slider("getValue");
 
     var heatmap_opacity = $("#slider_opacity").slider("getValue");
 
@@ -528,6 +527,11 @@ function setHeatmapData(source, heat_type) {
     heat.setData(heatdata);
     map.addLayer(heat);
 
+    // set legend text
+    legendscale = document.getElementById("legend-scale")
+    if (legendscale !== null) {
+        legendscale.innerText = ("Internações num raio de " + $("#slider_heatmap").slider("getValue").toFixed(2) + "Km")
+    }
 }
 
 function handleLargeCluster(map, path, data, cluster_pixels, heatmap_opacity, function_maker, source) {
@@ -1165,13 +1169,13 @@ function dadosInput() {
         container:'#datepicker',
     });
 
-    $("#slider_cluster").slider({min: 0, max: 22, step: 0.01, value: 5.5});
+    $("#slider_cluster").slider({min: 0, max: 22, step: 0.01, value: 8});
     $("#slider_cluster").on("change", function(slideEvt) {
         pixels_cluster = metresToPixels(slideEvt.value.newValue * 1000);
     });
 
 
-    $("#slider_heatmap").slider({min: 0, max: 9, step: 0.01, value: 2});
+    $("#slider_heatmap").slider({min: 0, max: 22, step: 0.01, value: 5});
 
     $("#slider_opacity").slider({min: 0, max: 100, step: 1, value: 40});
 

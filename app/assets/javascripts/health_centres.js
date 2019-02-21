@@ -527,5 +527,5 @@ function update_right_graph_text(data) {
 // Reload heatmap and clusters
 function reload() {
     teardown_markers()
-    handleLargeCluster(map, procedure_path, null, 80, 30, 60, clickOnMarkersHealthCentre, "HealthCentre");
+    handleLargeCluster(map, procedure_path, null, 80, 60, clickOnMarkersHealthCentre, "HealthCentres");
 }
