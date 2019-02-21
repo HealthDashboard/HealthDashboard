@@ -30,7 +30,7 @@ var heat, cluster, shapes, shape, clean_up_cluster, max, shapes_setor;
 
 var myStyle;
 
-var pixels_cluster, pixels_heatmap, heat_type;
+var pixels_cluster, heat_type;
 
 var minimap;
 
@@ -89,9 +89,10 @@ function initProcedureMap() {
     });
 
     pixels_cluster = metresToPixels(5500);
-    pixels_heatmap = metresToPixels(2000);
 
     L.control.scale({imperial: false, position: 'bottomright'}).addTo(map);
+    
+    map.on('zoomend', change_sliders);
 
     latlng = L.latLng(-23.72, -46.48);
     minimap = L.map('mini_map').setView(latlng, 9);
@@ -137,6 +138,20 @@ function initProcedureMap() {
 
     // When the page is loaded, the specific cid_primary filter needs to be disabled
     $('#6').prop('disabled', true);
+}
+
+function change_sliders() {
+    var cluster_slider = $("#slider_cluster").slider("getValue")
+    cluster_pixels = metresToPixels(cluster_slider * 1000);
+
+    cluster_km = (pixels_cluster * (cluster_slider)) / cluster_pixels;
+
+    $("#slider_cluster").slider("setValue", cluster_km.toFixed(2));
+
+    legendscale = document.getElementById("legend-scale")
+    if (legendscale !== null) {
+        legendscale.innerText = ("Internações num raio de " + $("#slider_heatmap").slider("getValue").toFixed(2) + "Km")
+    }
 }
 
 function download(dataFilters) {
@@ -478,8 +493,8 @@ function setHeatmapData(source, heat_type) {
             // });
         }
     }
-    else if(source === "HealthCentre"){
-        radius = 30 / scale;
+    else if(source === "HealthCentres"){
+        radius = 30;
         heatmap_opacity = 60;
         $.each(all_procedures, function(index, procedure) {
             heatmap_procedures.push({lat: procedure[0], lng: procedure[1], count: procedure[2]})
@@ -492,7 +507,7 @@ function setHeatmapData(source, heat_type) {
         // radius should be small ONLY if scaleRadius is true (or small radius is intended)
         // if scaleRadius is false it will be the constant radius used in pixels
         "radius": radius,
-        "scaleRadius": true, 
+        "scaleRadius": (source === "Procedures"), 
         // if activated: uses the data maximum within the current map boundaries
         //   (there will always be a red spot with useLocalExtremas true)
         "useLocalExtrema": true,
@@ -536,6 +551,9 @@ function handleLargeCluster(map, path, data, cluster_pixels, heatmap_opacity, fu
                 className = 'map-marker marker-100k a-class';
                 size = 84;
             }
+
+            //Changes values in legend
+            change_sliders();
 
             //Falta tratar o caso de ser um ponto e não um cluster
             cluster.on('contextmenu',function(e){
@@ -585,17 +603,17 @@ function handleLargeCluster(map, path, data, cluster_pixels, heatmap_opacity, fu
                 });
             }
             clusterElement = document.getElementById('checkCluster');
-            if ((clusterElement && clusterElement.checked) || source === "HealthCentre") {
+            if ((clusterElement && clusterElement.checked) || source === "HealthCentres") {
                 $.each(procedures, function(index, latlong){
                     // the index used in latlong to represent the procedures counter depends on the source
                     // so if the source is "Procedures", the latlong variable has a cd_geocodi field
-                    // if the source is "HealthCentre", the latlong variable does not have a cd_geocodi field.
+                    // if the source is "HealthCentres", the latlong variable does not have a cd_geocodi field.
                     icon = L.divIcon({ html: latlong[3], className: 'map-marker marker-single a-class', iconSize: L.point(34, 34) });
                     marker = L.marker(L.latLng(latlong[0], latlong[1]), {icon: icon})
                     marker.number = latlong[3];
                     marker.cd_geocodi = latlong[2];
                     marker.id = latlong[3];
-                    if(source === "HealthCentre"){
+                    if(source === "HealthCentres"){
                         icon = L.divIcon({ html: latlong[2], className: 'map-marker marker-single a-class', iconSize: L.point(34, 34) });
                         marker = L.marker(L.latLng(latlong[0], latlong[1]), {icon: icon})
                         marker.number = latlong[2];
@@ -683,7 +701,7 @@ function handleLargeCluster(map, path, data, cluster_pixels, heatmap_opacity, fu
             }
 
             heatmapElement = document.getElementById('checkHeatmap')
-            if ((heatmapElement && heatmapElement.checked) || source === "HealthCentre") {
+            if ((heatmapElement && heatmapElement.checked) || source === "HealthCentres") {
                 
                 // create default heatmap
                 heat_type = "default";
@@ -1154,10 +1172,6 @@ function dadosInput() {
 
 
     $("#slider_heatmap").slider({min: 0, max: 9, step: 0.01, value: 2});
-
-    $("#slider_heatmap").on("change", function(slideEvt) {
-        pixels_heatmap  = metresToPixels(slideEvt.value.newValue * 1000);
-    });
 
     $("#slider_opacity").slider({min: 0, max: 100, step: 1, value: 40});
 
