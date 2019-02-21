@@ -874,13 +874,24 @@ function markerOnClick(e) {
                 $.getJSON(path_distance_real, function(distance) { //get Real distance usign router.project-osrm.org
                     v_distance = parseFloat(distance.routes[0].distance);
                     v_distance = v_distance / 1000; // m -> km
-                    var index_cid_specific = cid_specific_array.findIndex(function(file_item){
-                        return file_item["SUBCAT"] == procedure[0].cid_primary;
-                    });
+                    var index_cid_specific;
+                    var cid_descric;
+                    if(procedure[0].cid_primary.length > 3){
+                        index_cid_specific = cid_specific_array[procedure[0].cid_primary.substring(0, procedure[0].cid_primary.length-1)].findIndex(function(file_item){
+                            return file_item["SUBCAT"] == procedure[0].cid_primary;
+                        });
+                        cid_descric = cid_specific_array[procedure[0].cid_primary.substring(0, procedure[0].cid_primary.length-1)][index_cid_specific]["DESCRIC"];
+                    }
+                    else{
+                        index_cid_specific = cid_specific_array[procedure[0].cid_primary].findIndex(function(file_item){
+                            return file_item["SUBCAT"] == procedure[0].cid_primary;
+                        });
+                        cid_descric = cid_specific_array[procedure[0].cid_primary][index_cid_specific]["DESCRIC"];
+                    }
                     text =  "<strong>Estabelecimento: </strong>" + health_centres_array[parseInt(cnes)] + "<br>";
                     text += "<strong>Sexo: </strong>" + sexp_var[procedure[0].gender] + "<br>";
                     text +=  "<strong>Idade: </strong>" + procedure[0].age_number + "<br>";
-                    text += "<strong>CID: </strong>" + cid_specific_array[index_cid_specific]["DESCRIC"] + "<br>";
+                    text += "<strong>CID: </strong>" + cid_descric + "<br>";
                     text += "<strong>CRS: </strong>" + procedure[0].CRS + "<br>";
                     text += "<strong>Data: </strong>" + procedure[0].date + "<br>";
                     text += "<strong>Distância: </strong>" + parseFloat(procedure[0].distance).toFixed(1).replace(".", ",") + " Km <br>";
@@ -1285,21 +1296,23 @@ function toggleFilters() {
 function cid10_change(){
     data = getData();
     $("#6").empty(); //#6 is the id of the specific cid10 multiselect
-    $.getJSON('/CID-10-subcategorias.json', function(file) {    
-        $.getJSON('/procedure/proceduresCid10Specific', data, function(result) {
-            if (Object.keys(result).length > 0){
-                $('#6').prop('disabled', false);
-            }
-            else{
-                $('#6').prop('disabled', true);
-            }
-            $.each(result, function(index, value){
-                $.each(result[index], function(index_item, value_item){
-                    var index_file = file.findIndex(function(file_item){
-                        return file_item["SUBCAT"] == index_item;
-                    });
-                    $("#6").append(new Option(file[index_file]["DESCRIC"], index_item));
-                });
+    $.getJSON('/procedure/proceduresCid10Specific', data, function(result) {
+        if (Object.keys(result).length > 0){
+            $('#6').prop('disabled', false);
+        }
+        else{
+            $('#6').prop('disabled', true);
+        }
+        $.each(result, function(index, value){
+            $.each(cid_specific_array[index], function(index_cid, value_cid){
+                if(Object.keys(result[index]).includes(value_cid["SUBCAT"])){
+                    $("#6").append(new Option(value_cid["DESCRIC"], value_cid["SUBCAT"]));
+                }
+                else{
+                    option = new Option(value_cid["DESCRIC"], value_cid["SUBCAT"])
+                    option.disabled = true;
+                    $("#6").append(option);
+                }
             });
         });
     });
