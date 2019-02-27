@@ -45,7 +45,7 @@ Rails.application.routes.draw do
     get :proceduresPerSpecialties, on: :collection
     get :proceduresDistance, on: :collection
     get :proceduresTotal, on: :collection
-    get :download, on: :collection
+    post :download, on: :collection
     get :proceduresDistanceGroup,  on: :collection
     get :proceduresQuartiles, on: :collection
     get :proceduresMaxValues, on: :collection
