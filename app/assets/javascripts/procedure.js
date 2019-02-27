@@ -155,13 +155,25 @@ function change_sliders() {
     }
 }
 
-function download(dataFilters) {
+function download(dataFilters, clusterDownload) {
+    console.log(dataFilters, clusterDownload);
+    
+    if (clusterDownload == true){
+        data_param = getData();
+        data_param["latlong"] = dataFilters;
+        data_param["ClusterDownload"] = "True";
+    }
+    else{
+        data_param = dataFilters;
+    }
     $.ajax({
-        contentType: 'json',
-        url: 'procedure/download.csv',
-        data: dataFilters,
+        type: "POST",
+        contentType: 'application/json',
         dataType: 'text',
+        url: 'procedure/download.csv',
+        data: JSON.stringify(data_param),
         success: function(result) {
+            var uri = "data:text/csv;Content-Type:text/csv"
             var today = new Date().toLocaleString("pt-BR", {day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric"})
             download_file(result, "SIH_resultado_busca_" + today + ".csv");
         }
@@ -178,17 +190,6 @@ function download_file(dataurl, filename) {
     b.initEvent("click", false, true);
     a.dispatchEvent(b);
     return false;
-}
-
-function downloadCluster(paramLat, paramLong){
-    var paramLatJSON = Object.assign({}, paramLat);
-    var paramLongJSON = Object.assign({}, paramLong);
-    var allData;
-    allData = getData();
-    allData["lat"] = paramLatJSON;
-    allData["long"] = paramLongJSON;
-    allData["ClusterDownload"] = "True";
-    download(allData);
 }
 
 //** Called when a visualization shape is selected, remove the selected shape if its already selected or draws a new one **//
@@ -567,15 +568,13 @@ function handleLargeCluster(map, path, data, cluster_pixels, heatmap_opacity, fu
                 button.id = markers.id;
                 button.className = 'btn btn-dark btn-sm';
                 button.innerText = 'Download';
-                if(source === "Procedures"){
+                if(source === "Procedures"){                
                     button.addEventListener('click', function(){
-                        var paramLat = [];
-                        var paramLong = [];
+                        var latlong = [];
                         $.each(markers, function(index, m){
-                            paramLat.push(m.latlong[0]);
-                            paramLong.push(m.latlong[1]);
+                            latlong.push(m.latlong[0], m.latlong[1]);
                         })
-                        downloadCluster(paramLat, paramLong);
+                        download(latlong, true);
                     });
                     var popup_cluster = L.popup().setContent(button);
                     popup_cluster.setLatLng(e.latlng)
@@ -634,15 +633,15 @@ function handleLargeCluster(map, path, data, cluster_pixels, heatmap_opacity, fu
                     marker.on('contextmenu',function(e){
                         if (source === "Procedures"){
                             if(shapes_cd_geocodi[e.target.cd_geocodi] == null){
-                                menu = "<button type='button' id='button-download_" + marker.id + "' class='btn btn-dark btn-sm' onclick='handlePopupMarker(" 
-                                + e.latlng.lat + "," + e.latlng.lng + "," + e.target.cd_geocodi + ",\"Download\", "+ marker.id + ")'> Download </button></br>";
+                                menu = "<button type='button' id='button-download_" + marker.id + "' class='btn btn-dark btn-sm' onclick='download(["
+                                + e.latlng.lat + "," + e.latlng.lng + "]" + ", true)'> Download </button></br>";
                                 var popup_cluster = L.popup().setContent(menu);
                                 popup_cluster.setLatLng(e.latlng);
                                 map.openPopup(popup_cluster);     
                             }     
                             else{
-                                menu = "<button type='button' id='button-download_" + marker.id + "' class='btn btn-dark btn-sm' onclick='handlePopupMarker(" 
-                                + e.latlng.lat + "," + e.latlng.lng + "," + e.target.cd_geocodi + ",\"Download\", "+ marker.id + ")'> Download </button></br>";
+                                menu = "<button type='button' id='button-download_" + marker.id + "' class='btn btn-dark btn-sm' onclick='download(["
+                                + e.latlng.lat + "," + e.latlng.lng + "]" + ", true)'> Download </button></br>";
                                 menu += "<button type='button' id='button-shape_" + marker.id + "' class='btn btn-dark btn-sm' onclick='handlePopupMarker(" 
                                     + e.latlng.lat + "," + e.latlng.lng + "," + e.target.cd_geocodi + ", \"Shape\", " + marker.id + ")'> Esconder Contorno </button>";
                                 var popup_cluster = L.popup().setContent(menu);
