@@ -596,6 +596,15 @@ class ProcedureController < ApplicationController
 		render json: cid10_options, status: 200
 	end
 
+	# GET /procedure/getSectorByCd_geocodi
+	# Params: [cd_geocodi value]
+	# Return: A hash containing the coordinates
+	def getSectorByCd_geocodi
+		render json: "Bad request", status: 400 and return unless params[:data] != nil
+		sector = Sector.select(:coordinates).where(:cd_geocodi => params[:data])
+		render json: sector, status: 200
+	end
+
 private
 	# Used when downloading a specific cluster
 	def downloadCluster

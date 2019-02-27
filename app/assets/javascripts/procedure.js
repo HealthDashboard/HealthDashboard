@@ -26,7 +26,7 @@ var filters_text, filters, genders, start_date, end_date, dist_min, dist_max;
 var printPlugin;
 
 //** Open Street view vars **//
-var heat, cluster, shapes, shape, clean_up_cluster, max, shapes_setor;
+var heat, cluster, shapes, shape, clean_up_cluster, max, shapes_setor, shapes_cd_geocodi, marker_hash;
 
 var myStyle;
 
@@ -66,6 +66,7 @@ function initProcedureMap() {
         'Shape_ESF.geojson': null
     };
     shapes_setor = [];
+    shapes_cd_geocodi = [];
 
     $('#loading_overlay').hide();
     var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
@@ -181,10 +182,11 @@ function download_file(dataurl, filename) {
 function downloadCluster(paramLat, paramLong){
     var paramLatJSON = Object.assign({}, paramLat);
     var paramLongJSON = Object.assign({}, paramLong);
-    var allData = getData();
+    var allData;
+    allData = getData();
     allData["lat"] = paramLatJSON;
     allData["long"] = paramLongJSON;
-    allData["ClusterDownload"] = "True"
+    allData["ClusterDownload"] = "True";
     download(allData);
 }
 
@@ -558,26 +560,26 @@ function handleLargeCluster(map, path, data, cluster_pixels, heatmap_opacity, fu
 
             //Changes values in legend
             change_sliders();
-
-            //Falta tratar o caso de ser um ponto e não um cluster
             cluster.on('contextmenu',function(e){
                 var button = document.createElement('button');
                 button.type = "button"
                 button.id = markers.id;
                 button.className = 'btn btn-dark btn-sm';
                 button.innerText = 'Download';
-                button.addEventListener('click', function(){
-                    var paramLat = [];
-                    var paramLong = [];
-                    $.each(markers, function(index, m){
-                        paramLat.push(m.latlong[0]);
-                        paramLong.push(m.latlong[1]);
-                    })
-                    downloadCluster(paramLat, paramLong);
-                });
-                var popup_cluster = L.popup().setContent(button);
-                popup_cluster.setLatLng(e.latlng)
-                map.openPopup(popup_cluster);
+                if(source === "Procedures"){
+                    button.addEventListener('click', function(){
+                        var paramLat = [];
+                        var paramLong = [];
+                        $.each(markers, function(index, m){
+                            paramLat.push(m.latlong[0]);
+                            paramLong.push(m.latlong[1]);
+                        })
+                        downloadCluster(paramLat, paramLong);
+                    });
+                    var popup_cluster = L.popup().setContent(button);
+                    popup_cluster.setLatLng(e.latlng)
+                    map.openPopup(popup_cluster);
+                }
             });
             return L.divIcon({ html: n, className: className, iconSize: L.point(size, size) });
         },
@@ -592,6 +594,7 @@ function handleLargeCluster(map, path, data, cluster_pixels, heatmap_opacity, fu
         success: function(procedures) {
             all_procedures = procedures.slice(0);
             markerList = [];
+            marker_hash = {};
             var proceduresPop;
             if(source === "Procedures"){
                 $.ajax({
@@ -628,23 +631,24 @@ function handleLargeCluster(map, path, data, cluster_pixels, heatmap_opacity, fu
                     marker.cluster = null;
                     marker.on('click', function_maker);
                     marker.on('contextmenu',function(e){
-                        var button = document.createElement('button');
-                        button.type = "button";
-                        button.id = marker.id;
-                        button.className = 'btn btn-dark btn-sm';
-                        button.innerText = "Download";
-                        button.lat = e.latlng.lat;
-                        button.long = e.latlng.lng;
-                        button.addEventListener('click', function(){
-                            var paramLat = [];
-                            var paramLong = [];
-                            paramLat.push(button.lat);
-                            paramLong.push(button.long);
-                            downloadCluster(paramLat, paramLong);
-                        });
-                        var popup_cluster = L.popup().setContent(button);
-                        popup_cluster.setLatLng(e.latlng);
-                        map.openPopup(popup_cluster);
+                        if (source === "Procedures"){
+                            if(shapes_cd_geocodi[e.target.cd_geocodi] == null){
+                                menu = "<button type='button' id='button-download_" + marker.id + "' class='btn btn-dark btn-sm' onclick='handlePopupMarker(" 
+                                + e.latlng.lat + "," + e.latlng.lng + "," + e.target.cd_geocodi + ",\"Download\", "+ marker.id + ")'> Download </button></br>";
+                                var popup_cluster = L.popup().setContent(menu);
+                                popup_cluster.setLatLng(e.latlng);
+                                map.openPopup(popup_cluster);     
+                            }     
+                            else{
+                                menu = "<button type='button' id='button-download_" + marker.id + "' class='btn btn-dark btn-sm' onclick='handlePopupMarker(" 
+                                + e.latlng.lat + "," + e.latlng.lng + "," + e.target.cd_geocodi + ",\"Download\", "+ marker.id + ")'> Download </button></br>";
+                                menu += "<button type='button' id='button-shape_" + marker.id + "' class='btn btn-dark btn-sm' onclick='handlePopupMarker(" 
+                                    + e.latlng.lat + "," + e.latlng.lng + "," + e.target.cd_geocodi + ", \"Shape\", " + marker.id + ")'> Esconder Contorno </button>";
+                                var popup_cluster = L.popup().setContent(menu);
+                                popup_cluster.setLatLng(e.latlng);
+                                map.openPopup(popup_cluster);     
+                            }                                                 
+                        }                       
                     });
                     markerList.push(marker);
                     if(source === "Procedures"){
@@ -675,7 +679,7 @@ function handleLargeCluster(map, path, data, cluster_pixels, heatmap_opacity, fu
                         if(isNaN(str_percentage_pop_preta) || !isFinite(str_percentage_pop_preta)) str_percentage_pop_preta = 0;
                         if(isNaN(str_percentage_pop_amarela) || !isFinite(str_percentage_pop_amarela)) str_percentage_pop_amarela = 0;
                         if(isNaN(str_percentage_pop_indigena) || !isFinite(str_percentage_pop_indigena)) str_percentage_pop_indigena = 0;
-                        const string_tooltip = ("População Total: " + marker.number + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_TOTAL"])
+                        var string_popup = ("População Total: " + marker.number + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_TOTAL"])
                             + ' (' + str_percentage_pop_total.toFixed(2).replace(".", ",") + '%)' + '</br>'
                             + "População Feminina: " + value_pop_mulher + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_MULHER"])
                             + ' (' + str_percentage_pop_mulher.toFixed(2).replace(".", ",") + '%)' + '</br>'
@@ -689,7 +693,13 @@ function handleLargeCluster(map, path, data, cluster_pixels, heatmap_opacity, fu
                             + ' (' + str_percentage_pop_amarela.toFixed(2).replace(".", ",") + '%)' + '</br>'
                             + "População Indígena: " + value_pop_indigena + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_INDIGENA"])
                             + ' (' + str_percentage_pop_indigena.toFixed(2).replace(".", ",") + '%)' + '</br>');
-                        marker.bindTooltip(string_tooltip).openTooltip();
+                        //In this case, the index of the marker on markerList array is his id.
+                        var string_button_popup = ("<button type='button' id='button-shape_" + markerList.length + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + marker.cd_geocodi + ", " + markerList.length + ")'> Mostrar Contorno </button>");
+                        var popup = L.popup().setLatLng(marker.latlong).setContent(string_popup + string_button_popup)
+                        marker_hash[markerList.length] = popup;
+                        marker.on('mouseover', function(e) {
+                            popup.openOn(map);
+                        });
                     }
                 });
                 cluster.addLayers(markerList);
@@ -968,6 +978,15 @@ function clearMap() {
     heat = null;
     cluster = null;
     clean_up_cluster = [];
+
+    for(shape_index in shapes_cd_geocodi){
+        if(shapes_cd_geocodi[shape_index] != null){
+            map.removeLayer(shapes_cd_geocodi[shape_index]);
+            shapes_cd_geocodi[shape_index] = null;
+        }
+    }
+
+    shapes_cd_geocodi = [];
 }
 
 //** Called when "Dados Gerais" button is clicked, open "Dados Gerais" page and passes filter values to it **//
@@ -1078,14 +1097,6 @@ function filters_value(data) {
                     //*The follow commands will catch 1 decimal places of median withour rouding and the number 1 (1||0) represents the number of decimal places*//
                     var fixed = 1 || 0;
                     fixed = Math.pow(10, fixed);
-                    const medianAux = Math.floor(quartiles[i][1] * fixed) / fixed;
-                    //the last field has a float number, so it is a special case
-                    //this commands will position the label in the correct place
-                    //const lastText = document.getElementById("label_slider_" + i.toString()).innerText;
-                    //document.getElementById("label_slider_" + i.toString()).setAttribute("title", lastText + " [ Mediana: " + medianAux.toLocaleString('pt-BR') + " ]");
-                    //document.getElementById("label_median_slider_" + i.toString()).innerText = medianAux.toLocaleString('pt-BR');
-                    //$("#label_median_slider_" + i.toString()).css('margin-left', (13+(75*median[i]/max_hash[slider])) + "%");
-                    //OBS: the number '13' represents a correct position of label
                     $("#" + slider).slider({
                         min: 0,
                         max: max_hash[slider],
@@ -1097,13 +1108,6 @@ function filters_value(data) {
                     });
                 }
                 else{
-                    const lastText = document.getElementById("label_slider_" + i.toString()).innerText;
-                    //document.getElementById("label_slider_" + i.toString()).setAttribute("title", lastText + " [ Mediana: " + median[i] + " ]");
-                    //document.getElementById("label_median_slider_" + i.toString()).innerText = median[i];
-                    //$("#label_median_slider_" + i.toString()).css('margin-left', (15+(75*median[i]/max_hash[slider])) + "%");
-                    //OBS: the number '15' represents the initil value of label position (look margin-left of cl)
-                    //OBS: this is not totally correct because it is not possible explain why the value '75' was choose, it just works
-                    //OBS: if another field with different characteristics needs to be represented in that way, possibly the label will be in a wrong position
                     $("#" + slider).slider({
                         min: 0,
                         max: max_hash[slider],
@@ -1280,7 +1284,8 @@ function toggleFilters() {
 
 function cid10_change(){
     data = getData();
-    $("#6").empty(); //#6 is the id of the specific cid10 multiselect 
+    $("#6").empty(); //#6 is the id of the specific cid10 multiselect
+    $.getJSON('/CID-10-subcategorias.json', function(file) {    
         $.getJSON('/procedure/proceduresCid10Specific', data, function(result) {
             if (Object.keys(result).length > 0){
                 $('#6').prop('disabled', false);
@@ -1290,11 +1295,46 @@ function cid10_change(){
             }
             $.each(result, function(index, value){
                 $.each(result[index], function(index_item, value_item){
-                    var index_cid_specific = cid_specific_array.findIndex(function(file_item){
+                    var index_file = file.findIndex(function(file_item){
                         return file_item["SUBCAT"] == index_item;
                     });
-                    $("#6").append(new Option(cid_specific_array[index_cid_specific]["DESCRIC"], index_item));
+                    $("#6").append(new Option(file[index_file]["DESCRIC"], index_item));
                 });
             });
         });
+    });
+}
+
+function showHideShape(string_popup, cd_geocodi, id){
+    if(shapes_cd_geocodi[cd_geocodi] == null){
+        $.getJSON("procedure/getSectorByCd_geocodi/", {data: cd_geocodi}, function(result){
+            var polygon = {
+                "type": "Feature",
+                    "properties": {
+                    "style": myStyle,
+                },
+                    "geometry": {
+                    "type": "Polygon",
+                        "coordinates": [
+                            JSON.parse(result[0]["coordinates"])["coordinates"][0],
+                    ]
+                }
+            };
+            var geojsonLayer = new L.GeoJSON(polygon);
+            map.addLayer(geojsonLayer);
+            shapes_cd_geocodi[cd_geocodi] = geojsonLayer;
+        });
+        document.getElementById("button-shape_" + id).innerText = "Esconder Contorno";
+        const string_button_popup = ("<button type='button' id='button-shape_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + ", " + id + ")'> Esconder Contorno </button>");
+        marker_hash[id].setContent(string_popup + string_button_popup);
+        marker_hash[id].update();                     
+    }
+    else{
+        map.removeLayer(shapes_cd_geocodi[cd_geocodi]);
+        document.getElementById("button-shape_" + id).innerText = "Mostrar Contorno";
+        shapes_cd_geocodi[cd_geocodi] = null;
+        const string_button_popup = ("<button type='button' id='button-shape_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + ", " + id + ")'> Mostrar Contorno </button>");
+        marker_hash[id].setContent(string_popup + string_button_popup);
+        marker_hash[id].update();                     
+    }
 }
