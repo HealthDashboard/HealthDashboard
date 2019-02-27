@@ -978,6 +978,15 @@ function clearMap() {
     heat = null;
     cluster = null;
     clean_up_cluster = [];
+
+    for(shape_index in shapes_cd_geocodi){
+        if(shapes_cd_geocodi[shape_index] != null){
+            map.removeLayer(shapes_cd_geocodi[shape_index]);
+            shapes_cd_geocodi[shape_index] = null;
+        }
+    }
+
+    shapes_cd_geocodi = [];
 }
 
 //** Called when "Dados Gerais" button is clicked, open "Dados Gerais" page and passes filter values to it **//
