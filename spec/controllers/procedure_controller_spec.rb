@@ -107,7 +107,7 @@ describe ProcedureController, type: 'controller' do
 		it 'should return the cluster procedures when data is passed correctly' do
 			filters = [["1"]]
 			data = {"filters" => filters}.to_json
-			self.send(:get, 'download', params: {"lat" => {"0": "-23.01"}, "long" => {"1": "-46.01"}, "ClusterDownload" => "True", data: data}, as: :json)
+			self.send(:get, 'download', params: {"latlong" => [-23.01, -46.01], "ClusterDownload" => "True", data: data}, as: :json)
 			expect(response.status).to eq(200)
 			expect(response.body).to eq("COD;LAT_SC;LONG_SC;P_SEXO;P_IDADE;P_RACA;LV_INSTRU;CNES;GESTOR_ID;CAR_INTEN;CMPT;DT_EMISSAO;DT_INTERNA;DT_SAIDA;COMPLEXIDA;PROC_RE;DIAG_PR;DIAG_SE1;DIAG_SE2;DIARIAS;DIARIAS_UT;DIARIAS_UI;DIAS_PERM;FINANC;VAL_TOT;DA;SUB;STS;CRS;DISTANCIA_KM\n" +
 			"2;-23,01;-46,01;;;;;1;;;;;;;;;;;;;;;;;;;;;;\n"	+
