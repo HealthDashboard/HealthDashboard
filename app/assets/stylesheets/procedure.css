@@ -503,8 +503,8 @@ h1 {
     display: none;
   }
 
-  .fab.active {
-  }
+  /* .fab.active {
+  } */
 }
 
 @media (max-width: 1000px) and (orientation: landscape) {
