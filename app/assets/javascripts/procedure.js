@@ -446,12 +446,6 @@ function setHeatmapData(source, heat_type) {
                         max_value_heatmap = totalCount
                 }
             });
-            
-            // $.each(all_procedures, function(index, procedure) {
-            //     heatmap_procedures.push({lat: procedure[0], lng: procedure[1], count: procedure[3]})
-            //     if (procedure[3] > max_value_heatmap)
-            //         max_value_heatmap = procedure[3]
-            // });
         }    
         else if(heat_type === "rate") {
             // hate heatmap gradient is different
@@ -483,17 +477,6 @@ function setHeatmapData(source, heat_type) {
                         max_value_heatmap = totalRate
                 }
             });
-
-            // $.each(all_procedures, function(index, latlong){
-            //     rate = 1000*1.0*latlong[3]/parseInt(population_sectors[latlong[2]]["POPULACAO_TOTAL"]);
-            //     if (!isFinite(rate)){
-            //         rate = 0;
-            //     }
-            //     if(rate > max_value_heatmap){
-            //         max_value_heatmap = rate;
-            //     }
-            //     heatmap_procedures.push({lat: latlong[0], lng: latlong[1], count: rate});
-            // });
         }
     }
     else if(source === "HealthCentres"){
