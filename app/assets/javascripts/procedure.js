@@ -227,7 +227,7 @@ function setShape(name, popup) {
             shapes_setor.map(function(setor) {
                 map.removeLayer(setor);
             });
-            shapes_setor = [];
+            shapes_setor = {};
         }
     }
     else {
@@ -274,7 +274,7 @@ function setor_censitario(e) {
 
                 }}).addTo(map);
             shape.setStyle(myStyle);
-            shapes_setor.push(shape);
+            shapes_setor["e.target.name_sc"].push(shape);
         }
     })
 }
@@ -677,8 +677,9 @@ function handleLargeCluster(map, path, data, cluster_pixels, heatmap_opacity, fu
                             + "População Indígena: " + value_pop_indigena + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_INDIGENA"])
                             + ' (' + str_percentage_pop_indigena.toFixed(2).replace(".", ",") + '%)' + '</br>');
                         //In this case, the index of the marker on markerList array is his id.
-                        var string_button_popup = ("<button type='button' id='button-shape_" + markerList.length + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + marker.cd_geocodi + ", " + markerList.length + ")'> Mostrar Contorno </button>");
-                        var popup = L.popup().setLatLng(marker.latlong).setContent(string_popup + string_button_popup)
+                        var string_button_popup_one_shape = ("<button type='button' id='button-shape_" + markerList.length + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + marker.cd_geocodi + ", " + markerList.length + ", \"Mostrar setor\")'> Mostrar setor </button>  ");
+                        var string_button_popup_all_shapes = ("<button type='button' id='button-all_shapes_" + markerList.length + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + marker.cd_geocodi + ", " + markerList.length + ", \"Mostrar setores\")'> Mostrar setores do distrito </button>");
+                        var popup = L.popup().setLatLng(marker.latlong).setContent(string_popup + string_button_popup_one_shape + string_button_popup_all_shapes);
                         marker_hash[markerList.length] = popup;
                         marker.on('mouseover', function(e) {
                             popup.openOn(map);
@@ -1302,36 +1303,66 @@ function cid10_change(){
     });
 }
 
-function showHideShape(string_popup, cd_geocodi, id){
-    if(shapes_cd_geocodi[cd_geocodi] == null){
-        $.getJSON("procedure/getSectorByCd_geocodi/", {data: cd_geocodi}, function(result){
-            var polygon = {
-                "type": "Feature",
-                    "properties": {
-                    "style": myStyle,
-                },
-                    "geometry": {
-                    "type": "Polygon",
-                        "coordinates": [
-                            JSON.parse(result[0]["coordinates"])["coordinates"][0],
-                    ]
-                }
-            };
-            var geojsonLayer = new L.GeoJSON(polygon);
-            map.addLayer(geojsonLayer);
-            shapes_cd_geocodi[cd_geocodi] = geojsonLayer;
-        });
-        document.getElementById("button-shape_" + id).innerText = "Esconder Contorno";
-        const string_button_popup = ("<button type='button' id='button-shape_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + ", " + id + ")'> Esconder Contorno </button>");
-        marker_hash[id].setContent(string_popup + string_button_popup);
-        marker_hash[id].update();                     
+function showHideShape(string_popup, cd_geocodi, id, action){
+    if (action == "Mostrar setor"){
+        if(shapes_cd_geocodi[cd_geocodi] == null){
+            $.getJSON("procedure/getSectorByCd_geocodi/", {data: cd_geocodi, var: "coordinates"}, function(result){
+                var polygon = {
+                    "type": "Feature",
+                        "properties": {
+                        "style": myStyle,
+                    },
+                        "geometry": {
+                        "type": "Polygon",
+                            "coordinates": [
+                                JSON.parse(result[0]["coordinates"])["coordinates"][0],
+                        ]
+                    }
+                };
+                var geojsonLayer = new L.GeoJSON(polygon);
+                map.addLayer(geojsonLayer);
+                shapes_cd_geocodi[cd_geocodi] = geojsonLayer;
+            });
+            document.getElementById("button-shape_" + id).innerText = "Esconder setor";
+            const string_button_popup = ("<button type='button' id='button-shape_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + ", " + id + ", \"Mostrar setor\")'> Esconder setor </button> ");
+            const string_button_popup_all_shapes = ("<button type='button' id='button-all_shapes_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + ", " + id + ", \"Mostrar setores\")'>" + document.getElementById("button-all_shapes_" + id).innerText + "</button>");
+            marker_hash[id].setContent(string_popup + string_button_popup + string_button_popup_all_shapes);
+            marker_hash[id].update();                     
+        }
+        else{
+            map.removeLayer(shapes_cd_geocodi[cd_geocodi]);
+            document.getElementById("button-shape_" + id).innerText = "Mostrar setor";
+            shapes_cd_geocodi[cd_geocodi] = null;
+            const string_button_popup = ("<button type='button' id='button-shape_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + ", " + id + ", \"Mostar setor\")'> Mostrar setor </button> ");
+            const string_button_popup_all_shapes = ("<button type='button' id='button-all_shapes_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + ", " + id + ", \"Mostrar setores\")'>" + document.getElementById("button-all_shapes_" + id).innerText + "</button>");
+            marker_hash[id].setContent(string_popup + string_button_popup + string_button_popup_all_shapes);
+            marker_hash[id].update();                     
+        }
     }
-    else{
-        map.removeLayer(shapes_cd_geocodi[cd_geocodi]);
-        document.getElementById("button-shape_" + id).innerText = "Mostrar Contorno";
-        shapes_cd_geocodi[cd_geocodi] = null;
-        const string_button_popup = ("<button type='button' id='button-shape_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + ", " + id + ")'> Mostrar Contorno </button>");
-        marker_hash[id].setContent(string_popup + string_button_popup);
-        marker_hash[id].update();                     
+    else if(action == "Mostrar setores"){
+        if(document.getElementById("button-all_shapes_" + id).innerText == "Mostrar setores do distrito"){
+            $.getJSON("procedure/getSectorByCd_geocodi/", {data: cd_geocodi, var: "DA"}, function(result){
+                $.ajax({
+                    dataType: "json",
+                    url: `SetorCensitario/Setor_with_pop-${result[0]["DA"]}.json`,
+                    success: function(data) {
+                        shape = new L.geoJson(data,
+                            {onEachFeature: function(feature, layer) {
+                                // layer.bindTooltip(`População Total: ${parseInt(feature.properties.POPULACAO_TOTAL)} </br>
+                                //                    População Feminina: ${parseInt(feature.properties.POPULACAO_MULHER)} </br>
+                                //                    População Masculina: ${parseInt(feature.properties.POPULACAO_HOMEM)} </br>
+                                //                    População Branca: ${parseInt(feature.properties.POPULACAO_BRANCA)} </br>
+                                //                    População Preta: ${parseInt(feature.properties.POPULACAO_PRETA)} </br>
+                                //                    População Amarela: ${parseInt(feature.properties.POPULACAO_AMARELA)} </br>
+                                //                    População Parda: ${parseInt(feature.properties.POPULACAO_PARDA)} </br>
+                                //                    População Indígena: ${parseInt(feature.properties.POPULACAO_INDIGENA)} </br>`, {closeButton: false});
+            
+                            }}).addTo(map);
+                        shape.setStyle(myStyle);
+                        shapes_setor.push(shape);
+                    }
+                });
+            });
+        }
     }
 }
