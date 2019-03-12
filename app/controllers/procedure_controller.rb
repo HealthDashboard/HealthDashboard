@@ -600,7 +600,7 @@ class ProcedureController < ApplicationController
 	# Return: A hash containing the coordinates
 	def getSectorByCd_geocodi
 		render json: "Bad request", status: 400 and return unless params[:data] != nil
-		sector = Sector.select(:coordinates).where(:cd_geocodi => params[:data])
+		sector = Sector.select(params[:var]).where(:cd_geocodi => params[:data])
 		render json: sector, status: 200
 	end
 
