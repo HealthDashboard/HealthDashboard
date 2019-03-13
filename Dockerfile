@@ -2,7 +2,7 @@ FROM ruby:2.5
 
 MAINTAINER health-dashboard@gmail.com
 
-RUN apt-get update && apt-get upgrade && apt-get install -y nodejs
+RUN apt-get update && apt-get upgrade -y && apt-get install -y nodejs
 
 WORKDIR /health-dashboard
 
@@ -13,6 +13,7 @@ RUN bundle install
 ADD . /health-dashboard/
 
 # TODO: O primeiro bundle install não está fazendo download de tudo.
+RUN gem install bundler --no-doc
 RUN bundle install
 
 ENTRYPOINT ["./run.sh"]
