@@ -2,8 +2,8 @@ FROM ruby:2.5
 
 MAINTAINER health-dashboard@gmail.com
 
-RUN apt-get upgrade && apt-get update && apt-get install -y nodejs
- 
+RUN apt-get update && apt-get upgrade && apt-get install -y nodejs
+
 WORKDIR /health-dashboard
 
 ADD Gemfile /health-dashboard/
