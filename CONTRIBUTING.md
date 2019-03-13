@@ -97,12 +97,12 @@ ambiente de homologação ou produção.
 
 ### Instalando o ambiente em uma máquina Linux
 
-Para configurar o projeto em uma máquina com sistema operacional linux primeiro
+Para configurar o projeto em uma máquina com sistema operacional Linux e distribuição derivada do Debian primeiro
 instalamos o postgreSQL:
 
 ```
 $ sudo apt-get install postgresql postgresql-contrib
-$ sudo apt-get install postgresql-server-dev-9.5
+$ sudo apt-get install postgresql-dev
 ```
 
 Logo, precisamos instalar o rails, para isso fazemos o seguinte. Primeiro,
@@ -120,8 +120,8 @@ $ if sudo grep -q secure_path /etc/sudoers; then sudo sh -c "echo export rvmsudo
 Depois, usando rvm podemos instalar o ruby
 
 ```
-$ rvm install ruby
-$ rvm --default use ruby
+$ rvm install $(<.ruby-version)
+$ cd .
 ```
 
 Finalmente, algumas gemas podem precisar do node.js para serem executadas, então, o seguinte comando instala o node.js
