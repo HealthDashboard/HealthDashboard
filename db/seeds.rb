@@ -141,7 +141,7 @@ def create_sectors
   da_array.each.with_index do |da|
     data_hash = JSON.parse(File.read("public/SetorCensitario/Setor_with_pop-" + da.upcase! + ".json"))
     data_hash["features"].each.with_index do |feature|
-      s = Sector.new cd_geocodi: feature["properties"]["CD_GEOCODI"], DA: da, coordinates: feature["geometry"].to_json
+      s = Sector.new cd_geocodi: feature["properties"]["CD_GEOCODI"], cd_geocodd: feature["properties"]["CD_GEOCODD"],  DA: da, coordinates: feature["geometry"].to_json
       list << s
       da_counter += 1
     end

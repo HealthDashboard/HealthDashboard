@@ -91,6 +91,7 @@ ActiveRecord::Schema.define(version: 20190207130814) do
 
   create_table "sectors", force: :cascade do |t|
     t.string   "cd_geocodi"
+    t.string   "cd_geocodd"
     t.string   "DA"
     t.string   "coordinates"
     t.datetime "created_at",  null: false
