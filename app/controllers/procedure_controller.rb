@@ -19,10 +19,10 @@ class ProcedureController < ApplicationController
 		@titles_establishment_filters = ["Estabelecimento do atendimento prestado.", "Secretaria responsável.", "Especialidade do leito de internação."]
 
 		@titles_procedure_filters = ["Ano/mês de processamento da AIH. Ex: 201506(junho de 2015).", "Caráter da internação.",
-									 "Motivo da internação.", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal (específico).", "Motivo que levou ao diagnóstico principal.", "Nível de atenção para realização do procedimento.",
+									 "Motivo da internação.", "Motivo que levou ao diagnóstico principal (específico).", "Motivo que levou ao diagnóstico principal.", "Motivo que levou ao diagnóstico principal.", "Nível de atenção para realização do procedimento.",
 									 "Tipo de financiamento da internação."]
 
-		@titles_patient_info_filters = ["Faixa etária do paciente.", "Raça/Cor do paciente.", "Grau de instrução do paciente.", "Distrito administrativo da internação.", "Subprefeitura do estabelecimento.", "Supervisão técnica de saúde.", "Coordenadoria regional de saúde."]
+		@titles_patient_info_filters = ["Faixa etária do paciente.", "Raça/Cor do paciente.", "Grau de instrução do paciente.", "Distrito administrativo da residência do paciente.", "Subprefeitura da residência do paciente.", "Supervisão Técnica de Saúde da residência do paciente.", "Coordenadoria Regional de Saúde da residência do paciente."]
 
 		@sliders = ["Total geral de diárias", "Diárias UTI", "Diárias UI", "Dias de permanência", "Valor da parcela", "Distância de deslocamento(Km)"]
 
