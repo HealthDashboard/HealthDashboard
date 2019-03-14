@@ -13,7 +13,7 @@ var clean_up_cluster;
 
 var shapes;
 
-var source;
+var metadata;
 
 var procedure_path;
 
@@ -45,15 +45,15 @@ function initialize() {
     map = L.map('map', { center: latlng, zoom: 11, layers: [tiles] });
     L.control.scale({imperial: false, position: 'bottomright'}).addTo(map);
 
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            source = findSource(xhttp.responseXML);
-            $('#source').html(source);
+    $.ajax({
+        type: "GET" ,
+        url: "metadata.xml" ,
+        dataType: "xml" ,
+        success: function(xml) {
+          metadata = xml;
+          updateCompleteness();
         }
-    };
-    xhttp.open("GET", "metadata.xml", true);
-    xhttp.send();
+    });  
 
     $('#loading_overlay').hide();
 }
