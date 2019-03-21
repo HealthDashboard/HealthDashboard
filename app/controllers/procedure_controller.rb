@@ -301,7 +301,6 @@ class ProcedureController < ApplicationController
 		cnes = params[:cnes].to_s
 		cnes = cnes.split(",")
 		health_centres = HealthCentre.where(cnes: cnes).pluck(:lat, :long)
-		#print(health_centres)
 		render json: health_centres, status: 200
 	end
 
@@ -310,33 +309,33 @@ class ProcedureController < ApplicationController
 	# Return: A hash with infos about each filter completeness
 	def proceduresCompleteness
 		render json: "Bad request", status: 400 and return unless @procedures != nil
-    filters_completeness = {}
+    	filters_completeness = {}
 		sliders_completeness = {}
 
     # Values for completeness at each filter
    	@filters_name.each.with_index do |name, i|
-      if name == "race"
-				freq = @procedures.where(name.to_sym => [nil, '99']).count.to_f
-      elsif name != "gestor_ide" and name != "lv_instruction"
-				freq = @procedures.where(name.to_sym => [nil, '0']).count.to_f
-      else
-				freq = @procedures.where(name.to_sym => nil).count.to_f
-      end
-      filters_completeness[name] = ((1 - (freq / @procedures.all.count)) * 100).round(2)
+      	if name == "race"
+			freq = @procedures.where(name.to_sym => [nil, '99']).count.to_f
+      	elsif name != "gestor_ide" and name != "lv_instruction"
+			freq = @procedures.where(name.to_sym => [nil, '0']).count.to_f
+      	else
+			freq = @procedures.where(name.to_sym => nil).count.to_f
+      	end
+      	filters_completeness[name] = ((1 - (freq / @procedures.all.count)) * 100).round(2)
     end
 
-    # Values for completeness at each slider
-    @sliders_name.each.with_index do |name, i|
-      freq = @procedures.where(name.to_sym => [nil, '0']).count.to_f
-    	sliders_completeness[name] = ((1 - (freq / @procedures.all.count)) * 100).round(2)
+		# Values for completeness at each slider
+		@sliders_name.each.with_index do |name, i|
+			freq = @procedures.where(name.to_sym => [nil, '0']).count.to_f
+			sliders_completeness[name] = ((1 - (freq / @procedures.all.count)) * 100).round(2)
 		end
 
 		completeness = {
 			:filters => filters_completeness,
-      :sliders => sliders_completeness
-    }
+			:sliders => sliders_completeness
+		}
 
-    render json: completeness, status: 200
+    	render json: completeness, status: 200
 	end
 
 	# GET /procedure/proceduresVariables{params}
@@ -601,7 +600,7 @@ class ProcedureController < ApplicationController
 	# Return: A hash containing the coordinates
 	def getSectorByCd_geocodi
 		render json: "Bad request", status: 400 and return unless params[:data] != nil
-		sector = Sector.select(:coordinates).where(:cd_geocodi => params[:data])
+		sector = Sector.select(params[:var]).where(:cd_geocodi => params[:data])
 		render json: sector, status: 200
 	end
 
