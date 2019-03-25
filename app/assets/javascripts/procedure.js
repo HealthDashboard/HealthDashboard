@@ -633,7 +633,7 @@ function handleLargeCluster(map, path, data, cluster_pixels, heatmap_opacity, fu
                                 menu = "<button type='button' id='button-download_" + marker.id + "' class='btn btn-dark btn-sm' onclick='download(["
                                 + e.latlng.lat + "," + e.latlng.lng + "]" + ", true)'> Download </button></br>";
                                 menu += "<button type='button' id='button-shape_" + marker.id + "' class='btn btn-dark btn-sm' onclick='handlePopupMarker(" 
-                                    + e.latlng.lat + "," + e.latlng.lng + "," + e.target.cd_geocodi + ", \"Shape\", " + marker.id + ")'> Esconder Contorno </button>";
+                                    + e.latlng.lat + "," + e.latlng.lng + "," + e.target.cd_geocodi + ", \"Shape\", " + marker.id + ")'> Ocultar Contorno </button>";
                                 var popup_cluster = L.popup().setContent(menu);
                                 popup_cluster.setLatLng(e.latlng);
                                 map.openPopup(popup_cluster);     
@@ -684,8 +684,8 @@ function handleLargeCluster(map, path, data, cluster_pixels, heatmap_opacity, fu
                             + "População Indígena: " + value_pop_indigena + "/" + parseInt(population_sectors[marker.cd_geocodi]["POPULACAO_INDIGENA"])
                             + ' (' + str_percentage_pop_indigena.toFixed(2).replace(".", ",") + '%)' + '</br>');
                         //In this case, the index of the marker on markerList array is his id.
-                        var string_button_popup_one_shape = ("<button type='button' id='button-shape_" + markerList.length + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + marker.cd_geocodi + ", " + population_sectors[marker.cd_geocodi]["CD_GEOCODD"] + ", " + markerList.length + ", \"Sector\")'> Mostrar setor </button>  ");
-                        var string_button_popup_all_shapes = ("<button type='button' id='button-all_shapes_" + markerList.length + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + marker.cd_geocodi + ", " + population_sectors[marker.cd_geocodi]["CD_GEOCODD"] + "," + markerList.length + ", \"All Sectors\")'> Mostrar setores do distrito </button>");
+                        var string_button_popup_one_shape = ("<button type='button' id='button-shape_" + markerList.length + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + marker.cd_geocodi + ", " + population_sectors[marker.cd_geocodi]["CD_GEOCODD"] + ", " + markerList.length + ", \"Sector\")'> Exibir setor </button>  ");
+                        var string_button_popup_all_shapes = ("<button type='button' id='button-all_shapes_" + markerList.length + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + marker.cd_geocodi + ", " + population_sectors[marker.cd_geocodi]["CD_GEOCODD"] + "," + markerList.length + ", \"All Sectors\")'> Exibir setores do distrito </button>");
                         var popup = L.popup().setLatLng(marker.latlong).setContent(string_popup + string_button_popup_one_shape + string_button_popup_all_shapes);
                         if(popup_marker_hash[population_sectors[marker.cd_geocodi]["CD_GEOCODD"]] == undefined) {
                             popup_marker_hash[population_sectors[marker.cd_geocodi]["CD_GEOCODD"]] = {};
@@ -1359,7 +1359,7 @@ function showHideShape(string_popup, cd_geocodi, cd_geocodd, id, action){
                 map.addLayer(shapes_setor[cd_geocodd][cd_geocodi].shape);                
             }
             shapes_setor[cd_geocodd][cd_geocodi].state = true;
-            const string_button_popup = ("<button type='button' id='button-shape_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + ", " + cd_geocodd + ", " + id + ", \"Sector\")'> Esconder setor </button> ");
+            const string_button_popup = ("<button type='button' id='button-shape_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + ", " + cd_geocodd + ", " + id + ", \"Sector\")'> Ocultar setor </button> ");
             const string_button_popup_all_shapes = ("<button type='button' id='button-all_shapes_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + ", " + cd_geocodd + "," + id + ", \"All Sectors\")'>" + document.getElementById("button-all_shapes_" + id).innerText + "</button>");
             popup_marker_hash[cd_geocodd][cd_geocodi].setContent(string_popup + string_button_popup + string_button_popup_all_shapes);
             popup_marker_hash[cd_geocodd][cd_geocodi].update();                     
@@ -1367,14 +1367,14 @@ function showHideShape(string_popup, cd_geocodi, cd_geocodd, id, action){
         else{
             map.removeLayer(shapes_setor[cd_geocodd][cd_geocodi].shape);
             shapes_setor[cd_geocodd][cd_geocodi].state = false;
-            const string_button_popup = ("<button type='button' id='button-shape_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + "," + cd_geocodd + ", " + id + ", \"Sector\")'> Mostrar setor </button> ");
+            const string_button_popup = ("<button type='button' id='button-shape_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + "," + cd_geocodd + ", " + id + ", \"Sector\")'> Exibir setor </button> ");
             const string_button_popup_all_shapes = ("<button type='button' id='button-all_shapes_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + ", " + cd_geocodd + ", " + id + ", \"All Sectors\")'>" + document.getElementById("button-all_shapes_" + id).innerText + "</button>");
             popup_marker_hash[cd_geocodd][cd_geocodi].setContent(string_popup + string_button_popup + string_button_popup_all_shapes);
             popup_marker_hash[cd_geocodd][cd_geocodi].update();                     
         }
     }
     else if(action == "All Sectors"){
-        if(document.getElementById("button-all_shapes_" + id).innerText == "Mostrar setores do distrito"){
+        if(document.getElementById("button-all_shapes_" + id).innerText == "Exibir setores do distrito"){
             $.ajax({
                 dataType: "json",
                 url: `SetorCensitario/Setor_with_pop-${DA}.json`,
@@ -1408,7 +1408,7 @@ function showHideShape(string_popup, cd_geocodi, cd_geocodd, id, action){
             });
             $.each(popup_marker_hash[cd_geocodd], function(index, popup){
                 content = popup.getContent();
-                popup_marker_hash[cd_geocodd][index].setContent(content.replace("Mostrar setores do distrito", "Esconder setores do distrito").replace("Mostrar setor", "Esconder setor"));
+                popup_marker_hash[cd_geocodd][index].setContent(content.replace("Exibir setores do distrito", "Ocultar setores do distrito").replace("Exibir setor", "Ocultar setor"));
                 popup_marker_hash[cd_geocodd][index].update();  
             });                   
         }
@@ -1421,7 +1421,7 @@ function showHideShape(string_popup, cd_geocodi, cd_geocodd, id, action){
             }
             $.each(popup_marker_hash[cd_geocodd], function(index, popup){
                     content = popup.getContent();
-                    popup_marker_hash[cd_geocodd][index].setContent(content.replace("Esconder setores do distrito", "Mostrar setores do distrito").replace("Esconder setor", "Mostrar setor"));
+                    popup_marker_hash[cd_geocodd][index].setContent(content.replace("Ocultar setores do distrito", "Exibir setores do distrito").replace("Ocultar setor", "Exibir setor"));
                     popup_marker_hash[cd_geocodd][index].update();  
             });
         }
