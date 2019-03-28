@@ -144,7 +144,7 @@ function setup_cluster(id, lat, long) {
     hc_id = id;
 
     $.getJSON(procedure_path, function(procedures) {
-        handleLargeCluster(map, procedure_path, null, 80, 60, clickOnMarkersHealthCentre, "HealthCentres");
+        handleLargeCluster(map, procedure_path, null, 80, 30, 60, clickOnMarkersHealthCentre, "HealthCentres");
         create_circles(id, lat, long);
     });
 
@@ -527,5 +527,5 @@ function update_right_graph_text(data) {
 // Reload heatmap and clusters
 function reload() {
     teardown_markers()
-    handleLargeCluster(map, procedure_path, null, 80, 60, clickOnMarkersHealthCentre, "HealthCentres");
+    handleLargeCluster(map, procedure_path, null, 80, 30, 60, clickOnMarkersHealthCentre, "HealthCentres");
 }
