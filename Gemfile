@@ -106,6 +106,7 @@ group :development, :test, :docker do
   gem 'rspec-rails', '~> 3.7'
   gem 'jasmine-jquery-rails'
   gem 'jasmine-rails'
+  gem 'teaspoon-jasmine'
 end
 
 group :development do
