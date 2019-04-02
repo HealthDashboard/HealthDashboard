@@ -27,10 +27,6 @@
 
 .vagrant/*
 
-Gemfile.lock
-
-.lock
-
 .rspec
 
 vendor/*
