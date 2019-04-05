@@ -1303,47 +1303,79 @@ function showHideShape(string_popup, cd_geocodi, cd_geocodd, id, action){
         shapes_setor[cd_geocodd][cd_geocodi] = {shape: null, state: false};
     }
     if(action == "Sector"){
-        if(shapes_setor[cd_geocodd][cd_geocodi].state == false){
-            if(shapes_setor[cd_geocodd][cd_geocodi].shape == null){
-                $.ajax({
-                    dataType: "json",
-                    url: "procedure/getSectorByCd_geocodi/",
-                    async: false,
-                    data: {data: cd_geocodi, var: "coordinates"},
-                    success: function(result){
-                        var polygon = {
-                            "type": "Feature",
-                                "properties": {
-                                },
-                                "geometry": {
-                                "type": "Polygon",
-                                    "coordinates": [
-                                        JSON.parse(result[0]["coordinates"])["coordinates"][0],
-                                ]
-                            }
-                        };
-                        var geojsonLayer = new L.GeoJSON(polygon);
-                        map.addLayer(geojsonLayer);
-                        shapes_setor[cd_geocodd][cd_geocodi].shape = geojsonLayer.setStyle(myStyle);
-                    }
-                });
+        if(document.getElementById("button-shape_" + id).innerText == "Mostrar setor"){
+            if(shapes_setor[cd_geocodd][cd_geocodi].state == false){
+                if(shapes_setor[cd_geocodd][cd_geocodi].shape == null){
+                    $.ajax({
+                        dataType: "json",
+                        url: "procedure/getSectorByCd_geocodi/",
+                        async: false,
+                        data: {data: cd_geocodi, var: "coordinates"},
+                        success: function(result){
+                            var polygon = {
+                                "type": "Feature",
+                                    "properties": {
+                                    },
+                                    "geometry": {
+                                    "type": "Polygon",
+                                        "coordinates": [
+                                            JSON.parse(result[0]["coordinates"])["coordinates"][0],
+                                    ]
+                                }
+                            };
+                            var geojsonLayer = new L.GeoJSON(polygon);
+                            map.addLayer(geojsonLayer);
+                            shapes_setor[cd_geocodd][cd_geocodi].shape = geojsonLayer;
+                        }
+                    });
+                }
+                else{
+                    map.addLayer(shapes_setor[cd_geocodd][cd_geocodi].shape);                
+                }
+                highlightedStyle = {
+                    "color": "#3074cc",
+                    "opacity": 0.6,
+                    "stroke": true,
+                    "fill": false,
+                };
+                shapes_setor[cd_geocodd][cd_geocodi].shape.setStyle(highlightedStyle);
+                shapes_setor[cd_geocodd][cd_geocodi].state = true;
+                const string_button_popup = ("<button type='button' id='button-shape_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + ", " + cd_geocodd + ", " + id + ", \"Sector\")'> Esconder setor </button> ");
+                const string_button_popup_all_shapes = ("<button type='button' id='button-all_shapes_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + ", " + cd_geocodd + "," + id + ", \"All Sectors\")'>" + document.getElementById("button-all_shapes_" + id).innerText + "</button>");
+                popup_marker_hash[cd_geocodd][cd_geocodi].setContent(string_popup + string_button_popup + string_button_popup_all_shapes);
+                popup_marker_hash[cd_geocodd][cd_geocodi].update();                     
             }
             else{
-                map.addLayer(shapes_setor[cd_geocodd][cd_geocodi].shape);                
+                highlightedStyle = {
+                    "color": "#3074cc",
+                    "opacity": 0.6,
+                    "stroke": true,
+                    "fill": false,
+                };
+                shapes_setor[cd_geocodd][cd_geocodi].shape.setStyle(highlightedStyle);
+                shapes_setor[cd_geocodd][cd_geocodi].state = true;
+                const string_button_popup = ("<button type='button' id='button-shape_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + ", " + cd_geocodd + ", " + id + ", \"Sector\")'> Esconder setor </button> ");
+                const string_button_popup_all_shapes = ("<button type='button' id='button-all_shapes_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + ", " + cd_geocodd + "," + id + ", \"All Sectors\")'>" + document.getElementById("button-all_shapes_" + id).innerText + "</button>");
+                popup_marker_hash[cd_geocodd][cd_geocodi].setContent(string_popup + string_button_popup + string_button_popup_all_shapes);
+                popup_marker_hash[cd_geocodd][cd_geocodi].update();  
             }
-            shapes_setor[cd_geocodd][cd_geocodi].state = true;
-            const string_button_popup = ("<button type='button' id='button-shape_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + ", " + cd_geocodd + ", " + id + ", \"Sector\")'> Ocultar setor </button> ");
-            const string_button_popup_all_shapes = ("<button type='button' id='button-all_shapes_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + ", " + cd_geocodd + "," + id + ", \"All Sectors\")'>" + document.getElementById("button-all_shapes_" + id).innerText + "</button>");
-            popup_marker_hash[cd_geocodd][cd_geocodi].setContent(string_popup + string_button_popup + string_button_popup_all_shapes);
-            popup_marker_hash[cd_geocodd][cd_geocodi].update();                     
         }
         else{
-            map.removeLayer(shapes_setor[cd_geocodd][cd_geocodi].shape);
-            shapes_setor[cd_geocodd][cd_geocodi].state = false;
-            const string_button_popup = ("<button type='button' id='button-shape_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + "," + cd_geocodd + ", " + id + ", \"Sector\")'> Exibir setor </button> ");
-            const string_button_popup_all_shapes = ("<button type='button' id='button-all_shapes_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + ", " + cd_geocodd + ", " + id + ", \"All Sectors\")'>" + document.getElementById("button-all_shapes_" + id).innerText + "</button>");
-            popup_marker_hash[cd_geocodd][cd_geocodi].setContent(string_popup + string_button_popup + string_button_popup_all_shapes);
-            popup_marker_hash[cd_geocodd][cd_geocodi].update();                     
+            if(document.getElementById("button-all_shapes_" + id).innerText == "Esconder setores do distrito"){
+                shapes_setor[cd_geocodd][cd_geocodi].shape.setStyle(myStyle);
+                const string_button_popup = ("<button type='button' id='button-shape_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + "," + cd_geocodd + ", " + id + ", \"Sector\")'> Mostrar setor </button> ");
+                const string_button_popup_all_shapes = ("<button type='button' id='button-all_shapes_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + ", " + cd_geocodd + ", " + id + ", \"All Sectors\")'>" + document.getElementById("button-all_shapes_" + id).innerText + "</button>");
+                popup_marker_hash[cd_geocodd][cd_geocodi].setContent(string_popup + string_button_popup + string_button_popup_all_shapes);
+                popup_marker_hash[cd_geocodd][cd_geocodi].update();
+            }
+            else{
+                map.removeLayer(shapes_setor[cd_geocodd][cd_geocodi].shape);
+                shapes_setor[cd_geocodd][cd_geocodi].state = false;
+                const string_button_popup = ("<button type='button' id='button-shape_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + "," + cd_geocodd + ", " + id + ", \"Sector\")'> Mostrar setor </button> ");
+                const string_button_popup_all_shapes = ("<button type='button' id='button-all_shapes_" + id + "' class='btn btn-dark btn-sm' onclick='showHideShape(\"" + string_popup + "\"" + "," + cd_geocodi + ", " + cd_geocodd + ", " + id + ", \"All Sectors\")'>" + document.getElementById("button-all_shapes_" + id).innerText + "</button>");
+                popup_marker_hash[cd_geocodd][cd_geocodi].setContent(string_popup + string_button_popup + string_button_popup_all_shapes);
+                popup_marker_hash[cd_geocodd][cd_geocodi].update();
+            }
         }
     }
     else if(action == "All Sectors"){
@@ -1354,14 +1386,6 @@ function showHideShape(string_popup, cd_geocodi, cd_geocodd, id, action){
                 success: function(data) {
                     shape = new L.geoJson(data,
                         {onEachFeature: function(feature, layer) {
-                            // layer.bindTooltip(`População Total: ${parseInt(feature.properties.POPULACAO_TOTAL)} </br>
-                            //                    População Feminina: ${parseInt(feature.properties.POPULACAO_MULHER)} </br>
-                            //                    População Masculina: ${parseInt(feature.properties.POPULACAO_HOMEM)} </br>
-                            //                    População Branca: ${parseInt(feature.properties.POPULACAO_BRANCA)} </br>
-                            //                    População Preta: ${parseInt(feature.properties.POPULACAO_PRETA)} </br>
-                            //                    População Amarela: ${parseInt(feature.properties.POPULACAO_AMARELA)} </br>
-                            //                    População Parda: ${parseInt(feature.properties.POPULACAO_PARDA)} </br>
-                            //                    População Indígena: ${parseInt(feature.properties.POPULACAO_INDIGENA)} </br>`, {closeButton: false});
                             var feature_cd_geocodi = feature.properties.CD_GEOCODI;
                             if(shapes_setor[cd_geocodd][feature_cd_geocodi] == undefined){
                                 shapes_setor[cd_geocodd][feature_cd_geocodi] = {shape: null, state: false};
@@ -1381,7 +1405,7 @@ function showHideShape(string_popup, cd_geocodi, cd_geocodd, id, action){
             });
             $.each(popup_marker_hash[cd_geocodd], function(index, popup){
                 content = popup.getContent();
-                popup_marker_hash[cd_geocodd][index].setContent(content.replace("Exibir setores do distrito", "Ocultar setores do distrito").replace("Exibir setor", "Ocultar setor"));
+                popup_marker_hash[cd_geocodd][index].setContent(content.replace("Mostrar setores do distrito", "Esconder setores do distrito"));
                 popup_marker_hash[cd_geocodd][index].update();  
             });                   
         }
@@ -1394,7 +1418,7 @@ function showHideShape(string_popup, cd_geocodi, cd_geocodd, id, action){
             }
             $.each(popup_marker_hash[cd_geocodd], function(index, popup){
                     content = popup.getContent();
-                    popup_marker_hash[cd_geocodd][index].setContent(content.replace("Ocultar setores do distrito", "Exibir setores do distrito").replace("Ocultar setor", "Exibir setor"));
+                    popup_marker_hash[cd_geocodd][index].setContent(content.replace("Esconder setores do distrito", "Mostrar setores do distrito"));
                     popup_marker_hash[cd_geocodd][index].update();  
             });
         }
