@@ -933,6 +933,9 @@ function limpar() {
 
     $("#heatmap-leg").toggleClass("hide");
 
+    $("#6").attr("data-placeholder","Selecione um diagnóstico principal acima"); // update the placeholder of the specific cid10 filter
+    $("#6").select2();
+
     clearMap();
 }
 
@@ -1163,11 +1166,21 @@ function dadosInput() {
 
     for (i = 0; i < 24; i++) {
         name = "#" + i;
-        $(name).select2({
-            placeholder: "Todos",
-            allowClear: true,
-            tags: true
-        });
+        if(i == 6){
+            $(name).select2({
+                // define a different placeholder for the specific cid10 filter
+                placeholder: "Selecione um diagnóstico principal acima",
+                allowClear: true,
+                tags: true
+            });
+        }
+        else{
+            $(name).select2({
+                placeholder: "Todos",
+                allowClear: true,
+                tags: true
+            });
+        }        
     }
 
     if (cid_array == null) {
@@ -1264,9 +1277,20 @@ function cid10_change(){
     $("#6").empty(); //#6 is the id of the specific cid10 multiselect
     $.getJSON('/procedure/proceduresCid10Specific', data, function(result) {
         if (Object.keys(result).length > 0){
+            // change the placeholder content for specific cid10 filter
+            $("#6").attr("data-placeholder","Todos");
+            $("#6").select2();
             $('#6').prop('disabled', false);
         }
         else{
+            // change the placeholder content for specific cid10 filter
+            if($('#5').val()){
+                $("#6").attr("data-placeholder","Nenhuma opção encontrada");
+            }
+            else{
+                $("#6").attr("data-placeholder","Selecione um diagnóstico principal acima");
+            }            
+            $("#6").select2();
             $('#6').prop('disabled', true);
         }
         $.each(result, function(index, value){
