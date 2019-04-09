@@ -2,3 +2,64 @@
     width: 47vw;
     flex: 1 1 auto;
   }
+
+  .container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 15px;
+  }
+
+  .card-div {
+    margin-top: 15px;
+    width: 90vw;
+    box-sizing: border-box;
+    -webkit-box-shadow: 3px 3px 10px 1px rgba(170,170,170,0.75);
+    -moz-box-shadow: 3px 3px 10px 1px rgba(170,170,170,0.75);
+    box-shadow: 3px 3px 10px 1px rgba(170,170,170,0.75);
+    border-radius: 10px 10px 0 0;
+  }
+
+  .card-header {
+    background-color: #f1f1f1;
+    padding: .5em;
+    text-align: center;
+    position: relative;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .card-header h1 {
+    font-size: 2em;
+    margin: 0;
+  }
+
+  .buttons-div {
+    position: absolute;
+    right: 15px;
+    top: 12.5px;
+  }
+
+  .fas {
+    margin: 0 2px;
+  }
+
+  .buttons-div i {
+    font-size: 1.5em;
+  }
+
+  .card-body {
+    padding: .5em 15px;
+  }
+
+  .card-body.hidden {
+    width: 0;
+  }
+
+  .card-body .title {
+    font-weight: bold;
+    text-decoration: underline;
+  }
+
+  .card-body p span {
+    font-weight: bold;
+  }
