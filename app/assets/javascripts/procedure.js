@@ -1336,7 +1336,8 @@ function showHideShape(string_popup, cd_geocodi, cd_geocodd, id, action){
                     "color": "#3074cc",
                     "opacity": 0.6,
                     "stroke": true,
-                    "fill": false,
+                    "fill": true,
+                    "fillColor": "#3074cc"
                 };
                 shapes_setor[cd_geocodd][cd_geocodi].shape.setStyle(highlightedStyle);
                 shapes_setor[cd_geocodd][cd_geocodi].state = true;
@@ -1350,7 +1351,9 @@ function showHideShape(string_popup, cd_geocodi, cd_geocodd, id, action){
                     "color": "#3074cc",
                     "opacity": 0.6,
                     "stroke": true,
-                    "fill": false,
+                    "fill": true,
+                    "fillColor": "#3074cc"
+
                 };
                 shapes_setor[cd_geocodd][cd_geocodi].shape.setStyle(highlightedStyle);
                 shapes_setor[cd_geocodd][cd_geocodi].state = true;
