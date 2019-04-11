@@ -313,7 +313,7 @@ function change(element) {
         data = getData();
         buscar(data);
     }
-    if (cleaning == false && auto == true) {
+    else if (cleaning == false && auto == true) {
         data = getData();
         setTimeout(function() {
             filters_value(data);
