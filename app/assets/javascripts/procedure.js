@@ -436,10 +436,12 @@ function setHeatmapData(source, heat_type, radius) {
         else if(heat_type === "rate") {
             // hate heatmap gradient is different
             if (document.getElementById('checkGradient').checked) {
-                gradient = { 0.1: "#D3C9F8", 0.2: "#7B5CEB", 0.3: "#4E25E4", 1.0: "#3816B3"}
+                //gradient = { 0.1: "#D3C9F8", 0.2: "#7B5CEB", 0.3: "#4E25E4", 1.0: "#3816B3"}
+                gradient = {0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"};
                 $("#gradient").addClass("dalt");
             } else {
-                gradient = { 0.1: "#2bffd3", 0.2: "#fffd57", 0.3: "#f93434"}
+                //gradient = { 0.1: "#2bffd3", 0.2: "#fffd57", 0.3: "#f93434"}
+                gradient = { 0.25: "#2bffd3", 0.62: "#fffd57", 1.0: "#f93434"}
                 $("#gradient").removeClass("dalt");
             }
 
