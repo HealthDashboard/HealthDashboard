@@ -16,4 +16,4 @@ ADD . /health-dashboard/
 RUN gem install bundler --no-doc
 RUN bundle install
 
-ENTRYPOINT ["./run.sh"]
+ENTRYPOINT ["./bin/wait-for-it.sh", "--timeout=0", "postgresql:5432", "--", "./run.sh"]
