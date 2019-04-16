@@ -27,4 +27,4 @@ services:
     - POSTGRES_USER=health-user
     - POSTGRES_PASSWORD=health-password
     volumes:
-    - ./tmp/postgresql:/var/lib/postgresql
+    - ./data/postgresql:/var/lib/postgresql
