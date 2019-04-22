@@ -185,7 +185,7 @@ class ProcedureController < ApplicationController
 	def proceduresMaxValues
 		parsed_json = JSON.parse params[:data]
 
-		getProcedures()
+		getProceduresWithoutSliders()
 		render json: "Bad request", status: 400 and return unless @procedures != nil
 
 		max = []
@@ -208,7 +208,7 @@ class ProcedureController < ApplicationController
 	def proceduresQuartiles
 		parsed_json = JSON.parse params[:data]
 
-		getProcedures()
+		getProceduresWithoutSliders()
 		render json: "Bad request", status: 400 and return unless @procedures != nil
 
 		quartiles = []
@@ -668,6 +668,43 @@ private
 					@procedures = @procedures.where(slider + ' >= ?', min) unless min == 0
 				else
 					@procedures = @procedures.where(slider + ' >= ? AND ' + slider + ' <= ?', min, max)
+				end
+			end
+		end
+
+		if !(parsed_json["start_date"].to_s.empty?) || !(parsed_json["end_date"].to_s.empty?)
+			start_date = Date.parse parsed_json["start_date"]
+			end_date = Date.parse parsed_json["end_date"]
+			@procedures = @procedures.where('date BETWEEN ? AND ?', start_date, end_date)
+		end
+
+		@procedures = nil unless @procedures != Procedure.where(nil)
+	end
+
+	# Params: [filters values array]
+	def getProceduresWithoutSliders
+		params.require(:data)
+		parsed_json = JSON.parse params[:data]
+		@procedures = Procedure.where(nil)
+
+		if parsed_json["send_all"] == "True"
+			@procedures = Procedure.all
+			return
+		end
+
+		if parsed_json["genders"] != nil && parsed_json["genders"] != []
+			@procedures = Procedure.where(gender: parsed_json["genders"])
+		end
+
+		@filters_name.each.with_index do |filter, i|
+			if parsed_json["filters"] != nil && !(parsed_json["filters"][i].to_a.empty?)
+				# Special case for cid filters, because some of the datas have 4 characters and some of them just 3 characters
+				if i == 5 || i == 7 || i == 8
+					tmp = parsed_json["filters"][i]
+					tmp.map! {|word| "#{word}%"}
+					@procedures = @procedures.where(filter + " LIKE ANY ( array[?] )", tmp)
+				else
+					@procedures = @procedures.where(filter => parsed_json["filters"][i])
 				end
 			end
 		end
