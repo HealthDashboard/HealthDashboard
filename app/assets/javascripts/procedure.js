@@ -313,9 +313,14 @@ function change(element) {
         buscar(data);
     }
     if (cleaning == false && auto == true) {
-        data = getData()
+        // It is important to point that a setTimeout call may not be a good solution
+        // But the data of the sliders should be updated before the search
+        data = getData();
+        setTimeout(function(){ 
+            filters_value(data);
+        }, 10000);
+        data = getData();
         buscar(data);
-        filters_value(data);
     }
 }
 
