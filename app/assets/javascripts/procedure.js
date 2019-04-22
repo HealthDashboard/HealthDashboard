@@ -22,7 +22,7 @@ var max_sliders = null;
 var health_centre_markers;
 
 //** Print vars **//
-var filters_text, filters, genders, start_date, end_date, dist_min, dist_max;
+var filters_text, filters, genders, start_date, end_date, dist_min, dist_max, sliders;
 var printPlugin;
 
 //** Open Street view vars **//
@@ -48,6 +48,7 @@ function initProcedureMap() {
     filters_text = [];
     filters = [];
     genders = [];
+    sliders = [];
     start_date = null;
     end_date = null;
     dist_min = null;
@@ -313,12 +314,10 @@ function change(element) {
         buscar(data);
     }
     if (cleaning == false && auto == true) {
-        // It is important to point that a setTimeout call may not be a good solution
-        // But the data of the sliders should be updated before the search
         data = getData();
-        setTimeout(function(){ 
+        setTimeout(function() {
             filters_value(data);
-        }, 10000);
+        }, 1000);
         data = getData();
         buscar(data);
     }
@@ -357,12 +356,6 @@ function getData() {
 
     if(sexo_feminino.checked)
         genders.push("F");
-
-    sliders = [];
-    for (i = 0; i < 6; i++) {
-        var values = $("#slider_" + i.toString()).slider("getValue");
-        sliders.push([values[0], values[1]]);
-    }
 
     data_aux = {send_all: "False", filters: filters, genders: genders, start_date: start_date.toString(), end_date: end_date.toString(), sliders: sliders};
     data = {"data": JSON.stringify(data_aux)} // Fix hash to array problem on controller
@@ -1066,6 +1059,7 @@ function filters_value(data) {
             $("#slider_" + index.toString()).on("slide", function(slideEvt) {
                 slider_min  = "input_" + slideEvt.currentTarget.id + "_min";
                 slider_max  = "input_" + slideEvt.currentTarget.id + "_max";
+                sliders[index] = [slideEvt.value[0], slideEvt.value[1]];
                 document.getElementById(slider_min).value = slideEvt.value[0];
                 document.getElementById(slider_max).value = slideEvt.value[1];
             });
@@ -1234,11 +1228,13 @@ function inputSlider(){
             $("#slider_" + i.toString()).slider("setValue", [minValue, maxValue]);
             document.getElementById("input_slider_" + i + "_min").value = minValue;
             document.getElementById("input_slider_" + i + "_max").value = maxValue;
+            sliders[i] = [minValue, maxValue];
         }
         else {
             document.getElementById("input_slider_" + i + "_min").value = maxValue;
             document.getElementById("input_slider_" + i + "_max").value = minValue;
             $("#slider_" + i.toString()).slider("setValue", [maxValue, minValue]);
+            sliders[i] = [maxValue, minValue];
         }
     }
 }
