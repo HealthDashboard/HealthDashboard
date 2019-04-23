@@ -14,18 +14,24 @@
     margin-top: 15px;
     width: 90vw;
     box-sizing: border-box;
-    -webkit-box-shadow: 3px 3px 10px 1px rgba(170,170,170,0.75);
-    -moz-box-shadow: 3px 3px 10px 1px rgba(170,170,170,0.75);
-    box-shadow: 3px 3px 10px 1px rgba(170,170,170,0.75);
-    border-radius: 10px 10px 0 0;
+    -webkit-box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    -moz-box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    border-radius: 0 2px ;
+    padding: 2em;
+    border-left: 5px #00c89e solid;
   }
 
   .card-header {
-    background-color: #f1f1f1;
     padding: .5em;
-    text-align: center;
+    text-align: left;
     position: relative;
     border-radius: 10px 10px 0 0;
+    font-weight: bold;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .card-header h1 {
@@ -34,13 +40,37 @@
   }
 
   .buttons-div {
-    position: absolute;
-    right: 15px;
-    top: 12.5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
   }
 
-  .fas {
-    margin: 0 2px;
+  .buttons-div .fas {
+    font-size: 1.5em;
+    margin: 0 3px;
+    cursor: pointer;
+  }
+
+  .buttons-div .fas:hover {
+    color: #00c89e;
+  }
+
+  .buttons-div .main-button {
+    font-size: 2.5em;
+    margin-left: 10px;
+  }
+
+  .buttons-div.active .main-button {
+    transform: rotate(135deg);
+  }
+
+  .buttons-div .config-buttons {
+    opacity: 0;
+  }
+
+  .buttons-div.active .config-buttons {
+    opacity: 1;
   }
 
   .buttons-div i {
