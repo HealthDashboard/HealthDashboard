@@ -110,10 +110,13 @@
     padding: .5em 15px;
     transform: scaleY(0);
     transform-origin: top;
-    transition: transform 250ms;
+    max-height: 0;
+    transition: transform 250ms,
+                max-height 250ms;
   }
 
   .card-div.active .card-body {
+    max-height: 1000px;
     transform: scaleY(1);
   }
 
