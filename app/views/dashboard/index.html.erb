@@ -4,15 +4,15 @@
 <link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
 
 <div class="container">
-  <div class="card-div">
+  <div id="main" class="card-div active">
     <div class="card-header">
       <h1>Caracterização dos Dados e filtros aplicados</h1>
-      <div class="buttons-div active">
+      <div class="buttons-div">
         <i class="config-buttons fas fa-download"></i>
         <i class="config-buttons fas fa-print"></i>
         <i class="config-buttons fas fa-info-circle"></i>
         <i class="config-buttons fas fa-thumbtack"></i>
-        <i class="main-button fas fa-plus-circle"></i>
+        <i class="main-button fas fa-plus-circle" onclick="on_click('main')"></i>
       </div>
     </div>
     <div class="card-body">
@@ -34,7 +34,7 @@
     </div>
   </div>
 
-  <div class="card-div">
+  <div id="rankings" class="card-div">
     <div class="card-header">
       <h1>Rankings</h1>
       <div class="buttons-div">
@@ -42,10 +42,11 @@
         <i class="config-buttons fas fa-print"></i>
         <i class="config-buttons fas fa-info-circle"></i>
         <i class="config-buttons fas fa-thumbtack"></i>
-        <i class="main-button fas fa-plus-circle"></i>
+        <i class="main-button fas fa-plus-circle" onclick="on_click('rankings')"></i>
       </div>
     </div>
-    <div class="card-body hidden">
+    <div class="card-body">
+      HELLO
     </div>
   </div>
 <!-- <div class="w3-container" id="filters-div">

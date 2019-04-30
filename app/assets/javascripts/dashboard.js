@@ -31,6 +31,11 @@ var chart_type = {"CRS":"bar", "DA":"bar", "PR":"bar", "STS":"bar", "age_code":"
  "days_ui":"bar-line", "distance":"bar-line", "finance":"pie", "gender":"pie", "gestor_ide":"pie", "lv_instruction":"pie", "proce_re":"bar",
  "race":"pie", "specialty_id":"pie", "treatment_type":"pie", "val_total":"bar-line"};
 
+function on_click(id) {
+  console.log("Hello")
+  $("#" + id).toggleClass("active")
+}
+
 function init_dashboard_chart() {
     dynamic = false;
     dashboard_legend_clicked = false;
@@ -120,7 +125,7 @@ function create_dashboard_charts() {
             }
           });
     }
-    
+
 
     create_proceduresPerSpecialties(result["specialty_id"], "specialty_id");
     create_specialties_distance_between_patients_hospital(data);
@@ -182,12 +187,12 @@ function create_proceduresPerSpecialties(data){
             top: 20,
             bottom: 20,
         },
-        
+
         tooltip : {
             trigger: 'item',
             formatter: "({d}%)"
         },
-    
+
         series : [
             {
                 type:'pie',
@@ -215,15 +220,15 @@ function create_specialties_distance_between_patients_hospital(data){
     }
 
     var formatData = [];
-    
+
     formatData.push(['amount', 'variable']);
-    
-    $.getJSON(path, data, function(result){     
+
+    $.getJSON(path, data, function(result){
         $.each(result, function(name, number) {
             // console.log([name, number]);
             formatData.push([name, number]);
         });
-        
+
         var option = {
             dataset: {
                 source: formatData
@@ -241,16 +246,16 @@ function create_specialties_distance_between_patients_hospital(data){
                 trigger: 'item',
                 formatter: "{c} "
             },
-            
+
             grid: {containLabel: true},
-            
+
             xAxis: {
-                type: 'value'    
+                type: 'value'
             },
             yAxis: {
                 type: 'category'
             },
-            
+
             series: [
                 {
                     type: 'bar',
@@ -263,10 +268,10 @@ function create_specialties_distance_between_patients_hospital(data){
                 }
         ]
     };
-    
+
     myChart.setOption(option);
     });
-}    
+}
 
 /* Gráfico de Total de Internações Hospitalares */
 function create_specialties_total(data) {
@@ -336,7 +341,7 @@ function create_analise(data){
     var formatData = [];
     formatData.push(['variable', 'amount']);
     // var max = 0;
-    
+
     if (dynamic == false) {
         var path = '/distance_metric.json'
     } else {
@@ -345,14 +350,14 @@ function create_analise(data){
 
     var aux = []
 
-    $.getJSON(path, data, function(result){     
+    $.getJSON(path, data, function(result){
         $.each(result, function(name, number) {
             formatData.push([name, number]);
-            
+
         });
-        
+
         // console.log(formatData.length)
-        
+
         option = {
             dataset: {
                 source: formatData,
@@ -364,18 +369,18 @@ function create_analise(data){
                 top: 20,
                 bottom: 20,
             },
-            
+
             tooltip : {
                 trigger: 'item',
                 formatter: "({d}%)"
             },
-        
+
             series : [
                 {
                     type:'pie',
                     radius : '50%',
                     center: ['39%', '50%'],
-    
+
                     encode: {
                         itemName: 'variable',
                         value: 'amount'
@@ -424,11 +429,11 @@ function populate_procedures_by_date() {
             },
             yAxis: {
                 type: 'value'
-                
+
             },
             series: [{
                 type: 'line'
-                
+
             }]
         };
 
@@ -487,7 +492,7 @@ function create_one_variable_graph(data, field){
     var formatData = [];
     formatData.push(['amount', 'variable']);
     var max = 0;
-    
+
     for(var i=0; i<data.length; i++){
         if(data[i][1] != null && data[i][0] != null){
             formatData.push([data[i][1], data[i][0].toString()]);

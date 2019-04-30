@@ -13,6 +13,7 @@
   .card-div {
     margin-top: 15px;
     width: 90vw;
+    height: 100%;
     box-sizing: border-box;
     -webkit-box-shadow: 0 2px 5px rgba(0,0,0,0.15);
     -moz-box-shadow: 0 2px 5px rgba(0,0,0,0.15);
@@ -20,6 +21,7 @@
     border-radius: 0 2px ;
     padding: 2em;
     border-left: 5px #00c89e solid;
+    flex-basis: auto;
   }
 
   .card-header {
@@ -59,9 +61,11 @@
   .buttons-div .main-button {
     font-size: 2.5em;
     margin-left: 10px;
+    transform: rotate(0deg);
+    transition: transform 250ms;
   }
 
-  .buttons-div.active .main-button {
+  .card-div.active .main-button {
     transform: rotate(135deg);
   }
 
@@ -69,8 +73,33 @@
     opacity: 0;
   }
 
-  .buttons-div.active .config-buttons {
+  .card-div.active .config-buttons {
     opacity: 1;
+    transform: translateX(0);
+  }
+
+  .buttons-div .fa-download {
+    transform: translateX(4em);
+    transition: opacity 200ms 100ms,
+                transform ease-out 200ms 100ms;
+  }
+
+  .buttons-div .fa-print {
+    transform: translateX(3em);
+    transition: opacity 200ms 150ms,
+                transform ease-out 200ms 150ms;
+  }
+
+  .buttons-div .fa-info-circle {
+    transform: translateX(2em);
+    transition: opacity 200ms 200ms,
+                transform ease-out 200ms 200ms;
+  }
+
+  .buttons-div .fa-thumbtack {
+    transform: translateX(1em);
+    transition: opacity 200ms 250ms,
+                transform ease-out 200ms 250ms;;
   }
 
   .buttons-div i {
@@ -79,10 +108,13 @@
 
   .card-body {
     padding: .5em 15px;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 250ms;
   }
 
-  .card-body.hidden {
-    width: 0;
+  .card-div.active .card-body {
+    transform: scaleY(1);
   }
 
   .card-body .title {
