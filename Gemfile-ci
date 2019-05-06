@@ -70,3 +70,6 @@ gem 'echarts-rails', :git => 'https://github.com/NaomiKodaira/echarts-rails.git'
 
 # Presentation visualizer
 gem 'slideshow', '~> 3.1'
+
+# Authentication
+gem 'devise'
