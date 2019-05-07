@@ -22,7 +22,7 @@ var max_sliders = null;
 var health_centre_markers;
 
 //** Print vars **//
-var filters_text, filters, genders, start_date, end_date, dist_min, dist_max;
+var filters_text, filters, genders, start_date, end_date, dist_min, dist_max, sliders;
 var printPlugin;
 
 //** Open Street view vars **//
@@ -36,6 +36,8 @@ var minimap;
 
 var metadata;
 
+var max_hash;
+
 //** Population sectors vars **//
 var population_sectors;
 
@@ -48,6 +50,7 @@ function initProcedureMap() {
     filters_text = [];
     filters = [];
     genders = [];
+    sliders = [];
     start_date = null;
     end_date = null;
     dist_min = null;
@@ -303,6 +306,7 @@ function automatic_search() {
 
 //** Called when any filter is altered, if automatic search is on it calls "buscar()" **//
 function change(element) {
+    
     // if the changed element is the specific cid10 filter, so the function called is cid10_change()
     var ids_to_change = ["slider_cluster", "slider_heatmap", "checkCluster", "checkHeatmap", "checkHeatmapRate", "checkGradient", "slider_opacity"];
     if (element.id == 5){
@@ -311,11 +315,13 @@ function change(element) {
     if (ids_to_change.includes(element.id)) {
         data = getData();
         buscar(data);
+        
     }
-    if (cleaning == false && auto == true) {
-        data = getData()
-        buscar(data);
+    else if (cleaning == false && auto == true) {
+        data = getData();
         filters_value(data);
+        data = getData();
+        buscar(data);
     }
 }
 
@@ -352,12 +358,6 @@ function getData() {
 
     if(sexo_feminino.checked)
         genders.push("F");
-
-    sliders = [];
-    for (i = 0; i < 6; i++) {
-        var values = $("#slider_" + i.toString()).slider("getValue");
-        sliders.push([values[0], values[1]]);
-    }
 
     data_aux = {send_all: "False", filters: filters, genders: genders, start_date: start_date.toString(), end_date: end_date.toString(), sliders: sliders};
     data = {"data": JSON.stringify(data_aux)} // Fix hash to array problem on controller
@@ -438,10 +438,12 @@ function setHeatmapData(source, heat_type, radius) {
         else if(heat_type === "rate") {
             // hate heatmap gradient is different
             if (document.getElementById('checkGradient').checked) {
-                gradient = { 0.1: "#D3C9F8", 0.2: "#7B5CEB", 0.3: "#4E25E4", 1.0: "#3816B3"}
+                //gradient = { 0.1: "#D3C9F8", 0.2: "#7B5CEB", 0.3: "#4E25E4", 1.0: "#3816B3"}
+                gradient = {0.25: "#D3C9F8", 0.55: "#7B5CEB", 0.85: "#4E25E4", 1.0: "#3816B3"};
                 $("#gradient").addClass("dalt");
             } else {
-                gradient = { 0.1: "#2bffd3", 0.2: "#fffd57", 0.3: "#f93434"}
+                //gradient = { 0.1: "#2bffd3", 0.2: "#fffd57", 0.3: "#f93434"}
+                gradient = { 0.25: "#2bffd3", 0.62: "#fffd57", 1.0: "#f93434"}
                 $("#gradient").removeClass("dalt");
             }
 
@@ -1042,102 +1044,42 @@ function print_maps() {
 }
 
 function filters_value(data) {
-    var max_hash = {}
+    max_hash = {}
     $.getJSON('/procedure/proceduresMaxValues', data, function(result) {
-        max_sliders = result;
-        $.each(result, function(index, max) {
-            slider = "slider_" + index.toString();
-            max_hash[slider] = max;
-            //it changes the possible maximum and minimum value of each slider
-            document.getElementById("input_slider_" + index.toString() + "_min").setAttribute("max", max_hash[slider]);
-            document.getElementById("input_slider_" + index.toString() + "_max").setAttribute("max", max_hash[slider]);
-            $("#" + slider).slider({
-                min: 0,
-                max: max_hash[slider],
-                step: 1,
-                value: [0, max_hash[slider]],
-            });
-
-            $("#slider_" + index.toString()).on("slide", function(slideEvt) {
-                slider_min  = "input_" + slideEvt.currentTarget.id + "_min";
-                slider_max  = "input_" + slideEvt.currentTarget.id + "_max";
-                document.getElementById(slider_min).value = slideEvt.value[0];
-                document.getElementById(slider_max).value = slideEvt.value[1];
-            });
-        });
         $.getJSON('/procedure/proceduresQuartiles', data, function(quartiles) {
-            for (i = 0; i < 6; i++) {
-                slider = "slider_" + i.toString();
-                if(quartiles[i][1] != parseInt(quartiles[i][1], 10)){
-                    //*The follow commands will catch 1 decimal places of median withour rouding and the number 1 (1||0) represents the number of decimal places*//
-                    var fixed = 1 || 0;
-                    fixed = Math.pow(10, fixed);
-                    $("#" + slider).slider({
-                        min: 0,
-                        max: max_hash[slider],
-                        step: 1,
-                        value: [0, max_hash[slider]],
-                        //highlight the [quartile1, quartile3] interval
-                        rangeHighlights: [{ "start": quartiles[i][0], "end": quartiles[i][2]}],
-                        tooltip: 'show',
-                    });
-                }
-                else{
-                    $("#" + slider).slider({
-                        min: 0,
-                        max: max_hash[slider],
-                        step: 1,
-                        value: [0, max_hash[slider]],
-                        //highlight the [quartile1, quartile3] interval
-                        rangeHighlights: [{ "start": quartiles[i][0], "end": quartiles[i][2]}],
-                        tooltip: 'show',
-                    });
-                }
-                $("#slider_" + i.toString()).on("change", function(slideEvt) {
+            $.each(result, function(index, max) {
+                slider = "slider_" + index.toString();
+                max_hash[slider] = max;
+                //it changes the possible maximum and minimum value of each slider
+                document.getElementById("input_slider_" + index.toString() + "_min").setAttribute("max", max_hash[slider]);
+                document.getElementById("input_slider_" + index.toString() + "_max").setAttribute("value", max_hash[slider]);
+                document.getElementById("input_slider_" + index.toString() + "_max").setAttribute("max", max_hash[slider]);
+                $("#" + slider).slider({
+                    min: 0,
+                    max: max_hash[slider],
+                    step: 1,
+                    value: [0, max_hash[slider]],
+                    rangeHighlights: [{ "start": quartiles[index][0],
+                                        "end": quartiles[index][2],
+                                        "class": "slider-rangeHighlight"}],
+                });    
+                $("#slider_" + index.toString()).on("slide", function(slideEvt) {
                     slider_min  = "input_" + slideEvt.currentTarget.id + "_min";
                     slider_max  = "input_" + slideEvt.currentTarget.id + "_max";
-                    document.getElementById(slider_min).value = slideEvt.value.newValue[0];
-                    document.getElementById(slider_max).value = slideEvt.value.newValue[1];
+                    document.getElementById(slider_min).value = slideEvt.value[0];
+                    document.getElementById(slider_max).value = slideEvt.value[1];
                 });
-            }
-            $("#slider_0").slider({
-                formatter: function(value) {
-                    return 'Mediana: ' + quartiles[0][1];
-                },
-            });
-            $("#slider_1").slider({
-                formatter: function(value) {
-                    return 'Mediana: ' + quartiles[1][1];
-                }
-            });
-            $("#slider_2").slider({
-                formatter: function(value) {
-                    return 'Mediana: ' + quartiles[2][1];
-                },
-            });
-            $("#slider_3").slider({
-                formatter: function(value) {
-                    return 'Mediana: ' + quartiles[3][1];
-
-                },
-            });
-            $("#slider_4").slider({
-                formatter: function(value) {
-                    return 'Mediana: ' + quartiles[4][1];
-                },
-            });
-            $("#slider_5").slider({
-                formatter: function(value) {
-                    var fixed = 1 || 0;
-                    fixed = Math.pow(10, fixed);
-                    const medianAux = Math.floor(quartiles[5][1] * fixed) / fixed;
-                    return 'Mediana: ' + medianAux.toLocaleString('pt-BR');;
-                },
-            });
-            // inputSlider();
-            // slider_fix()
+                $("#" + slider).slider({
+                    formatter: function(value) {
+                        return 'Mediana: ' + parseFloat(quartiles[index][1]).toLocaleString('pt-BR');
+                    },
+                });
+                $("#" + slider).slider('refresh');
+            })
         });
     });
+    // inputSlider();
+    // slider_fix();
 }
 
 //** Called when loading the page, init filters **//
@@ -1170,14 +1112,12 @@ function dadosInput() {
             $(name).select2({
                 // define a different placeholder for the specific cid10 filter
                 placeholder: "Selecione um diagnóstico principal acima",
-                allowClear: true,
                 tags: true
             });
         }
         else{
             $(name).select2({
                 placeholder: "Todos",
-                allowClear: true,
                 tags: true
             });
         }        
@@ -1229,11 +1169,13 @@ function inputSlider(){
             $("#slider_" + i.toString()).slider("setValue", [minValue, maxValue]);
             document.getElementById("input_slider_" + i + "_min").value = minValue;
             document.getElementById("input_slider_" + i + "_max").value = maxValue;
+            sliders[i] = [minValue, maxValue];
         }
         else {
             document.getElementById("input_slider_" + i + "_min").value = maxValue;
             document.getElementById("input_slider_" + i + "_max").value = minValue;
             $("#slider_" + i.toString()).slider("setValue", [maxValue, minValue]);
+            sliders[i] = [maxValue, minValue];
         }
     }
 }
