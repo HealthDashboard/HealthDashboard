@@ -36,6 +36,8 @@ var minimap;
 
 var metadata;
 
+var max_hash;
+
 //** Population sectors vars **//
 var population_sectors;
 
@@ -304,6 +306,7 @@ function automatic_search() {
 
 //** Called when any filter is altered, if automatic search is on it calls "buscar()" **//
 function change(element) {
+    
     // if the changed element is the specific cid10 filter, so the function called is cid10_change()
     var ids_to_change = ["slider_cluster", "slider_heatmap", "checkCluster", "checkHeatmap", "checkHeatmapRate", "checkGradient", "slider_opacity"];
     if (element.id == 5){
@@ -312,12 +315,11 @@ function change(element) {
     if (ids_to_change.includes(element.id)) {
         data = getData();
         buscar(data);
+        
     }
     else if (cleaning == false && auto == true) {
         data = getData();
-        setTimeout(function() {
-            filters_value(data);
-        }, 1000);
+        filters_value(data);
         data = getData();
         buscar(data);
     }
@@ -1042,7 +1044,7 @@ function print_maps() {
 }
 
 function filters_value(data) {
-    var max_hash = {}
+    max_hash = {}
     $.getJSON('/procedure/proceduresMaxValues', data, function(result) {
         $.getJSON('/procedure/proceduresQuartiles', data, function(quartiles) {
             $.each(result, function(index, max) {
@@ -1110,14 +1112,12 @@ function dadosInput() {
             $(name).select2({
                 // define a different placeholder for the specific cid10 filter
                 placeholder: "Selecione um diagnóstico principal acima",
-                allowClear: true,
                 tags: true
             });
         }
         else{
             $(name).select2({
                 placeholder: "Todos",
-                allowClear: true,
                 tags: true
             });
         }        
