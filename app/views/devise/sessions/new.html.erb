@@ -1,26 +1,41 @@
-<h2><%= t('.sign_in') %></h2>
+<%= stylesheet_link_tag "dashboard.css", "health_centres.css", "map_menu.css"%>
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+<div class="container">
+  <div class="w3-container">
+    <div class="w3-card-4" >
+      <header class="w3-container w3-light-grey">
+        <h1><center><%= t('.sign_in') %></center></h1>
+      </header>
 
-  <div class="field">
-    <%= f.label :password %><br />
-    <%= f.password_field :password, autocomplete: "current-password" %>
-  </div>
+      <div class="w3-container">
+        <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+          <div class="field">
+            <%= f.label :email %><br />
+            <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+          </div>
 
-  <% if devise_mapping.rememberable? %>
-    <div class="field">
-      <%= f.check_box :remember_me %>
-      <%= f.label :remember_me %>
+          <div class="field">
+            <%= f.label :password %><br />
+            <%= f.password_field :password, autocomplete: "current-password" %>
+          </div>
+
+          <% if devise_mapping.rememberable? %>
+            <div class="field">
+              <%= f.check_box :remember_me %>
+              <%= f.label :remember_me %>
+            </div>
+          <% end %>
+
+          <div class="actions">
+            <%= f.submit t('.sign_in') %>
+          </div>
+        <% end %>
+
+        <%= render "devise/shared/links" %>
+
+        <p>&nbsp;</p>
+      </div>
     </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit t('.sign_in') %>
   </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>
