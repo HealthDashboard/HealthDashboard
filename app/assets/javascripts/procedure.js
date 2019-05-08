@@ -361,6 +361,7 @@ function getData() {
 
     data_aux = {send_all: "False", filters: filters, genders: genders, start_date: start_date.toString(), end_date: end_date.toString(), sliders: sliders};
     data = {"data": JSON.stringify(data_aux)} // Fix hash to array problem on controller
+    console.log(data);
     return data
 }
 
@@ -1077,6 +1078,7 @@ function filters_value(data) {
                 $("#" + slider).slider('refresh');
             })
         });
+        max_sliders = result;
     });
     // inputSlider();
     // slider_fix();
@@ -1146,7 +1148,7 @@ function dadosInput() {
 }
 
 //*Called when the textbox slider reads a new value*//
-function inputSlider(){
+function inputSlider(element){
     var fields = max_sliders;
     //fields are the maximum value of each slider
     for (var i = 0; i < 6; i++) {
