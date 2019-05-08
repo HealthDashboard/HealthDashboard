@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
-  devise_for :users
+  devise_for :users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
   mount JasmineRails::Engine => '/specs' if defined?(JasmineRails)
   root to: 'application#home'
 
