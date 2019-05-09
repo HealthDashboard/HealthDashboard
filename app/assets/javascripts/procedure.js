@@ -361,7 +361,6 @@ function getData() {
 
     data_aux = {send_all: "False", filters: filters, genders: genders, start_date: start_date.toString(), end_date: end_date.toString(), sliders: sliders};
     data = {"data": JSON.stringify(data_aux)} // Fix hash to array problem on controller
-    console.log(data);
     return data
 }
 
@@ -1069,6 +1068,7 @@ function filters_value(data) {
                     slider_max  = "input_" + slideEvt.currentTarget.id + "_max";
                     document.getElementById(slider_min).value = slideEvt.value[0];
                     document.getElementById(slider_max).value = slideEvt.value[1];
+                    sliders[index] = [slideEvt.value[0], slideEvt.value[1]];
                 });
                 $("#" + slider).slider({
                     formatter: function(value) {
@@ -1148,7 +1148,7 @@ function dadosInput() {
 }
 
 //*Called when the textbox slider reads a new value*//
-function inputSlider(element){
+function inputSlider(){
     var fields = max_sliders;
     //fields are the maximum value of each slider
     for (var i = 0; i < 6; i++) {
