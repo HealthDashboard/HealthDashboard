@@ -916,6 +916,46 @@ function limpar() {
         name = ".select-" + i;
         $(name).val('').trigger('change');
     }
+    data = getData();
+    max_hash = {}
+    $.getJSON('/procedure/proceduresMaxValues', {"data": JSON.stringify({send_all: "True"})}, function(result) {
+        $.getJSON('/procedure/proceduresQuartiles', {"data": JSON.stringify({send_all: "True"})}, function(quartiles) {
+            $.each(result, function(index, max) {
+                slider = "slider_" + index.toString();
+                max_hash[slider] = max;
+                //it changes the possible maximum and minimum value of each slider and clean the inputs
+                document.getElementById("input_slider_" + index.toString() + "_min").value = 0;
+                document.getElementById("input_slider_" + index.toString() + "_min").setAttribute("max", max_hash[slider]);
+                document.getElementById("input_slider_" + index.toString() + "_max").value = max_hash[slider];
+                document.getElementById("input_slider_" + index.toString() + "_max").setAttribute("max", max_hash[slider]);
+                $("#" + slider).slider({
+                    min: 0,
+                    max: max_hash[slider],
+                    step: 1,
+                    value: [0, max_hash[slider]],
+                    rangeHighlights: [{ "start": quartiles[index][0],
+                                        "end": quartiles[index][2],
+                                        "class": "slider-rangeHighlight"}],
+                });    
+                $("#slider_" + index.toString()).on("slide", function(slideEvt) {
+                    slider_min  = "input_" + slideEvt.currentTarget.id + "_min";
+                    slider_max  = "input_" + slideEvt.currentTarget.id + "_max";
+                    document.getElementById(slider_min).value = slideEvt.value[0];
+                    document.getElementById(slider_max).value = slideEvt.value[1];
+                    sliders[index] = [slideEvt.value[0], slideEvt.value[1]];
+                });
+                $("#" + slider).slider({
+                    formatter: function(value) {
+                        return 'Mediana: ' + parseFloat(quartiles[index][1]).toLocaleString('pt-BR');
+                    },
+                });
+                // change the sliders variable to its initial state
+                sliders[index] = [0, max_hash[slider]];
+                $("#" + slider).slider('refresh');    
+            });
+            max_sliders = result;
+        });
+    });
     $("#intervalStart").val('').datepicker('destroy').datepicker();
     $("#intervalEnd").val('').datepicker('destroy').datepicker();
     $("#sexo_masculino").prop("checked", true);
@@ -1052,7 +1092,7 @@ function filters_value(data) {
                 max_hash[slider] = max;
                 //it changes the possible maximum and minimum value of each slider
                 document.getElementById("input_slider_" + index.toString() + "_min").setAttribute("max", max_hash[slider]);
-                document.getElementById("input_slider_" + index.toString() + "_max").setAttribute("value", max_hash[slider]);
+                document.getElementById("input_slider_" + index.toString() + "_max").value = max_hash[slider];
                 document.getElementById("input_slider_" + index.toString() + "_max").setAttribute("max", max_hash[slider]);
                 $("#" + slider).slider({
                     min: 0,
