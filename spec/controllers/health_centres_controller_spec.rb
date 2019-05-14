@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe HealthCentresController, type: 'controller' do
         describe 'without a logged in user' do
-                ['points', 'health_centre_count', 'hospital'].each do |method|
+                ['points', 'hospital', 'procedures', 'procedures_setor_healthcentre', 'specialties', 'specialty_distance', 'specialties_count', 'specialties_procedure_distance_average', 'distance_quartis', 'distances', 'distance_metric'].each do |method|
                         describe "#{method}" do
                                 it 'is expected to redirect to sign in' do
                                   self.send(:get, method, format: :json, params: {id: 1})

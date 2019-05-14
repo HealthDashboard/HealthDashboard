@@ -5,7 +5,7 @@ describe ProcedureController, type: 'controller' do
         describe 'without a logged in user' do
                 [
                   'download', 'healthCentresCnes', 'proceduresPerHealthCentre',
-                  'proceduresSetorCensitario', 'proceduresTotal',
+                  'proceduresSetorCensitario',
                   'proceduresInfo', 'proceduresMaxValues',
                   'proceduresQuartiles', 'proceduresDistanceGroup',
                   'proceduresClusterPoints', 'proceduresDistance',
@@ -14,7 +14,7 @@ describe ProcedureController, type: 'controller' do
                 ].each do |method|
                         describe "#{method}" do
                                 it 'is expected to redirect to sign in' do
-                                  self.send(:get, method, format: :json, params: {id: 1})
+                                  self.send(:get, method, format: :json, params: {id: 1, data: {}.to_json})
 
                                   expect(response.status).to eq(401) # unauthorized
                                 end

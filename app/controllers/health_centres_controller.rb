@@ -1,4 +1,6 @@
 class HealthCentresController < ApplicationController
+    before_action :authenticate_user!, except: [:total_distance_average, :health_centre_count]
+
     # GET /points
     # Params: None
     # Return: Return all helth centres
