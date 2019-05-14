@@ -1091,14 +1091,21 @@ function filters_value(data) {
                 slider = "slider_" + index.toString();
                 max_hash[slider] = max;
                 //it changes the possible maximum and minimum value of each slider
+                if (!sliders[index]) 
+                    sliders[index] = [0, max];
+                if (sliders[index][0] > max_hash[slider])
+                sliders[index][0] = 0;
+                if (sliders[index][1] > max_hash[slider])
+                sliders[index][1] = max_hash[slider]
                 document.getElementById("input_slider_" + index.toString() + "_min").setAttribute("max", max_hash[slider]);
-                document.getElementById("input_slider_" + index.toString() + "_max").value = max_hash[slider];
+                document.getElementById("input_slider_" + index.toString() + "_min").value = sliders[index][0];
+                document.getElementById("input_slider_" + index.toString() + "_max").value = sliders[index][1];
                 document.getElementById("input_slider_" + index.toString() + "_max").setAttribute("max", max_hash[slider]);
                 $("#" + slider).slider({
                     min: 0,
                     max: max_hash[slider],
                     step: 1,
-                    value: [0, max_hash[slider]],
+                    value: sliders[index],
                     rangeHighlights: [{ "start": quartiles[index][0],
                                         "end": quartiles[index][2],
                                         "class": "slider-rangeHighlight"}],
@@ -1120,8 +1127,6 @@ function filters_value(data) {
         });
         max_sliders = result;
     });
-    // inputSlider();
-    // slider_fix();
 }
 
 //** Called when loading the page, init filters **//
