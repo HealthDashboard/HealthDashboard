@@ -44,7 +44,9 @@
               <% if current_user&.admin? %>
                 <li class='nav-item' style="cursor: pointer"><%= link_to('Admin', admin_root_path) %></li>
               <% end %>
-              <li class='nav-item' style="cursor: pointer"><%= link_to('Logout', destroy_user_session_path, method: :delete) %></li>
+              <% unless current_user.nil? %>
+                <li class='nav-item' style="cursor: pointer"><%= link_to('Logout', destroy_user_session_path, method: :delete) %></li>
+              <% end %>
             </ul>
           </div>
           </nav>
