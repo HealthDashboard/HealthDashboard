@@ -1008,7 +1008,7 @@ function clearMap() {
 
 //** Called when "Dados Gerais" button is clicked, open "Dados Gerais" page and passes filter values to it **//
 function graphs() {
-    var w = window.open('dados-gerais');
+    var w = window.open(window.location.origin + '/dados-gerais');
     w._data_filters = getData();
     w._filters_text = filters_text;
     w._genders = genders;
