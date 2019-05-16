@@ -123,3 +123,10 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # Graphs
 gem 'echarts-rails', :git => 'https://github.com/NaomiKodaira/echarts-rails.git'
+
+# Authentication
+gem 'devise'
+gem 'devise-i18n'
+
+# Admin
+gem 'activeadmin'

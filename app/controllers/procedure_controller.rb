@@ -3,6 +3,7 @@ class ProcedureController < ApplicationController
 		:proceduresPerHealthCentre, :proceduresPerSpecialties, :proceduresDistance,
 		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario, :download, :downloadCluster, :proceduresVariables, 
 		:proceduresCompleteness, :proceduresPop, :proceduresCid10Specific]
+        before_action :authenticate_user!, except: [:proceduresTotal]
 
 	def initialize
 		# Cons, AVOID USING NUMBERS, make a constant instead

@@ -41,6 +41,12 @@
               <!-- <%= link_to "Dados Gerais", dados_gerais_path, id: 'nav_dados_gerais', class: 'nav-link' %></li> -->
               <li class='nav-item <%= 'active' if current_page?('/about')%>' style="cursor: pointer" onclick="about()"><a class="nav-link">Sobre</a></li>
               <li class='nav-item <%= 'active' if current_page?('/faq')%>' style="cursor: pointer" onclick="faq()"><a class="nav-link">Perguntas Frequentes</a></li>
+              <% if current_user&.admin? %>
+                <li class='nav-item' style="cursor: pointer"><%= link_to('Admin', admin_root_path) %></li>
+              <% end %>
+              <% unless current_user.nil? %>
+                <li class='nav-item' style="cursor: pointer"><%= link_to('Logout', destroy_user_session_path) %></li>
+              <% end %>
             </ul>
           </div>
           </nav>
