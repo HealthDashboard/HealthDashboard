@@ -18,6 +18,7 @@
 //= require bootstrap-datepicker
 //= require select2
 //= require_tree .
+//= stub active_admin
 //= require turbolinks
 //= require leaflet.markercluster
 //= require echarts-en
