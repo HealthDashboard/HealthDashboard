@@ -12,7 +12,7 @@ services:
     - POSTGRES_USER=health-user
     - POSTGRES_PASSWORD=health-password
     - RAILS_ENV=docker-compose
-    links:
+    depends_on:
     - postgresql
     ports:
     - "3000:3000"
@@ -27,4 +27,4 @@ services:
     - POSTGRES_USER=health-user
     - POSTGRES_PASSWORD=health-password
     volumes:
-    - ./tmp/postgresql:/var/lib/postgresql
+    - ./data/postgresql:/var/lib/postgresql
