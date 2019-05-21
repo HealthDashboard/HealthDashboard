@@ -177,7 +177,7 @@ function download(dataFilters, clusterDownload) {
         type: "POST",
         contentType: 'application/json',
         dataType: 'text',
-        url: 'procedure/download.csv',
+        url: 'procedure/download',
         data: JSON.stringify(data_param),
         success: function(result) {
             var uri = "data:text/csv;Content-Type:text/csv"
