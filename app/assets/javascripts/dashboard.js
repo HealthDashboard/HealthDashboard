@@ -31,11 +31,6 @@ var chart_type = {"CRS":"bar", "DA":"bar", "PR":"bar", "STS":"bar", "age_code":"
  "days_ui":"bar-line", "distance":"bar-line", "finance":"pie", "gender":"pie", "gestor_ide":"pie", "lv_instruction":"pie", "proce_re":"bar",
  "race":"pie", "specialty_id":"pie", "treatment_type":"pie", "val_total":"bar-line"};
 
-function on_click(id) {
-  console.log("Hello")
-  $("#" + id).toggleClass("active")
-}
-
 function init_dashboard_chart() {
     dynamic = false;
     dashboard_legend_clicked = false;
@@ -823,4 +818,12 @@ function formatCID (data) {
 function changeChart(){
     const field = document.getElementById("select-chart").value;
     create_one_variable_graph(result[field], field);
+}
+
+
+//*** DOM Functions ****//
+
+function on_click(id) {
+  console.log("Hello")
+  $("#" + id).toggleClass("active")
 }

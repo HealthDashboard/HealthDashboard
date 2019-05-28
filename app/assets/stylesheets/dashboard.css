@@ -125,6 +125,6 @@
     text-decoration: underline;
   }
 
-  .card-body p span {
+  .bold {
     font-weight: bold;
   }

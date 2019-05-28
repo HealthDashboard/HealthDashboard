@@ -18,18 +18,19 @@
     <div class="card-body">
       <p class="title">Base de dados - totais</p>
       <p>
-        <span>Fonte:</span> Sistema de Internações Hospitalares SUS - SMS/SP<br>
-        <span>Total de registros:</span> 554.202<br>
-        <span>Território/Unidade de análise:</span> Municipio de São Paulo
+        <span class="bold">Fonte:</span> <span id="fonte-base">Sistema de Internações Hospitalares SUS - SMS/SP</span><br>
+        <span class="bold">Total de registros:</span> <span id="total-base">554.202</span><br>
+        <span class="bold">Território/Unidade de análise:</span> <span id="territorio-base">Municipio de São Paulo</span>
       </p>
       <br>
       <p class="title">Dados selecionados (com base nos filtros)</p>
-      <p>
-        <span>Período:</span> 01/01/2015 a 31/03/2015<br>
-        <span>Total de registros:</span> 37.102 (6,69%)<br>
-        <span>Território/Unidade de análise:</span> CRS Norte<br>
-        <span>Sexo:</span> M, F<br>
-        <span>Caráter do atendimento:</span> Urgencia
+      <p id="filters-text">
+        <span class="bold">Período:</span> <span id="data-filtro"></span><br>
+        <span class="bold">Total de registros:</span> <span id="total-filtro"></span><br>
+        <span class="bold">Território/Unidade de análise:</span> <span id="territorio-filtro"></span><br>
+        <span class="bold">Sexo:</span> <span id="sexo-filtro"></span><br>
+        <span class="bold">Idade:</span> <span id="idade-filtro"></span><br>
+        <span class="bold">Caráter do atendimento:</span> <span id="carater-filtro"></span>
       </p>
     </div>
   </div>
@@ -57,6 +58,28 @@
         </thead>
         <tbody></tbody>
       </table>
+    </div>
+  </div>
+  <div id="change_this" class="card-div">
+    <div class="card-header">
+      <h1>Header</h1>
+      <div class="buttons-div">
+        <i class="config-buttons fas fa-download"></i>
+        <i class="config-buttons fas fa-print"></i>
+        <i class="config-buttons fas fa-info-circle"></i>
+        <i class="config-buttons fas fa-thumbtack"></i>
+        <i class="main-button fas fa-plus-circle" onclick="on_click('change_this')"></i>
+      </div>
+    </div>
+    <div class="card-body">
+      content <br>
+      content <br>
+      content <br>
+      content <br>
+      content <br>
+      content <br>
+      content <br>
+      content <br>
     </div>
   </div>
 <!-- <div class="w3-container" id="filters-div">
