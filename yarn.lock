@@ -11,3 +11,15 @@ heatmap.js@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/heatmap.js/-/heatmap.js-2.0.5.tgz#466d3b86513f5d49112a49d25700ab2730149153"
   integrity sha1-Rm07hlE/XUkRKknSVwCrJzAUkVM=
+
+leaflet.pattern@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/leaflet.pattern/-/leaflet.pattern-0.1.0.tgz#c127ac80915b7aa3f450f97fe08c06e7215eb8a7"
+  integrity sha512-E4sxvvK0XHi1EhE1yUTG1bzafXZoXUPqWPjHz5fSpv/pOcT4CtS0qR1lhFSRtSUYios8OwlZmUGB9n91zQEgcw==
+  dependencies:
+    leaflet "~0.7.1"
+
+leaflet@~0.7.1:
+  version "0.7.7"
+  resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-0.7.7.tgz#1e352ba54e63d076451fa363c900890cb2cf75ee"
+  integrity sha1-HjUrpU5j0HZFH6NjyQCJDLLPde4=
