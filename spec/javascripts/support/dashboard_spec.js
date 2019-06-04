@@ -1,5 +1,4 @@
 //= require jquery
-//= require loader.js
 //= require dashboard.js
 describe("Tests for filters_show() method", function() {
 

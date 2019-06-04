@@ -305,10 +305,6 @@ function update_chart(id) {
     });
 }
 
-function create_chart() {
-    google.charts.setOnLoadCallback(create_homepage_charts);
-}
-
 // Gets and formats the data to create the charts
 function create_homepage_charts(id) {
     var dataSpecialty, dataTotal, pathSpecialty, pathTotal, dataNormalized, n, i
