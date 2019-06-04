@@ -95,6 +95,11 @@ Este comando irá criar um container de PostgreSQL e um container com o
 InternaSUS, executando os como se fosse um deploy da aplicação em um
 ambiente de homologação ou produção. 
 
+```
+$ docker-compose exec health-dashboard bash -c "cd /health-dashboard; rails db:seed"
+```
+Este comando insere os dados iniciais na base.
+
 ### Instalando o ambiente em uma máquina Linux
 
 Para configurar o projeto em uma máquina com sistema operacional Linux e distribuição derivada do Debian primeiro
