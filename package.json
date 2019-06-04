@@ -2,6 +2,7 @@
     "name": "railsdiff",
     "private": true,
     "dependencies": {
+        "dom-to-image": "^2.6.0",
         "heatmap.js": "^2.0.5",
         "leaflet-heatmap": "^1.0.0"
     }
