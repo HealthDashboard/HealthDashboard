@@ -1,6 +1,3 @@
-$(document).ready(function(){
-  google.charts.load("current", {packages:["corechart"], language: 'pt'});
-})
 
 var types_color = {
  "HOSPITAL/DIA - ISOLADO":'#003300',
@@ -42,11 +39,7 @@ var types_name = [
  "CLÍNICA/CENTRO DE ESPECIALIDADE", 
 ]
 
-function init_specialties_chart(){
-  google.charts.setOnLoadCallback(create_specialties_charts);
-}
-
-function create_specialties_charts() {
+function init_specialties_chart() {
  specialties_metric = $.getJSON('/specialties_metric.json', function(specialties) {
    $.each(specialties, create_specialty_chart);
  });

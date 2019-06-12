@@ -1,6 +1,3 @@
-$(document).ready(function() {
-    google.charts.load('current', {'packages':["corechart"], 'language':'pt'});
-});
 
 var specialties_color = {
  "CIRURGIA":'#587C7C',
@@ -56,7 +53,7 @@ function init_dashboard_chart() {
         dynamic = false;
         document.getElementById("filters-div").style.display = "none";
     }
-    google.charts.setOnLoadCallback(create_dashboard_charts);
+    create_dashboard_charts();
     dashboard_legend();
     animate_legend();
 }

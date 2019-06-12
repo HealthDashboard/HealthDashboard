@@ -1,5 +1,10 @@
 {
     "name": "railsdiff",
     "private": true,
-    "dependencies": {}
+    "dependencies": {
+        "bundle-js": "^1.0.3",
+        "dom-to-image": "^2.6.0",
+        "heatmap.js": "^2.0.5",
+        "leaflet.pattern": "^0.1.0"
+    }
 }
