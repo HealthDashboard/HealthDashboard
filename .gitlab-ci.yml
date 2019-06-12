@@ -1,4 +1,4 @@
-image: ruby:2.3
+image: ruby:2.5.1
 
 stages:
   - test_quality
@@ -14,11 +14,12 @@ rspec:
     POSTGRES_PASSWORD: health_dashboard
     POSTGRES_DB: health_dashboard_test
     RAILS_ENV: test
+    BUNDLER_VERSION: 2.0.1
 
   script:
     - cp config/database-ci.yml config/database.yml
     - apt-get update && apt-get install -y nodejs --no-install-recommends
-    - gem install bundler --no-document
+    - gem install bundler:2.0.1
     - bundle check || bundle install
     - bundle exec rake db:create
     - bundle exec rake db:migrate

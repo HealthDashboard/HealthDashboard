@@ -1,44 +1,37 @@
+default: &default
+   adapter: postgresql
+   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+   timeout: 5000
+
 development:
-  adapter: postgresql
+  <<: *default
   database: my_database_development
-  pool: 5
-  timeout: 5000
 
 docker:
-  adapter: postgresql
+  <<: *default
   host: psql-container
   database: health-dashboard
   username: health-user
   password: health-password
-  pool: 5
-  timeout: 5000
 
 rspec:
-  adapter: postgresql
+  <<: *default
   host: psql-container
   database: health-dashboard-test
   username: health-user
   password: health-password
-  pool: 5
-  timeout: 5000
 
 docker-compose:
-  adapter: postgresql
+  <<: *default
   host: <%= ENV["POSTGRES_HOST"] %>
   username: <%= ENV["POSTGRES_USER"] %>
   password: <%= ENV["POSTGRES_PASSWORD"] %>
   database: <%= ENV["POSTGRES_DB"] %>
-  pool: 5
-  timeout: 5000
 
 test:
-  adapter: postgresql
+  <<: *default
   database: my_database_test
-  pool: 5
-  timeout: 5000
 
 production:
-  adapter: postgresql
+  <<: *default
   database: my_database_production
-  pool: 5
-  timeout: 5000
