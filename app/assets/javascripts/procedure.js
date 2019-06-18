@@ -488,6 +488,8 @@ function setHeatmapData(source, heat_type, radius) {
     };
 
     heatdata = {max: max_value_heatmap, data: heatmap_procedures}
+    if (heat != null)
+        map.removeLayer(heat);
     heat = new HeatmapOverlay(cfg);
     heat.setData(heatdata);
     map.addLayer(heat);
