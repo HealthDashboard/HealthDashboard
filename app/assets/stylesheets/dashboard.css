@@ -62,7 +62,7 @@
     font-size: 2.5em;
     margin-left: 10px;
     transform: rotate(0deg);
-    transition: transform 250ms;
+    transition: transform 550ms;
   }
 
   .card-div.active .main-button {
@@ -80,26 +80,26 @@
 
   .buttons-div .fa-download {
     transform: translateX(4em);
-    transition: opacity 200ms 100ms,
-                transform ease-out 200ms 100ms;
+    transition: opacity 200ms 300ms,
+                transform ease-out 200ms 300ms;
   }
 
   .buttons-div .fa-print {
     transform: translateX(3em);
-    transition: opacity 200ms 150ms,
-                transform ease-out 200ms 150ms;
+    transition: opacity 200ms 350ms,
+                transform ease-out 200ms 350ms;
   }
 
   .buttons-div .fa-info-circle {
     transform: translateX(2em);
-    transition: opacity 200ms 200ms,
-                transform ease-out 200ms 200ms;
+    transition: opacity 200ms 400ms,
+                transform ease-out 200ms 400ms;
   }
 
   .buttons-div .fa-thumbtack {
     transform: translateX(1em);
-    transition: opacity 200ms 250ms,
-                transform ease-out 200ms 250ms;;
+    transition: opacity 200ms 450ms,
+                transform ease-out 200ms 450ms;;
   }
 
   .buttons-div i {
@@ -111,8 +111,8 @@
     transform: scaleY(0);
     transform-origin: top;
     max-height: 0;
-    transition: transform 250ms,
-                max-height 250ms;
+    transition: transform 450ms,
+                max-height 450ms;
   }
 
   .card-div.active .card-body {
