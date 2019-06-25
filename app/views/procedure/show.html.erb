@@ -155,6 +155,45 @@
                         <% end %>
                     </div>
                 </div>
+                <button class="collapsible grouped_search"><h4><b>Busca agrupada</b></h4></button>
+                <div class="wrap">
+                    <div class="content">
+                        <div class="col-sm-12">
+                            <div class="filter-label">
+                                <label title="Condição específica: grupo"><b>
+                                    Grupo
+                                </b></label>
+                                <p class="label-subtitle">
+                            </div>
+                            <select class="select-specific_group form-control" id="specific-group" multiple="multiple" onchange='change(this)'>
+                                <option value="Teste" > "Teste" </option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="filter-label">
+                                <label title="Condição específica: subgrupo"><b>
+                                    Subgrupo
+                                </b></label>
+                                <p class="label-subtitle">
+                            </div>
+                            <select class="select-specific_subgroup form-control" id="specific-subgroup" multiple="multiple" onchange='change(this)'>
+                                <option value="Teste" > "Teste" </option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="filter-label">
+                                <label title="Condição específica: agravo"><b>
+                                    Agravo
+                                </b></label>
+                                <p class="label-subtitle">
+                            </div>
+                            <select class="select-specific_grievance form-control" id="specific-grievance" multiple="multiple" onchange='change(this)'>
+                                <option value="Teste" > "Teste" </option>
+                            </select>
+                        </div>
+                    <div class="col-sm-12"><hr></div> <!-- Space line -->
+                    </div>
+                </div>
                 <button class="collapsible diagnostic"><h4><b>Procedimento</b></h4></button>
                 <div class="wrap">
                     <div class="content">
