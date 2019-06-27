@@ -59,6 +59,7 @@
   }
 
   .buttons-div .far:hover {
+    cursor: pointer;
     color: #d2cfcf;
   }
 
@@ -131,4 +132,8 @@
 
   .bold {
     font-weight: bold;
+  }
+
+  .hidden {
+    visibility: hidden;
   }
