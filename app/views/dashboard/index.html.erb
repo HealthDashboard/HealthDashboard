@@ -82,7 +82,7 @@
       content <br>
     </div>
   </div>-->
-<div class="w3-container" id="filters-div">
+<div class="w3-container hidden" id="filters-div">
   <div class="w3-card-4" >
     <header class="w3-container w3-light-grey">
       <h1><center>Filtros</center></h1>
@@ -107,21 +107,21 @@
     </div>
     <div class="card-body">
       <p class="title">Base de Dados</p>
-      <p>
+      <p style="color: #6b6b6b;">
         <span class="bold">Fonte:</span> <span id="fonte-base">Sistema de Internações Hospitalares SUS - SMS/SP</span><br>
         <span class="bold">Total de registros:</span> <span id="total-base">554.202</span><br>
         <span class="bold">Território/Unidade de análise:</span> <span id="territorio-base">Municipio de São Paulo</span>
       </p>
       <br>
       <p class="title">Dados selecionados (com base nos filtros)</p>
-      <p id="filters-text">
+      <div id="filters-text" style="color: #6b6b6b;">
         <p><span class="bold">Período:</span> <span id="data-filtro"></span><br></p>
         <p><span class="bold">Total de registros:</span> <span id="total-filtro"></span><br></p>
         <p><span class="bold">Território/Unidade de análise:</span> <span id="territorio-filtro"></span><br></p>
         <p><span class="bold">Sexo:</span> <span id="sexo-filtro"></span><br></p>
         <p><span class="bold">Idade:</span> <span id="idade-filtro"></span><br></p>
         <p><span class="bold">Caráter do atendimento:</span> <span id="carater-filtro"></span></p>
-      </p>
+      </div>
     </div>
   </div>
   <div id="rankings" class="card-div">
@@ -191,7 +191,7 @@
   </div>
 </div>
 
-<div class="w3-container">
+<div class="w3-container hidden">
   <div class="w3-card-4" >
     <header class="w3-container w3-light-grey">
       <h1><center>Dados Gerais</center></h1>
@@ -219,7 +219,7 @@
   </div>
 </div>
 
-<div class="w3-container">
+<div class="w3-container hidden">
     <div class="w3-card-4" >
         <header class="w3-container w3-light-grey">
             <h1><center>Especialidades</center></h1>
@@ -242,7 +242,7 @@
     </div>
 </div>
 
-<div class="w3-container">
+<div class="w3-container hidden">
     <div class="w3-card-4" align="center">
         <header class="w3-container w3-light-grey">
             <h1><center>Porcentagem de Internações por distância percorrida</center></h1>
@@ -257,7 +257,7 @@
     </div>
 </div>
 
-<div class="w3-container" id="avarage_distance_div">
+<div class="w3-container hidden" id="avarage_distance_div">
   <div class="w3-card-4" >
     <header class="w3-container w3-light-grey">
       <h1><center>Distância Média Percorrida por Pacientes(Km)</center></h1>
@@ -309,7 +309,7 @@
   </div>
 </div>
 
-<div class="w3-container">
+<div class="w3-container hidden">
     <div class="w3-card-4" align="center">
         <header class="w3-container w3-light-grey">
             <h1><center>Variáveis de Busca</center></h1>

@@ -19,14 +19,14 @@
     -moz-box-shadow: 0 2px 5px rgba(0,0,0,0.15);
     box-shadow: 0 2px 5px rgba(0,0,0,0.15);
     border-radius: 0 2px ;
-    padding: 2em;
+    padding: .7em .7em 0 1.5em;
     border-left: 10px #d2cfcf solid;
     flex-basis: auto;
   }
 
   .card-header {
-    padding: .5em;
     text-align: left;
+    top: 10px;
     position: relative;
     border-radius: 10px 10px 0 0;
     font-weight: bold;
@@ -37,7 +37,7 @@
   }
 
   .card-header h1 {
-    font-size: 2em;
+    font-size: 1.7em;
     margin: 0;
   }
 
@@ -64,7 +64,7 @@
   }
 
   .buttons-div .main-button {
-    font-size: 3em;
+    font-size: 2em;
     margin-left: 10px;
     transform: rotate(135deg);
     transition: transform 550ms;
@@ -112,7 +112,7 @@
   }
 
   .card-body {
-    padding: .5em 15px;
+    padding: 1em 15px;
     transform: scaleY(0);
     transform-origin: top;
     max-height: 0;

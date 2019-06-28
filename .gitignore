@@ -46,3 +46,6 @@ coverage/*
 # Ignore VM files
 devenv/.vagrant
 devenv/*.log
+
+# Ignore node modules
+/node_modules
