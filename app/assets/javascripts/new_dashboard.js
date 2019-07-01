@@ -118,7 +118,7 @@ function create_specialties_total(data) {
         title: {
             text: 'Total de internações hospitalares',
             top: 0,
-            left: 400,
+            left: 350,
             textStyle: {
                 color: '#333'
             }
@@ -210,3 +210,395 @@ function create_proceduresPerSpecialties(data){
     };
     myChart.setOption(option);
 }
+/* Gráfico de Porcentagem de Internações por distância percorrida */
+function create_analise(data){
+    var myChart = echarts.init(document.getElementById("chart_div_analise"));
+
+    var formatData = [];
+    formatData.push(['variable', 'amount']);
+    // var max = 0;
+
+    if (dynamic == false) {
+        var path = '/distance_metric.json'
+    } else {
+        var path = 'procedure/proceduresDistanceGroup'
+    }
+
+    var aux = []
+
+    $.getJSON(path, data, function(result){
+        $.each(result, function(name, number) {
+            formatData.push([name, number]);
+
+        });
+
+        option = {
+            dataset: {
+                source: formatData,
+            },
+            legend: {
+                type: 'scroll',
+                orient: 'vertical',
+                right: 10,
+                top: 20,
+                bottom: 20,
+            },
+            title: {
+                text: 'Porcentagem de Internações por Distância Percorrida',
+                top: 20,
+                left: 50,
+                textStyle: {
+                    color: '#333'
+                }
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "({d}%)"
+            },
+
+            series : [
+                {
+                    type:'pie',
+                    radius : '50%',
+                    center: ['39%', '50%'],
+
+                    encode: {
+                        itemName: 'variable',
+                        value: 'amount'
+                      }
+                }
+            ]
+        };
+    myChart.setOption(option);
+    });
+}
+/* Gráfico de Porcentagem de Distância Média por Especialidade */
+function create_specialties_distance_between_patients_hospital(data){
+    var myChart = echarts.init(document.getElementById("chart_spec_distance_average"));
+
+    if (dynamic == false) {
+        var path = 'specialties_procedure_distance_average'
+    } else {
+        var path = '/procedure/proceduresDistance'
+    }
+
+    var formatData = [];
+
+    formatData.push(['amount', 'variable']);
+
+    $.getJSON(path, data, function(result){
+        $.each(result, function(name, number) {
+            // console.log([name, number]);
+            formatData.push([name, number]);
+        });
+
+        var option = {
+            dataset: {
+                source: formatData
+            },
+            title: {
+                text: 'Distância Média por Especialidade',
+                top: 20,
+                left: 400,
+                textStyle: {
+                    color: '#333'
+                }
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{c} "
+            },
+
+            grid: {containLabel: true},
+
+            xAxis: {
+                type: 'value'
+            },
+            yAxis: {
+                type: 'category'
+            },
+
+            series: [
+                {
+                    type: 'bar',
+                    encode: {
+                        // Map the "amount" column to X axis.
+                        x: 'variable',
+                        // Map the "product" column to Y axis
+                        y: 'amount'
+                    }
+                }
+        ]
+    };
+
+    myChart.setOption(option);
+    });
+}
+/* Gráfico base para uma variável*/
+function create_one_variable_graph(data, field){
+    var formatData = [];
+    formatData.push(['amount', 'variable']);
+    var max = 0;
+
+    for(var i=0; i<data.length; i++){
+        if(data[i][1] != null && data[i][0] != null){
+            formatData.push([data[i][1], data[i][0].toString()]);
+            max = Math.max(max, data[i][1]);
+        }
+    }
+
+    myChart.clear();
+    switch (chart_type[field]) {
+      case "bar":
+        var option = {
+            dataset: {
+                source: formatData,
+            },
+            //title: 'Title',
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : {
+                    type : 'shadow'
+                }
+            },
+            dataZoom: [{
+                id: 'dataZoomX',
+                type: 'slider',
+                xAxisIndex: [0],
+                filterMode: 'filter'
+            },
+            {
+                id: 'dataZoomY',
+                type: 'slider',
+                yAxisIndex: [0],
+                filterMode: 'empty'
+            }],
+            grid: {containLabel: true},
+            xAxis: {
+              name: 'Procedimentos',
+              axisLabel: {interval : 0},
+            },
+            yAxis: {type: 'category'},
+            visualMap: {
+                orient: 'horizontal',
+                min: 0,
+                max: max,
+                text: ['Máximo', 'Mínimo'],
+                // Map the score column to color
+                dimension: 0,
+                inRange: {
+                    color: ['#D7DA8B', '#E15457']
+                },
+            },
+            series: [
+                {
+                    type: 'bar',
+                    encode: {
+                        // Map the "amount" column to X axis.
+                        x: 'amount',
+                        // Map the "product" column to Y axis
+                        y: 'variable',
+                    }
+                }
+            ]
+        };
+        myChart.setOption(option);
+      break;
+      case "pie":
+        var option = {
+            dataset: {
+                source: formatData,
+            },
+            //title: 'Title',
+            tooltip : {
+                trigger: 'item',
+
+            },
+            legend: {
+                type: 'scroll',
+                orient: 'vertical',
+                right: 10,
+                top: 20,
+                bottom: 20,
+            },
+            label: {
+                    formatter: '{b}: ({d}%)'
+                },
+            series : [
+                {
+                    type: 'pie',
+                    radius : '55%',
+                    center: ['40%', '50%'],
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    },
+                    encode: {
+                      itemName: 'variable',
+                      value: 'amount'
+                    }
+                }
+            ]
+        };
+        myChart.setOption(option);
+      break;
+      case "line":
+        var option = {
+            dataset: {
+                source: formatData,
+            },
+            //title: 'Title',
+            tooltip : {
+                trigger: 'axis',
+            },
+            dataZoom: [{
+                id: 'dataZoomX',
+                type: 'slider',
+                xAxisIndex: [0],
+                filterMode: 'filter'
+            }],
+            grid: {containLabel: true},
+            yAxis: {
+              name: 'Procedimentos',
+              type: 'value',
+              axisLabel: {interval : 0}
+            },
+            xAxis: {
+              type: 'category',
+              boundaryGap: false
+            },
+            toolbox: {
+              feature: {
+                magicType: {
+                  type: ['line', 'bar']
+                }
+              }
+            },
+            series: [
+                {
+                    type: 'line',
+                    encode: {
+                        y: 'amount',
+                        x: 'variable',
+                    }
+                }
+            ]
+        };
+        myChart.setOption(option);
+      break;
+      case "bar-line":
+        var q = quartile(formatData);
+        var option = {
+              dataset: {
+                  source: formatData,
+              },
+              //title: 'Title',
+              tooltip : {
+                  trigger: 'axis',
+                  axisPointer : {
+                      type : 'shadow'
+                  },
+              },
+              dataZoom: [{
+                  id: 'dataZoomX',
+                  type: 'slider',
+                  xAxisIndex: [0],
+                  filterMode: 'filter'
+              }],
+              grid: {containLabel: true},
+              yAxis: {
+                name: 'Procedimentos',
+                type: 'value',
+                axisLabel: {interval : 10}
+              },
+              xAxis: {
+                type: 'category',
+              },
+              toolbox: {
+                feature: {
+                  magicType: {
+                    type: ['line', 'bar']
+                  }
+                }
+              },
+              series: [
+                  {
+                      type: 'bar',
+                      encode: {
+                          y: 'amount',
+                          x: 'variable',
+                      },
+                      markPoint: {
+                        data : [[
+                            {
+                              name: "q1",
+                              value: q[1]
+                            }]
+                        ]
+                      },
+                      markArea: {
+                        silent: true,
+                        label: {
+                          show: true,
+                          formatter: "Q1: " + q[0] + " até Q3: " + q[2],
+                          position: ["102%", "2%"],
+                          emphasis: {
+                            position: ["102%", "2%"],
+                          }
+                        },
+                          data: [
+                            [
+                              {
+                                xAxis: q[0]
+                              },
+                              {
+                                xAxis: q[2]
+                              }
+                            ]
+                          ]
+                      },
+                  }
+              ]
+        };
+        myChart.setOption(option);
+      break;
+      case "cid":
+        var cid10 = formatCID(formatData);
+        var option = {
+          label: {
+            // fontWeight: 'bold',
+            fontSize: 16
+          },
+          tooltip: {
+            formatter: function (params) {
+              var str = params.data.fullname + ": " + params.data.value;
+              return str;
+            },
+          },
+          series: [{
+            type: "treemap",
+            name: "Procedimentos",
+            data: cid10,
+            leafDepth: 3,
+          }],
+        }
+        myChart.setOption(option);
+      break;
+    }
+}
+
+
+//*** DOM Functions ****//
+
+function on_click(id) {
+    $("#" + id).toggleClass("active")
+}
+
+function changeChart(){
+    const field = document.getElementById("select-chart").value;
+    create_one_variable_graph(result[field], field);
+}
+  

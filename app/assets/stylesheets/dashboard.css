@@ -26,7 +26,6 @@
 
   .card-header {
     text-align: left;
-    top: 10px;
     position: relative;
     border-radius: 10px 10px 0 0;
     font-weight: bold;
@@ -37,7 +36,8 @@
   }
 
   .card-header h1 {
-    font-size: 1.7em;
+    font-size: 1em;
+    font-weight: bold;
     margin: 0;
   }
 
@@ -112,12 +112,22 @@
   }
 
   .card-body {
-    padding: 1em 15px;
+    padding: 0.3em 15px;
     transform: scaleY(0);
     transform-origin: top;
     max-height: 0;
     transition: transform 450ms,
                 max-height 450ms;
+  }
+
+  .ranking {
+    height: 500px;
+    overflow: auto;
+  }
+
+  .distace-charts {
+    height: 450px;
+    overflow: auto;
   }
 
   .card-div.active .card-body {

@@ -824,6 +824,5 @@ function changeChart(){
 //*** DOM Functions ****//
 
 function on_click(id) {
-  console.log("Hello")
   $("#" + id).toggleClass("active")
 }

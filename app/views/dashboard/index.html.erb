@@ -135,7 +135,7 @@
         <i class="main-button far fa-times-circle" onclick="on_click('rankings')"></i>
       </div>
     </div>
-    <div class="card-body">
+    <div class="card-body ranking">
       <table class='health_centres_rank table table-sm table-inverse'>
          <caption><center>Ranking de hospitais que realizam mais internações hospitalares</center></caption>
          <thead>
@@ -183,152 +183,291 @@
       </div>
     </div>
     <div class="card-body">
+      <div style="display: flex; justify-content: space-around;" class="row">
+        <div class="col" id="chart_specialties" style="width: 800px; height: 500px;"></div>
+        <div class="col" id="chart_spec_total"  style="width: 1000px; height: 400px;"></div>
+      </div>
+    </div>
+  </div>
+  <div id="healthcentres" class="card-div">
+    <div class="card-header">
+      <h1>Estabelecimentos</h1>
+      <div class="buttons-div">
+        <i class="config-buttons fas fa-download" title="Download"></i>
+        <i class="config-buttons fas fa-print" title="Imprimir"></i>
+        <i class="config-buttons fas fa-info-circle" title="Mais informações"></i>
+        <i class="config-buttons fas fa-thumbtack" title="Fixar"></i>
+        <i class="main-button far fa-times-circle" onclick="on_click('healthcentres')"></i>
+      </div>
+    </div>
+    <div class="card-body">
       <div style="display: flex; justify-content: space-around;">
         <div id="chart_specialties" style="width: 800px; height: 500px;"></div>
         <div id="chart_spec_total"  style="width: 1000px; height: 400px;"></div>
       </div>
     </div>
   </div>
-</div>
-
-<div class="w3-container hidden">
-  <div class="w3-card-4" >
-    <header class="w3-container w3-light-grey">
-      <h1><center>Dados Gerais</center></h1>
-    </header>
-
-    <div class="w3-container">
-      <div class='col-md-6'>
-        <table class='health_centres_rank table table-sm table-inverse'>
-           <caption><center>Ranking de hospitais que realizam mais internações hospitalares</center></caption>
-           <thead>
-            <tr>
-              <th>#</th>
-              <th>Hospital</th>
-              <th>Nº de Internações</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-     </div>
-      <div class='col-md-6'>
-        <div id='procedure_by_date' style='width: 580px; height: 450px'></div>
+  <div id="hospitalizations" class="card-div">
+    <div class="card-header">
+      <h1>Internações / Pacientes</h1>
+      <div class="buttons-div">
+        <i class="config-buttons fas fa-download" title="Download"></i>
+        <i class="config-buttons fas fa-print" title="Imprimir"></i>
+        <i class="config-buttons fas fa-info-circle" title="Mais informações"></i>
+        <i class="config-buttons fas fa-thumbtack" title="Fixar"></i>
+        <i class="main-button far fa-times-circle" onclick="on_click('hospitalizations')"></i>
       </div>
     </div>
-
-  </div>
-</div>
-
-<div class="w3-container hidden">
-    <div class="w3-card-4" >
-        <header class="w3-container w3-light-grey">
-            <h1><center>Especialidades</center></h1>
-        </header>
-        <div class="w3-container">
-            <div class='row'>
-                <div class='col-md-5'>
-                    <div id="chart_specialties" style="width: 800px; height: 500px;"></div>
-                </div>
-                <div class='col-md-7'>
-                    <div id="chart_spec_distance_average"  style="width: 1000px; height: 440px;"></div>
-                </div>
-            </div>
-            <div class="row">
-                <div class='col-md-12'>
-                    <div id="chart_spec_total"  style="width: 1800px; height: 400px;, position: center;"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="w3-container hidden">
-    <div class="w3-card-4" align="center">
-        <header class="w3-container w3-light-grey">
-            <h1><center>Porcentagem de Internações por distância percorrida</center></h1>
-        </header>
-        <div class="w3-container">
-            <div class='row'>
-                <div class='col-md-12'>
-                    <div id="chart_div_analise" style="width: 800px; height: 800px;"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="w3-container hidden" id="avarage_distance_div">
-  <div class="w3-card-4" >
-    <header class="w3-container w3-light-grey">
-      <h1><center>Distância Média Percorrida por Pacientes(Km)</center></h1>
-    </header>
-    <div class="w3-container">
-
-        <div class='row'>
-          <div class='col-md-6'>
-            <div id="chart_cirurgia" style="width: 100%; height: 400px;"></div>
-          </div>
-          <div class='col-md-6'>
-            <div id="chart_obstetrecia"  style="width: 100%; height: 400px;"></div>
-          </div>
-        </div>
-
-        <div class='row'>
-          <div class='col-md-6'>
-            <div id="chart_pacientes" style="width: 100%; height: 400px;"></div>
-          </div>
-          <div class='col-md-6'>
-            <div id="chart_psiquiatria"  style="width: 100%; height: 400px;"></div>
-          </div>
-        </div>
-
-        <div class='row'>
-          <div class='col-md-6'>
-            <div id="chart_pediatria"  style="width: 100%; height: 400px;"></div>
-          </div>
-          <div class='col-md-6'>
-            <div id="chart_reabilitacao" style="width: 100%; height: 400px;"></div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class='col-md-6'>
-            <div id="chart_clinica_medica" style="width: 100%; height: 400px;"></div>
-          </div>
-          <div class='col-md-6'>
-            <div id="chart_psiquiatria_dia" style="width: 100%; height: 400px;"></div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class='col-md-6'>
-            <div id="chart_tisiologia" style="width: 100%; height: 400px;"></div>
-          </div>
-        </div>
+    <div class="card-body">
+      <div style="display: flex; justify-content: space-around;">
+        <div id="chart_specialties" style="width: 800px; height: 500px;"></div>
+        <div id="chart_spec_total"  style="width: 1000px; height: 400px;"></div>
+      </div>
     </div>
   </div>
+  <div id="territories" class="card-div">
+    <div class="card-header">
+      <h1>Territórios e regiões administrativas</h1>
+      <div class="buttons-div">
+        <i class="config-buttons fas fa-download" title="Download"></i>
+        <i class="config-buttons fas fa-print" title="Imprimir"></i>
+        <i class="config-buttons fas fa-info-circle" title="Mais informações"></i>
+        <i class="config-buttons fas fa-thumbtack" title="Fixar"></i>
+        <i class="main-button far fa-times-circle" onclick="on_click('territories')"></i>
+      </div>
+    </div>
+    <div class="card-body">
+      <div style="display: flex; justify-content: space-around;">
+        <div id="chart_specialties" style="width: 800px; height: 500px;"></div>
+        <div id="chart_spec_total"  style="width: 1000px; height: 400px;"></div>
+      </div>
+    </div>
+  </div>
+  <div id="distance" class="card-div">
+    <div class="card-header">
+      <h1>Distâncias e deslocamento</h1>
+      <div class="buttons-div">
+        <i class="config-buttons fas fa-download" title="Download"></i>
+        <i class="config-buttons fas fa-print" title="Imprimir"></i>
+        <i class="config-buttons fas fa-info-circle" title="Mais informações"></i>
+        <i class="config-buttons fas fa-thumbtack" title="Fixar"></i>
+        <i class="main-button far fa-times-circle" onclick="on_click('distance')"></i>
+      </div>
+    </div>
+    <div class="card-body distace-charts">
+      <div class="row" style="display: flex; justify-content: space-around;">
+        <div class="col" id="chart_div_analise" style="width: 800px; height: 500px;"></div>
+        <div class="col" id="chart_spec_distance_average"  style="width: 1000px; height: 400px;"></div>
+      </div>
+      <div class="row" style="text-align: center;">
+          <h2>Distância Média Percorrida por Pacientes (em Km)</h2>
+      </div>
+      <div class="row" style="display: flex; justify-content: space-around;">
+        <div class="col" id="chart_cirurgia" style="width: 800px; height: 500px;"></div>
+        <div class="col" id="chart_obstetrecia"  style="width: 1000px; height: 400px;"></div>
+      </div>
+      <div class="row" style="display: flex; justify-content: space-around;">
+        <div class="col" id="chart_pacientes" style="width: 800px; height: 500px;"></div>
+        <div class="col" id="chart_psiquiatria"  style="width: 1000px; height: 400px;"></div>
+      </div>
+      <div class="row" style="display: flex; justify-content: space-around;">
+        <div class="col" id="chart_pediatria" style="width: 800px; height: 500px;"></div>
+        <div class="col" id="chart_reabilitacao"  style="width: 1000px; height: 400px;"></div>
+      </div>
+      <div class="row" style="display: flex; justify-content: space-around;">
+        <div class="col" id="chart_clinica_medica" style="width: 800px; height: 500px;"></div>
+        <div class="col" id="chart_psiquiatria_dia"  style="width: 1000px; height: 400px;"></div>
+      </div>
+      <div class="row" style="display: flex; justify-content: space-around;">
+        <div class="col" id="chart_tisiologia" style="width: 800px; height: 500px;"></div>
+        <div class="col" id=""  style="width: 1000px; height: 400px;"></div>
+      </div>
+    </div>
+  </div>
+  <div id="dynamic-charts" class="card-div">
+    <div class="card-header">
+      <h1>Gráfico Dinâmico (selecione a variável)</h1>
+      <div class="buttons-div">
+        <i class="config-buttons fas fa-download" title="Download"></i>
+        <i class="config-buttons fas fa-print" title="Imprimir"></i>
+        <i class="config-buttons fas fa-info-circle" title="Mais informações"></i>
+        <i class="config-buttons fas fa-thumbtack" title="Fixar"></i>
+        <i class="main-button far fa-times-circle" onclick="on_click('dynamic-charts')"></i>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row">
+      <select id="select-chart" onchange="changeChart()">
+        <% @select_text.each.with_index do |key, index| %>
+          <option value="<%= @select_values[index] %>"><%= key %></option>
+        <% end %>
+      </select>
+      <div id="bar-graph" style="width: 100%;height:90vh;"></div>
+      </div>
+    </div>
+  </div>
+  <div id="statistic" class="card-div">
+    <div class="card-header">
+      <h1>Estatística descritiva</h1>
+      <div class="buttons-div">
+        <i class="config-buttons fas fa-download" title="Download"></i>
+        <i class="config-buttons fas fa-print" title="Imprimir"></i>
+        <i class="config-buttons fas fa-info-circle" title="Mais informações"></i>
+        <i class="config-buttons fas fa-thumbtack" title="Fixar"></i>
+        <i class="main-button far fa-times-circle" onclick="on_click('statistic')"></i>
+      </div>
+    </div>
+    <div class="card-body">
+      <div style="display: flex; justify-content: space-around;">
+        <div id="chart_specialties" style="width: 800px; height: 500px;"></div>
+        <div id="chart_spec_total"  style="width: 1000px; height: 400px;"></div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<div class="w3-container hidden">
-    <div class="w3-card-4" align="center">
-        <header class="w3-container w3-light-grey">
-            <h1><center>Variáveis de Busca</center></h1>
-        </header>
-        <div class="w3-container">
-            <div class='row'>
-                <div class='col-md-12'>
-                  <select id="select-chart" onchange="changeChart()">
-                    <% @select_text.each.with_index do |key, index| %>
-                      <option value="<%= @select_values[index] %>"><%= key %></option>
-                    <% end %>
-                  </select>
-                  <div id="bar-graph" style="width: 100%;height:90vh;"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
+
+
+
+                          <div class="w3-container hidden">
+                            <div class="w3-card-4" >
+                              <header class="w3-container w3-light-grey">
+                                <h1><center>Dados Gerais</center></h1>
+                              </header>
+
+                              <div class="w3-container">
+                                <div class='col-md-6'>
+                                  <table class='health_centres_rank table table-sm table-inverse'>
+                                    <caption><center>Ranking de hospitais que realizam mais internações hospitalares</center></caption>
+                                    <thead>
+                                      <tr>
+                                        <th>#</th>
+                                        <th>Hospital</th>
+                                        <th>Nº de Internações</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                  </table>
+                              </div>
+                                <div class='col-md-6'>
+                                  <div id='procedure_by_date' style='width: 580px; height: 450px'></div>
+                                </div>
+                              </div>
+
+                            </div>
+                          </div>
+
+                          <div class="w3-container hidden">
+                              <div class="w3-card-4" >
+                                  <header class="w3-container w3-light-grey">
+                                      <h1><center>Especialidades</center></h1>
+                                  </header>
+                                  <div class="w3-container">
+                                      <div class='row'>
+                                          <div class='col-md-5'>
+                                              <div id="chart_specialties" style="width: 800px; height: 500px;"></div>
+                                          </div>
+                                          <div class='col-md-7'>
+                                              <div id="chart_spec_distance_average"  style="width: 1000px; height: 440px;"></div>
+                                          </div>
+                                      </div>
+                                      <div class="row">
+                                          <div class='col-md-12'>
+                                              <div id="chart_spec_total"  style="width: 1800px; height: 400px;, position: center;"></div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <div class="w3-container hidden">
+                              <div class="w3-card-4" align="center">
+                                  <header class="w3-container w3-light-grey">
+                                      <h1><center>Porcentagem de Internações por distância percorrida</center></h1>
+                                  </header>
+                                  <div class="w3-container">
+                                      <div class='row'>
+                                          <div class='col-md-12'>
+                                              <div id="chart_div_analise" style="width: 800px; height: 800px;"></div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <div class="w3-container hidden" id="avarage_distance_div">
+                            <div class="w3-card-4" >
+                              <header class="w3-container w3-light-grey">
+                                <h1><center>Distância Média Percorrida por Pacientes(Km)</center></h1>
+                              </header>
+                              <div class="w3-container">
+
+                                  <div class='row'>
+                                    <div class='col-md-6'>
+                                      <div id="chart_cirurgia" style="width: 100%; height: 400px;"></div>
+                                    </div>
+                                    <div class='col-md-6'>
+                                      <div id="chart_obstetrecia"  style="width: 100%; height: 400px;"></div>
+                                    </div>
+                                  </div>
+
+                                  <div class='row'>
+                                    <div class='col-md-6'>
+                                      <div id="chart_pacientes" style="width: 100%; height: 400px;"></div>
+                                    </div>
+                                    <div class='col-md-6'>
+                                      <div id="chart_psiquiatria"  style="width: 100%; height: 400px;"></div>
+                                    </div>
+                                  </div>
+
+                                  <div class='row'>
+                                    <div class='col-md-6'>
+                                      <div id="chart_pediatria"  style="width: 100%; height: 400px;"></div>
+                                    </div>
+                                    <div class='col-md-6'>
+                                      <div id="chart_reabilitacao" style="width: 100%; height: 400px;"></div>
+                                    </div>
+                                  </div>
+
+                                  <div class="row">
+                                    <div class='col-md-6'>
+                                      <div id="chart_clinica_medica" style="width: 100%; height: 400px;"></div>
+                                    </div>
+                                    <div class='col-md-6'>
+                                      <div id="chart_psiquiatria_dia" style="width: 100%; height: 400px;"></div>
+                                    </div>
+                                  </div>
+
+                                  <div class="row">
+                                    <div class='col-md-6'>
+                                      <div id="chart_tisiologia" style="width: 100%; height: 400px;"></div>
+                                    </div>
+                                  </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="w3-container hidden">
+                              <div class="w3-card-4" align="center">
+                                  <header class="w3-container w3-light-grey">
+                                      <h1><center>Variáveis de Busca</center></h1>
+                                  </header>
+                                  <div class="w3-container">
+                                      <div class='row'>
+                                          <div class='col-md-12'>
+                                            <select id="select-chart" onchange="changeChart()">
+                                              <% @select_text.each.with_index do |key, index| %>
+                                                <option value="<%= @select_values[index] %>"><%= key %></option>
+                                              <% end %>
+                                            </select>
+                                            <div id="bar-graph" style="width: 100%;height:90vh;"></div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                          </div>
 
 <script>
   var myChart = echarts.init(document.getElementById('bar-graph'));
