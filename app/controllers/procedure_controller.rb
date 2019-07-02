@@ -1,6 +1,6 @@
 class ProcedureController < ApplicationController
 	before_action :getProcedures, only: [:proceduresDistanceGroup, :proceduresPerMonth,
-		:proceduresPerHealthCentre, :proceduresPerSpecialties, :proceduresDistance,
+		:proceduresPerVariable, :proceduresPerSpecialties, :proceduresDistance,
 		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario, :download, :downloadCluster, :proceduresVariables, 
 		:proceduresCompleteness, :proceduresPop, :proceduresCid10Specific]
         before_action :authenticate_user!, except: [:proceduresTotal]
@@ -95,17 +95,51 @@ class ProcedureController < ApplicationController
 		render json: result, status: 200
 	end
 
-	# GET /procedure/proceduresPerHealthCentre{params}
+	# GET /procedure/proceduresPerVariable{params}
 	# Params: [filters values array]
-	# Return: Hash of {health_centre => total_of_procedures}
-	def proceduresPerHealthCentre
+	# Return: Hash of {<especific_variable> => total_of_procedures}
+	def proceduresPerVariable
 		render json: "Bad request", status: 400 and return unless @procedures != nil
 
 		result = {}
-		@procedures.group(:cnes_id).order("count_id DESC").limit(10)
-				  .count(:id).each.with_index do |p, i|
+		case params[:variable]
+		when "health_centre"
+			@procedures.group(:cnes_id).order("count_id DESC")
+						.count(:id).each.with_index do |p, i|
 				result[HealthCentre.find_by(cnes: p[0]).name.to_s] = p[1].to_i
 			end
+		when "DA"
+			@procedures.group(:DA).order("count_id DESC")
+						.count(:id).each.with_index do |p, i|
+				result[p[0].to_s] = p[1].to_i
+			end
+		when "age"
+			@procedures.group(:age_code).order("count_id DESC")
+						.count(:id).each.with_index do |p, i|
+				result[@age_group.detect{|e| e["id"] == p[0]}["text"]] = p[1].to_i
+			end
+		when "gender"
+			@procedures.group(:gender).order("count_id DESC")
+						.count(:id).each.with_index do |p, i|
+				result[p[0] == "M" ? "Masculino" : "Feminino"] = p[1].to_i
+			end
+		when "CID"
+			@procedures.group(:cid_primary).order("count_id DESC")
+						.count(:id).each.with_index do |p, i|
+				if result[@cid.detect{|e| e["id"] == p[0][0..2]}["text"]] then
+					result[@cid.detect{|e| e["id"] == p[0][0..2]}["text"]] += p[1].to_i 
+				else
+					result[@cid.detect{|e| e["id"] == p[0][0..2]}["text"]] = p[1].to_i
+				end
+			end
+			result = result.sort_by{|k, v| -v}.to_h
+		else
+			@procedures.group(:cnes_id).order("count_id DESC")
+						.count(:id).each.with_index do |p, i|
+				result[HealthCentre.find_by(cnes: p[0]).name.to_s] = p[1].to_i
+			end
+		end
+
 		render json: result, status: 200
 	end
 

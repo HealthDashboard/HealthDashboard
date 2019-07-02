@@ -70,18 +70,40 @@ function init_dashboard_sections() {
 
 //Ranking
 function update_rank() {
+    variable = document.getElementById("select-variable").value;
     if (filters == null) {
-        $.getJSON('/rank_health_centres.json', create_table_rank);
+        switch(variable) {
+            case "health_centre":
+                $.getJSON('/rank_health_centre.json', create_table_rank);
+                break;
+            case "DA":
+                $.getJSON('/rank_DA.json', create_table_rank);
+                break;
+            case "age":
+                $.getJSON('/rank_age.json', create_table_rank);
+                break;
+            case "gender":
+                $.getJSON('/rank_gender.json', create_table_rank);
+                break;
+            case "CID":
+                $.getJSON('/rank_CID.json', create_table_rank);
+                break;
+            default:
+                $.getJSON('/rank_health_centre.json', create_table_rank);
+          }
     } else {
-        $.getJSON('/procedure/proceduresPerHealthCentre', filters, create_table_rank);
+        $.getJSON('/procedure/proceduresPerVariable?variable='+variable, filters, create_table_rank);
     }
 }
 function create_table_rank(result) {
-    rank_table = $('.health_centres_rank tbody');
+    rank_table = $('.health_centres_rank');
 
-    rows = "";
+    text = $("#select-variable :selected").text();
     index = 1;
     Total = 0;
+
+    rows = "<caption><center>Ranking dos que possuem mais internações hospitalares</center></caption>"
+    rows += "<thead><tr><th>#</th><th>"+text+"</th><th>Nº de Internações</th></tr></thead><tbody>"
 
     $.each(result, function(name, n_procedures) {
         if (index % 2) {
@@ -92,7 +114,7 @@ function create_table_rank(result) {
         rows += " <th scope=\"row\">" + (index++) + "</th><td>" + name + "</td> <td>" + n_procedures.toLocaleString('pt-BR') + "</td></tr>"
             Total += n_procedures
     });
-    rows += " <th scope=\"row\">#</th><td> TOTAL </td> <td>" + Total.toLocaleString('pt-BR') + "</td></tr>"
+    rows += " <th scope=\"row\">#</th><td> TOTAL </td> <td>" + Total.toLocaleString('pt-BR') + "</td></tr></tbody>"
     rank_table.html(rows);
 }
 

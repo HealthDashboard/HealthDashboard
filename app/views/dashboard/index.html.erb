@@ -136,16 +136,14 @@
       </div>
     </div>
     <div class="card-body ranking">
+    <select id="select-variable" onchange="update_rank()">
+        <option value="health_centre">Hospital</option>
+        <option value="DA">Distrito Administrativo</option>
+        <option value="age">Faixa Etária</option>
+        <option value="gender">Sexo</option>
+        <option value="CID">Diagnóstico Principal (CID 10)</option>
+    </select>
       <table class='health_centres_rank table table-sm table-inverse'>
-         <caption><center>Ranking de hospitais que realizam mais internações hospitalares</center></caption>
-         <thead>
-          <tr>
-            <th>#</th>
-            <th>Hospital</th>
-            <th>Nº de Internações</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
       </table>
     </div>
   </div>

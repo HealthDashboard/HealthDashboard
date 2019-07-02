@@ -127,7 +127,7 @@ function create_dashboard_charts() {
     create_analise(data);
     populate_procedures_by_date();
     create_specialties_total(result["specialty_id"], "specialty_id");
-    update_rank();
+    // update_rank();
 }
 
 function animate_legend() {
@@ -453,15 +453,15 @@ function dashboard_legend() {
     });
 }
 
-function update_rank() {
-    if (dynamic == false) {
-        $.getJSON('/rank_health_centres.json', create_table_rank);
-        //console.log("RodolfoIf")
-    } else {
-        $.getJSON('/procedure/proceduresPerHealthCentre', data, create_table_rank);
-        //console.log("RodolfoElse")
-    }
-}
+// function update_rank() {
+//     if (dynamic == false) {
+//         $.getJSON('/rank_health_centres.json', create_table_rank);
+//         //console.log("RodolfoIf")
+//     } else {
+//         $.getJSON('/procedure/proceduresPerVariable?variable=DA', data, create_table_rank);
+//         //console.log("RodolfoElse")
+//     }
+// }
 
 function create_table_rank(result) {
     rank_table = $('.health_centres_rank tbody');
