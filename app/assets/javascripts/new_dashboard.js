@@ -66,6 +66,8 @@ function init_dashboard_sections() {
     document.getElementById("carater-filtro").innerHTML = treatment_type;
 
     update_rank();
+    create_pie_chart(filtered_data["specialty_id"], "chart_bed_specialty");
+    create_pie_chart(filtered_data["gestor_ide"], "chart_management");
 }
 
 //Ranking
@@ -355,6 +357,60 @@ function create_specialties_distance_between_patients_hospital(data){
 
     myChart.setOption(option);
     });
+}
+
+function create_pie_chart(data, elementId) {
+    var myChart = echarts.init(document.getElementById(elementId));
+
+    var formatData = [];
+    formatData.push(['amount', 'variable']);
+    var max = 0;
+
+    for(var i=0; i<data.length; i++){
+        if(data[i][1] != null && data[i][0] != null){
+            formatData.push([data[i][1], data[i][0].toString()]);
+            max = Math.max(max, data[i][1]);
+        }
+    }
+    var option = {
+        dataset: {
+            source: formatData,
+        },
+        //title: 'Title',
+        tooltip : {
+            trigger: 'item',
+
+        },
+        legend: {
+            type: 'scroll',
+            orient: 'vertical',
+            right: 10,
+            top: 20,
+            bottom: 20,
+        },
+        label: {
+                formatter: '{b}: ({d}%)'
+            },
+        series : [
+            {
+                type: 'pie',
+                radius : '55%',
+                center: ['40%', '50%'],
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                },
+                encode: {
+                  itemName: 'variable',
+                  value: 'amount'
+                }
+            }
+        ]
+    };
+    myChart.setOption(option);
 }
 /* Gráfico base para uma variável*/
 function create_one_variable_graph(data, field){
