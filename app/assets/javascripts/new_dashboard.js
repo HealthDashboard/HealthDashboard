@@ -73,6 +73,9 @@ function init_dashboard_sections() {
     create_pie_chart(filtered_data["gender"], "chart_gender");
     create_bar_chart(filtered_data["age_code"], "chart_age");
     create_pie_chart(filtered_data["race"], "chart_race");
+    create_bar_chart(filtered_data["STS"], "chart_STS");
+    create_bar_chart(filtered_data["CRS"], "chart_CRS");
+    create_bar_chart(filtered_data["DA"], "chart_DA");
 }
 
 //Ranking

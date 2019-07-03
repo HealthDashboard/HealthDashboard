@@ -125,12 +125,7 @@
     overflow: auto;
   }
 
-  .distace-charts {
-    height: 450px;
-    overflow: auto;
-  }
-
-  .patient-charts {
+  .overflow {
     height: 450px;
     overflow: auto;
   }
