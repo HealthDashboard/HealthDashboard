@@ -68,6 +68,11 @@ function init_dashboard_sections() {
     update_rank();
     create_pie_chart(filtered_data["specialty_id"], "chart_bed_specialty");
     create_pie_chart(filtered_data["gestor_ide"], "chart_management");
+    create_pie_chart(filtered_data["treatment_type"], "chart_character");
+    create_bar_line_chart(filtered_data["days_total"], "chart_days_total");
+    create_pie_chart(filtered_data["gender"], "chart_gender");
+    create_bar_chart(filtered_data["age_code"], "chart_age");
+    create_pie_chart(filtered_data["race"], "chart_race");
 }
 
 //Ranking
@@ -358,7 +363,7 @@ function create_specialties_distance_between_patients_hospital(data){
     myChart.setOption(option);
     });
 }
-
+/* Gráfico de Pizza */
 function create_pie_chart(data, elementId) {
     var myChart = echarts.init(document.getElementById(elementId));
 
@@ -409,6 +414,165 @@ function create_pie_chart(data, elementId) {
                 }
             }
         ]
+    };
+    myChart.setOption(option);
+}
+/* Gráfico de Barra */
+function create_bar_chart(data, elementId) {
+    var myChart = echarts.init(document.getElementById(elementId));    
+
+    var formatData = [];
+    formatData.push(['amount', 'variable']);
+    var max = 0;
+
+    for(var i=0; i<data.length; i++){
+        if(data[i][1] != null && data[i][0] != null){
+            formatData.push([data[i][1], data[i][0].toString()]);
+            max = Math.max(max, data[i][1]);
+        }
+    }
+
+    var option = {
+        dataset: {
+            source: formatData,
+        },
+        //title: 'Title',
+        tooltip : {
+            trigger: 'axis',
+            axisPointer : {
+                type : 'shadow'
+            }
+        },
+        dataZoom: [{
+            id: 'dataZoomX',
+            type: 'slider',
+            xAxisIndex: [0],
+            filterMode: 'filter'
+        },
+        {
+            id: 'dataZoomY',
+            type: 'slider',
+            yAxisIndex: [0],
+            filterMode: 'empty'
+        }],
+        grid: {containLabel: true},
+        xAxis: {
+            name: 'Procedimentos',
+            axisLabel: {interval : 0},
+        },
+        yAxis: {type: 'category'},
+        visualMap: {
+            orient: 'horizontal',
+            min: 0,
+            max: max,
+            text: ['Máximo', 'Mínimo'],
+            // Map the score column to color
+            dimension: 0,
+            inRange: {
+                color: ['#D7DA8B', '#E15457']
+            },
+        },
+        series: [
+            {
+                type: 'bar',
+                encode: {
+                    // Map the "amount" column to X axis.
+                    x: 'amount',
+                    // Map the "product" column to Y axis
+                    y: 'variable',
+                }
+            }
+        ]
+    };
+    myChart.setOption(option);
+}
+/* Gráfico de Barra e Linha*/
+function create_bar_line_chart(data, elementId) {
+    var myChart = echarts.init(document.getElementById(elementId));    
+
+    var formatData = [];
+    formatData.push(['amount', 'variable']);
+    var max = 0;
+
+    for(var i=0; i<data.length; i++){
+        if(data[i][1] != null && data[i][0] != null){
+            formatData.push([data[i][1], data[i][0].toString()]);
+            max = Math.max(max, data[i][1]);
+        }
+    }
+
+    var q = quartile(formatData);
+    var option = {
+          dataset: {
+              source: formatData,
+          },
+          //title: 'Title',
+          tooltip : {
+              trigger: 'axis',
+              axisPointer : {
+                  type : 'shadow'
+              },
+          },
+          dataZoom: [{
+              id: 'dataZoomX',
+              type: 'slider',
+              xAxisIndex: [0],
+              filterMode: 'filter'
+          }],
+          grid: {containLabel: true},
+          yAxis: {
+            name: 'Procedimentos',
+            type: 'value',
+            axisLabel: {interval : 10}
+          },
+          xAxis: {
+            type: 'category',
+          },
+          toolbox: {
+            feature: {
+              magicType: {
+                type: ['line', 'bar']
+              }
+            }
+          },
+          series: [
+              {
+                  type: 'bar',
+                  encode: {
+                      y: 'amount',
+                      x: 'variable',
+                  },
+                  markPoint: {
+                    data : [[
+                        {
+                          name: "q1",
+                          value: q[1]
+                        }]
+                    ]
+                  },
+                  markArea: {
+                    silent: true,
+                    label: {
+                      show: true,
+                      formatter: "Q1: " + q[0] + " até Q3: " + q[2],
+                      position: ["102%", "2%"],
+                      emphasis: {
+                        position: ["102%", "2%"],
+                      }
+                    },
+                      data: [
+                        [
+                          {
+                            xAxis: q[0]
+                          },
+                          {
+                            xAxis: q[2]
+                          }
+                        ]
+                      ]
+                  },
+              }
+          ]
     };
     myChart.setOption(option);
 }

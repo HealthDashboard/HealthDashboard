@@ -130,6 +130,11 @@
     overflow: auto;
   }
 
+  .patient-charts {
+    height: 450px;
+    overflow: auto;
+  }
+
   .card-div.active .card-body {
     max-height: 1000px;
     transform: scaleY(1);
