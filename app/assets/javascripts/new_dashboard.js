@@ -66,16 +66,16 @@ function init_dashboard_sections() {
     document.getElementById("carater-filtro").innerHTML = treatment_type;
 
     update_rank();
-    create_pie_chart(filtered_data["specialty_id"], "chart_bed_specialty");
-    create_pie_chart(filtered_data["gestor_ide"], "chart_management");
-    create_pie_chart(filtered_data["treatment_type"], "chart_character");
-    create_bar_line_chart(filtered_data["days_total"], "chart_days_total");
-    create_pie_chart(filtered_data["gender"], "chart_gender");
-    create_bar_chart(filtered_data["age_code"], "chart_age");
-    create_pie_chart(filtered_data["race"], "chart_race");
-    create_bar_chart(filtered_data["STS"], "chart_STS");
-    create_bar_chart(filtered_data["CRS"], "chart_CRS");
-    create_bar_chart(filtered_data["DA"], "chart_DA");
+    create_pie_chart(filtered_data["specialty_id"], "chart_bed_specialty", "Número de internações por Especialidade do Leito");
+    create_pie_chart(filtered_data["gestor_ide"], "chart_management", "Número de internações por Gestão");
+    create_pie_chart(filtered_data["treatment_type"], "chart_character", "Número de internações por Caráter do Atendimento");
+    create_bar_line_chart(filtered_data["days_total"], "chart_days_total", "Número de internações pelo Total Geral de Diárias");
+    create_pie_chart(filtered_data["gender"], "chart_gender", "Internações por Sexo");
+    create_bar_chart(filtered_data["age_code"], "chart_age", "Internações por Faixa Etária");
+    create_pie_chart(filtered_data["race"], "chart_race", "Internações por Raça/Cor");
+    create_bar_chart(filtered_data["STS"], "chart_STS", "Internações por Supervisão Técnica de Saúde");
+    create_bar_chart(filtered_data["CRS"], "chart_CRS", "Internações por Coordenadoria Regional de Saúde");
+    create_bar_chart(filtered_data["DA"], "chart_DA", "Internações por Distrito Administrativo");
 }
 
 //Ranking
@@ -155,6 +155,9 @@ function create_specialties_total(data) {
                 color: '#333'
             }
         },
+        textStyle: {
+            fontSize: 16,
+        },
 
         tooltip : {
             trigger: 'item',
@@ -213,6 +216,9 @@ function create_proceduresPerSpecialties(data){
             textStyle: {
                 color: '#333'
             }
+        },
+        textStyle: {
+            fontSize: 16,
         },
         legend: {
             type: 'scroll',
@@ -283,6 +289,9 @@ function create_analise(data){
                     color: '#333'
                 }
             },
+            textStyle: {
+                fontSize: 16,
+            },
             tooltip : {
                 trigger: 'item',
                 formatter: "({d}%)"
@@ -336,6 +345,9 @@ function create_specialties_distance_between_patients_hospital(data){
                     color: '#333'
                 }
             },
+            textStyle: {
+                fontSize: 16,
+            },
             tooltip : {
                 trigger: 'item',
                 formatter: "{c} "
@@ -367,7 +379,7 @@ function create_specialties_distance_between_patients_hospital(data){
     });
 }
 /* Gráfico de Pizza */
-function create_pie_chart(data, elementId) {
+function create_pie_chart(data, elementId, title) {
     var myChart = echarts.init(document.getElementById(elementId));
 
     var formatData = [];
@@ -384,17 +396,20 @@ function create_pie_chart(data, elementId) {
         dataset: {
             source: formatData,
         },
-        //title: 'Title',
+        title: {
+            text: title,
+        },
+        textStyle: {
+            fontSize: 16,
+        },
         tooltip : {
             trigger: 'item',
-
         },
         legend: {
             type: 'scroll',
             orient: 'vertical',
-            right: 10,
-            top: 20,
-            bottom: 20,
+            right: 0,
+            bottom: 0,
         },
         label: {
                 formatter: '{b}: ({d}%)'
@@ -421,7 +436,7 @@ function create_pie_chart(data, elementId) {
     myChart.setOption(option);
 }
 /* Gráfico de Barra */
-function create_bar_chart(data, elementId) {
+function create_bar_chart(data, elementId, title) {
     var myChart = echarts.init(document.getElementById(elementId));    
 
     var formatData = [];
@@ -439,7 +454,12 @@ function create_bar_chart(data, elementId) {
         dataset: {
             source: formatData,
         },
-        //title: 'Title',
+        title: {
+            text: title,
+        },
+        textStyle: {
+            fontSize: 16,
+        },
         tooltip : {
             trigger: 'axis',
             axisPointer : {
@@ -490,7 +510,7 @@ function create_bar_chart(data, elementId) {
     myChart.setOption(option);
 }
 /* Gráfico de Barra e Linha*/
-function create_bar_line_chart(data, elementId) {
+function create_bar_line_chart(data, elementId, title) {
     var myChart = echarts.init(document.getElementById(elementId));    
 
     var formatData = [];
@@ -509,7 +529,12 @@ function create_bar_line_chart(data, elementId) {
           dataset: {
               source: formatData,
           },
-          //title: 'Title',
+          title: {
+            text: title,
+          },
+          textStyle: {
+              fontSize: 16,
+          },
           tooltip : {
               trigger: 'axis',
               axisPointer : {
@@ -600,6 +625,9 @@ function create_one_variable_graph(data, field){
                 source: formatData,
             },
             //title: 'Title',
+            textStyle: {
+                fontSize: 16,
+            },
             tooltip : {
                 trigger: 'axis',
                 axisPointer : {
@@ -655,6 +683,9 @@ function create_one_variable_graph(data, field){
                 source: formatData,
             },
             //title: 'Title',
+            textStyle: {
+                fontSize: 16,
+            },
             tooltip : {
                 trigger: 'item',
 
@@ -696,6 +727,9 @@ function create_one_variable_graph(data, field){
                 source: formatData,
             },
             //title: 'Title',
+            textStyle: {
+                fontSize: 16,
+            },
             tooltip : {
                 trigger: 'axis',
             },
@@ -741,6 +775,9 @@ function create_one_variable_graph(data, field){
                   source: formatData,
               },
               //title: 'Title',
+              textStyle: {
+                  fontSize: 16,
+              },
               tooltip : {
                   trigger: 'axis',
                   axisPointer : {
