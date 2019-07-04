@@ -66,6 +66,7 @@ function init_dashboard_sections() {
     document.getElementById("carater-filtro").innerHTML = treatment_type;
 
     update_rank();
+    populate_procedures_by_date();
     create_pie_chart(filtered_data["specialty_id"], "chart_bed_specialty", "Número de internações por Especialidade do Leito");
     create_pie_chart(filtered_data["gestor_ide"], "chart_management", "Número de internações por Gestão");
     create_pie_chart(filtered_data["treatment_type"], "chart_character", "Número de internações por Caráter do Atendimento");
@@ -126,6 +127,56 @@ function create_table_rank(result) {
     });
     rows += " <th scope=\"row\">#</th><td> TOTAL </td> <td>" + Total.toLocaleString('pt-BR') + "</td></tr></tbody>"
     rank_table.html(rows);
+}
+
+/* Série Histórica */
+function populate_procedures_by_date() {
+    var myChart = echarts.init(document.getElementById("procedure_by_date"));
+
+    if (dynamic == false) {
+        var path = "/procedures_by_date.json";
+    } else {
+        var path = "/procedure/proceduresPerMonth"
+    }
+
+    $.getJSON(path, data, function(result) {
+        var values = [];
+        $.each(result, function(k,v) {
+          values.push([new Date(v[0] + "T00:00:00").toString().slice(4, 8)+new Date(v[0] + "T00:00:00").toString().slice(11, 15), v[1]]); // Fix timezone problem
+        });
+
+        option = {
+            dataset: {
+                source: values,
+            },
+            title: {
+                text: 'Número de internações por mês',
+                top: 20,
+                right: 20,
+                left: 150,
+                textStyle: {
+                    color: '#333'
+                }
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{c} "
+            },
+            xAxis: {
+                type: 'category',
+            },
+            yAxis: {
+                type: 'value'
+
+            },
+            series: [{
+                type: 'line'
+
+            }]
+        };
+
+        myChart.setOption(option);
+    });
 }
 
 // Charts
