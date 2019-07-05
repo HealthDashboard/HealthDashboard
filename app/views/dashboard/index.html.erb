@@ -100,7 +100,9 @@
       <div class="buttons-div">
         <i class="config-buttons fas fa-download" title="Download"></i>
         <i class="config-buttons fas fa-print" title="Imprimir"></i>
-        <i class="config-buttons fas fa-info-circle" title="Mais informações"></i>
+        <i class="config-buttons fas fa-info-circle popup popup" title="Mais informações" onclick="open_info('main_popup')">
+            <span class="popuptext" id="main_popup">Esta aba informa qual é a base de dados utilizada, além de possuir informações 
+                                                    sobre os dados selecionados anteriormente pela página de Busca Avançada</span></i>
         <i class="config-buttons fas fa-thumbtack" title="Fixar"></i>
         <i class="main-button far fa-times-circle" onclick="on_click('main')"></i>
       </div>
@@ -113,7 +115,7 @@
         <span class="bold">Território/Unidade de análise:</span> <span id="territorio-base">Municipio de São Paulo</span>
       </p>
       <br>
-      <p class="title">Dados selecionados (com base nos filtros)</p>
+      <p class="title">Dados Selecionados (com base nos filtros)</p>
       <div id="filters-text" style="color: #6b6b6b;">
         <p><span class="bold">Período:</span> <span id="data-filtro"></span><br></p>
         <p><span class="bold">Total de registros:</span> <span id="total-filtro"></span><br></p>
@@ -130,7 +132,9 @@
       <div class="buttons-div">
         <i class="config-buttons fas fa-download" title="Download"></i>
         <i class="config-buttons fas fa-print" title="Imprimir"></i>
-        <i class="config-buttons fas fa-info-circle" title="Mais informações"></i>
+        <i class="config-buttons fas fa-info-circle popup" title="Mais informações" onclick="open_info('rank_popup')">
+            <span class="popuptext" id="rank_popup">Essa aba apresenta um Ranking em ordem decrescente com o número  
+                                                    de internações por hospital (ou por DA, faixa etária, sexo ou diagnóstico principal)</span></i>
         <i class="config-buttons fas fa-thumbtack" title="Fixar"></i>
         <i class="main-button far fa-times-circle" onclick="on_click('rankings')"></i>
       </div>
@@ -147,30 +151,34 @@
       </table>
     </div>
   </div>
-  <div id="change_this" class="card-div">
+  <div id="historic" class="card-div">
     <div class="card-header">
       <h1>Série Histórica</h1>
       <div class="buttons-div">
         <i class="config-buttons fas fa-download" title="Download"></i>
         <i class="config-buttons fas fa-print" title="Imprimir"></i>
-        <i class="config-buttons fas fa-info-circle" title="Mais informações"></i>
+        <i class="config-buttons fas fa-info-circle popup" title="Mais informações" onclick="open_info('historic_popup')">
+            <span class="popuptext" id="historic_popup">A Série Histórica apresenta o número de internações por mês no período 
+                                                    vigente da base de dados utilizada</span></i>
         <i class="config-buttons fas fa-thumbtack" title="Fixar"></i>
-        <i class="main-button far fa-times-circle" onclick="on_click('change_this')"></i>
+        <i class="main-button far fa-times-circle" onclick="on_click('historic')"></i>
       </div>
     </div>
     <div class="card-body">
       <div id="procedure_by_date" style="width: 1500px; height: 400px"></div>
     </div>
   </div>
-  <div id="specilities" class="card-div">
+  <div id="specialities" class="card-div">
     <div class="card-header">
       <h1>Especialidades</h1>
       <div class="buttons-div">
         <i class="config-buttons fas fa-download" title="Download"></i>
         <i class="config-buttons fas fa-print" title="Imprimir"></i>
-        <i class="config-buttons fas fa-info-circle" title="Mais informações"></i>
+        <i class="config-buttons fas fa-info-circle popup" title="Mais informações" onclick="open_info('specialities_popup')">
+            <span class="popuptext" id="specialities_popup">Esta aba apresenta informações específicas sobre as Especialidades
+                                                    das internações</span></i>
         <i class="config-buttons fas fa-thumbtack" title="Fixar"></i>
-        <i class="main-button far fa-times-circle" onclick="on_click('specilities')"></i>
+        <i class="main-button far fa-times-circle" onclick="on_click('specialities')"></i>
       </div>
     </div>
     <div class="card-body">
@@ -186,7 +194,9 @@
       <div class="buttons-div">
         <i class="config-buttons fas fa-download" title="Download"></i>
         <i class="config-buttons fas fa-print" title="Imprimir"></i>
-        <i class="config-buttons fas fa-info-circle" title="Mais informações"></i>
+        <i class="config-buttons fas fa-info-circle popup" title="Mais informações" onclick="open_info('healthcentres_popup')">
+            <span class="popuptext" id="healthcentres_popup">Esta aba apresenta informações específicas sobre os Estabelecimentos
+                                                           das internações</span></i>
         <i class="config-buttons fas fa-thumbtack" title="Fixar"></i>
         <i class="main-button far fa-times-circle" onclick="on_click('healthcentres')"></i>
       </div>
@@ -204,7 +214,9 @@
       <div class="buttons-div">
         <i class="config-buttons fas fa-download" title="Download"></i>
         <i class="config-buttons fas fa-print" title="Imprimir"></i>
-        <i class="config-buttons fas fa-info-circle" title="Mais informações"></i>
+        <i class="config-buttons fas fa-info-circle popup" title="Mais informações" onclick="open_info('hospitalizations_popup')">
+            <span class="popuptext" id="hospitalizations_popup">Esta aba apresenta informações específicas sobre as Internações 
+                                                              e os Pacientes das internações</span></i>
         <i class="config-buttons fas fa-thumbtack" title="Fixar"></i>
         <i class="main-button far fa-times-circle" onclick="on_click('hospitalizations')"></i>
       </div>
@@ -231,11 +243,13 @@
   </div>
   <div id="territories" class="card-div">
     <div class="card-header">
-      <h1>Territórios e regiões administrativas</h1>
+      <h1>Territórios e Regiões Administrativas</h1>
       <div class="buttons-div">
         <i class="config-buttons fas fa-download" title="Download"></i>
         <i class="config-buttons fas fa-print" title="Imprimir"></i>
-        <i class="config-buttons fas fa-info-circle" title="Mais informações"></i>
+        <i class="config-buttons fas fa-info-circle popup" title="Mais informações" onclick="open_info('territories_popup')">
+            <span class="popuptext" id="territories_popup">Esta aba apresenta informações específicas sobre os Territórios 
+                                                          e as Regiões Administrativas das internações</span></i>
         <i class="config-buttons fas fa-thumbtack" title="Fixar"></i>
         <i class="main-button far fa-times-circle" onclick="on_click('territories')"></i>
       </div>
@@ -252,11 +266,13 @@
   </div>
   <div id="distance" class="card-div">
     <div class="card-header">
-      <h1>Distâncias e deslocamento</h1>
+      <h1>Distâncias e Deslocamento</h1>
       <div class="buttons-div">
         <i class="config-buttons fas fa-download" title="Download"></i>
         <i class="config-buttons fas fa-print" title="Imprimir"></i>
-        <i class="config-buttons fas fa-info-circle" title="Mais informações"></i>
+        <i class="config-buttons fas fa-info-circle popup" title="Mais informações" onclick="open_info('distance_popup')">
+            <span class="popuptext" id="distance_popup">Esta aba apresenta informações específicas sobre as Distâncias
+                                                      percorrida pelos pacientes para serem internados</span></i>
         <i class="config-buttons fas fa-thumbtack" title="Fixar"></i>
         <i class="main-button far fa-times-circle" onclick="on_click('distance')"></i>
       </div>
@@ -297,7 +313,9 @@
       <div class="buttons-div">
         <i class="config-buttons fas fa-download" title="Download"></i>
         <i class="config-buttons fas fa-print" title="Imprimir"></i>
-        <i class="config-buttons fas fa-info-circle" title="Mais informações"></i>
+        <i class="config-buttons fas fa-info-circle popup" title="Mais informações" onclick="open_info('dynamic_popup')">
+            <span class="popuptext" id="dynamic_popup">Esta aba possibilita a visualização de informações específicas 
+                                                      sobre o Número de Internações de acordo com a Variável Escolhida</span></i>
         <i class="config-buttons fas fa-thumbtack" title="Fixar"></i>
         <i class="main-button far fa-times-circle" onclick="on_click('dynamic-charts')"></i>
       </div>
@@ -315,11 +333,13 @@
   </div>
   <div id="statistic" class="card-div">
     <div class="card-header">
-      <h1>Estatística descritiva</h1>
+      <h1>Estatística Descritiva</h1>
       <div class="buttons-div">
         <i class="config-buttons fas fa-download" title="Download"></i>
         <i class="config-buttons fas fa-print" title="Imprimir"></i>
-        <i class="config-buttons fas fa-info-circle" title="Mais informações"></i>
+        <i class="config-buttons fas fa-info-circle popup" title="Mais informações" onclick="open_info('statistic_popup')">
+            <span class="popuptext" id="statistic_popup">Esta aba apresenta informações estatísticas sobre algumas das Variáveis,
+                                                        tais como: Idade, Diárias, Diárias UT, Diárias UTI, Valor Total e Dias de Permanencia</span></i>
         <i class="config-buttons fas fa-thumbtack" title="Fixar"></i>
         <i class="main-button far fa-times-circle" onclick="on_click('statistic')"></i>
       </div>

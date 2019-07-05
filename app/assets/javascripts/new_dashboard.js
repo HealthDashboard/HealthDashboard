@@ -926,6 +926,11 @@ function create_one_variable_graph(data, field){
 
 //*** DOM Functions ****//
 
+function open_info(id) {
+    var popup = document.getElementById(id);
+    popup.classList.toggle("show");
+}
+
 function on_click(id) {
     $("#" + id).toggleClass("active")
 }
