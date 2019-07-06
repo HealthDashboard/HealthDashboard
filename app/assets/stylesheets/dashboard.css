@@ -7,8 +7,9 @@
     display: flex;
     align-items: center;
     flex-direction: column;
+    height: calc(100vh - 50px);
     padding: 15px 0 50px 0;
-    background-color: #f2f2f2;
+    background-color: #f2f2f238;
   }
 
   .card-div {

@@ -1,405 +1,203 @@
-
-var specialties_color = {
- "CIRURGIA":'#587C7C',
- "OBSTETRÍCIA":'#013F5E',
- "CLINICA MÉDICA":'#007C84',
- "CUIDADOS PROLONGADOS":"#BBE0CE",
- "PSIQUIATRIA":"#9EA615",
- "TISIOLOGIA":"#E8D666",
- "PEDIATRIA":"#FEDCC1",
- "REABILITAÇÃO":"#F7A08C",
- "PSIQUIATRIA EM HOSPITAL-DIA": "#F1573F"
-}
-
-var filters_print = ["Estabelecimento de ocorrência", "Competência (aaaamm)", "Especialidade do leito",
-"Caráter do atendimento", "Diagnóstico principal (CID-10)", "Diagnóstico secundário (CID-10)",
-"Diagnóstico secundário 2 (CID-10)",  "Complexidade", "Tipo de Financiamento", "Faixa etária", "Raça/Cor", "Nível de instrução",
-"Distrito Administrativo", "Subprefeitura", "Supervisão Técnica de Saúde", "Coordenadoria Regional de Saúde",
-"Gestão", "Total geral de diárias", "Diárias UTI", "Diárias UI", "Dias de permanência", "Valor da parcela"];
-
-
-var dynamic = false;
-var data = null;
-var dashboard_legend_clicked = false;
-var filters_text = null;
-var start_date = null;
-var end_date = null;
-var genders = null;
+var filters = null;
+var filtered_data = null;
+var dynamicChart = null;
 
 var chart_type = {"CRS":"bar", "DA":"bar", "PR":"bar", "STS":"bar", "age_code":"bar", "cid_primary":"cid", "cid_secondary":"cid",
  "cid_secondary2":"cid", "cmpt":"line", "cnes_id":"bar", "complexity":"pie", "days":"bar-line", "days_total":"bar-line", "days_uti":"bar-line",
  "days_ui":"bar-line", "distance":"bar-line", "finance":"pie", "gender":"pie", "gestor_ide":"pie", "lv_instruction":"pie", "proce_re":"bar",
  "race":"pie", "specialty_id":"pie", "treatment_type":"pie", "val_total":"bar-line"};
 
-function init_dashboard_chart() {
-    dynamic = false;
-    dashboard_legend_clicked = false;
+function init_dashboard_sections() {
+
+    // Get the filters
     if (window._data_filters != null && window._data_filters != []) {
-        dynamic = true;
-        data = window._data_filters;
-        filters_text = window._filters_text;
-        start_date = window._start_date;
-        end_date = window._end_date;
-        genders = window._genders;
-        window._data_filters = null;
-        window._filters_text = null;
-        window._start_date = null;
-        window._end_date = null;
-        window._genders = null;
-
-        filters_show();
-
-    } else {
-        dynamic = false;
-        document.getElementById("filters-div").style.display = "none";
-    }
-    create_dashboard_charts();
-    dashboard_legend();
-    animate_legend();
-}
-
-function filters_show(){
-    var filters_div_text = "";
-
-    $.each(filters_print, function(index, value) {
-        if (filters_text[index] != null && filters_text[index] != "") {
-            filters_div_text = filters_div_text.concat("<br /><strong>" + value + ": </strong>" + filters_text[index]);
-        }
-    });
-    if (genders[0] != null) {
-        filters_div_text = filters_div_text.concat("<br /><strong>Sexo:</strong> " + genders.join(", "));
-    }
-    if (start_date != null && start_date != "") {
-        filters_div_text = filters_div_text.concat("<br /><strong>Data mínima:</strong> " + start_date);
-    }
-    if (end_date != null && end_date != "") {
-        filters_div_text = filters_div_text.concat("<br /><strong>Data máxima:</strong> " + end_date);
-    }
-    if (dist_min != null) {
-        filters_div_text = filters_div_text.concat("<br /><strong>Distância mínima:</strong> " + dist_min);
-    }
-    if (dist_max != null) {
-        filters_div_text = filters_div_text.concat("<br /><strong>Distância máxima:</strong> " + dist_max);
+        filters = window._data_filters;       
     }
 
-    filters_div_text = filters_div_text.concat("<br/><br/>");
-    document.getElementById("filters-text").innerHTML = filters_div_text;
-}
-
-function create_dashboard_charts() {
-    if(data === null){
+    // Get filtered data
+    if(filters === null) {
         $.ajax({
             url: "variables_metric.json",
             dataType: 'json',
             async: false,
-            data: data,
+            data: filters,
             success: function(loaded) {
-                result = loaded;
-                result["cnes_id"].reverse();
-                result["STS"].reverse()
-                result["PR"].reverse()
-                result["CRS"].reverse()
-                result["DA"].reverse()
-                result["distance"].sort()
-                result["val_total"] = result["val_total"].map(x => {return [x[0].replace("," , "."), x[1]]})
-                create_one_variable_graph(result["cnes_id"], "cnes_id");
+                filtered_data = loaded;
             }
-          });
-
+        });
     }
-    else{
+    else {
         $.ajax({
             url: "procedure/proceduresVariables",
             dataType: 'json',
             async: false,
-            data: data,
+            data: filters,
             success: function(loaded) {
-                result = loaded;
-                result["val_total"] = result["val_total"].map(x => {return [x[0].replace("," , "."), x[1]]})
-                create_one_variable_graph(result["cnes_id"], "cnes_id");
+                filtered_data = loaded;
             }
-          });
+        });
     }
 
+    // Set vars to the first section informations
+    if (filters) { 
+        start_date = JSON.parse(filters.data).start_date;
+        end_date = JSON.parse(filters.data).end_date;
+    }
+    else start_date = "";
+    if (start_date == "") document.getElementById("data-filtro").parentElement.className += " hidden";;
+    count = filtered_data.gender.reduce((sum, item) => sum + item[1], 0);
+    region = ""
+    if (filtered_data.CRS.length == 0) document.getElementById("territorio-filtro").parentElement.className += " hidden";
+    else if (filtered_data.CRS.length == 6) document.getElementById("territorio-filtro").parentElement.className += " hidden";
+    else region = "CRS " + filtered_data.CRS[0][0];
+    for (var i = 1; i < filtered_data.CRS.length-1; i++) region += ", "+ filtered_data.CRS[i][0];
+    region += " e "+ filtered_data.CRS[filtered_data.CRS.length-1][0];
+    gender = ""
+    if (filtered_data.gender.length == 1) gender = filtered_data.gender[0][0];
+    else document.getElementById("sexo-filtro").parentElement.className += " hidden";
+    age = ""
+    if (filtered_data.age_code.length == 1) age = filtered_data.age_code[0][0];
+    else document.getElementById("idade-filtro").parentElement.className += " hidden";
+    treatment_type = ""
+    if (filtered_data.treatment_type.length == 1) treatment_type = filtered_data.treatment_type[0][0];
+    else document.getElementById("carater-filtro").parentElement.className += " hidden";
 
-    create_proceduresPerSpecialties(result["specialty_id"], "specialty_id");
-    create_specialties_distance_between_patients_hospital(data);
-    create_analise(data);
+
+    // Load first section informations (using the filtered data)
+    document.getElementById("data-filtro").innerHTML = start_date + " à " + end_date;
+    document.getElementById("total-filtro").innerHTML = count;
+    document.getElementById("territorio-filtro").innerHTML = region;
+    document.getElementById("sexo-filtro").innerHTML = gender;
+    document.getElementById("idade-filtro").innerHTML = age;
+    document.getElementById("carater-filtro").innerHTML = treatment_type;
+    
+    dynamicChart = echarts.init(document.getElementById('bar-graph'));
+    $(window).on('resize', function(){
+        if(dynamicChart != null && dynamicChart != undefined){
+          dynamicChart.resize();
+        }
+    });
+    update_rank();
     populate_procedures_by_date();
-    create_specialties_total(result["specialty_id"], "specialty_id");
-    // update_rank();
+    create_proceduresPerSpecialties(filtered_data["specialty_id"], "specialty_id");
+    create_specialties_distance_between_patients_hospital(filters);
+    create_analise(filters);
+    create_specialties_total(filtered_data["specialty_id"], "specialty_id");
+    create_pie_chart(filtered_data["specialty_id"], "chart_bed_specialty", "Número de internações por Especialidade do Leito");
+    create_pie_chart(filtered_data["gestor_ide"], "chart_management", "Número de internações por Gestão");
+    create_pie_chart(filtered_data["treatment_type"], "chart_character", "Número de internações por Caráter do Atendimento");
+    create_bar_line_chart(filtered_data["days_total"], "chart_days_total", "Número de internações pelo Total Geral de Diárias");
+    create_pie_chart(filtered_data["gender"], "chart_gender", "Internações por Sexo");
+    create_bar_chart(filtered_data["age_code"], "chart_age", "Internações por Faixa Etária");
+    create_pie_chart(filtered_data["race"], "chart_race", "Internações por Raça/Cor");
+    create_bar_chart(filtered_data["STS"], "chart_STS", "Internações por Supervisão Técnica de Saúde");
+    create_bar_chart(filtered_data["CRS"], "chart_CRS", "Internações por Coordenadoria Regional de Saúde");
+    create_bar_chart(filtered_data["DA"], "chart_DA", "Internações por Distrito Administrativo");
+    create_one_variable_graph(filtered_data["cnes_id"], "cnes_id");
+    update_statistic_table();
 }
 
-function animate_legend() {
-    $dashboard = $("#dashboard_legend");
-    $arrow = $("#dashboard_legend .glyphicon-chevron-up");
-    $("#dashboard_legend .dashboard-header").click(function() {
-        var options = {}
-        if (!dashboard_legend_clicked) {
-            options = {top: '-=200px'};
-            dashboard_legend_clicked = true;
-            $arrow.addClass('glyphicon-chevron-down');
-            $arrow.removeClass('glyphicon-chevron-up');
+//Ranking
+function update_rank() {
+    variable = document.getElementById("select-variable").value;
+    if (filters == null) {
+        switch(variable) {
+            case "health_centre":
+                $.getJSON('/rank_health_centre.json', create_table_rank);
+                break;
+            case "DA":
+                $.getJSON('/rank_DA.json', create_table_rank);
+                break;
+            case "age":
+                $.getJSON('/rank_age.json', create_table_rank);
+                break;
+            case "gender":
+                $.getJSON('/rank_gender.json', create_table_rank);
+                break;
+            case "CID":
+                $.getJSON('/rank_CID.json', create_table_rank);
+                break;
+            default:
+                $.getJSON('/rank_health_centre.json', create_table_rank);
+          }
+    } else {
+        $.getJSON('/procedure/proceduresPerVariable?variable='+variable, filters, create_table_rank);
+    }
+}
+function create_table_rank(result) {
+    rank_table = $('.health_centres_rank');
+
+    text = $("#select-variable :selected").text();
+    index = 1;
+    Total = 0;
+
+    rows = "<caption><center>Ranking dos que possuem mais internações hospitalares</center></caption>"
+    rows += "<thead><tr><th>#</th><th>"+text+"</th><th>Nº de Internações</th></tr></thead><tbody>"
+
+    $.each(result, function(name, n_procedures) {
+        if (index % 2) {
+            rows += "<tr class='bg-success'>"
         } else {
-            options = {top: '+=200px'};
-            dashboard_legend_clicked = false;
-            $arrow.addClass('glyphicon-chevron-up');
-            $arrow.removeClass('glyphicon-chevron-down');
+            rows += "<tr>"
         }
-        $dashboard.animate(options);
+        rows += " <th scope=\"row\">" + (index++) + "</th><td>" + name + "</td> <td>" + n_procedures.toLocaleString('pt-BR') + "</td></tr>"
+            Total += n_procedures
     });
+    rows += " <th scope=\"row\">#</th><td> TOTAL </td> <td>" + Total.toLocaleString('pt-BR') + "</td></tr></tbody>"
+    rank_table.html(rows);
 }
 
-/* Gráfico de Porcentagem de Internações por especialidades */
-function create_proceduresPerSpecialties(data){
-    var myChart = echarts.init(document.getElementById("chart_specialties"));
-    var formatData = [];
-    formatData.push(['amount', 'variable']);
-    var max = 0;
-
-    for(var i=0; i<data.length; i++){
-        if(data[i][1] != null && data[i][0] != null){
-            formatData.push([data[i][1], data[i][0].toString()]);
-            max = Math.max(max, data[i][1]);
-        }
-    }
-    option = {
-        dataset: {
-            source: formatData,
-        },
-        title: {
-            text: 'Porcentagem de Internações por especialidades',
-            top: 20,
-            left: 100,
-            textStyle: {
-                color: '#333'
-            }
-        },
-        legend: {
-            type: 'scroll',
-            orient: 'vertical',
-            right: 10,
-            top: 20,
-            bottom: 20,
-        },
-
-        tooltip : {
-            trigger: 'item',
-            formatter: "({d}%)"
-        },
-
-        series : [
-            {
-                type:'pie',
-                radius : '50%',
-                center: ['39%', '50%'],
-
-                encode: {
-                    itemName: 'variable',
-                    value: 'amount'
-                  }
-            }
-        ]
-    };
-    myChart.setOption(option);
-}
-
-/* Gráfico de Porcentagem de Distância Média por Especialidade */
-function create_specialties_distance_between_patients_hospital(data){
-    var myChart = echarts.init(document.getElementById("chart_spec_distance_average"));
-
-    if (dynamic == false) {
-        var path = 'specialties_procedure_distance_average'
+function update_statistic_table() {
+    if (filters == null) {
+        $.getJSON('/statistic_values.json', create_statistic_table);
     } else {
-        var path = '/procedure/proceduresDistance'
+        $.getJSON('/procedure/proceduresStatisticAnalysis', filters, create_statistic_table);
     }
+}
 
-    var formatData = [];
+function create_statistic_table(result) {
+    statistic_table = $('.statistic_table');
+    
+    index = 1;
 
-    formatData.push(['amount', 'variable']);
+    rows = "<thead><tr><th>Variável</th>"
+    rows += "<th>Contagem</th><th>Soma</th>"
+    rows += "<th>Mínimo</th><th>Máximo</th>"
+    rows += "<th>Média</th><th>Desvio Padrão</th></tr></thead><tbody>"
 
-    $.getJSON(path, data, function(result){
-        $.each(result, function(name, number) {
-            // console.log([name, number]);
-            formatData.push([name, number]);
-        });
-
-        var option = {
-            dataset: {
-                source: formatData
-            },
-            title: {
-                text: 'Distância Média por Especialidade',
-                top: 20,
-                right: 20,
-                left: 450,
-                textStyle: {
-                    color: '#333'
-                }
-            },
-            tooltip : {
-                trigger: 'item',
-                formatter: "{c} "
-            },
-
-            grid: {containLabel: true},
-
-            xAxis: {
-                type: 'value'
-            },
-            yAxis: {
-                type: 'category'
-            },
-
-            series: [
-                {
-                    type: 'bar',
-                    encode: {
-                        // Map the "amount" column to X axis.
-                        x: 'variable',
-                        // Map the "product" column to Y axis
-                        y: 'amount'
-                    }
-                }
-        ]
-    };
-
-    myChart.setOption(option);
+    $.each(result, function(variable, analysis) {
+        if (index % 2 == 0) {
+            rows += "<tr class='bg-success'>"
+        } else {
+            rows += "<tr>"
+        }
+        index++;
+        rows += "<td>" + variable + "</td>"
+        rows += "<td>" + analysis["count"].toLocaleString('pt-BR') + "</td>"
+        rows += "<td>" + analysis["sum"].toLocaleString('pt-BR') + "</td>"
+        rows += "<td>" + analysis["min"].toLocaleString('pt-BR') + "</td>"
+        rows += "<td>" + analysis["max"].toLocaleString('pt-BR') + "</td>"
+        rows += "<td>" + analysis["average"].toLocaleString('pt-BR') + "</td>"
+        rows += "<td>" + analysis["deviation"].toLocaleString('pt-BR') + "</td></tr>"
     });
+    rows += "</tbody>"
+    statistic_table.html(rows);
 }
 
-/* Gráfico de Total de Internações Hospitalares */
-function create_specialties_total(data) {
-    var myChart = echarts.init(document.getElementById("chart_spec_total"));
-    var formatData = [];
-    formatData.push(['amount', 'variable']);
-    var max = 0;
-
-    for(var i=0; i<data.length; i++){
-        if(data[i][1] != null && data[i][0] != null){
-            formatData.push([data[i][1], data[i][0].toString()]);
-            max = Math.max(max, data[i][1]);
-        }
-    }
-
-    option = {
-        dataset: {
-            source: formatData
-        },
-        title: {
-            text: 'Total de internações hospitalares',
-            top: 20,
-            left: 800,
-            textStyle: {
-                color: '#333'
-            }
-        },
-
-        tooltip : {
-            trigger: 'item',
-            formatter: "{c} "
-        },
-        grid: {containLabel: true},
-        xAxis: {name: 'amount'},
-        yAxis: {type: 'category'},
-        visualMap: {
-            orient: 'horizontal',
-            left: 'center',
-            min: 10,
-            max: 100,
-            text: ['High Score', 'Low Score'],
-            // Map the score column to color
-            dimension: 0,
-            inRange: {
-                color: ['#D7DA8B', '#E15457']
-            }
-        },
-        series: [
-            {
-                type: 'bar',
-                encode: {
-                    // Map the "amount" column to X axis.
-                    x: 'amount',
-                    // Map the "product" column to Y axis
-                    y: 'product'
-                }
-            }
-        ]
-    }
-    myChart.setOption(option);
-}
-
-/* Gráfico de Porcentagem de Internações por distância percorrida */
-function create_analise(data){
-    var myChart = echarts.init(document.getElementById("chart_div_analise"));
-
-    var formatData = [];
-    formatData.push(['variable', 'amount']);
-    // var max = 0;
-
-    if (dynamic == false) {
-        var path = '/distance_metric.json'
-    } else {
-        var path = 'procedure/proceduresDistanceGroup'
-    }
-
-    var aux = []
-
-    $.getJSON(path, data, function(result){
-        $.each(result, function(name, number) {
-            formatData.push([name, number]);
-
-        });
-
-        // console.log(formatData.length)
-
-        option = {
-            dataset: {
-                source: formatData,
-            },
-            legend: {
-                type: 'scroll',
-                orient: 'vertical',
-                right: 10,
-                top: 20,
-                bottom: 20,
-            },
-
-            tooltip : {
-                trigger: 'item',
-                formatter: "({d}%)"
-            },
-
-            series : [
-                {
-                    type:'pie',
-                    radius : '50%',
-                    center: ['39%', '50%'],
-
-                    encode: {
-                        itemName: 'variable',
-                        value: 'amount'
-                      }
-                }
-            ]
-        };
-    myChart.setOption(option);
-});
-}
-
+/* Série Histórica */
 function populate_procedures_by_date() {
     var myChart = echarts.init(document.getElementById("procedure_by_date"));
 
-    if (dynamic == false) {
+    if (filters == null) {
         var path = "/procedures_by_date.json";
     } else {
         var path = "/procedure/proceduresPerMonth"
     }
 
-    $.getJSON(path, data, function(result) {
+    $.getJSON(path, filters, function(result) {
         var values = [];
         $.each(result, function(k,v) {
-          values.push([new Date(v[0] + "T00:00:00"), v[1]]); // Fix timezone problem
+          values.push([new Date(v[0] + "T00:00:00").toString().slice(4, 8)+new Date(v[0] + "T00:00:00").toString().slice(11, 15), v[1]]); // Fix timezone problem
         });
 
         option = {
@@ -436,53 +234,483 @@ function populate_procedures_by_date() {
     });
 }
 
-function get_color_slice() {
-    var slices = {};
-    var idx = 0;
-    $.each(specialties_color, function(result, value) {
-        slices[idx++] = {color: value};
-    });
-    return slices;
-}
+// Charts
+/* Gráfico de Total de Internações Hospitalares */
+function create_specialties_total(data) {
+    var myChart = echarts.init(document.getElementById("chart_spec_total"));
+    var formatData = [];
+    formatData.push(['amount', 'variable']);
+    var max = 0;
 
-function dashboard_legend() {
-    text = ""
-    dashboard = $('#dashboard_legend .list')
-    $.each(specialties_color, function(name, color) {
-        dashboard.append("<li><span style='background-color: "+color+";'></span> "+name.toLowerCase()+"</li>");
-    });
-}
-
-// function update_rank() {
-//     if (dynamic == false) {
-//         $.getJSON('/rank_health_centres.json', create_table_rank);
-//         //console.log("RodolfoIf")
-//     } else {
-//         $.getJSON('/procedure/proceduresPerVariable?variable=DA', data, create_table_rank);
-//         //console.log("RodolfoElse")
-//     }
-// }
-
-function create_table_rank(result) {
-    rank_table = $('.health_centres_rank tbody');
-
-    rows = "";
-    index = 1;
-    Total = 0;
-
-    $.each(result, function(name, n_procedures) {
-        if (index % 2) {
-            rows += "<tr class='bg-success'>"
-        } else {
-            rows += "<tr>"
+    for(var i=0; i<data.length; i++){
+        if(data[i][1] != null && data[i][0] != null){
+            formatData.push([data[i][1], data[i][0].toString()]);
+            max = Math.max(max, data[i][1]);
         }
-        rows += " <th scope=\"row\">" + (index++) + "</th><td>" + name + "</td> <td>" + n_procedures.toLocaleString('pt-BR') + "</td></tr>"
-            Total += n_procedures
-    });
-    rows += " <th scope=\"row\">#</th><td> TOTAL </td> <td>" + Total.toLocaleString('pt-BR') + "</td></tr>"
-    rank_table.html(rows);
-}
+    }
 
+    option = {
+        dataset: {
+            source: formatData
+        },
+        title: {
+            text: 'Total de internações hospitalares',
+            top: 0,
+            left: 350,
+            textStyle: {
+                color: '#333'
+            }
+        },
+        textStyle: {
+            fontSize: 16,
+        },
+
+        tooltip : {
+            trigger: 'item',
+            formatter: "{c} "
+        },
+        grid: {containLabel: true},
+        xAxis: {name: 'amount'},
+        yAxis: {type: 'category'},
+        visualMap: {
+            orient: 'horizontal',
+            left: 'center',
+            min: 0,
+            max: max,
+            text: ['High Score', 'Low Score'],
+            // Map the score column to color
+            dimension: 0,
+            inRange: {
+                color: ['#D7DA8B', '#E15457']
+            }
+        },
+        series: [
+            {
+                type: 'bar',
+                encode: {
+                    // Map the "amount" column to X axis.
+                    x: 'amount',
+                    // Map the "product" column to Y axis
+                    y: 'product'
+                }
+            }
+        ]
+    }
+    myChart.setOption(option);
+}
+/* Gráfico de Porcentagem de Internações por especialidades */
+function create_proceduresPerSpecialties(data){
+    var myChart = echarts.init(document.getElementById("chart_specialties"));
+    var formatData = [];
+    formatData.push(['amount', 'variable']);
+    var max = 0;
+
+    for(var i=0; i<data.length; i++){
+        if(data[i][1] != null && data[i][0] != null){
+            formatData.push([data[i][1], data[i][0].toString()]);
+            max = Math.max(max, data[i][1]);
+        }
+    }
+    option = {
+        dataset: {
+            source: formatData,
+        },
+        title: {
+            text: 'Porcentagem de Internações por especialidades',
+            top: 0,
+            left: 80,
+            textStyle: {
+                color: '#333'
+            }
+        },
+        textStyle: {
+            fontSize: 16,
+        },
+        legend: {
+            type: 'scroll',
+            orient: 'vertical',
+            right: 10,
+            top: 20,
+            bottom: 20,
+        },
+
+        tooltip : {
+            trigger: 'item',
+            formatter: "({d}%)"
+        },
+
+        series : [
+            {
+                type:'pie',
+                radius : '50%',
+                center: ['39%', '50%'],
+
+                encode: {
+                    itemName: 'variable',
+                    value: 'amount'
+                }
+            }
+        ]
+    };
+    myChart.setOption(option);
+}
+/* Gráfico de Porcentagem de Internações por distância percorrida */
+function create_analise(data){
+    var myChart = echarts.init(document.getElementById("chart_div_analise"));
+
+    var formatData = [];
+    formatData.push(['variable', 'amount']);
+    // var max = 0;
+
+    if (filters == null) {
+        var path = '/distance_metric.json'
+    } else {
+        var path = 'procedure/proceduresDistanceGroup'
+    }
+
+    var aux = []
+
+    $.getJSON(path, data, function(result){
+        $.each(result, function(name, number) {
+            formatData.push([name, number]);
+
+        });
+
+        option = {
+            dataset: {
+                source: formatData,
+            },
+            legend: {
+                type: 'scroll',
+                orient: 'vertical',
+                right: 10,
+                top: 20,
+                bottom: 20,
+            },
+            title: {
+                text: 'Porcentagem de Internações por Distância Percorrida',
+                top: 20,
+                left: 50,
+                textStyle: {
+                    color: '#333'
+                }
+            },
+            textStyle: {
+                fontSize: 16,
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "({d}%)"
+            },
+
+            series : [
+                {
+                    type:'pie',
+                    radius : '50%',
+                    center: ['39%', '50%'],
+
+                    encode: {
+                        itemName: 'variable',
+                        value: 'amount'
+                      }
+                }
+            ]
+        };
+    myChart.setOption(option);
+    });
+}
+/* Gráfico de Porcentagem de Distância Média por Especialidade */
+function create_specialties_distance_between_patients_hospital(data){
+    var myChart = echarts.init(document.getElementById("chart_spec_distance_average"));
+
+    if (filters == null) {
+        var path = 'specialties_procedure_distance_average'
+    } else {
+        var path = '/procedure/proceduresDistance'
+    }
+
+    var formatData = [];
+
+    formatData.push(['amount', 'variable']);
+
+    $.getJSON(path, data, function(result){
+        $.each(result, function(name, number) {
+            // console.log([name, number]);
+            formatData.push([name, number]);
+        });
+
+        var option = {
+            dataset: {
+                source: formatData
+            },
+            title: {
+                text: 'Distância Média por Especialidade',
+                top: 20,
+                left: 400,
+                textStyle: {
+                    color: '#333'
+                }
+            },
+            textStyle: {
+                fontSize: 16,
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{c} "
+            },
+
+            grid: {containLabel: true},
+
+            xAxis: {
+                type: 'value'
+            },
+            yAxis: {
+                type: 'category'
+            },
+
+            series: [
+                {
+                    type: 'bar',
+                    encode: {
+                        // Map the "amount" column to X axis.
+                        x: 'variable',
+                        // Map the "product" column to Y axis
+                        y: 'amount'
+                    }
+                }
+        ]
+    };
+
+    myChart.setOption(option);
+    });
+}
+/* Gráfico de Pizza */
+function create_pie_chart(data, elementId, title) {
+    var myChart = echarts.init(document.getElementById(elementId));
+
+    var formatData = [];
+    formatData.push(['amount', 'variable']);
+    var max = 0;
+
+    for(var i=0; i<data.length; i++){
+        if(data[i][1] != null && data[i][0] != null){
+            formatData.push([data[i][1], data[i][0].toString()]);
+            max = Math.max(max, data[i][1]);
+        }
+    }
+    var option = {
+        dataset: {
+            source: formatData,
+        },
+        title: {
+            text: title,
+        },
+        textStyle: {
+            fontSize: 16,
+        },
+        tooltip : {
+            trigger: 'item',
+        },
+        legend: {
+            type: 'scroll',
+            orient: 'vertical',
+            right: 0,
+            bottom: 0,
+        },
+        label: {
+                formatter: '{b}: ({d}%)'
+            },
+        series : [
+            {
+                type: 'pie',
+                radius : '55%',
+                center: ['40%', '50%'],
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                },
+                encode: {
+                  itemName: 'variable',
+                  value: 'amount'
+                }
+            }
+        ]
+    };
+    myChart.setOption(option);
+}
+/* Gráfico de Barra */
+function create_bar_chart(data, elementId, title) {
+    var myChart = echarts.init(document.getElementById(elementId));    
+
+    var formatData = [];
+    formatData.push(['amount', 'variable']);
+    var max = 0;
+
+    for(var i=0; i<data.length; i++){
+        if(data[i][1] != null && data[i][0] != null){
+            formatData.push([data[i][1], data[i][0].toString()]);
+            max = Math.max(max, data[i][1]);
+        }
+    }
+
+    var option = {
+        dataset: {
+            source: formatData,
+        },
+        title: {
+            text: title,
+        },
+        textStyle: {
+            fontSize: 16,
+        },
+        tooltip : {
+            trigger: 'axis',
+            axisPointer : {
+                type : 'shadow'
+            }
+        },
+        dataZoom: [{
+            id: 'dataZoomX',
+            type: 'slider',
+            xAxisIndex: [0],
+            filterMode: 'filter'
+        },
+        {
+            id: 'dataZoomY',
+            type: 'slider',
+            yAxisIndex: [0],
+            filterMode: 'empty'
+        }],
+        grid: {containLabel: true},
+        xAxis: {
+            name: 'Procedimentos',
+            axisLabel: {interval : 0},
+        },
+        yAxis: {type: 'category'},
+        visualMap: {
+            orient: 'horizontal',
+            min: 0,
+            max: max,
+            text: ['Máximo', 'Mínimo'],
+            // Map the score column to color
+            dimension: 0,
+            inRange: {
+                color: ['#D7DA8B', '#E15457']
+            },
+        },
+        series: [
+            {
+                type: 'bar',
+                encode: {
+                    // Map the "amount" column to X axis.
+                    x: 'amount',
+                    // Map the "product" column to Y axis
+                    y: 'variable',
+                }
+            }
+        ]
+    };
+    myChart.setOption(option);
+}
+/* Gráfico de Barra e Linha*/
+function create_bar_line_chart(data, elementId, title) {
+    var myChart = echarts.init(document.getElementById(elementId));    
+
+    var formatData = [];
+    formatData.push(['amount', 'variable']);
+    var max = 0;
+
+    for(var i=0; i<data.length; i++){
+        if(data[i][1] != null && data[i][0] != null){
+            formatData.push([data[i][1], data[i][0].toString()]);
+            max = Math.max(max, data[i][1]);
+        }
+    }
+
+    var q = quartile(formatData);
+    var option = {
+          dataset: {
+              source: formatData,
+          },
+          title: {
+            text: title,
+          },
+          textStyle: {
+              fontSize: 16,
+          },
+          tooltip : {
+              trigger: 'axis',
+              axisPointer : {
+                  type : 'shadow'
+              },
+          },
+          dataZoom: [{
+              id: 'dataZoomX',
+              type: 'slider',
+              xAxisIndex: [0],
+              filterMode: 'filter'
+          }],
+          grid: {containLabel: true},
+          yAxis: {
+            name: 'Procedimentos',
+            type: 'value',
+            axisLabel: {interval : 10}
+          },
+          xAxis: {
+            type: 'category',
+          },
+          toolbox: {
+            feature: {
+              magicType: {
+                type: ['line', 'bar']
+              }
+            }
+          },
+          series: [
+              {
+                  type: 'bar',
+                  encode: {
+                      y: 'amount',
+                      x: 'variable',
+                  },
+                  markPoint: {
+                    data : [[
+                        {
+                          name: "q1",
+                          value: q[1]
+                        }]
+                    ]
+                  },
+                  markArea: {
+                    silent: true,
+                    label: {
+                      show: true,
+                      formatter: "Q1: " + q[0] + " até Q3: " + q[2],
+                      position: ["102%", "2%"],
+                      emphasis: {
+                        position: ["102%", "2%"],
+                      }
+                    },
+                      data: [
+                        [
+                          {
+                            xAxis: q[0]
+                          },
+                          {
+                            xAxis: q[2]
+                          }
+                        ]
+                      ]
+                  },
+              }
+          ]
+    };
+    myChart.setOption(option);
+}
+/* Gráfico base para uma variável*/
 function create_one_variable_graph(data, field){
     var formatData = [];
     formatData.push(['amount', 'variable']);
@@ -495,7 +723,7 @@ function create_one_variable_graph(data, field){
         }
     }
 
-    myChart.clear();
+    dynamicChart.clear();
     switch (chart_type[field]) {
       case "bar":
         var option = {
@@ -503,6 +731,9 @@ function create_one_variable_graph(data, field){
                 source: formatData,
             },
             //title: 'Title',
+            textStyle: {
+                fontSize: 16,
+            },
             tooltip : {
                 trigger: 'axis',
                 axisPointer : {
@@ -550,7 +781,7 @@ function create_one_variable_graph(data, field){
                 }
             ]
         };
-        myChart.setOption(option);
+        dynamicChart.setOption(option);
       break;
       case "pie":
         var option = {
@@ -558,6 +789,9 @@ function create_one_variable_graph(data, field){
                 source: formatData,
             },
             //title: 'Title',
+            textStyle: {
+                fontSize: 16,
+            },
             tooltip : {
                 trigger: 'item',
 
@@ -591,7 +825,7 @@ function create_one_variable_graph(data, field){
                 }
             ]
         };
-        myChart.setOption(option);
+        dynamicChart.setOption(option);
       break;
       case "line":
         var option = {
@@ -599,6 +833,9 @@ function create_one_variable_graph(data, field){
                 source: formatData,
             },
             //title: 'Title',
+            textStyle: {
+                fontSize: 16,
+            },
             tooltip : {
                 trigger: 'axis',
             },
@@ -635,7 +872,7 @@ function create_one_variable_graph(data, field){
                 }
             ]
         };
-        myChart.setOption(option);
+        dynamicChart.setOption(option);
       break;
       case "bar-line":
         var q = quartile(formatData);
@@ -644,6 +881,9 @@ function create_one_variable_graph(data, field){
                   source: formatData,
               },
               //title: 'Title',
+              textStyle: {
+                  fontSize: 16,
+              },
               tooltip : {
                   trigger: 'axis',
                   axisPointer : {
@@ -711,7 +951,7 @@ function create_one_variable_graph(data, field){
                   }
               ]
         };
-        myChart.setOption(option);
+        dynamicChart.setOption(option);
       break;
       case "cid":
         var cid10 = formatCID(formatData);
@@ -733,96 +973,101 @@ function create_one_variable_graph(data, field){
             leafDepth: 3,
           }],
         }
-        myChart.setOption(option);
+        dynamicChart.setOption(option);
       break;
     }
 }
 
 function quartile(data) {
-  var q = [];
-  var total = 0;
-  data = data.sort(function(a,b){return a[1] - b[1];});
-  for (var i = 1; i < data.length; i++) {
-    total = total + data[i][0];
-  }
-  var total1 = Math.floor(total * 0.25);
-  var total2 = Math.floor(total * 0.5);
-  var total3 = Math.floor(total * 0.75);
-
-  total = 0;
-  for (i = 1; i < data.length; i++) {
-    total += data[i][0];
-    if (total1 <= total) {
-      q.push(data[i][1])
-      break;
+    var q = [];
+    var total = 0;
+    data = data.sort(function(a,b){return a[1] - b[1];});
+    for (var i = 1; i < data.length; i++) {
+      total = total + data[i][0];
     }
-  }
-  for (i; i < data.length; i++) {
-    total += data[i][0];
-    if (total2 <= total) {
-      q.push(data[i][1])
-      break;
+    var total1 = Math.floor(total * 0.25);
+    var total2 = Math.floor(total * 0.5);
+    var total3 = Math.floor(total * 0.75);
+  
+    total = 0;
+    for (i = 1; i < data.length; i++) {
+      total += data[i][0];
+      if (total1 <= total) {
+        q.push(data[i][1])
+        break;
+      }
     }
-  }
-  for (i; i < data.length; i++) {
-    total += data[i][0];
-    if (total3 <= total) {
-      q.push(data[i][1]);
-      break;
+    for (i; i < data.length; i++) {
+      total += data[i][0];
+      if (total2 <= total) {
+        q.push(data[i][1])
+        break;
+      }
     }
-  }
-  return q;
-}
-
-function formatCID (data) {
-  var cid10 = [];
-  for (i = 0; i < 26; i++) {
-    obj = {
-      name: String.fromCharCode(i + 65),
-      children: []
+    for (i; i < data.length; i++) {
+      total += data[i][0];
+      if (total3 <= total) {
+        q.push(data[i][1]);
+        break;
+      }
     }
-    cid10.push(obj)
-    for (j = 0; j < 10; j++) {
+    return q;
+  }
+  
+  function formatCID (data) {
+    var cid10 = [];
+    for (i = 0; i < 26; i++) {
       obj = {
-        name: String.fromCharCode(i + 65, j + 48),
+        name: String.fromCharCode(i + 65),
         children: []
       }
-      cid10[i].children.push(obj)
+      cid10.push(obj)
+      for (j = 0; j < 10; j++) {
+        obj = {
+          name: String.fromCharCode(i + 65, j + 48),
+          children: []
+        }
+        cid10[i].children.push(obj)
+      }
     }
+  
+    for (i=1; i < data.length-1; i++) {
+      letter = data[i][1].charCodeAt(0) - 65;
+      number = data[i][1].charAt(1);
+      obj = {
+        name: data[i][1].slice(0, 3),
+        fullname: data[i][1],
+        value: data[i][0]
+      }
+      cid10[letter].children[number].children.push(obj)
+    }
+  
+    if (data[i][1] != "") {
+      letter = data[i][1].charCodeAt(0) - 65;
+      number = data[i][1].charAt(1);
+      obj = {
+        name: data[i][1].slice(0, 3),
+        fullname: data[i][1],
+        value: data[i][0]
+      }
+      cid10[letter].children[number].children.push(obj)
+    }
+    return cid10;
   }
 
-  for (i=1; i < data.length-1; i++) {
-    letter = data[i][1].charCodeAt(0) - 65;
-    number = data[i][1].charAt(1);
-    obj = {
-      name: data[i][1].slice(0, 3),
-      fullname: data[i][1],
-      value: data[i][0]
-    }
-    cid10[letter].children[number].children.push(obj)
-  }
+//*** DOM Functions ****//
 
-  if (data[i][1] != "") {
-    letter = data[i][1].charCodeAt(0) - 65;
-    number = data[i][1].charAt(1);
-    obj = {
-      name: data[i][1].slice(0, 3),
-      fullname: data[i][1],
-      value: data[i][0]
-    }
-    cid10[letter].children[number].children.push(obj)
-  }
-  return cid10;
+function open_info(id) {
+    var popup = document.getElementById(id);
+    popup.classList.toggle("show");
+}
+
+function on_click(id) {
+    $("#" + id).toggleClass("active")
 }
 
 function changeChart(){
     const field = document.getElementById("select-chart").value;
-    create_one_variable_graph(result[field], field);
+    create_one_variable_graph(filtered_data[field], field);
 }
-
-
-//*** DOM Functions ****//
-
-function on_click(id) {
-  $("#" + id).toggleClass("active")
-}
+  
