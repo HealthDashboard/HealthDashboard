@@ -125,7 +125,7 @@
   }
 
   .ranking {
-    height: 500px;
+    height: 550px;
     overflow: auto;
   }
 
@@ -150,6 +150,13 @@
 
   .hidden {
     visibility: hidden;
+  }
+
+  .statistic_table {
+    width: 1500px;
+    height: 300px;
+    font-size: 14pt;
+    margin: 20px;
   }
 
   /* Popup container - can be anything you want */

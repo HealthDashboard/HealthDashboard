@@ -1,6 +1,6 @@
 class ProcedureController < ApplicationController
 	before_action :getProcedures, only: [:proceduresDistanceGroup, :proceduresPerMonth,
-		:proceduresPerVariable, :proceduresPerSpecialties, :proceduresDistance,
+		:proceduresPerVariable, :proceduresPerSpecialties, :proceduresStatisticAnalysis, :proceduresDistance,
 		:proceduresLatLong, :proceduresClusterPoints, :proceduresSetorCensitario, :download, :downloadCluster, :proceduresVariables, 
 		:proceduresCompleteness, :proceduresPop, :proceduresCid10Specific]
         before_action :authenticate_user!, except: [:proceduresTotal]
@@ -157,7 +157,38 @@ class ProcedureController < ApplicationController
 		render json: result, status: 200
 	end
 
-	#AQUI
+	# GET /procedure/proceduresStatisticAnalysis{params}
+	# Params: [filters values array]
+	# Return: Hash of {<variable> => {'count' => count, 'sum' => sum, 'min' => min, 'max' => max, 'average' => average, 'deviation' => deviation}}
+	def proceduresStatisticAnalysis
+		render json: "Bad request", status: 400 and return unless @procedures != nil
+
+		result = {}
+		analysis = {}
+		values = {}
+
+		@procedures.each do |item|
+			[:age_number, :days, :days_uti, :days_ui, :val_total, :days_total].each do |name|
+				values[name] = [] if !values[name]
+				values[name].append(item[name])
+			end
+		end
+
+		for variable in [:age_number, :days, :days_uti, :days_ui, :val_total, :days_total] do
+			analysis["count"] = @procedures.count
+			analysis["sum"] = @procedures.sum(variable)
+			analysis["min"] = @procedures.minimum(variable)
+			analysis["max"] = @procedures.maximum(variable)
+			analysis["average"] = @procedures.average(variable).to_f.round(2)
+			sum = values[variable].inject(0){|accum, i| accum +(i-analysis["average"])**2}
+			analysis["deviation"] = Math.sqrt(sum/(values[variable].length - 1).to_f).round(2)
+
+			result[variable.to_s] = analysis
+			analysis = {}
+		end
+		render json: result, status: 200
+	end
+
 	# GET /procedure/proceduresDistance{params}
 	# Params: [filters values array]
 	# Return: Hash of {specialty => distance_average}

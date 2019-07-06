@@ -77,6 +77,7 @@ function init_dashboard_sections() {
     create_bar_chart(filtered_data["STS"], "chart_STS", "Internações por Supervisão Técnica de Saúde");
     create_bar_chart(filtered_data["CRS"], "chart_CRS", "Internações por Coordenadoria Regional de Saúde");
     create_bar_chart(filtered_data["DA"], "chart_DA", "Internações por Distrito Administrativo");
+    update_statistic_table();
 }
 
 //Ranking
@@ -127,6 +128,43 @@ function create_table_rank(result) {
     });
     rows += " <th scope=\"row\">#</th><td> TOTAL </td> <td>" + Total.toLocaleString('pt-BR') + "</td></tr></tbody>"
     rank_table.html(rows);
+}
+
+function update_statistic_table() {
+    if (filters == null) {
+        $.getJSON('/statistic_values.json', create_statistic_table);
+    } else {
+        $.getJSON('/procedure/proceduresStatisticAnalysis', filters, create_statistic_table);
+    }
+}
+
+function create_statistic_table(result) {
+    statistic_table = $('.statistic_table');
+    
+    index = 1;
+
+    rows = "<thead><tr><th>Variável</th>"
+    rows += "<th>Contagem</th><th>Soma</th>"
+    rows += "<th>Mínimo</th><th>Máximo</th>"
+    rows += "<th>Média</th><th>Desvio Padrão</th></tr></thead><tbody>"
+
+    $.each(result, function(variable, analysis) {
+        if (index % 2 == 0) {
+            rows += "<tr class='bg-success'>"
+        } else {
+            rows += "<tr>"
+        }
+        index++;
+        rows += "<td>" + variable + "</td>"
+        rows += "<td>" + analysis["count"].toLocaleString('pt-BR') + "</td>"
+        rows += "<td>" + analysis["sum"].toLocaleString('pt-BR') + "</td>"
+        rows += "<td>" + analysis["min"].toLocaleString('pt-BR') + "</td>"
+        rows += "<td>" + analysis["max"].toLocaleString('pt-BR') + "</td>"
+        rows += "<td>" + analysis["average"].toLocaleString('pt-BR') + "</td>"
+        rows += "<td>" + analysis["deviation"].toLocaleString('pt-BR') + "</td></tr>"
+    });
+    rows += "</tbody>"
+    statistic_table.html(rows);
 }
 
 /* Série Histórica */

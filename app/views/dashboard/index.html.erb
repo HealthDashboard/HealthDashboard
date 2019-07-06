@@ -140,15 +140,14 @@
       </div>
     </div>
     <div class="card-body ranking">
-    <select id="select-variable" onchange="update_rank()">
-        <option value="health_centre">Hospital</option>
-        <option value="DA">Distrito Administrativo</option>
-        <option value="age">Faixa Etária</option>
-        <option value="gender">Sexo</option>
-        <option value="CID">Diagnóstico Principal (CID 10)</option>
-    </select>
-      <table class='health_centres_rank table table-sm table-inverse'>
-      </table>
+      <select id="select-variable" onchange="update_rank()">
+          <option value="health_centre">Hospital</option>
+          <option value="DA">Distrito Administrativo</option>
+          <option value="age">Faixa Etária</option>
+          <option value="gender">Sexo</option>
+          <option value="CID">Diagnóstico Principal (CID 10)</option>
+      </select>
+      <table class='health_centres_rank table table-sm table-inverse'></table>
     </div>
   </div>
   <div id="historic" class="card-div">
@@ -254,7 +253,7 @@
         <i class="main-button far fa-times-circle" onclick="on_click('territories')"></i>
       </div>
     </div>
-    <div class="card-body">
+    <div class="card-body overflow">
       <div style="display: flex; justify-content: space-between;">
         <div id="chart_STS" style="width: 800px; height: 500px;"></div>
         <div id="chart_CRS"  style="width: 1000px; height: 400px;"></div>
@@ -339,16 +338,13 @@
         <i class="config-buttons fas fa-print" title="Imprimir"></i>
         <i class="config-buttons fas fa-info-circle popup" title="Mais informações" onclick="open_info('statistic_popup')">
             <span class="popuptext" id="statistic_popup">Esta aba apresenta informações estatísticas sobre algumas das Variáveis,
-                                                        tais como: Idade, Diárias, Diárias UT, Diárias UTI, Valor Total e Dias de Permanencia</span></i>
+                                                        tais como: Idade, Diárias, Diárias UI, Diárias UTI, Valor Total e Dias de Permanencia</span></i>
         <i class="config-buttons fas fa-thumbtack" title="Fixar"></i>
         <i class="main-button far fa-times-circle" onclick="on_click('statistic')"></i>
       </div>
     </div>
-    <div class="card-body">
-      <div style="display: flex; justify-content: space-between;">
-        <div id="chart_specialties" style="width: 800px; height: 500px;"></div>
-        <div id="chart_spec_total"  style="width: 1000px; height: 400px;"></div>
-      </div>
+    <div class="card-body overflow">
+        <table class='statistic_table'></table>
     </div>
   </div>
 

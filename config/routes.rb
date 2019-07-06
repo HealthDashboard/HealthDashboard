@@ -45,6 +45,7 @@ Rails.application.routes.draw do
     get :proceduresPerMonth, on: :collection
     get :proceduresPerVariable, on: :collection
     get :proceduresPerSpecialties, on: :collection
+    get :proceduresStatisticAnalysis, on: :collection
     get :proceduresDistance, on: :collection
     get :proceduresTotal, on: :collection
     post :download, on: :collection
