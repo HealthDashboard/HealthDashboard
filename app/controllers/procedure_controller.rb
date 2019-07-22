@@ -105,27 +105,27 @@ class ProcedureController < ApplicationController
 		case params[:variable]
 		when "health_centre"
 			@procedures.group(:cnes_id).order("count_id DESC")
-						.count(:id).each.with_index do |p, i|
+						.count(:id).each do |p|
 				result[HealthCentre.find_by(cnes: p[0]).name.to_s] = p[1].to_i
 			end
 		when "DA"
 			@procedures.group(:DA).order("count_id DESC")
-						.count(:id).each.with_index do |p, i|
+						.count(:id).each do |p|
 				result[p[0].to_s] = p[1].to_i
 			end
 		when "age"
 			@procedures.group(:age_code).order("count_id DESC")
-						.count(:id).each.with_index do |p, i|
+						.count(:id).each do |p|
 				result[@age_group.detect{|e| e["id"] == p[0]}["text"]] = p[1].to_i
 			end
 		when "gender"
 			@procedures.group(:gender).order("count_id DESC")
-						.count(:id).each.with_index do |p, i|
+						.count(:id).each do |p|
 				result[p[0] == "M" ? "Masculino" : "Feminino"] = p[1].to_i
 			end
 		when "CID"
 			@procedures.group(:cid_primary).order("count_id DESC")
-						.count(:id).each.with_index do |p, i|
+						.count(:id).each do |p|
 				if result[@cid.detect{|e| e["id"] == p[0][0..2]}["text"]] then
 					result[@cid.detect{|e| e["id"] == p[0][0..2]}["text"]] += p[1].to_i 
 				else
@@ -135,7 +135,7 @@ class ProcedureController < ApplicationController
 			result = result.sort_by{|k, v| -v}.to_h
 		else
 			@procedures.group(:cnes_id).order("count_id DESC")
-						.count(:id).each.with_index do |p, i|
+						.count(:id).each do |p|
 				result[HealthCentre.find_by(cnes: p[0]).name.to_s] = p[1].to_i
 			end
 		end
