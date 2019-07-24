@@ -2,3 +2,221 @@
     width: 47vw;
     flex: 1 1 auto;
   }
+
+  .container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: calc(100vh - 50px);
+    padding: 15px 0 50px 0;
+    background-color: #f2f2f238;
+  }
+
+  .card-div {
+    margin-top: 15px;
+    width: 90vw;
+    height: 100%;
+    box-sizing: border-box;
+    -webkit-box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    -moz-box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    border-radius: 0 2px ;
+    padding: .7em .7em 0 1.5em;
+    border-left: 10px #d2cfcf solid;
+    flex-basis: auto;
+    background-color: #fff;
+  }
+
+  .card-header {
+    text-align: left;
+    position: relative;
+    border-radius: 10px 10px 0 0;
+    font-weight: bold;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1;
+  }
+
+  .card-header h1 {
+    font-size: 1em;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .buttons-div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  .buttons-div .fas {
+    font-size: 1.5em;
+    margin: 0 5px;
+    cursor: pointer;
+  }
+
+  .buttons-div .fas:hover {
+    color: #d2cfcf;
+  }
+
+  .buttons-div .far:hover {
+    cursor: pointer;
+    color: #d2cfcf;
+  }
+
+  .buttons-div .main-button {
+    font-size: 2em;
+    margin-left: 10px;
+    transform: rotate(135deg);
+    transition: transform 550ms;
+  }
+
+  .card-div.active .main-button {
+    transform: rotate(0deg);
+  }
+
+  .buttons-div .config-buttons {
+    opacity: 0;
+  }
+
+  .card-div.active .config-buttons {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .buttons-div .fa-download {
+    transform: translateX(4em);
+    transition: opacity 200ms 300ms,
+                transform ease-out 200ms 300ms;
+  }
+
+  .buttons-div .fa-print {
+    transform: translateX(3em);
+    transition: opacity 200ms 350ms,
+                transform ease-out 200ms 350ms;
+  }
+
+  .buttons-div .fa-info-circle {
+    transform: translateX(2em);
+    transition: opacity 200ms 400ms,
+                transform ease-out 200ms 400ms;
+  }
+
+  .buttons-div .fa-thumbtack {
+    transform: translateX(1em);
+    transition: opacity 200ms 450ms,
+                transform ease-out 200ms 450ms;;
+  }
+
+  .buttons-div i {
+    font-size: 1.5em;
+  }
+
+  .card-body {
+    padding: 0.3em 15px;
+    transform: scaleY(0);
+    transform-origin: top;
+    max-height: 0;
+    transition: transform 450ms,
+                max-height 450ms;
+    z-index: 0;    
+  }
+
+  .ranking {
+    height: 550px;
+    overflow: auto;
+  }
+
+  .overflow {
+    height: 450px;
+    overflow: auto;
+  }
+
+  .card-div.active .card-body {
+    max-height: 1000px;
+    transform: scaleY(1);
+  }
+
+  .card-body .title {
+    font-weight: bold;
+    text-decoration: underline;
+  }
+
+  .bold {
+    font-weight: bold;
+  }
+
+  .hidden {
+    visibility: hidden;
+  }
+
+  .statistic_table {
+    width: 1500px;
+    height: 300px;
+    font-size: 14pt;
+    margin: 20px;
+  }
+
+  /* Popup container - can be anything you want */
+.popup {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* The actual popup */
+.popup .popuptext {
+  visibility: hidden;
+  width: 400px;
+  background-color: #fff;
+  color: #7c7d7d;
+  font-family: sans-serif;
+  font-size: 14pt;
+  font-weight: normal;
+  border: 3px;
+  border-radius: 7px;
+  border-style: inset;
+  padding: 8px;
+  position: absolute;
+  z-index: 1;
+  top: 135%;
+  left: 50%;
+  margin-left: -300px;
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+  content: "";
+  position: absolute;
+  bottom: 101%;
+  left: 50%;
+  margin-left: 93px;
+  border-width: 7px;
+  border-style: solid;
+  border-color: transparent transparent #9a9a9a transparent;
+}
+
+/* Toggle this class - hide and show the popup */
+.popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 0.5s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;} 
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
