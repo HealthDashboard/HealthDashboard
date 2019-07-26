@@ -341,7 +341,7 @@ function create_proceduresPerSpecialties(data){
 
         tooltip : {
             trigger: 'item',
-            formatter: "({d}%)"
+            formatter: "{c} ({d}%)"
         },
 
         series : [
@@ -406,7 +406,7 @@ function create_analise(data){
             },
             tooltip : {
                 trigger: 'item',
-                formatter: "({d}%)"
+                formatter: "{c} ({d}%)"
             },
 
             series : [
@@ -518,6 +518,7 @@ function create_pie_chart(data, elementId, title) {
         },
         tooltip : {
             trigger: 'item',
+            formatter: '{c} ({d}%)'
         },
         legend: {
             type: 'scroll',
@@ -526,7 +527,7 @@ function create_pie_chart(data, elementId, title) {
             bottom: 0,
         },
         label: {
-                formatter: '{b}: ({d}%)'
+                formatter: '{b}'
             },
         series : [
             {
@@ -806,7 +807,7 @@ function create_one_variable_graph(data, field){
             },
             tooltip : {
                 trigger: 'item',
-
+                formatter: '{c} ({d}%)'
             },
             legend: {
                 type: 'scroll',
@@ -816,7 +817,7 @@ function create_one_variable_graph(data, field){
                 bottom: 20,
             },
             label: {
-                    formatter: '{b}: ({d}%)'
+                    formatter: '{b}'
                 },
             series : [
                 {
