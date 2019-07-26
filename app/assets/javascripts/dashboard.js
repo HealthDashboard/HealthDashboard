@@ -213,6 +213,9 @@ function populate_procedures_by_date() {
                     color: '#333'
                 }
             },
+            textStyle: {
+                fontFamily:	'Verdana, sans-serif',
+            },
             tooltip : {
                 trigger: 'item',
                 formatter: "{c} "
@@ -262,6 +265,7 @@ function create_specialties_total(data) {
             }
         },
         textStyle: {
+            fontFamily:	'Verdana, sans-serif',
             fontSize: 16,
         },
 
@@ -324,6 +328,7 @@ function create_proceduresPerSpecialties(data){
             }
         },
         textStyle: {
+            fontFamily:	'Verdana, sans-serif',
             fontSize: 16,
         },
         legend: {
@@ -396,6 +401,7 @@ function create_analise(data){
                 }
             },
             textStyle: {
+                fontFamily:	'Verdana, sans-serif',
                 fontSize: 16,
             },
             tooltip : {
@@ -452,6 +458,7 @@ function create_specialties_distance_between_patients_hospital(data){
                 }
             },
             textStyle: {
+                fontFamily:	'Verdana, sans-serif',
                 fontSize: 16,
             },
             tooltip : {
@@ -506,6 +513,7 @@ function create_pie_chart(data, elementId, title) {
             text: title,
         },
         textStyle: {
+            fontFamily:	'Verdana, sans-serif',
             fontSize: 16,
         },
         tooltip : {
@@ -564,6 +572,7 @@ function create_bar_chart(data, elementId, title) {
             text: title,
         },
         textStyle: {
+            fontFamily:	'Verdana, sans-serif',        
             fontSize: 16,
         },
         tooltip : {
@@ -639,6 +648,7 @@ function create_bar_line_chart(data, elementId, title) {
             text: title,
           },
           textStyle: {
+              fontFamily:	'Verdana, sans-serif',
               fontSize: 16,
           },
           tooltip : {
@@ -732,6 +742,7 @@ function create_one_variable_graph(data, field){
             },
             //title: 'Title',
             textStyle: {
+                fontFamily:	'Verdana, sans-serif',
                 fontSize: 16,
             },
             tooltip : {
@@ -790,6 +801,7 @@ function create_one_variable_graph(data, field){
             },
             //title: 'Title',
             textStyle: {
+                fontFamily:	'Verdana, sans-serif',
                 fontSize: 16,
             },
             tooltip : {
@@ -834,6 +846,7 @@ function create_one_variable_graph(data, field){
             },
             //title: 'Title',
             textStyle: {
+                fontFamily:	'Verdana, sans-serif',
                 fontSize: 16,
             },
             tooltip : {
@@ -882,6 +895,7 @@ function create_one_variable_graph(data, field){
               },
               //title: 'Title',
               textStyle: {
+                  fontFamily:	'Verdana, sans-serif',
                   fontSize: 16,
               },
               tooltip : {
@@ -956,6 +970,9 @@ function create_one_variable_graph(data, field){
       case "cid":
         var cid10 = formatCID(formatData);
         var option = {
+          textStyle: {
+            fontFamily:	'Verdana, sans-serif'
+          },
           label: {
             // fontWeight: 'bold',
             fontSize: 16
