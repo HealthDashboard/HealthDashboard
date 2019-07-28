@@ -247,7 +247,9 @@ function create_specialties_total(data) {
 
     for(var i=0; i<data.length; i++){
         if(data[i][1] != null && data[i][0] != null){
-            formatData.push([data[i][1], data[i][0].toString()]);
+            variable = data[i][0].toString();
+            if (variable[0] == "1") variable = "Especialidade "+variable;
+            formatData.push([data[i][1], variable]);
             max = Math.max(max, data[i][1]);
         }
     }
@@ -311,7 +313,9 @@ function create_proceduresPerSpecialties(data){
 
     for(var i=0; i<data.length; i++){
         if(data[i][1] != null && data[i][0] != null){
-            formatData.push([data[i][1], data[i][0].toString()]);
+            variable = data[i][0].toString();
+            if (variable[0] == "1") variable = "Especialidade "+variable;
+            formatData.push([data[i][1], variable]);
             max = Math.max(max, data[i][1]);
         }
     }
@@ -501,7 +505,9 @@ function create_pie_chart(data, elementId, title) {
 
     for(var i=0; i<data.length; i++){
         if(data[i][1] != null && data[i][0] != null){
-            formatData.push([data[i][1], data[i][0].toString()]);
+            variable = data[i][0].toString();
+            if (variable[0] == "1") variable = "Especialidade "+variable;
+            formatData.push([data[i][1], variable]);
             max = Math.max(max, data[i][1]);
         }
     }
