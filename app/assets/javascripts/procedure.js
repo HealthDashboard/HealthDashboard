@@ -448,7 +448,23 @@ function setHeatmapData(source, heat_type, radius) {
             }
 
             $.each(all_procedures, function(index, procedure){
-                rate = 1000*1.0*procedure[3]/parseInt(population_sectors[procedure[2]]["POPULACAO_TOTAL"]);
+                var total = parseInt(population_sectors[procedure[2]]["POPULACAO_TOTAL"]);
+                if (data_aux.filters[12].length > 0) total = 0;
+                if (data_aux.filters[12].includes("01"))
+                    total += parseInt(population_sectors[procedure[2]]["POPULACAO_BRANCA"]);
+                if (data_aux.filters[12].includes("02"))
+                    total += parseInt(population_sectors[procedure[2]]["POPULACAO_PRETA"]);
+                if (data_aux.filters[12].includes("03"))
+                    total += parseInt(population_sectors[procedure[2]]["POPULACAO_PARDA"]);
+                if (data_aux.filters[12].includes("04"))
+                    total += parseInt(population_sectors[procedure[2]]["POPULACAO_AMARELA"]);
+                if (data_aux.filters[12].includes("05"))
+                    total += parseInt(population_sectors[procedure[2]]["POPULACAO_INDIGENA"]);
+                if (data_aux.genders.length == 1) {
+                    if (data_aux.genders[0] == "M") total = parseInt(population_sectors[procedure[2]]["POPULACAO_HOMEM"]);
+                    else total = parseInt(population_sectors[procedure[2]]["POPULACAO_MULHER"]);
+                }
+                rate = 100.0*procedure[3]/total;
                 if (!isFinite(rate)){
                     rate = 0;
                 }
