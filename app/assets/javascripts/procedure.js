@@ -434,6 +434,8 @@ function setHeatmapData(source, heat_type, radius) {
                 if (procedure[3] > max_value_heatmap)
                     max_value_heatmap = procedure[3]
             });
+            // Change legend heatmap text
+            document.getElementsByClassName('legend-title')[0].innerHTML = "Número de Internações Hospitalares"
         }    
         else if(heat_type === "rate") {
             // hate heatmap gradient is different
@@ -473,6 +475,8 @@ function setHeatmapData(source, heat_type, radius) {
                 }
                 heatmap_procedures.push({lat: procedure[0], lng: procedure[1], count: rate});
             });
+            // Change legend heatmap text
+            document.getElementsByClassName('legend-title')[0].innerHTML = "Número de Internações Hospitalares por 100 habitantes"
         }
     }
     else if(source === "HealthCentres"){
