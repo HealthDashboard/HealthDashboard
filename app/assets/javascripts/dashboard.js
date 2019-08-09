@@ -213,6 +213,9 @@ function populate_procedures_by_date() {
                     color: '#333'
                 }
             },
+            textStyle: {
+                fontFamily:	'Verdana, sans-serif',
+            },
             tooltip : {
                 trigger: 'item',
                 formatter: "{c} "
@@ -244,7 +247,9 @@ function create_specialties_total(data) {
 
     for(var i=0; i<data.length; i++){
         if(data[i][1] != null && data[i][0] != null){
-            formatData.push([data[i][1], data[i][0].toString()]);
+            variable = data[i][0].toString();
+            if (variable[0] == "1") variable = "Especialidade "+variable;
+            formatData.push([data[i][1], variable]);
             max = Math.max(max, data[i][1]);
         }
     }
@@ -262,6 +267,7 @@ function create_specialties_total(data) {
             }
         },
         textStyle: {
+            fontFamily:	'Verdana, sans-serif',
             fontSize: 16,
         },
 
@@ -307,7 +313,9 @@ function create_proceduresPerSpecialties(data){
 
     for(var i=0; i<data.length; i++){
         if(data[i][1] != null && data[i][0] != null){
-            formatData.push([data[i][1], data[i][0].toString()]);
+            variable = data[i][0].toString();
+            if (variable[0] == "1") variable = "Especialidade "+variable;
+            formatData.push([data[i][1], variable]);
             max = Math.max(max, data[i][1]);
         }
     }
@@ -324,6 +332,7 @@ function create_proceduresPerSpecialties(data){
             }
         },
         textStyle: {
+            fontFamily:	'Verdana, sans-serif',
             fontSize: 16,
         },
         legend: {
@@ -336,7 +345,7 @@ function create_proceduresPerSpecialties(data){
 
         tooltip : {
             trigger: 'item',
-            formatter: "({d}%)"
+            formatter: "{c} ({d}%)"
         },
 
         series : [
@@ -396,11 +405,12 @@ function create_analise(data){
                 }
             },
             textStyle: {
+                fontFamily:	'Verdana, sans-serif',
                 fontSize: 16,
             },
             tooltip : {
                 trigger: 'item',
-                formatter: "({d}%)"
+                formatter: "{c} ({d}%)"
             },
 
             series : [
@@ -452,6 +462,7 @@ function create_specialties_distance_between_patients_hospital(data){
                 }
             },
             textStyle: {
+                fontFamily:	'Verdana, sans-serif',
                 fontSize: 16,
             },
             tooltip : {
@@ -494,7 +505,9 @@ function create_pie_chart(data, elementId, title) {
 
     for(var i=0; i<data.length; i++){
         if(data[i][1] != null && data[i][0] != null){
-            formatData.push([data[i][1], data[i][0].toString()]);
+            variable = data[i][0].toString();
+            if (variable[0] == "1") variable = "Especialidade "+variable;
+            formatData.push([data[i][1], variable]);
             max = Math.max(max, data[i][1]);
         }
     }
@@ -506,10 +519,12 @@ function create_pie_chart(data, elementId, title) {
             text: title,
         },
         textStyle: {
+            fontFamily:	'Verdana, sans-serif',
             fontSize: 16,
         },
         tooltip : {
             trigger: 'item',
+            formatter: '{c} ({d}%)'
         },
         legend: {
             type: 'scroll',
@@ -518,7 +533,7 @@ function create_pie_chart(data, elementId, title) {
             bottom: 0,
         },
         label: {
-                formatter: '{b}: ({d}%)'
+                formatter: '{b}'
             },
         series : [
             {
@@ -564,6 +579,7 @@ function create_bar_chart(data, elementId, title) {
             text: title,
         },
         textStyle: {
+            fontFamily:	'Verdana, sans-serif',        
             fontSize: 16,
         },
         tooltip : {
@@ -639,6 +655,7 @@ function create_bar_line_chart(data, elementId, title) {
             text: title,
           },
           textStyle: {
+              fontFamily:	'Verdana, sans-serif',
               fontSize: 16,
           },
           tooltip : {
@@ -732,6 +749,7 @@ function create_one_variable_graph(data, field){
             },
             //title: 'Title',
             textStyle: {
+                fontFamily:	'Verdana, sans-serif',
                 fontSize: 16,
             },
             tooltip : {
@@ -790,11 +808,12 @@ function create_one_variable_graph(data, field){
             },
             //title: 'Title',
             textStyle: {
+                fontFamily:	'Verdana, sans-serif',
                 fontSize: 16,
             },
             tooltip : {
                 trigger: 'item',
-
+                formatter: '{c} ({d}%)'
             },
             legend: {
                 type: 'scroll',
@@ -804,7 +823,7 @@ function create_one_variable_graph(data, field){
                 bottom: 20,
             },
             label: {
-                    formatter: '{b}: ({d}%)'
+                    formatter: '{b}'
                 },
             series : [
                 {
@@ -834,6 +853,7 @@ function create_one_variable_graph(data, field){
             },
             //title: 'Title',
             textStyle: {
+                fontFamily:	'Verdana, sans-serif',
                 fontSize: 16,
             },
             tooltip : {
@@ -882,6 +902,7 @@ function create_one_variable_graph(data, field){
               },
               //title: 'Title',
               textStyle: {
+                  fontFamily:	'Verdana, sans-serif',
                   fontSize: 16,
               },
               tooltip : {
@@ -956,6 +977,9 @@ function create_one_variable_graph(data, field){
       case "cid":
         var cid10 = formatCID(formatData);
         var option = {
+          textStyle: {
+            fontFamily:	'Verdana, sans-serif'
+          },
           label: {
             // fontWeight: 'bold',
             fontSize: 16
