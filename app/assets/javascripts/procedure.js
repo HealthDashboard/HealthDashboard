@@ -434,6 +434,10 @@ function setHeatmapData(source, heat_type, radius) {
                 if (procedure[3] > max_value_heatmap)
                     max_value_heatmap = procedure[3]
             });
+            // Change legend heatmap text
+            document.getElementsByClassName('legend-title')[0].innerHTML = "Número de Internações Hospitalares";
+            document.getElementsByClassName('info-icon')[0].classList.add("hidden");
+            document.getElementsByClassName('info-div')[0].classList.add("hidden");
         }    
         else if(heat_type === "rate") {
             // hate heatmap gradient is different
@@ -448,7 +452,51 @@ function setHeatmapData(source, heat_type, radius) {
             }
 
             $.each(all_procedures, function(index, procedure){
-                rate = 1000*1.0*procedure[3]/parseInt(population_sectors[procedure[2]]["POPULACAO_TOTAL"]);
+                document.getElementById('total-population').innerHTML = "Número de internações hospitalares, por 100 habitantes, na população residente de cada setor censitário. ";
+                var total = parseInt(population_sectors[procedure[2]]["POPULACAO_TOTAL"]);
+                var text = "A população total foi utilizada como denominador para o calculo da taxa.";
+                var elements = [];
+                if (data_aux.filters[12].length > 0) {
+                    total = 0;
+                    text = "A população raça/cor "
+                }
+                if (data_aux.filters[12].length > 1) text = "As populações raça/cor "
+                if (data_aux.filters[12].includes("01")) {
+                    total += parseInt(population_sectors[procedure[2]]["POPULACAO_BRANCA"]);
+                    elements.push("branca");
+                }
+                if (data_aux.filters[12].includes("02")) {
+                    total += parseInt(population_sectors[procedure[2]]["POPULACAO_PRETA"]);
+                    elements.push("preta");
+                }
+                if (data_aux.filters[12].includes("03")) {
+                    total += parseInt(population_sectors[procedure[2]]["POPULACAO_PARDA"]);
+                    elements.push("parda");
+                }
+                if (data_aux.filters[12].includes("04")) {
+                    total += parseInt(population_sectors[procedure[2]]["POPULACAO_AMARELA"]);
+                    elements.push("amarela");
+                }
+                if (data_aux.filters[12].includes("05")) {
+                    total += parseInt(population_sectors[procedure[2]]["POPULACAO_INDIGENA"]);
+                    elements.push("indigena");
+                }
+                text += elements.join(", ");
+                if (data_aux.filters[12].length == 1) text += " foi utilizada como denominador para o calculo da taxa."
+                if (data_aux.filters[12].length > 1) text += " foram utilizadas como denominador para o calculo da taxa."
+                document.getElementById('total-population').innerHTML += text;                
+                if (data_aux.genders.length == 1) {
+                    document.getElementById('total-population').innerHTML = "Número de internações hospitalares, por 100 habitantes, na população residente de cada setor censitário. ";
+                    if (data_aux.genders[0] == "M") {
+                        total = parseInt(population_sectors[procedure[2]]["POPULACAO_HOMEM"]);
+                        document.getElementById('total-population').innerHTML += "A população masculina foi utilizada como denominador para o calculo da taxa."
+                    }
+                    else {
+                        total = parseInt(population_sectors[procedure[2]]["POPULACAO_MULHER"]);
+                        document.getElementById('total-population').innerHTML += "A população feminina foi utilizada como denominador para o calculo da taxa."
+                    }
+                }
+                rate = 100.0*procedure[3]/total;
                 if (!isFinite(rate)){
                     rate = 0;
                 }
@@ -457,6 +505,10 @@ function setHeatmapData(source, heat_type, radius) {
                 }
                 heatmap_procedures.push({lat: procedure[0], lng: procedure[1], count: rate});
             });
+            // Change legend heatmap text
+            document.getElementsByClassName('legend-title')[0].innerHTML = "Número de Internações Hospitalares, por 100 habitantes";
+            document.getElementsByClassName('info-icon')[0].classList.remove("hidden");
+            document.getElementsByClassName('info-div')[0].classList.remove("hidden");
         }
     }
     else if(source === "HealthCentres"){
