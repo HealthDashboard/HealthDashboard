@@ -528,8 +528,7 @@ function create_pie_chart(data, elementId, title) {
         },
         legend: {
             type: 'scroll',
-            orient: 'vertical',
-            right: 0,
+            orient: 'horizontal',
             bottom: 0,
         },
         label: {
