@@ -531,7 +531,7 @@ function create_pie_chart(data, elementId, title) {
         legend: {
             type: 'scroll',
             orient: 'horizontal',
-            bottom: 0,
+            bottom: 50,
         },
         label: {
                 formatter: '{b}'
@@ -540,7 +540,7 @@ function create_pie_chart(data, elementId, title) {
             {
                 type: 'pie',
                 radius : '55%',
-                center: ['40%', '50%'],
+                center: ['50%', '50%'],
                 itemStyle: {
                     emphasis: {
                         shadowBlur: 10,
@@ -825,8 +825,7 @@ function create_one_variable_graph(data, field){
                 type: 'scroll',
                 orient: 'vertical',
                 right: 10,
-                top: 20,
-                bottom: 20,
+                bottom: 50,
             },
             label: {
                     formatter: '{b}'
@@ -835,7 +834,7 @@ function create_one_variable_graph(data, field){
                 {
                     type: 'pie',
                     radius : '55%',
-                    center: ['40%', '50%'],
+                    center: ['50%', '50%'],
                     itemStyle: {
                         emphasis: {
                             shadowBlur: 10,

@@ -125,7 +125,6 @@
   }
 
   .ranking {
-    height: 550px;
     overflow: auto;
   }
 
@@ -134,8 +133,12 @@
     overflow: auto;
   }
 
+  .dynamic-charts.active .card-body {
+    max-height: 1000px !important;
+  }
+
   .card-div.active .card-body {
-    max-height: 1000px;
+    max-height: 550px;
     transform: scaleY(1);
   }
 
@@ -153,7 +156,7 @@
   }
 
   .statistic_table {
-    width: 100%;
+    width: calc(100% - 50px);
     height: 300px;
     font-size: 14pt;
     margin: 20px;
