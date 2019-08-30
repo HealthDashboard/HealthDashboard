@@ -167,23 +167,30 @@ class ProcedureController < ApplicationController
 		analysis = {}
 		values = {}
 
+		variables = [[:age_number, "Idade"],
+								 [:days, "Total geral de diárias"],
+								 [:days_uti, "Diárias UTI"],
+								 [:days_ui, "Diárias UI"],
+								 [:val_total, "Valor da parcela"],
+								 [:days_total, "Dias de permanência"]]
+
 		@procedures.each do |item|
-			[:age_number, :days, :days_uti, :days_ui, :val_total, :days_total].each do |name|
-				values[name] = [] if !values[name]
-				values[name].append(item[name])
+			variables.each do |name, text|
+				values[text] = [] if !values[text]
+				values[text].append(item[name])
 			end
 		end
 
-		for variable in [:age_number, :days, :days_uti, :days_ui, :val_total, :days_total] do
+		for variable, text in variables do
 			analysis["count"] = @procedures.count
 			analysis["sum"] = @procedures.sum(variable)
 			analysis["min"] = @procedures.minimum(variable)
 			analysis["max"] = @procedures.maximum(variable)
 			analysis["average"] = @procedures.average(variable).to_f.round(2)
-			sum = values[variable].inject(0){|accum, i| accum +(i-analysis["average"])**2}
-			analysis["deviation"] = Math.sqrt(sum/(values[variable].length - 1).to_f).round(2)
+			sum = values[text].inject(0){|accum, i| accum +(i-analysis["average"])**2}
+			analysis["deviation"] = Math.sqrt(sum/(values[text].length - 1).to_f).round(2)
 
-			result[variable.to_s] = analysis
+			result[text] = analysis
 			analysis = {}
 		end
 		render json: result, status: 200

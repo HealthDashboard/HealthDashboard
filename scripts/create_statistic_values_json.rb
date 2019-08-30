@@ -13,23 +13,30 @@ def create_statistic_values
   analysis = {}
   procedure_values = {}
 
+  variables = [[:age_number, "Idade"],
+								 [:days, "Total geral de diárias"],
+								 [:days_uti, "Diárias UTI"],
+								 [:days_ui, "Diárias UI"],
+								 [:val_total, "Valor da parcela"],
+								 [:days_total, "Dias de permanência"]]
+
   Procedure.all.each do |item|
-    [:age_number, :days, :days_uti, :days_ui, :val_total, :days_total].each do |name|
-      procedure_values[name] = [] if !procedure_values[name]
-      procedure_values[name].append(item[name])
+    variables.each do |name, text|
+      procedure_values[text] = [] if !procedure_values[text]
+      procedure_values[text].append(item[name])
     end
   end
 
-  for variable in [:age_number, :days, :days_uti, :days_ui, :val_total, :days_total] do
+  for variable, text in variables do
     analysis["count"] = Procedure.count
     analysis["sum"] = Procedure.sum(variable)
     analysis["min"] = Procedure.minimum(variable)
     analysis["max"] = Procedure.maximum(variable)
     analysis["average"] = Procedure.average(variable).to_f.round(2)
-    sum = procedure_values[variable].inject(0){|accum, i| accum +(i-analysis["average"])**2}
-    analysis["deviation"] = Math.sqrt(sum/(procedure_values[variable].length - 1).to_f).round(2)
+    sum = procedure_values[text].inject(0){|accum, i| accum +(i-analysis["average"])**2}
+    analysis["deviation"] = Math.sqrt(sum/(procedure_values[text].length - 1).to_f).round(2)
 
-    values[variable.to_s] = analysis
+    values[text] = analysis
     analysis = {}
   end
 	return values

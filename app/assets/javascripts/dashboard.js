@@ -244,6 +244,7 @@ function create_specialties_total(data) {
     var formatData = [];
     formatData.push(['amount', 'variable']);
     var max = 0;
+    var min = Number.MAX_SAFE_INTEGER;
 
     for(var i=0; i<data.length; i++){
         if(data[i][1] != null && data[i][0] != null){
@@ -251,6 +252,7 @@ function create_specialties_total(data) {
             if (variable[0] == "1") variable = "Especialidade "+variable;
             formatData.push([data[i][1], variable]);
             max = Math.max(max, data[i][1]);
+            min = Math.min(min, data[i][1]);
         }
     }
 
@@ -261,7 +263,7 @@ function create_specialties_total(data) {
         title: {
             text: 'Total de internações hospitalares',
             top: 0,
-            left: 350,
+            left: 'center',
             textStyle: {
                 color: '#333'
             }
@@ -276,14 +278,14 @@ function create_specialties_total(data) {
             formatter: "{c} "
         },
         grid: {containLabel: true},
-        xAxis: {name: 'amount'},
+        xAxis: {name: ' '},
         yAxis: {type: 'category'},
         visualMap: {
             orient: 'horizontal',
             left: 'center',
-            min: 0,
+            min: min,
             max: max,
-            text: ['High Score', 'Low Score'],
+            text: [max, min],
             // Map the score column to color
             dimension: 0,
             inRange: {
@@ -529,7 +531,7 @@ function create_pie_chart(data, elementId, title) {
         legend: {
             type: 'scroll',
             orient: 'horizontal',
-            bottom: 0,
+            bottom: 50,
         },
         label: {
                 formatter: '{b}'
@@ -538,7 +540,7 @@ function create_pie_chart(data, elementId, title) {
             {
                 type: 'pie',
                 radius : '55%',
-                center: ['40%', '50%'],
+                center: ['50%', '50%'],
                 itemStyle: {
                     emphasis: {
                         shadowBlur: 10,
@@ -562,11 +564,13 @@ function create_bar_chart(data, elementId, title) {
     var formatData = [];
     formatData.push(['amount', 'variable']);
     var max = 0;
+    var min = Number.MAX_SAFE_INTEGER;
 
     for(var i=0; i<data.length; i++){
         if(data[i][1] != null && data[i][0] != null){
             formatData.push([data[i][1], data[i][0].toString()]);
             max = Math.max(max, data[i][1]);
+            min = Math.min(min, data[i][1]);
         }
     }
 
@@ -576,6 +580,7 @@ function create_bar_chart(data, elementId, title) {
         },
         title: {
             text: title,
+            left: 'center',
         },
         textStyle: {
             fontFamily:	'Verdana, sans-serif',        
@@ -601,15 +606,15 @@ function create_bar_chart(data, elementId, title) {
         }],
         grid: {containLabel: true},
         xAxis: {
-            name: 'Procedimentos',
+            name: ' ',
             axisLabel: {interval : 0},
         },
         yAxis: {type: 'category'},
         visualMap: {
             orient: 'horizontal',
-            min: 0,
+            min: min,
             max: max,
-            text: ['Máximo', 'Mínimo'],
+            text: [max, min],
             // Map the score column to color
             dimension: 0,
             inRange: {
@@ -731,11 +736,13 @@ function create_one_variable_graph(data, field){
     var formatData = [];
     formatData.push(['amount', 'variable']);
     var max = 0;
+    var min = Number.MAX_SAFE_INTEGER;
 
     for(var i=0; i<data.length; i++){
         if(data[i][1] != null && data[i][0] != null){
             formatData.push([data[i][1], data[i][0].toString()]);
             max = Math.max(max, data[i][1]);
+            min = Math.min(min, data[i][1]);
         }
     }
 
@@ -771,15 +778,15 @@ function create_one_variable_graph(data, field){
             }],
             grid: {containLabel: true},
             xAxis: {
-              name: 'Procedimentos',
+              name: ' ',
               axisLabel: {interval : 0},
             },
             yAxis: {type: 'category'},
             visualMap: {
                 orient: 'horizontal',
-                min: 0,
+                min: min,
                 max: max,
-                text: ['Máximo', 'Mínimo'],
+                text: [max, min],
                 // Map the score column to color
                 dimension: 0,
                 inRange: {
@@ -818,8 +825,7 @@ function create_one_variable_graph(data, field){
                 type: 'scroll',
                 orient: 'vertical',
                 right: 10,
-                top: 20,
-                bottom: 20,
+                bottom: 50,
             },
             label: {
                     formatter: '{b}'
@@ -828,7 +834,7 @@ function create_one_variable_graph(data, field){
                 {
                     type: 'pie',
                     radius : '55%',
-                    center: ['40%', '50%'],
+                    center: ['50%', '50%'],
                     itemStyle: {
                         emphasis: {
                             shadowBlur: 10,
