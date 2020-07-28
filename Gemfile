@@ -53,7 +53,7 @@ gem 'postgres-copy'
 gem 'activerecord-import'
 
 # Read JSON files
-gem 'json', '~> 1.8.3'
+gem 'json', '~> 2.3.0'
 
 #Use postgres
 gem 'pg'
